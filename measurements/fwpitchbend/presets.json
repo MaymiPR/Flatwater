@@ -1,0 +1,2347 @@
+{
+ "2 Deep": {
+  "pitch_cents": 0.0,
+  "formant_cents": -200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {}
+ },
+ "Addison": {
+  "pitch_cents": 0.0,
+  "formant_cents": -300.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 23.1,
+   "offset": 0.3,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "formant": [
+    [
+     "PT",
+     8.0
+    ],
+    [
+     "AM",
+     14.0
+    ]
+   ]
+  }
+ },
+ "Age Modifier": {
+  "pitch_cents": 0.0,
+  "formant_cents": 200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 167.5,
+   "release": 108.6,
+   "level": 1.6
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 9,
+    "hz": 4.178,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.280952380952381,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {}
+ },
+ "BV Perfect Fourth": {
+  "pitch_cents": 500.0,
+  "formant_cents": -100.0,
+  "mix": 48.8,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.775,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   }
+  ],
+  "slots": {}
+ },
+ "Broken Bot": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 0.99
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 8,
+    "hz": 5.003,
+    "phase": 0.0,
+    "warp": 0.53,
+    "smooth": 1.0,
+    "level": 0.25,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 4,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 21,
+    "hz": 0.06,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.0,
+    "level": 0.2,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     100.0
+    ],
+    [
+     "AM",
+     -15.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "M2",
+     68.0
+    ]
+   ]
+  }
+ },
+ "Character Morph": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 24.7,
+   "release": 101.9,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 56.6,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "formant": [
+    [
+     "PT",
+     41.0
+    ],
+    [
+     "AM",
+     -53.0
+    ]
+   ]
+  }
+ },
+ "Chipmunk": {
+  "pitch_cents": 1200.0,
+  "formant_cents": 1200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {}
+ },
+ "Crusin Accent": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 18,
+    "hz": 0.4052941176470588,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "flat"
+   }
+  ],
+  "slots": {
+   "formant": [
+    [
+     "M1",
+     50.0
+    ]
+   ]
+  }
+ },
+ "Dad Support": {
+  "pitch_cents": -1200.0,
+  "formant_cents": -400.0,
+  "mix": 50.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 167.5,
+   "release": 108.6,
+   "level": 1.6
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 9,
+    "hz": 4.178,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 0.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     6.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "AM",
+     45.0
+    ]
+   ]
+  }
+ },
+ "Dark Magician": {
+  "pitch_cents": 0.0,
+  "formant_cents": -900.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 4,
+    "hz": 14.864,
+    "phase": 0.0,
+    "warp": 2.11,
+    "smooth": 7.6,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.0,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     2.0
+    ]
+   ]
+  }
+ },
+ "Drunken Double": {
+  "pitch_cents": 0.0,
+  "formant_cents": -400.0,
+  "mix": 30.1,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 13,
+    "hz": 1.678,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 7.6,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     8.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     11.0
+    ]
+   ]
+  }
+ },
+ "Early Morning": {
+  "pitch_cents": 0.0,
+  "formant_cents": -202.0,
+  "mix": 80.1,
+  "fine": 1,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 293.1,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 13,
+    "hz": 2.259,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1000.0,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 8,
+    "hz": 7.3887399463806975,
+    "phase": 0.0,
+    "warp": 3.4,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     5.0
+    ]
+   ],
+   "formant": [
+    [
+     "PT",
+     -8.0
+    ]
+   ]
+  }
+ },
+ "Fake Vibrato": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 27.9,
+   "release": 44.5,
+   "level": 2.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 7,
+    "hz": 6.345,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 0.11,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "flat"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     2.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     3.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "AM",
+     100.0
+    ]
+   ]
+  }
+ },
+ "Full Reset": "the defaults (a reset preset)",
+ "GF Support": {
+  "pitch_cents": 700.0,
+  "formant_cents": 300.0,
+  "mix": 40.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 167.5,
+   "release": 108.6,
+   "level": 1.6
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 9,
+    "hz": 4.178,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 0.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     6.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "AM",
+     45.0
+    ]
+   ]
+  }
+ },
+ "Game Over": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 13,
+    "hz": 1.6211764705882352,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.0,
+    "level": 1.0,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ],
+    [
+     "M2",
+     19.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     12.0
+    ]
+   ]
+  }
+ },
+ "Get Off The Stage": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 0,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 300.6,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 1,
+    "hz": 25.999999999999996,
+    "phase": 0.0,
+    "warp": 1.3599999999999999,
+    "smooth": 174.2,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 19,
+    "hz": 0.2026470588235294,
+    "phase": 0.5,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "PT",
+     -100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     29.0
+    ],
+    [
+     "M2",
+     -17.0
+    ]
+   ]
+  }
+ },
+ "Gliding Slug": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 120.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "PT",
+     100.0
+    ]
+   ]
+  }
+ },
+ "Glitchy Double": {
+  "pitch_cents": 0.0,
+  "formant_cents": -300.0,
+  "mix": 58.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 17.8,
+    "level": 1.0,
+    "shape": "drawn"
+   },
+   {
+    "type": "Seq",
+    "steps": 2,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 4,
+    "hz": 12.969411764705882,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 2 steps"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M2",
+     -5.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     9.0
+    ]
+   ]
+  }
+ },
+ "High Double Tracker": {
+  "pitch_cents": 0.0,
+  "formant_cents": 82.0,
+  "mix": 32.0,
+  "fine": 1,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 18,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.925826630920464,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "AM",
+     -5.0
+    ],
+    [
+     "PT",
+     -4.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     -2.0
+    ]
+   ]
+  }
+ },
+ "Just a SEQ": {
+  "pitch_cents": 500.0,
+  "formant_cents": 1200.0,
+  "mix": 49.9,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 8,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.925826630920464,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 8 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.925826630920464,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     93.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     100.0
+    ]
+   ]
+  }
+ },
+ "Little Loud": {
+  "pitch_cents": 0.0,
+  "formant_cents": -400.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 235.3,
+   "release": 118.0,
+   "level": 1.6600000000000001
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "drawn"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "formant": [
+    [
+     "AM",
+     86.0
+    ]
+   ]
+  }
+ },
+ "Low Double Tracker": {
+  "pitch_cents": 0.0,
+  "formant_cents": -126.0,
+  "mix": 36.0,
+  "fine": 1,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 18,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.925826630920464,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "AM",
+     -5.0
+    ],
+    [
+     "PT",
+     -4.0
+    ]
+   ]
+  }
+ },
+ "Lullabied": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 10.1,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     23.0
+    ]
+   ]
+  }
+ },
+ "M2F": {
+  "pitch_cents": 1200.0,
+  "formant_cents": 500.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 509.3,
+   "offset": 0.59,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 18,
+    "hz": 0.656,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1000.0,
+    "level": 0.41000000000000003,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 8,
+    "hz": 7.3887399463806975,
+    "phase": 0.0,
+    "warp": 3.4,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "mix": [
+    [
+     "AM",
+     -15.0
+    ]
+   ]
+  }
+ },
+ "Male Bass BV": {
+  "pitch_cents": -500.0,
+  "formant_cents": -500.0,
+  "mix": 33.9,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "mix": [
+    [
+     "AM",
+     -26.0
+    ]
+   ]
+  }
+ },
+ "Mic Swap w. Fans": {
+  "pitch_cents": 0.0,
+  "formant_cents": 300.0,
+  "mix": 18.6,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 19,
+    "hz": 0.2026470588235294,
+    "phase": 0.505,
+    "warp": 1.0,
+    "smooth": 138.4,
+    "level": 1.0,
+    "shape": "square"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "mix": [
+    [
+     "M1",
+     66.0
+    ]
+   ]
+  }
+ },
+ "Mickey": {
+  "pitch_cents": 0.0,
+  "formant_cents": 1200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 2.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 16,
+    "hz": 0.668,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {}
+ },
+ "NVisitor": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 8,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 8 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 19,
+    "hz": 0.2026470588235294,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     20.0
+    ]
+   ]
+  }
+ },
+ "Odyssey": {
+  "pitch_cents": 0.0,
+  "formant_cents": 149.0,
+  "mix": 88.0,
+  "fine": 1,
+  "flatten": 1,
+  "flatten_note": 0,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 8,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 4,
+    "hz": 12.969411764705882,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 8 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 5,
+    "hz": 10.369,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 153.5,
+    "level": 0.88,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     19.0
+    ]
+   ]
+  }
+ },
+ "Overdose": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 0,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 7.0,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 8.5,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     -100.0
+    ]
+   ]
+  }
+ },
+ "Phicker": {
+  "pitch_cents": 0.0,
+  "formant_cents": -500.0,
+  "mix": 35.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.005,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 0.67,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.0,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   }
+  ],
+  "slots": {}
+ },
+ "Real ADT Double": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 35.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 11.3,
+   "release": 40.2,
+   "level": 2.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 17,
+    "hz": 0.554,
+    "phase": 0.269,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 18,
+    "hz": 0.406,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     2.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     3.0
+    ]
+   ],
+   "m1_phase": [
+    [
+     "M2",
+     13.0
+    ]
+   ]
+  }
+ },
+ "Scratcher": {
+  "pitch_cents": -1100.0,
+  "formant_cents": -1000.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 0,
+  "am": {
+   "attack": 6.3,
+   "release": 26.3,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 8.141802067946825,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 4.06789667896679,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "AM",
+     75.0
+    ]
+   ],
+   "formant": [
+    [
+     "AM",
+     74.0
+    ]
+   ]
+  }
+ },
+ "Siren": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 0,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 19,
+    "hz": 0.2026470588235294,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 9.9,
+    "level": 1.0,
+    "shape": "triangle"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 3.2423529411764704,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     100.0
+    ]
+   ]
+  }
+ },
+ "Taking Over": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 11.9,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 4,
+    "hz": 12.969411764705882,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 15.8,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   },
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 10.6,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     28.0
+    ]
+   ]
+  }
+ },
+ "Tape-head": {
+  "pitch_cents": 0.0,
+  "formant_cents": 0.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 16,
+    "hz": 0.7000254000508,
+    "phase": 0.08700000000000001,
+    "warp": 1.0,
+    "smooth": 10.0,
+    "level": 0.0,
+    "shape": "drawn"
+   },
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 2.8008130081300813,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 2.0,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     95.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "m1_rate": [
+    [
+     "M2",
+     2.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "M2",
+     100.0
+    ]
+   ]
+  }
+ },
+ "Tech Chop": {
+  "pitch_cents": 0.0,
+  "formant_cents": 1200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 1,
+  "flatten_note": 0,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "Seq",
+    "steps": 8,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 7,
+    "hz": 6.484705882352941,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sequence of 8 steps"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 13,
+    "hz": 1.6211764705882352,
+    "phase": 0.0,
+    "warp": 9.91,
+    "smooth": 2.4,
+    "level": 1.0,
+    "shape": "drawn"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     100.0
+    ]
+   ],
+   "formant": [
+    [
+     "M2",
+     51.0
+    ]
+   ]
+  }
+ },
+ "Too Cold": {
+  "pitch_cents": 1200.0,
+  "formant_cents": -300.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 5,
+    "hz": 9.369,
+    "phase": 0.0,
+    "warp": 1.79,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "sine"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 10,
+    "hz": 2.8008130081300813,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     1.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     2.0
+    ]
+   ]
+  }
+ },
+ "Unda Wata": {
+  "pitch_cents": 0.0,
+  "formant_cents": -204.0,
+  "mix": 100.0,
+  "fine": 1,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 17.4,
+   "release": 151.4,
+   "level": 2.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 2,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 19,
+    "hz": 0.263,
+    "phase": 0.0,
+    "warp": 1.16,
+    "smooth": 1.7000000000000002,
+    "level": 0.24,
+    "shape": "drawn"
+   },
+   {
+    "type": "Seq",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 0,
+    "note": 16,
+    "hz": 0.8105882352941176,
+    "phase": 0.0,
+    "warp": 1.0,
+    "smooth": 56.8,
+    "level": 1.0,
+    "shape": "sequence of 16 steps"
+   }
+  ],
+  "slots": {
+   "formant": [
+    [
+     "M1",
+     10.0
+    ]
+   ],
+   "m1_rate": [
+    [
+     "AM",
+     10.0
+    ]
+   ],
+   "m1_level": [
+    [
+     "AM",
+     85.0
+    ]
+   ]
+  }
+ },
+ "Wow": {
+  "pitch_cents": 0.0,
+  "formant_cents": -200.0,
+  "mix": 100.0,
+  "fine": 0,
+  "flatten": 0,
+  "flatten_note": 12,
+  "am": {
+   "attack": 10.0,
+   "release": 100.0,
+   "level": 1.0
+  },
+  "pt": {
+   "smooth": 10.0,
+   "offset": 0.0,
+   "level": 1.0
+  },
+  "mods": [
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 18,
+    "hz": 0.401,
+    "phase": 0.0,
+    "warp": 0.8200000000000001,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "drawn"
+   },
+   {
+    "type": "LFO",
+    "steps": 16,
+    "free": 0,
+    "hz_shown": 1,
+    "note": 9,
+    "hz": 4.487,
+    "phase": 0.0,
+    "warp": 0.85,
+    "smooth": 1.5,
+    "level": 1.0,
+    "shape": "triangle"
+   }
+  ],
+  "slots": {
+   "pitch": [
+    [
+     "M1",
+     3.0
+    ],
+    [
+     "M2",
+     2.0
+    ]
+   ],
+   "formant": [
+    [
+     "M1",
+     3.0
+    ],
+    [
+     "M2",
+     2.0
+    ],
+    [
+     "AM",
+     2.0
+    ]
+   ]
+  }
+ }
+}

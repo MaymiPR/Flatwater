@@ -1,0 +1,1303 @@
+{
+ "what": "output rms against input rms (dB), 0.5 s .. end, per setting and material; Mix 100",
+ "rows": [
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -3.23
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.76
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.32
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.33
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -0.79
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 1.73
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -0.12
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.02
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.54
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -3.46
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -3.57
+  },
+  {
+   "material": "vowel a 150 Hz",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -0.13
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.2
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -1.19
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -0.81
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -1.09
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.98
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.73
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -1.73
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.45
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.4
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.66
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.77
+  },
+  {
+   "material": "vowel i 300 Hz",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 1.91
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": 0.01
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -2.93
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -2.17
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -0.46
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -0.45
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -1.12
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": 1.32
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -0.52
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -0.78
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -2.57
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -3.32
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": -3.5
+  },
+  {
+   "material": "vowel u 110 Hz",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -17.98,
+   "out_minus_in_db": 0.34
+  },
+  {
+   "material": "noise",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.01
+  },
+  {
+   "material": "noise",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.61
+  },
+  {
+   "material": "noise",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.61
+  },
+  {
+   "material": "noise",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": 1.91
+  },
+  {
+   "material": "noise",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": 1.91
+  },
+  {
+   "material": "noise",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.59
+  },
+  {
+   "material": "noise",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.59
+  },
+  {
+   "material": "noise",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.64
+  },
+  {
+   "material": "noise",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.69
+  },
+  {
+   "material": "noise",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -18.0,
+   "out_minus_in_db": -0.61
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.0
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": 1.77
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": 1.71
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.62
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.61
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.59
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.6
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.67
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.7
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.64
+  },
+  {
+   "material": "noise band 4-10 kHz (sibilant)",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -17.97,
+   "out_minus_in_db": -0.63
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": 0.01
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -2.21
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -0.64
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -0.83
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -0.67
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": 0.92
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": 0.73
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -1.04
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": 1.39
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -2.17
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -2.53
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": -2.6
+  },
+  {
+   "material": "sung webb_024",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -10.27,
+   "out_minus_in_db": 1.49
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": 0.01
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -2.65
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -1.44
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -0.77
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -0.8
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": 0.65
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": 1.4
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -0.27
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": 0.27
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -2.28
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -2.99
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": -3.0
+  },
+  {
+   "material": "sung webb_010",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -13.8,
+   "out_minus_in_db": 1.31
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": 0.02
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -2.47
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -1.3
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -0.84
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -0.94
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": 0.35
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": 1.83
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -0.11
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": 0.3
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -2.33
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -3.22
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": -3.36
+  },
+  {
+   "material": "sung webb_002",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -18.17,
+   "out_minus_in_db": 0.17
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": 0.01
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -1.94
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -0.72
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -0.57
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -0.69
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": 0.78
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": 0.73
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -0.49
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": 0.73
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -2.0
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -2.42
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": -2.41
+  },
+  {
+   "material": "sung webb_025",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -9.4,
+   "out_minus_in_db": 1.46
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -3.12
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -2.0
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -0.42
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -0.5
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -0.37
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": 1.26
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -0.06
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -0.34
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -2.33
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -3.27
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": -2.95
+  },
+  {
+   "material": "rap legacy_061",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -16.55,
+   "out_minus_in_db": 0.51
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": -12,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -2.78
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -1.86
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": -1,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -1.06
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 1,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -1.22
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": 0.08
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 12,
+   "formant_st": 0,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": 0.41
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 0,
+   "formant_st": -12,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -0.86
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 0,
+   "formant_st": -7,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -0.16
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 0,
+   "formant_st": 7,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -2.65
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 0,
+   "formant_st": 12,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -3.48
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": -7,
+   "formant_st": 7,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": -3.31
+  },
+  {
+   "material": "rap legacy_054",
+   "pitch_st": 5,
+   "formant_st": -5,
+   "in_rms_db": -15.89,
+   "out_minus_in_db": 0.62
+  },
+  {
+   "material": "vowel a 150 Hz at -40 dBFS",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -39.99,
+   "out_minus_in_db": -2.55
+  },
+  {
+   "material": "vowel a 150 Hz at -40 dBFS",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -39.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz at -40 dBFS",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -39.99,
+   "out_minus_in_db": -0.86
+  },
+  {
+   "material": "vowel a 150 Hz at -30 dBFS",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -29.99,
+   "out_minus_in_db": -2.7
+  },
+  {
+   "material": "vowel a 150 Hz at -30 dBFS",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -29.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz at -30 dBFS",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -29.99,
+   "out_minus_in_db": -0.81
+  },
+  {
+   "material": "vowel a 150 Hz at -18 dBFS",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -2.76
+  },
+  {
+   "material": "vowel a 150 Hz at -18 dBFS",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz at -18 dBFS",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -17.99,
+   "out_minus_in_db": -0.79
+  },
+  {
+   "material": "vowel a 150 Hz at -10 dBFS",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -9.99,
+   "out_minus_in_db": -2.77
+  },
+  {
+   "material": "vowel a 150 Hz at -10 dBFS",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -9.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz at -10 dBFS",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -9.99,
+   "out_minus_in_db": -0.79
+  },
+  {
+   "material": "vowel a 150 Hz at -6 dBFS",
+   "pitch_st": -7,
+   "formant_st": 0,
+   "in_rms_db": -5.99,
+   "out_minus_in_db": -2.77
+  },
+  {
+   "material": "vowel a 150 Hz at -6 dBFS",
+   "pitch_st": 0,
+   "formant_st": 0,
+   "in_rms_db": -5.99,
+   "out_minus_in_db": 0.0
+  },
+  {
+   "material": "vowel a 150 Hz at -6 dBFS",
+   "pitch_st": 5,
+   "formant_st": 0,
+   "in_rms_db": -5.99,
+   "out_minus_in_db": -0.79
+  }
+ ],
+ "table_out_minus_in_db": {
+  "vowel a 150 Hz": {
+   "+0/+0": 0.0,
+   "-12/+0": -3.23,
+   "-7/+0": -2.76,
+   "-1/+0": 0.32,
+   "+1/+0": 0.33,
+   "+5/+0": -0.79,
+   "+12/+0": 1.73,
+   "+0/-12": -0.12,
+   "+0/-7": 0.02,
+   "+0/+7": -2.54,
+   "+0/+12": -3.46,
+   "-7/+7": -3.57,
+   "+5/-5": -0.13
+  },
+  "vowel i 300 Hz": {
+   "+0/+0": 0.0,
+   "-12/+0": -2.2,
+   "-7/+0": -1.19,
+   "-1/+0": -0.81,
+   "+1/+0": -1.09,
+   "+5/+0": 0.98,
+   "+12/+0": 0.73,
+   "+0/-12": -1.73,
+   "+0/-7": 0.45,
+   "+0/+7": -2.4,
+   "+0/+12": -2.66,
+   "-7/+7": -2.77,
+   "+5/-5": 1.91
+  },
+  "vowel u 110 Hz": {
+   "+0/+0": 0.01,
+   "-12/+0": -2.93,
+   "-7/+0": -2.17,
+   "-1/+0": -0.46,
+   "+1/+0": -0.45,
+   "+5/+0": -1.12,
+   "+12/+0": 1.32,
+   "+0/-12": -0.52,
+   "+0/-7": -0.78,
+   "+0/+7": -2.57,
+   "+0/+12": -3.32,
+   "-7/+7": -3.5,
+   "+5/-5": 0.34
+  },
+  "noise": {
+   "+0/+0": -0.01,
+   "-12/+0": -0.61,
+   "-7/+0": -0.61,
+   "-1/+0": 1.91,
+   "+1/+0": 1.91,
+   "+5/+0": -0.62,
+   "+12/+0": -0.62,
+   "+0/-12": -0.59,
+   "+0/-7": -0.59,
+   "+0/+7": -0.64,
+   "+0/+12": -0.69,
+   "-7/+7": -0.62,
+   "+5/-5": -0.61
+  },
+  "noise band 4-10 kHz (sibilant)": {
+   "+0/+0": -0.0,
+   "-12/+0": -0.62,
+   "-7/+0": -0.62,
+   "-1/+0": 1.77,
+   "+1/+0": 1.71,
+   "+5/+0": -0.62,
+   "+12/+0": -0.61,
+   "+0/-12": -0.59,
+   "+0/-7": -0.6,
+   "+0/+7": -0.67,
+   "+0/+12": -0.7,
+   "-7/+7": -0.64,
+   "+5/-5": -0.63
+  },
+  "sung webb_024": {
+   "+0/+0": 0.01,
+   "-12/+0": -2.21,
+   "-7/+0": -0.64,
+   "-1/+0": -0.83,
+   "+1/+0": -0.67,
+   "+5/+0": 0.92,
+   "+12/+0": 0.73,
+   "+0/-12": -1.04,
+   "+0/-7": 1.39,
+   "+0/+7": -2.17,
+   "+0/+12": -2.53,
+   "-7/+7": -2.6,
+   "+5/-5": 1.49
+  },
+  "sung webb_010": {
+   "+0/+0": 0.01,
+   "-12/+0": -2.65,
+   "-7/+0": -1.44,
+   "-1/+0": -0.77,
+   "+1/+0": -0.8,
+   "+5/+0": 0.65,
+   "+12/+0": 1.4,
+   "+0/-12": -0.27,
+   "+0/-7": 0.27,
+   "+0/+7": -2.28,
+   "+0/+12": -2.99,
+   "-7/+7": -3.0,
+   "+5/-5": 1.31
+  },
+  "sung webb_002": {
+   "+0/+0": 0.02,
+   "-12/+0": -2.47,
+   "-7/+0": -1.3,
+   "-1/+0": -0.84,
+   "+1/+0": -0.94,
+   "+5/+0": 0.35,
+   "+12/+0": 1.83,
+   "+0/-12": -0.11,
+   "+0/-7": 0.3,
+   "+0/+7": -2.33,
+   "+0/+12": -3.22,
+   "-7/+7": -3.36,
+   "+5/-5": 0.17
+  },
+  "sung webb_025": {
+   "+0/+0": 0.01,
+   "-12/+0": -1.94,
+   "-7/+0": -0.72,
+   "-1/+0": -0.57,
+   "+1/+0": -0.69,
+   "+5/+0": 0.78,
+   "+12/+0": 0.73,
+   "+0/-12": -0.49,
+   "+0/-7": 0.73,
+   "+0/+7": -2.0,
+   "+0/+12": -2.42,
+   "-7/+7": -2.41,
+   "+5/-5": 1.46
+  },
+  "rap legacy_061": {
+   "+0/+0": 0.0,
+   "-12/+0": -3.12,
+   "-7/+0": -2.0,
+   "-1/+0": -0.42,
+   "+1/+0": -0.5,
+   "+5/+0": -0.37,
+   "+12/+0": 1.26,
+   "+0/-12": -0.06,
+   "+0/-7": -0.34,
+   "+0/+7": -2.33,
+   "+0/+12": -3.27,
+   "-7/+7": -2.95,
+   "+5/-5": 0.51
+  },
+  "rap legacy_054": {
+   "+0/+0": 0.0,
+   "-12/+0": -2.78,
+   "-7/+0": -1.86,
+   "-1/+0": -1.06,
+   "+1/+0": -1.22,
+   "+5/+0": 0.08,
+   "+12/+0": 0.41,
+   "+0/-12": -0.86,
+   "+0/-7": -0.16,
+   "+0/+7": -2.65,
+   "+0/+12": -3.48,
+   "-7/+7": -3.31,
+   "+5/-5": 0.62
+  },
+  "vowel a 150 Hz at -40 dBFS": {
+   "-7/+0": -2.55,
+   "+0/+0": 0.0,
+   "+5/+0": -0.86
+  },
+  "vowel a 150 Hz at -30 dBFS": {
+   "-7/+0": -2.7,
+   "+0/+0": 0.0,
+   "+5/+0": -0.81
+  },
+  "vowel a 150 Hz at -18 dBFS": {
+   "-7/+0": -2.76,
+   "+0/+0": 0.0,
+   "+5/+0": -0.79
+  },
+  "vowel a 150 Hz at -10 dBFS": {
+   "-7/+0": -2.77,
+   "+0/+0": 0.0,
+   "+5/+0": -0.79
+  },
+  "vowel a 150 Hz at -6 dBFS": {
+   "-7/+0": -2.77,
+   "+0/+0": 0.0,
+   "+5/+0": -0.79
+  }
+ }
+}

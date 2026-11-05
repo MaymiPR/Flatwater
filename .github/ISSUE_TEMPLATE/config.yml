@@ -1,0 +1,29 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How close is Flatwater Vocal Comp to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwVocalComp/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Bass Lift to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwBassLift/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater BassX Lift to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwBassXLift/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Comp to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwComp/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Delay to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwDelay/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Bass Leveler to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwBassLeveler/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Vocal Leveler to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwVocalLeveler/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Vocal Chain to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwVocalChain/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.
+  - name: How close is Flatwater Pitch Bend to the original?
+    url: https://github.com/MaymiPR/Flatwater/blob/main/plugins/FwPitchBend/NULLTESTS.md
+    about: What has been measured against the original and the known differences, before reporting one.

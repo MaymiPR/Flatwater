@@ -1,0 +1,905 @@
+[
+ {
+  "preset": 1,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -43.61,
+  "without_doubler": -44.02
+ },
+ {
+  "preset": 1,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -45.6,
+  "without_doubler": -47.15
+ },
+ {
+  "preset": 1,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -38.45,
+  "without_doubler": -38.97
+ },
+ {
+  "preset": 2,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -35.31,
+  "without_doubler": -35.29
+ },
+ {
+  "preset": 2,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -33.54,
+  "without_doubler": -33.61
+ },
+ {
+  "preset": 2,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -29.74,
+  "without_doubler": -29.8
+ },
+ {
+  "preset": 3,
+  "part": 24,
+  "pitch": "clear",
+  "null": -35.39,
+  "without_doubler": -35.39
+ },
+ {
+  "preset": 3,
+  "part": 27,
+  "pitch": "clear",
+  "null": -33.69,
+  "without_doubler": -33.69
+ },
+ {
+  "preset": 3,
+  "part": 33,
+  "pitch": "clear",
+  "null": -29.81,
+  "without_doubler": -29.81
+ },
+ {
+  "preset": 4,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -20.81,
+  "without_doubler": -29.01
+ },
+ {
+  "preset": 4,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -5.86,
+  "without_doubler": -29.44
+ },
+ {
+  "preset": 4,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -7.19,
+  "without_doubler": -27.28
+ },
+ {
+  "preset": 5,
+  "part": 24,
+  "pitch": "clear",
+  "null": -24.27,
+  "without_doubler": -24.27
+ },
+ {
+  "preset": 5,
+  "part": 27,
+  "pitch": "clear",
+  "null": -26.59,
+  "without_doubler": -26.59
+ },
+ {
+  "preset": 5,
+  "part": 33,
+  "pitch": "clear",
+  "null": -24.99,
+  "without_doubler": -24.99
+ },
+ {
+  "preset": 6,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -24.27,
+  "without_doubler": -24.29
+ },
+ {
+  "preset": 6,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -26.58,
+  "without_doubler": -26.6
+ },
+ {
+  "preset": 6,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -24.91,
+  "without_doubler": -25.0
+ },
+ {
+  "preset": 7,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -17.16,
+  "without_doubler": -25.7
+ },
+ {
+  "preset": 7,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -7.22,
+  "without_doubler": -26.01
+ },
+ {
+  "preset": 7,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -4.79,
+  "without_doubler": -24.16
+ },
+ {
+  "preset": 8,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -27.22,
+  "without_doubler": -27.82
+ },
+ {
+  "preset": 8,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -30.22,
+  "without_doubler": -31.28
+ },
+ {
+  "preset": 8,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -25.31,
+  "without_doubler": -26.18
+ },
+ {
+  "preset": 9,
+  "part": 24,
+  "pitch": "clear",
+  "null": -37.85,
+  "without_doubler": -37.85
+ },
+ {
+  "preset": 9,
+  "part": 27,
+  "pitch": "clear",
+  "null": -34.04,
+  "without_doubler": -34.04
+ },
+ {
+  "preset": 9,
+  "part": 33,
+  "pitch": "clear",
+  "null": -36.42,
+  "without_doubler": -36.42
+ },
+ {
+  "preset": 10,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -27.69,
+  "without_doubler": -27.68
+ },
+ {
+  "preset": 10,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -29.54,
+  "without_doubler": -29.64
+ },
+ {
+  "preset": 10,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -26.87,
+  "without_doubler": -26.93
+ },
+ {
+  "preset": 11,
+  "part": 24,
+  "pitch": "clear",
+  "null": -32.05,
+  "without_doubler": -32.05
+ },
+ {
+  "preset": 11,
+  "part": 27,
+  "pitch": "clear",
+  "null": -31.08,
+  "without_doubler": -31.08
+ },
+ {
+  "preset": 11,
+  "part": 33,
+  "pitch": "clear",
+  "null": -31.46,
+  "without_doubler": -31.46
+ },
+ {
+  "preset": 12,
+  "part": 24,
+  "pitch": "Wide",
+  "null": -36.23,
+  "without_doubler": -36.94
+ },
+ {
+  "preset": 12,
+  "part": 27,
+  "pitch": "Wide",
+  "null": -32.21,
+  "without_doubler": -33.2
+ },
+ {
+  "preset": 12,
+  "part": 33,
+  "pitch": "Wide",
+  "null": -16.17,
+  "without_doubler": -32.4
+ },
+ {
+  "preset": 13,
+  "part": 24,
+  "pitch": "clear",
+  "null": -30.57,
+  "without_doubler": -30.57
+ },
+ {
+  "preset": 13,
+  "part": 27,
+  "pitch": "clear",
+  "null": -32.05,
+  "without_doubler": -32.05
+ },
+ {
+  "preset": 13,
+  "part": 33,
+  "pitch": "clear",
+  "null": -29.52,
+  "without_doubler": -29.52
+ },
+ {
+  "preset": 14,
+  "part": 24,
+  "pitch": "clear",
+  "null": -30.06,
+  "without_doubler": -30.06
+ },
+ {
+  "preset": 14,
+  "part": 27,
+  "pitch": "clear",
+  "null": -31.57,
+  "without_doubler": -31.57
+ },
+ {
+  "preset": 14,
+  "part": 33,
+  "pitch": "clear",
+  "null": -30.2,
+  "without_doubler": -30.2
+ },
+ {
+  "preset": 15,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -38.85,
+  "without_doubler": -39.02
+ },
+ {
+  "preset": 15,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -32.33,
+  "without_doubler": -32.35
+ },
+ {
+  "preset": 15,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -29.26,
+  "without_doubler": -29.4
+ },
+ {
+  "preset": 16,
+  "part": 24,
+  "pitch": "clear",
+  "null": -39.42,
+  "without_doubler": -39.42
+ },
+ {
+  "preset": 16,
+  "part": 27,
+  "pitch": "clear",
+  "null": -32.85,
+  "without_doubler": -32.85
+ },
+ {
+  "preset": 16,
+  "part": 33,
+  "pitch": "clear",
+  "null": -29.53,
+  "without_doubler": -29.53
+ },
+ {
+  "preset": 17,
+  "part": 24,
+  "pitch": "clear",
+  "null": -30.09,
+  "without_doubler": -30.09
+ },
+ {
+  "preset": 17,
+  "part": 27,
+  "pitch": "clear",
+  "null": -30.85,
+  "without_doubler": -30.85
+ },
+ {
+  "preset": 17,
+  "part": 33,
+  "pitch": "clear",
+  "null": -27.25,
+  "without_doubler": -27.25
+ },
+ {
+  "preset": 18,
+  "part": 24,
+  "pitch": "clear",
+  "null": -30.09,
+  "without_doubler": -30.09
+ },
+ {
+  "preset": 18,
+  "part": 27,
+  "pitch": "clear",
+  "null": -30.92,
+  "without_doubler": -30.92
+ },
+ {
+  "preset": 18,
+  "part": 33,
+  "pitch": "clear",
+  "null": -27.23,
+  "without_doubler": -27.23
+ },
+ {
+  "preset": 19,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -23.38,
+  "without_doubler": -28.6
+ },
+ {
+  "preset": 19,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -11.07,
+  "without_doubler": -30.4
+ },
+ {
+  "preset": 19,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -23.27,
+  "without_doubler": -27.82
+ },
+ {
+  "preset": 20,
+  "part": 24,
+  "pitch": "clear",
+  "null": -30.53,
+  "without_doubler": -30.53
+ },
+ {
+  "preset": 20,
+  "part": 27,
+  "pitch": "clear",
+  "null": -31.88,
+  "without_doubler": -31.88
+ },
+ {
+  "preset": 20,
+  "part": 33,
+  "pitch": "clear",
+  "null": -29.5,
+  "without_doubler": -29.5
+ },
+ {
+  "preset": 21,
+  "part": 24,
+  "pitch": "clear",
+  "null": -78.28,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 21,
+  "part": 27,
+  "pitch": "clear",
+  "null": -78.28,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 21,
+  "part": 33,
+  "pitch": "clear",
+  "null": -43.6,
+  "without_doubler": -43.6
+ },
+ {
+  "preset": 22,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -29.68,
+  "without_doubler": -29.64
+ },
+ {
+  "preset": 22,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -30.73,
+  "without_doubler": -30.73
+ },
+ {
+  "preset": 22,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -28.17,
+  "without_doubler": -28.2
+ },
+ {
+  "preset": 23,
+  "part": 24,
+  "pitch": "clear",
+  "null": -37.57,
+  "without_doubler": -37.57
+ },
+ {
+  "preset": 23,
+  "part": 27,
+  "pitch": "clear",
+  "null": -29.73,
+  "without_doubler": -29.73
+ },
+ {
+  "preset": 23,
+  "part": 33,
+  "pitch": "clear",
+  "null": -24.57,
+  "without_doubler": -24.57
+ },
+ {
+  "preset": 24,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -23.02,
+  "without_doubler": -37.17
+ },
+ {
+  "preset": 24,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -8.26,
+  "without_doubler": -31.23
+ },
+ {
+  "preset": 24,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -22.61,
+  "without_doubler": -30.9
+ },
+ {
+  "preset": 25,
+  "part": 24,
+  "pitch": "clear",
+  "null": -34.46,
+  "without_doubler": -34.46
+ },
+ {
+  "preset": 25,
+  "part": 27,
+  "pitch": "clear",
+  "null": -27.19,
+  "without_doubler": -27.19
+ },
+ {
+  "preset": 25,
+  "part": 33,
+  "pitch": "clear",
+  "null": -30.19,
+  "without_doubler": -30.19
+ },
+ {
+  "preset": 26,
+  "part": 24,
+  "pitch": "clear",
+  "null": -29.39,
+  "without_doubler": -29.39
+ },
+ {
+  "preset": 26,
+  "part": 27,
+  "pitch": "clear",
+  "null": -31.3,
+  "without_doubler": -31.3
+ },
+ {
+  "preset": 26,
+  "part": 33,
+  "pitch": "clear",
+  "null": -28.8,
+  "without_doubler": -28.8
+ },
+ {
+  "preset": 27,
+  "part": 24,
+  "pitch": "clear",
+  "null": -29.46,
+  "without_doubler": -29.46
+ },
+ {
+  "preset": 27,
+  "part": 27,
+  "pitch": "clear",
+  "null": -31.12,
+  "without_doubler": -31.12
+ },
+ {
+  "preset": 27,
+  "part": 33,
+  "pitch": "clear",
+  "null": -28.94,
+  "without_doubler": -28.94
+ },
+ {
+  "preset": 28,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -35.02,
+  "without_doubler": -34.89
+ },
+ {
+  "preset": 28,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -29.58,
+  "without_doubler": -28.81
+ },
+ {
+  "preset": 28,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -29.21,
+  "without_doubler": -30.53
+ },
+ {
+  "preset": 29,
+  "part": 24,
+  "pitch": "clear",
+  "null": -32.06,
+  "without_doubler": -32.06
+ },
+ {
+  "preset": 29,
+  "part": 27,
+  "pitch": "clear",
+  "null": -30.29,
+  "without_doubler": -30.29
+ },
+ {
+  "preset": 29,
+  "part": 33,
+  "pitch": "clear",
+  "null": -27.41,
+  "without_doubler": -27.41
+ },
+ {
+  "preset": 30,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -41.38,
+  "without_doubler": -41.59
+ },
+ {
+  "preset": 30,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -38.86,
+  "without_doubler": -39.17
+ },
+ {
+  "preset": 30,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -36.65,
+  "without_doubler": -37.16
+ },
+ {
+  "preset": 31,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -30.07,
+  "without_doubler": -30.09
+ },
+ {
+  "preset": 31,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -30.86,
+  "without_doubler": -30.83
+ },
+ {
+  "preset": 31,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -27.24,
+  "without_doubler": -27.25
+ },
+ {
+  "preset": 32,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -42.25,
+  "without_doubler": -53.65
+ },
+ {
+  "preset": 32,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -35.86,
+  "without_doubler": -40.27
+ },
+ {
+  "preset": 32,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -28.84,
+  "without_doubler": -32.24
+ },
+ {
+  "preset": 33,
+  "part": 24,
+  "pitch": "Wide",
+  "null": -43.21,
+  "without_doubler": -43.54
+ },
+ {
+  "preset": 33,
+  "part": 27,
+  "pitch": "Wide",
+  "null": -45.34,
+  "without_doubler": -47.35
+ },
+ {
+  "preset": 33,
+  "part": 33,
+  "pitch": "Wide",
+  "null": -26.35,
+  "without_doubler": -37.49
+ },
+ {
+  "preset": 34,
+  "part": 24,
+  "pitch": "Wide",
+  "null": -54.7,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 34,
+  "part": 27,
+  "pitch": "Wide",
+  "null": -50.11,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 34,
+  "part": 33,
+  "pitch": "Wide",
+  "null": -25.18,
+  "without_doubler": -43.6
+ },
+ {
+  "preset": 35,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -46.46,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 35,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -41.5,
+  "without_doubler": -78.28
+ },
+ {
+  "preset": 35,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -38.76,
+  "without_doubler": -43.6
+ },
+ {
+  "preset": 36,
+  "part": 24,
+  "pitch": "Wide",
+  "null": -34.31,
+  "without_doubler": -35.82
+ },
+ {
+  "preset": 36,
+  "part": 27,
+  "pitch": "Wide",
+  "null": -32.09,
+  "without_doubler": -36.36
+ },
+ {
+  "preset": 36,
+  "part": 33,
+  "pitch": "Wide",
+  "null": -11.23,
+  "without_doubler": -33.28
+ },
+ {
+  "preset": 37,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -33.74,
+  "without_doubler": -33.84
+ },
+ {
+  "preset": 37,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -34.25,
+  "without_doubler": -34.42
+ },
+ {
+  "preset": 37,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -32.57,
+  "without_doubler": -33.03
+ },
+ {
+  "preset": 38,
+  "part": 24,
+  "pitch": "Wide",
+  "null": -40.82,
+  "without_doubler": -60.04
+ },
+ {
+  "preset": 38,
+  "part": 27,
+  "pitch": "Wide",
+  "null": -35.24,
+  "without_doubler": -58.97
+ },
+ {
+  "preset": 38,
+  "part": 33,
+  "pitch": "Wide",
+  "null": -12.12,
+  "without_doubler": -44.29
+ },
+ {
+  "preset": 39,
+  "part": 24,
+  "pitch": "Stereo",
+  "null": -30.34,
+  "without_doubler": -30.15
+ },
+ {
+  "preset": 39,
+  "part": 27,
+  "pitch": "Stereo",
+  "null": -29.52,
+  "without_doubler": -29.69
+ },
+ {
+  "preset": 39,
+  "part": 33,
+  "pitch": "Stereo",
+  "null": -28.8,
+  "without_doubler": -29.06
+ },
+ {
+  "preset": 40,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -3.52,
+  "without_doubler": -35.78
+ },
+ {
+  "preset": 40,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -9.35,
+  "without_doubler": -34.79
+ },
+ {
+  "preset": 40,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -24.48,
+  "without_doubler": -31.83
+ },
+ {
+  "preset": 41,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -17.26,
+  "without_doubler": -34.61
+ },
+ {
+  "preset": 41,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -29.57,
+  "without_doubler": -34.55
+ },
+ {
+  "preset": 41,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -29.04,
+  "without_doubler": -31.31
+ },
+ {
+  "preset": 42,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -19.24,
+  "without_doubler": -33.81
+ },
+ {
+  "preset": 42,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -30.44,
+  "without_doubler": -32.28
+ },
+ {
+  "preset": 42,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -17.11,
+  "without_doubler": -29.51
+ },
+ {
+  "preset": 43,
+  "part": 24,
+  "pitch": "Spreader",
+  "null": -23.78,
+  "without_doubler": -28.19
+ },
+ {
+  "preset": 43,
+  "part": 27,
+  "pitch": "Spreader",
+  "null": -11.7,
+  "without_doubler": -30.06
+ },
+ {
+  "preset": 43,
+  "part": 33,
+  "pitch": "Spreader",
+  "null": -23.65,
+  "without_doubler": -27.72
+ }
+]

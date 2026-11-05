@@ -1,0 +1,6672 @@
+{
+ "what": "the reference with its controls at c and the rest moved by M1 (a constant step sequence on Pitch and / or Formant, 0.24 st per unit of depth) against ours given the totals and the controls; level dB from 0.5 s, output f0, envelope shift st (vowels), noise correlation with the delayed input",
+ "renderer": "FwPitchBendShifterRender.exe",
+ "rows": [
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -0.95,
+    "out_f0": null
+   },
+   "ours": {
+    "level_db": -0.95,
+    "out_f0": null
+   },
+   "level_diff_db": 0.0,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.3,
+    "out_f0": null
+   },
+   "ours": {
+    "level_db": -1.17,
+    "out_f0": null
+   },
+   "level_diff_db": 0.13,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -1.48,
+    "out_f0": 75.0,
+    "env_st": -0.16
+   },
+   "ours": {
+    "level_db": -1.29,
+    "out_f0": 75.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -1.63,
+    "out_f0": 100.0,
+    "env_st": -0.22
+   },
+   "ours": {
+    "level_db": -1.29,
+    "out_f0": 100.0,
+    "env_st": -0.36
+   },
+   "level_diff_db": 0.34,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -1.43,
+    "out_f0": 73.3
+   },
+   "ours": {
+    "level_db": -1.27,
+    "out_f0": 73.4
+   },
+   "level_diff_db": 0.16,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -1.6,
+    "out_f0": 97.9
+   },
+   "ours": {
+    "level_db": -1.3,
+    "out_f0": 97.9
+   },
+   "level_diff_db": 0.3,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.59,
+    "out_f0": 120.9
+   },
+   "ours": {
+    "level_db": -0.73,
+    "out_f0": 205.2
+   },
+   "level_diff_db": -0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -24",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 1.0,
+    "out_f0": 43.9
+   },
+   "ours": {
+    "level_db": 0.99,
+    "out_f0": 43.7
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 1.04,
+    "out_f0": 59.8,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 0.96,
+    "out_f0": 59.5,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.08,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 1.08,
+    "out_f0": 119.7,
+    "env_st": -0.36
+   },
+   "ours": {
+    "level_db": 0.96,
+    "out_f0": 119.1,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.8,
+    "out_f0": 159.6,
+    "env_st": -1.53
+   },
+   "ours": {
+    "level_db": 0.95,
+    "out_f0": 158.7,
+    "env_st": -0.5
+   },
+   "level_diff_db": 0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.76,
+    "out_f0": 116.9
+   },
+   "ours": {
+    "level_db": 0.96,
+    "out_f0": 116.4
+   },
+   "level_diff_db": 0.2,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.93,
+    "out_f0": 156.4
+   },
+   "ours": {
+    "level_db": 0.96,
+    "out_f0": 155.4
+   },
+   "level_diff_db": 0.03,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 0.85,
+    "out_f0": 49.5
+   },
+   "ours": {
+    "level_db": 1.04,
+    "out_f0": 48.1
+   },
+   "level_diff_db": 0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 1.84,
+    "out_f0": 55.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 1.86,
+    "out_f0": 55.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.02,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 1.9,
+    "out_f0": 75.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 1.76,
+    "out_f0": 75.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.14,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 2.26,
+    "out_f0": 150.0,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 1.87,
+    "out_f0": 150.0,
+    "env_st": 0.05
+   },
+   "level_diff_db": -0.39,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 2.05,
+    "out_f0": 200.0,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 1.9,
+    "out_f0": 200.0,
+    "env_st": 0.05
+   },
+   "level_diff_db": -0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.93,
+    "out_f0": 146.7
+   },
+   "ours": {
+    "level_db": 1.89,
+    "out_f0": 146.8
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 1.89,
+    "out_f0": 196.0
+   },
+   "ours": {
+    "level_db": 1.88,
+    "out_f0": 195.8
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.34,
+    "out_f0": 61.9
+   },
+   "ours": {
+    "level_db": 1.79,
+    "out_f0": 60.7
+   },
+   "level_diff_db": 0.45,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 1.88,
+    "out_f0": 72.9,
+    "env_st": -0.43
+   },
+   "ours": {
+    "level_db": 1.15,
+    "out_f0": 73.4,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.73,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 2.26,
+    "out_f0": 99.5,
+    "env_st": -0.36
+   },
+   "ours": {
+    "level_db": 1.23,
+    "out_f0": 100.1,
+    "env_st": -0.02
+   },
+   "level_diff_db": -1.03,
+   "level_judged": true,
+   "level_ok": false,
+   "env_diff_st": 0.34,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 1.0,
+    "out_f0": 198.9,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 1.31,
+    "out_f0": 200.2,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.97,
+    "out_f0": 265.3,
+    "env_st": -0.71
+   },
+   "ours": {
+    "level_db": 1.31,
+    "out_f0": 267.0,
+    "env_st": -0.71
+   },
+   "level_diff_db": 0.34,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.24,
+    "out_f0": 194.5
+   },
+   "ours": {
+    "level_db": 1.33,
+    "out_f0": 196.2
+   },
+   "level_diff_db": 0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 1.35,
+    "out_f0": 260.0
+   },
+   "ours": {
+    "level_db": 1.34,
+    "out_f0": 261.7
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.35,
+    "out_f0": 80.8
+   },
+   "ours": {
+    "level_db": 1.12,
+    "out_f0": 80.5
+   },
+   "level_diff_db": -0.23,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 0.99,
+    "out_f0": 81.8,
+    "env_st": -0.29
+   },
+   "ours": {
+    "level_db": 1.82,
+    "out_f0": 82.4,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.83,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 1.36,
+    "out_f0": 111.6,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": 1.89,
+    "out_f0": 112.4,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.53,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.21,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 2.58,
+    "out_f0": 223.1,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": 1.93,
+    "out_f0": 224.8,
+    "env_st": 0.05
+   },
+   "level_diff_db": -0.65,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 1.98,
+    "out_f0": 297.5,
+    "env_st": 1.36
+   },
+   "ours": {
+    "level_db": 1.94,
+    "out_f0": 299.7,
+    "env_st": -0.36
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 2.32,
+    "out_f0": 218.3
+   },
+   "ours": {
+    "level_db": 1.95,
+    "out_f0": 220.0
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 2.05,
+    "out_f0": 291.7
+   },
+   "ours": {
+    "level_db": 1.98,
+    "out_f0": 293.6
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.69,
+    "out_f0": 90.0
+   },
+   "ours": {
+    "level_db": 1.73,
+    "out_f0": 90.2
+   },
+   "level_diff_db": 0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 1.65,
+    "out_f0": 91.9,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 2.43,
+    "out_f0": 92.5,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.78,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 1.6,
+    "out_f0": 125.3,
+    "env_st": 0.12
+   },
+   "ours": {
+    "level_db": 2.43,
+    "out_f0": 126.1,
+    "env_st": 0.05
+   },
+   "level_diff_db": 0.83,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.07,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 2.55,
+    "out_f0": 250.7,
+    "env_st": 0.26
+   },
+   "ours": {
+    "level_db": 2.46,
+    "out_f0": 252.3,
+    "env_st": 0.33
+   },
+   "level_diff_db": -0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 3.25,
+    "out_f0": 334.2,
+    "env_st": -2.7
+   },
+   "ours": {
+    "level_db": 2.48,
+    "out_f0": 336.4,
+    "env_st": -2.42
+   },
+   "level_diff_db": -0.77,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 2.5,
+    "out_f0": 245.3
+   },
+   "ours": {
+    "level_db": 2.49,
+    "out_f0": 246.7
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 2.65,
+    "out_f0": 327.8
+   },
+   "ours": {
+    "level_db": 2.52,
+    "out_f0": 329.7
+   },
+   "level_diff_db": -0.13,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 2.46,
+    "out_f0": 100.9
+   },
+   "ours": {
+    "level_db": 2.25,
+    "out_f0": 101.6
+   },
+   "level_diff_db": -0.21,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 2.76,
+    "out_f0": 103.5,
+    "env_st": -0.16
+   },
+   "ours": {
+    "level_db": 2.64,
+    "out_f0": 103.8,
+    "env_st": -0.16
+   },
+   "level_diff_db": -0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 3.37,
+    "out_f0": 141.2,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 2.64,
+    "out_f0": 141.6,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.73,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 2.09,
+    "out_f0": 282.3,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 2.52,
+    "out_f0": 283.2,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.43,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 2.96,
+    "out_f0": 376.5,
+    "env_st": -0.57
+   },
+   "ours": {
+    "level_db": 2.52,
+    "out_f0": 377.6,
+    "env_st": -0.64
+   },
+   "level_diff_db": -0.44,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.7,
+    "out_f0": 276.0
+   },
+   "ours": {
+    "level_db": 2.51,
+    "out_f0": 276.9
+   },
+   "level_diff_db": 0.81,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 2.09,
+    "out_f0": 369.1
+   },
+   "ours": {
+    "level_db": 2.51,
+    "out_f0": 369.9
+   },
+   "level_diff_db": 0.42,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 2.51,
+    "out_f0": 113.0
+   },
+   "ours": {
+    "level_db": 2.44,
+    "out_f0": 113.7
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.07,
+    "out_f0": 116.9,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 2.57,
+    "out_f0": 116.5,
+    "env_st": -0.16
+   },
+   "level_diff_db": -0.5,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 3.85,
+    "out_f0": 159.4,
+    "env_st": 0.12
+   },
+   "ours": {
+    "level_db": 2.57,
+    "out_f0": 158.9,
+    "env_st": 0.12
+   },
+   "level_diff_db": -1.28,
+   "level_judged": true,
+   "level_ok": false,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 1.7,
+    "out_f0": 318.8,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 2.49,
+    "out_f0": 317.9,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.79,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 2.86,
+    "out_f0": 425.0,
+    "env_st": 0.94
+   },
+   "ours": {
+    "level_db": 2.49,
+    "out_f0": 423.8,
+    "env_st": -0.5
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.9,
+    "out_f0": 311.6
+   },
+   "ours": {
+    "level_db": 2.47,
+    "out_f0": 310.7
+   },
+   "level_diff_db": 0.57,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 2.14,
+    "out_f0": 416.5
+   },
+   "ours": {
+    "level_db": 2.47,
+    "out_f0": 415.0
+   },
+   "level_diff_db": 0.33,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 2.47,
+    "out_f0": 126.9
+   },
+   "ours": {
+    "level_db": 2.42,
+    "out_f0": 127.5
+   },
+   "level_diff_db": -0.05,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.78,
+    "out_f0": 131.6,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 3.78,
+    "out_f0": 130.8,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.0,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 2.91,
+    "out_f0": 179.5,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 3.74,
+    "out_f0": 178.4,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.83,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 3.98,
+    "out_f0": 359.0,
+    "env_st": -0.29
+   },
+   "ours": {
+    "level_db": 3.68,
+    "out_f0": 356.8,
+    "env_st": -0.22
+   },
+   "level_diff_db": -0.3,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 3.66,
+    "out_f0": 478.7,
+    "env_st": -2.56
+   },
+   "ours": {
+    "level_db": 3.68,
+    "out_f0": 475.7,
+    "env_st": -2.42
+   },
+   "level_diff_db": 0.02,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 3.56,
+    "out_f0": 351.1
+   },
+   "ours": {
+    "level_db": 3.66,
+    "out_f0": 348.7
+   },
+   "level_diff_db": 0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 3.93,
+    "out_f0": 469.0
+   },
+   "ours": {
+    "level_db": 3.69,
+    "out_f0": 466.4
+   },
+   "level_diff_db": -0.24,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 3.42,
+    "out_f0": 142.0
+   },
+   "ours": {
+    "level_db": 3.56,
+    "out_f0": 142.5
+   },
+   "level_diff_db": 0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 4.29,
+    "out_f0": 147.9,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 4.38,
+    "out_f0": 146.8,
+    "env_st": -0.16
+   },
+   "level_diff_db": 0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 4.86,
+    "out_f0": 201.7,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 4.37,
+    "out_f0": 200.2,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.49,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 4.46,
+    "out_f0": 403.4,
+    "env_st": -3.38
+   },
+   "ours": {
+    "level_db": 4.31,
+    "out_f0": 400.5,
+    "env_st": -0.29
+   },
+   "level_diff_db": -0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 2.51,
+    "out_f0": 537.9,
+    "env_st": -0.77
+   },
+   "ours": {
+    "level_db": 4.31,
+    "out_f0": 534.0,
+    "env_st": -0.64
+   },
+   "level_diff_db": 1.8,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 3.99,
+    "out_f0": 394.9
+   },
+   "ours": {
+    "level_db": 4.29,
+    "out_f0": 391.9
+   },
+   "level_diff_db": 0.3,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 4.62,
+    "out_f0": 527.1
+   },
+   "ours": {
+    "level_db": 4.36,
+    "out_f0": 523.0
+   },
+   "level_diff_db": -0.26,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 3.46,
+    "out_f0": 159.4
+   },
+   "ours": {
+    "level_db": 4.17,
+    "out_f0": 159.4
+   },
+   "level_diff_db": 0.71,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.75,
+    "out_f0": 165.9,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 3.98,
+    "out_f0": 164.8,
+    "env_st": -0.5
+   },
+   "level_diff_db": 0.23,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 3.33,
+    "out_f0": 226.2,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 3.98,
+    "out_f0": 224.8,
+    "env_st": -0.22
+   },
+   "level_diff_db": 0.65,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.27,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 3.8,
+    "out_f0": 452.4,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 3.93,
+    "out_f0": 449.5,
+    "env_st": 0.19
+   },
+   "level_diff_db": 0.13,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 4.12,
+    "out_f0": 603.2,
+    "env_st": -2.22
+   },
+   "ours": {
+    "level_db": 3.93,
+    "out_f0": 599.4,
+    "env_st": -1.74
+   },
+   "level_diff_db": -0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 4.39,
+    "out_f0": 442.6
+   },
+   "ours": {
+    "level_db": 3.91,
+    "out_f0": 439.8
+   },
+   "level_diff_db": -0.48,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 4.94,
+    "out_f0": 591.3
+   },
+   "ours": {
+    "level_db": 4.02,
+    "out_f0": 587.4
+   },
+   "level_diff_db": -0.92,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 3.91,
+    "out_f0": 179.7
+   },
+   "ours": {
+    "level_db": 3.77,
+    "out_f0": 179.0
+   },
+   "level_diff_db": -0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.03,
+    "out_f0": 220.0,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": 2.93,
+    "out_f0": 220.0,
+    "env_st": -0.22
+   },
+   "level_diff_db": -0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 3.96,
+    "out_f0": 300.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 2.88,
+    "out_f0": 300.0,
+    "env_st": -0.36
+   },
+   "level_diff_db": -1.08,
+   "level_judged": true,
+   "level_ok": false,
+   "env_diff_st": -0.27,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 1.69,
+    "out_f0": 600.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 2.86,
+    "out_f0": 600.1,
+    "env_st": -0.71
+   },
+   "level_diff_db": 1.17,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 2.03,
+    "out_f0": 800.1,
+    "env_st": 0.12
+   },
+   "ours": {
+    "level_db": 2.86,
+    "out_f0": 800.1,
+    "env_st": -1.12
+   },
+   "level_diff_db": 0.83,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 2.01,
+    "out_f0": 587.2
+   },
+   "ours": {
+    "level_db": 2.81,
+    "out_f0": 587.0
+   },
+   "level_diff_db": 0.8,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 2.9,
+    "out_f0": 791.0
+   },
+   "ours": {
+    "level_db": 2.87,
+    "out_f0": 782.2
+   },
+   "level_diff_db": -0.03,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 2.85,
+    "out_f0": 236.4
+   },
+   "ours": {
+    "level_db": 2.75,
+    "out_f0": 238.6
+   },
+   "level_diff_db": -0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 4.78,
+    "out_f0": 275.7,
+    "env_st": 1.63
+   },
+   "ours": {
+    "level_db": 4.89,
+    "out_f0": 277.2,
+    "env_st": 1.56
+   },
+   "level_diff_db": 0.11,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 4.94,
+    "out_f0": 376.0,
+    "env_st": -0.64
+   },
+   "ours": {
+    "level_db": 4.89,
+    "out_f0": 378.0,
+    "env_st": 1.01
+   },
+   "level_diff_db": -0.05,
+   "level_judged": false,
+   "level_ok": true,
+   "env_diff_st": 1.65,
+   "env_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -3.68,
+    "out_f0": 752.0,
+    "env_st": -2.9
+   },
+   "ours": {
+    "level_db": 4.84,
+    "out_f0": 756.0,
+    "env_st": -2.15
+   },
+   "level_diff_db": 8.52,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 5.18,
+    "out_f0": 1002.8,
+    "env_st": 3.35
+   },
+   "ours": {
+    "level_db": 4.84,
+    "out_f0": 1008.1,
+    "env_st": -2.35
+   },
+   "level_diff_db": -0.34,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 4.47,
+    "out_f0": 740.7
+   },
+   "ours": {
+    "level_db": 4.79,
+    "out_f0": 739.8
+   },
+   "level_diff_db": 0.32,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 5.4,
+    "out_f0": 956.7
+   },
+   "ours": {
+    "level_db": 4.91,
+    "out_f0": 965.5
+   },
+   "level_diff_db": -0.49,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 4.99,
+    "out_f0": 297.2
+   },
+   "ours": {
+    "level_db": 4.66,
+    "out_f0": 300.5
+   },
+   "level_diff_db": -0.33,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 8.8,
+    "out_f0": 440.0,
+    "env_st": -0.29
+   },
+   "ours": {
+    "level_db": 4.52,
+    "out_f0": 440.0,
+    "env_st": 2.59
+   },
+   "level_diff_db": -4.28,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 7.51,
+    "out_f0": 600.0,
+    "env_st": 1.01
+   },
+   "ours": {
+    "level_db": 4.52,
+    "out_f0": 600.1,
+    "env_st": -0.84
+   },
+   "level_diff_db": -2.99,
+   "level_judged": false,
+   "level_ok": false,
+   "env_diff_st": -1.85,
+   "env_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 3.26,
+    "out_f0": 600.0,
+    "env_st": -8.4
+   },
+   "ours": {
+    "level_db": 4.5,
+    "out_f0": 600.0,
+    "env_st": -11.63
+   },
+   "level_diff_db": 1.24,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 3.73,
+    "out_f0": 800.1,
+    "env_st": 13.65
+   },
+   "ours": {
+    "level_db": 4.48,
+    "out_f0": 800.1,
+    "env_st": 11.73
+   },
+   "level_diff_db": 0.75,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 3.66,
+    "out_f0": 757.4
+   },
+   "ours": {
+    "level_db": 4.44,
+    "out_f0": 587.8
+   },
+   "level_diff_db": 0.78,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 5.33,
+    "out_f0": 772.9
+   },
+   "ours": {
+    "level_db": 4.68,
+    "out_f0": 779.8
+   },
+   "level_diff_db": -0.65,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 4.25,
+    "out_f0": 470.3
+   },
+   "ours": {
+    "level_db": 4.35,
+    "out_f0": 476.8
+   },
+   "level_diff_db": 0.1,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": false
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -0.52,
+    "out_f0": 110.0,
+    "env_st": -11.08
+   },
+   "ours": {
+    "level_db": -0.4,
+    "out_f0": 110.0,
+    "env_st": -11.01
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -0.12,
+    "out_f0": 150.0,
+    "env_st": -11.97
+   },
+   "ours": {
+    "level_db": -0.66,
+    "out_f0": 150.0,
+    "env_st": -12.38
+   },
+   "level_diff_db": -0.54,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.41,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -1.72,
+    "out_f0": 300.0,
+    "env_st": -12.04
+   },
+   "ours": {
+    "level_db": -0.4,
+    "out_f0": 300.0,
+    "env_st": -12.45
+   },
+   "level_diff_db": 1.32,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.82,
+    "out_f0": 400.0,
+    "env_st": -11.69
+   },
+   "ours": {
+    "level_db": -0.48,
+    "out_f0": 400.0,
+    "env_st": -12.79
+   },
+   "level_diff_db": 0.34,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.89,
+    "out_f0": 292.9
+   },
+   "ours": {
+    "level_db": -0.42,
+    "out_f0": 293.2
+   },
+   "level_diff_db": 0.47,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.28,
+    "out_f0": 391.4
+   },
+   "ours": {
+    "level_db": -0.42,
+    "out_f0": 388.8
+   },
+   "level_diff_db": -0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.05,
+    "out_f0": 118.5
+   },
+   "ours": {
+    "level_db": -0.42,
+    "out_f0": 119.8
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.59,
+    "corr_delayed": 0.003
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.009
+   },
+   "level_diff_db": -0.49,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -0.77,
+    "out_f0": 110.0,
+    "env_st": -7.44
+   },
+   "ours": {
+    "level_db": 0.3,
+    "out_f0": 110.0,
+    "env_st": -7.44
+   },
+   "level_diff_db": 1.07,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.06,
+    "out_f0": 150.0,
+    "env_st": -7.16
+   },
+   "ours": {
+    "level_db": 0.02,
+    "out_f0": 150.0,
+    "env_st": -7.23
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.26,
+    "out_f0": 300.0,
+    "env_st": -6.96
+   },
+   "ours": {
+    "level_db": 0.4,
+    "out_f0": 300.0,
+    "env_st": -6.82
+   },
+   "level_diff_db": 0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.13,
+    "out_f0": 400.0,
+    "env_st": -9.08
+   },
+   "ours": {
+    "level_db": 0.3,
+    "out_f0": 400.0,
+    "env_st": -8.12
+   },
+   "level_diff_db": 0.17,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.39,
+    "out_f0": 293.7
+   },
+   "ours": {
+    "level_db": 0.41,
+    "out_f0": 293.1
+   },
+   "level_diff_db": -0.98,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.22,
+    "out_f0": 391.5
+   },
+   "ours": {
+    "level_db": 0.44,
+    "out_f0": 390.2
+   },
+   "level_diff_db": 0.22,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.37,
+    "out_f0": 119.3
+   },
+   "ours": {
+    "level_db": 0.24,
+    "out_f0": 119.7
+   },
+   "level_diff_db": 0.61,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.6,
+    "corr_delayed": -0.002
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.019
+   },
+   "level_diff_db": -0.48,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.75,
+    "out_f0": 110.0,
+    "env_st": -3.04
+   },
+   "ours": {
+    "level_db": -0.33,
+    "out_f0": 110.0,
+    "env_st": -3.04
+   },
+   "level_diff_db": 1.42,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.25,
+    "out_f0": 150.0,
+    "env_st": -3.04
+   },
+   "ours": {
+    "level_db": -1.31,
+    "out_f0": 150.0,
+    "env_st": -2.97
+   },
+   "level_diff_db": -0.06,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.37,
+    "out_f0": 300.0,
+    "env_st": -3.32
+   },
+   "ours": {
+    "level_db": 0.52,
+    "out_f0": 300.0,
+    "env_st": -3.18
+   },
+   "level_diff_db": 0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.05,
+    "out_f0": 400.0,
+    "env_st": -5.51
+   },
+   "ours": {
+    "level_db": -0.06,
+    "out_f0": 400.0,
+    "env_st": -5.44
+   },
+   "level_diff_db": -0.11,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.93,
+    "out_f0": 293.4
+   },
+   "ours": {
+    "level_db": 0.57,
+    "out_f0": 293.2
+   },
+   "level_diff_db": -0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.41,
+    "out_f0": 391.6
+   },
+   "ours": {
+    "level_db": 0.23,
+    "out_f0": 392.1
+   },
+   "level_diff_db": -0.18,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.96,
+    "out_f0": 119.0
+   },
+   "ours": {
+    "level_db": -0.58,
+    "out_f0": 119.7
+   },
+   "level_diff_db": 0.38,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.62,
+    "corr_delayed": 0.005
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.035
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.47,
+    "out_f0": 110.0,
+    "env_st": 3.07
+   },
+   "ours": {
+    "level_db": -1.12,
+    "out_f0": 110.0,
+    "env_st": 2.94
+   },
+   "level_diff_db": 0.35,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.73,
+    "out_f0": 150.0,
+    "env_st": 3.21
+   },
+   "ours": {
+    "level_db": -1.89,
+    "out_f0": 150.0,
+    "env_st": 3.0
+   },
+   "level_diff_db": -0.16,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.21,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.29,
+    "out_f0": 300.0,
+    "env_st": 3.35
+   },
+   "ours": {
+    "level_db": -0.24,
+    "out_f0": 300.0,
+    "env_st": 3.35
+   },
+   "level_diff_db": -0.53,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.6,
+    "out_f0": 400.0,
+    "env_st": 0.46
+   },
+   "ours": {
+    "level_db": -0.72,
+    "out_f0": 400.0,
+    "env_st": 0.6
+   },
+   "level_diff_db": -0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.25,
+    "out_f0": 293.5
+   },
+   "ours": {
+    "level_db": -0.17,
+    "out_f0": 292.9
+   },
+   "level_diff_db": 0.08,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.47,
+    "out_f0": 392.2
+   },
+   "ours": {
+    "level_db": -0.46,
+    "out_f0": 391.6
+   },
+   "level_diff_db": 0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.32,
+    "out_f0": 120.1
+   },
+   "ours": {
+    "level_db": -1.18,
+    "out_f0": 120.5
+   },
+   "level_diff_db": 0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.62,
+    "corr_delayed": -0.0
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.03
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -2.53,
+    "out_f0": 110.0,
+    "env_st": 7.06
+   },
+   "ours": {
+    "level_db": -2.73,
+    "out_f0": 110.0,
+    "env_st": 6.92
+   },
+   "level_diff_db": -0.2,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -2.51,
+    "out_f0": 150.0,
+    "env_st": 7.19
+   },
+   "ours": {
+    "level_db": -3.18,
+    "out_f0": 150.0,
+    "env_st": 6.99
+   },
+   "level_diff_db": -0.67,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.2,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -2.29,
+    "out_f0": 300.0,
+    "env_st": 7.12
+   },
+   "ours": {
+    "level_db": -2.1,
+    "out_f0": 300.0,
+    "env_st": 6.99
+   },
+   "level_diff_db": 0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -2.44,
+    "out_f0": 400.0,
+    "env_st": 6.44
+   },
+   "ours": {
+    "level_db": -2.39,
+    "out_f0": 400.0,
+    "env_st": 6.3
+   },
+   "level_diff_db": 0.05,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -2.17,
+    "out_f0": 293.3
+   },
+   "ours": {
+    "level_db": -2.05,
+    "out_f0": 293.4
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -2.33,
+    "out_f0": 392.2
+   },
+   "ours": {
+    "level_db": -2.24,
+    "out_f0": 391.8
+   },
+   "level_diff_db": 0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -2.34,
+    "out_f0": 120.3
+   },
+   "ours": {
+    "level_db": -2.53,
+    "out_f0": 120.2
+   },
+   "level_diff_db": -0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.65,
+    "corr_delayed": 0.002
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.015
+   },
+   "level_diff_db": -0.42,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -3.32,
+    "out_f0": 110.0,
+    "env_st": 11.93
+   },
+   "ours": {
+    "level_db": -3.43,
+    "out_f0": 110.0,
+    "env_st": 11.93
+   },
+   "level_diff_db": -0.11,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -3.46,
+    "out_f0": 150.0,
+    "env_st": 12.0
+   },
+   "ours": {
+    "level_db": -4.06,
+    "out_f0": 150.0,
+    "env_st": 12.07
+   },
+   "level_diff_db": -0.6,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -2.66,
+    "out_f0": 300.0,
+    "env_st": 11.93
+   },
+   "ours": {
+    "level_db": -2.65,
+    "out_f0": 300.0,
+    "env_st": 12.21
+   },
+   "level_diff_db": 0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -2.88,
+    "out_f0": 400.0,
+    "env_st": 13.44
+   },
+   "ours": {
+    "level_db": -3.07,
+    "out_f0": 400.0,
+    "env_st": 10.15
+   },
+   "level_diff_db": -0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -2.53,
+    "out_f0": 293.3
+   },
+   "ours": {
+    "level_db": -2.6,
+    "out_f0": 293.1
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -2.99,
+    "out_f0": 391.7
+   },
+   "ours": {
+    "level_db": -2.87,
+    "out_f0": 391.5
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -3.27,
+    "out_f0": 121.2
+   },
+   "ours": {
+    "level_db": -3.13,
+    "out_f0": 120.2
+   },
+   "level_diff_db": 0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.73,
+    "corr_delayed": -0.002
+   },
+   "ours": {
+    "level_db": -1.05,
+    "corr_delayed": 0.004
+   },
+   "level_diff_db": -0.32,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.11,
+    "out_f0": 110.8,
+    "env_st": -2.08
+   },
+   "ours": {
+    "level_db": -0.44,
+    "out_f0": 110.0,
+    "env_st": -2.22
+   },
+   "level_diff_db": 0.67,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -0.8,
+    "out_f0": 151.1,
+    "env_st": -2.01
+   },
+   "ours": {
+    "level_db": -0.58,
+    "out_f0": 150.0,
+    "env_st": -2.15
+   },
+   "level_diff_db": 0.22,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.14,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.2,
+    "out_f0": 302.2,
+    "env_st": -2.35
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 300.0,
+    "env_st": -2.35
+   },
+   "level_diff_db": -0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.12,
+    "out_f0": 402.9,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": -0.54,
+    "out_f0": 400.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.66,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.6,
+    "out_f0": 295.5
+   },
+   "ours": {
+    "level_db": -0.57,
+    "out_f0": 293.1
+   },
+   "level_diff_db": -1.17,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.28,
+    "out_f0": 394.8
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 391.8
+   },
+   "level_diff_db": -0.28,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.86,
+    "out_f0": 120.2
+   },
+   "ours": {
+    "level_db": -0.47,
+    "out_f0": 120.1
+   },
+   "level_diff_db": 0.39,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.63,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.046
+   },
+   "level_diff_db": -0.45,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.44,
+    "out_f0": 109.2,
+    "env_st": 2.04
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 110.0,
+    "env_st": 2.04
+   },
+   "level_diff_db": 0.88,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.05,
+    "out_f0": 148.9,
+    "env_st": 2.25
+   },
+   "ours": {
+    "level_db": -0.72,
+    "out_f0": 150.0,
+    "env_st": 1.97
+   },
+   "level_diff_db": 0.33,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.28,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.35,
+    "out_f0": 297.8,
+    "env_st": 2.04
+   },
+   "ours": {
+    "level_db": -0.59,
+    "out_f0": 300.0,
+    "env_st": 2.04
+   },
+   "level_diff_db": -0.94,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.1,
+    "out_f0": 397.1,
+    "env_st": 0.33
+   },
+   "ours": {
+    "level_db": -0.58,
+    "out_f0": 400.0,
+    "env_st": 0.74
+   },
+   "level_diff_db": -0.48,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.13,
+    "out_f0": 291.3
+   },
+   "ours": {
+    "level_db": -0.57,
+    "out_f0": 292.9
+   },
+   "level_diff_db": -0.44,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.87,
+    "out_f0": 389.2
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 392.0
+   },
+   "level_diff_db": 0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.13,
+    "out_f0": 118.6
+   },
+   "ours": {
+    "level_db": -0.57,
+    "out_f0": 120.6
+   },
+   "level_diff_db": 0.56,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.61,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.041
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.99,
+    "out_f0": 78.0,
+    "env_st": -2.42
+   },
+   "ours": {
+    "level_db": -1.79,
+    "out_f0": 77.8,
+    "env_st": -2.63
+   },
+   "level_diff_db": 0.2,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -2.24,
+    "out_f0": 106.4,
+    "env_st": -2.49
+   },
+   "ours": {
+    "level_db": -2.58,
+    "out_f0": 106.1,
+    "env_st": -2.56
+   },
+   "level_diff_db": -0.34,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.07,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.54,
+    "out_f0": 212.7,
+    "env_st": -2.42
+   },
+   "ours": {
+    "level_db": -0.89,
+    "out_f0": 212.1,
+    "env_st": -2.49
+   },
+   "level_diff_db": -0.35,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -1.91,
+    "out_f0": 283.7,
+    "env_st": -1.19
+   },
+   "ours": {
+    "level_db": -1.41,
+    "out_f0": 282.9,
+    "env_st": -1.53
+   },
+   "level_diff_db": 0.5,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.13,
+    "out_f0": 208.3
+   },
+   "ours": {
+    "level_db": -0.8,
+    "out_f0": 207.9
+   },
+   "level_diff_db": -0.67,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.88,
+    "out_f0": 277.9
+   },
+   "ours": {
+    "level_db": -1.12,
+    "out_f0": 277.2
+   },
+   "level_diff_db": -0.24,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.94,
+    "out_f0": 85.0
+   },
+   "ours": {
+    "level_db": -1.9,
+    "out_f0": 85.1
+   },
+   "level_diff_db": 0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.63,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.038
+   },
+   "level_diff_db": -0.45,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 0.65,
+    "out_f0": 165.6,
+    "env_st": 1.9
+   },
+   "ours": {
+    "level_db": 0.31,
+    "out_f0": 164.8,
+    "env_st": 1.9
+   },
+   "level_diff_db": -0.34,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -0.15,
+    "out_f0": 225.9,
+    "env_st": 1.9
+   },
+   "ours": {
+    "level_db": -0.33,
+    "out_f0": 224.8,
+    "env_st": 1.9
+   },
+   "level_diff_db": -0.18,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.85,
+    "out_f0": 451.8,
+    "env_st": 1.9
+   },
+   "ours": {
+    "level_db": 0.97,
+    "out_f0": 449.5,
+    "env_st": 1.77
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.61,
+    "out_f0": 602.3,
+    "env_st": 1.29
+   },
+   "ours": {
+    "level_db": 0.52,
+    "out_f0": 599.4,
+    "env_st": 1.42
+   },
+   "level_diff_db": 1.13,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 1.32,
+    "out_f0": 442.6
+   },
+   "ours": {
+    "level_db": 1.0,
+    "out_f0": 439.9
+   },
+   "level_diff_db": -0.32,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 1.16,
+    "out_f0": 590.3
+   },
+   "ours": {
+    "level_db": 0.78,
+    "out_f0": 586.9
+   },
+   "level_diff_db": -0.38,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.03,
+    "out_f0": 178.4
+   },
+   "ours": {
+    "level_db": 0.09,
+    "out_f0": 177.9
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.62,
+    "corr_delayed": -0.002
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.041
+   },
+   "level_diff_db": -0.45,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -4.4,
+    "out_f0": 43.3
+   },
+   "ours": {
+    "level_db": -4.47,
+    "out_f0": 43.7
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -4.41,
+    "out_f0": 59.1,
+    "env_st": -2.63
+   },
+   "ours": {
+    "level_db": -5.11,
+    "out_f0": 59.5,
+    "env_st": -2.56
+   },
+   "level_diff_db": -0.7,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -3.79,
+    "out_f0": 118.2,
+    "env_st": -2.7
+   },
+   "ours": {
+    "level_db": -3.69,
+    "out_f0": 119.1,
+    "env_st": -2.63
+   },
+   "level_diff_db": 0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -4.02,
+    "out_f0": 157.6,
+    "env_st": -3.18
+   },
+   "ours": {
+    "level_db": -4.17,
+    "out_f0": 158.7,
+    "env_st": -2.83
+   },
+   "level_diff_db": -0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -3.62,
+    "out_f0": 115.5
+   },
+   "ours": {
+    "level_db": -3.64,
+    "out_f0": 116.5
+   },
+   "level_diff_db": -0.02,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -4.04,
+    "out_f0": 154.4
+   },
+   "ours": {
+    "level_db": -3.94,
+    "out_f0": 155.4
+   },
+   "level_diff_db": 0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -3.47,
+    "out_f0": 47.9
+   },
+   "ours": {
+    "level_db": -4.16,
+    "out_f0": 48.2
+   },
+   "level_diff_db": -0.69,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.6,
+    "corr_delayed": -0.0
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.038
+   },
+   "level_diff_db": -0.48,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.19,
+    "out_f0": 279.2,
+    "env_st": -13.82
+   },
+   "ours": {
+    "level_db": 1.33,
+    "out_f0": 277.2,
+    "env_st": 2.32
+   },
+   "level_diff_db": -1.86,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 2.14,
+    "out_f0": 380.7,
+    "env_st": 3.35
+   },
+   "ours": {
+    "level_db": 1.25,
+    "out_f0": 378.0,
+    "env_st": 3.14
+   },
+   "level_diff_db": -0.89,
+   "level_judged": false,
+   "level_ok": true,
+   "env_diff_st": -0.21,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.3,
+    "out_f0": 761.5,
+    "env_st": 2.39
+   },
+   "ours": {
+    "level_db": 1.36,
+    "out_f0": 756.0,
+    "env_st": 2.25
+   },
+   "level_diff_db": 1.66,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 3.08,
+    "out_f0": 1015.1,
+    "env_st": -2.22
+   },
+   "ours": {
+    "level_db": 1.31,
+    "out_f0": 1008.1,
+    "env_st": 2.87
+   },
+   "level_diff_db": -1.77,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.1,
+    "out_f0": 748.0
+   },
+   "ours": {
+    "level_db": 1.32,
+    "out_f0": 739.5
+   },
+   "level_diff_db": 1.42,
+   "level_judged": false,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 1.11,
+    "out_f0": 966.1
+   },
+   "ours": {
+    "level_db": 1.36,
+    "out_f0": 964.9
+   },
+   "level_diff_db": 0.25,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.72,
+    "out_f0": 302.2
+   },
+   "ours": {
+    "level_db": 1.21,
+    "out_f0": 299.8
+   },
+   "level_diff_db": -0.51,
+   "level_judged": false,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.66,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.032
+   },
+   "level_diff_db": -0.41,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -0.51,
+    "out_f0": 109.7,
+    "env_st": 0.33
+   },
+   "ours": {
+    "level_db": -0.46,
+    "out_f0": 110.0,
+    "env_st": 0.33
+   },
+   "level_diff_db": 0.05,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.17,
+    "out_f0": 149.6,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": -0.6,
+    "out_f0": 150.0,
+    "env_st": 0.26
+   },
+   "level_diff_db": -0.77,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -1.05,
+    "out_f0": 299.1,
+    "env_st": 0.12
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 300.0,
+    "env_st": 0.19
+   },
+   "level_diff_db": 0.49,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.91,
+    "out_f0": 398.9,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": -0.55,
+    "out_f0": 400.0,
+    "env_st": 0.05
+   },
+   "level_diff_db": 0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -1.02,
+    "out_f0": 292.7
+   },
+   "ours": {
+    "level_db": -0.56,
+    "out_f0": 293.3
+   },
+   "level_diff_db": 0.46,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.93,
+    "out_f0": 391.0
+   },
+   "ours": {
+    "level_db": -0.57,
+    "out_f0": 391.8
+   },
+   "level_diff_db": 0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.63,
+    "out_f0": 119.6
+   },
+   "ours": {
+    "level_db": -0.51,
+    "out_f0": 120.2
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "material": "noise",
+   "ref": {
+    "level_db": 1.9,
+    "corr_delayed": -0.005
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.209
+   },
+   "level_diff_db": -2.98,
+   "level_judged": true,
+   "level_ok": false,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 0.04,
+    "out_f0": 110.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 0.12,
+    "out_f0": 110.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.08,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.46,
+    "out_f0": 150.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 150.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.25,
+    "out_f0": 300.0,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 0.01,
+    "out_f0": 300.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.26,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.03,
+    "out_f0": 400.0,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 0.04,
+    "out_f0": 400.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.02,
+    "out_f0": 293.3
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 293.2
+   },
+   "level_diff_db": -0.02,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.09,
+    "out_f0": 392.1
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 391.5
+   },
+   "level_diff_db": -0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 0.31,
+    "out_f0": 120.1
+   },
+   "ours": {
+    "level_db": 0.08,
+    "out_f0": 120.3
+   },
+   "level_diff_db": -0.23,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "material": "noise",
+   "ref": {
+    "level_db": 3.04,
+    "corr_delayed": 0.056
+   },
+   "ours": {
+    "level_db": -1.5,
+    "corr_delayed": 0.929
+   },
+   "level_diff_db": -4.54,
+   "level_judged": true,
+   "level_ok": false,
+   "noise_mode_ok": false
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 0.16,
+    "out_f0": 110.0,
+    "env_st": 0.12
+   },
+   "ours": {
+    "level_db": 0.12,
+    "out_f0": 110.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.52,
+    "out_f0": 150.0,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 150.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.52,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.16,
+    "out_f0": 300.0,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 0.01,
+    "out_f0": 300.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.17,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.05,
+    "out_f0": 400.0,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 0.04,
+    "out_f0": 400.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.01,
+    "out_f0": 293.4
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 293.2
+   },
+   "level_diff_db": 0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.15,
+    "out_f0": 392.1
+   },
+   "ours": {
+    "level_db": -0.0,
+    "out_f0": 391.5
+   },
+   "level_diff_db": -0.15,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 0.41,
+    "out_f0": 120.0
+   },
+   "ours": {
+    "level_db": 0.08,
+    "out_f0": 120.3
+   },
+   "level_diff_db": -0.33,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": 3.03,
+    "corr_delayed": 0.061
+   },
+   "ours": {
+    "level_db": -1.5,
+    "corr_delayed": 0.929
+   },
+   "level_diff_db": -4.53,
+   "level_judged": true,
+   "level_ok": false,
+   "noise_mode_ok": false
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -3.5,
+    "out_f0": 110.0,
+    "env_st": 10.08
+   },
+   "ours": {
+    "level_db": -3.19,
+    "out_f0": 110.0,
+    "env_st": 9.94
+   },
+   "level_diff_db": 0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -3.42,
+    "out_f0": 150.0,
+    "env_st": 10.22
+   },
+   "ours": {
+    "level_db": -3.78,
+    "out_f0": 150.0,
+    "env_st": 10.01
+   },
+   "level_diff_db": -0.36,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.21,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -2.74,
+    "out_f0": 300.0,
+    "env_st": 10.83
+   },
+   "ours": {
+    "level_db": -2.43,
+    "out_f0": 300.0,
+    "env_st": 10.01
+   },
+   "level_diff_db": 0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -3.14,
+    "out_f0": 400.0,
+    "env_st": 10.49
+   },
+   "ours": {
+    "level_db": -2.82,
+    "out_f0": 400.0,
+    "env_st": 10.01
+   },
+   "level_diff_db": 0.32,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -2.41,
+    "out_f0": 293.3
+   },
+   "ours": {
+    "level_db": -2.38,
+    "out_f0": 293.3
+   },
+   "level_diff_db": 0.03,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -2.67,
+    "out_f0": 391.7
+   },
+   "ours": {
+    "level_db": -2.6,
+    "out_f0": 392.1
+   },
+   "level_diff_db": 0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -3.24,
+    "out_f0": 121.0
+   },
+   "ours": {
+    "level_db": -2.93,
+    "out_f0": 121.0
+   },
+   "level_diff_db": 0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.67,
+    "corr_delayed": 0.003
+   },
+   "ours": {
+    "level_db": -1.06,
+    "corr_delayed": 0.009
+   },
+   "level_diff_db": -0.39,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 0.68,
+    "out_f0": 110.0,
+    "env_st": -9.57
+   },
+   "ours": {
+    "level_db": 0.1,
+    "out_f0": 110.0,
+    "env_st": -9.5
+   },
+   "level_diff_db": -0.58,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.66,
+    "out_f0": 150.0,
+    "env_st": -10.25
+   },
+   "ours": {
+    "level_db": -0.16,
+    "out_f0": 150.0,
+    "env_st": -10.39
+   },
+   "level_diff_db": -0.82,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.14,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.68,
+    "out_f0": 300.0,
+    "env_st": -10.39
+   },
+   "ours": {
+    "level_db": 0.14,
+    "out_f0": 300.0,
+    "env_st": -9.57
+   },
+   "level_diff_db": 0.82,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.28,
+    "out_f0": 400.0,
+    "env_st": -11.42
+   },
+   "ours": {
+    "level_db": 0.05,
+    "out_f0": 400.0,
+    "env_st": -9.57
+   },
+   "level_diff_db": -0.23,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.2,
+    "out_f0": 294.0
+   },
+   "ours": {
+    "level_db": 0.13,
+    "out_f0": 293.4
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.19,
+    "out_f0": 390.7
+   },
+   "ours": {
+    "level_db": 0.15,
+    "out_f0": 388.6
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 0.42,
+    "out_f0": 119.0
+   },
+   "ours": {
+    "level_db": 0.05,
+    "out_f0": 119.7
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.58,
+    "corr_delayed": -0.002
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.014
+   },
+   "level_diff_db": -0.49,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.75,
+    "out_f0": 110.0,
+    "env_st": -3.04
+   },
+   "ours": {
+    "level_db": -0.33,
+    "out_f0": 110.0,
+    "env_st": -3.04
+   },
+   "level_diff_db": 1.42,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.27,
+    "out_f0": 150.0,
+    "env_st": -3.04
+   },
+   "ours": {
+    "level_db": -1.31,
+    "out_f0": 150.0,
+    "env_st": -2.97
+   },
+   "level_diff_db": -0.04,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 0.27,
+    "out_f0": 300.0,
+    "env_st": -3.32
+   },
+   "ours": {
+    "level_db": 0.52,
+    "out_f0": 300.0,
+    "env_st": -3.18
+   },
+   "level_diff_db": 0.25,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.04,
+    "out_f0": 400.0,
+    "env_st": -5.51
+   },
+   "ours": {
+    "level_db": -0.06,
+    "out_f0": 400.0,
+    "env_st": -5.44
+   },
+   "level_diff_db": -0.1,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.94,
+    "out_f0": 293.4
+   },
+   "ours": {
+    "level_db": 0.57,
+    "out_f0": 293.2
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": 0.39,
+    "out_f0": 391.6
+   },
+   "ours": {
+    "level_db": 0.23,
+    "out_f0": 392.1
+   },
+   "level_diff_db": -0.16,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.95,
+    "out_f0": 119.1
+   },
+   "ours": {
+    "level_db": -0.58,
+    "out_f0": 119.7
+   },
+   "level_diff_db": 0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.62,
+    "corr_delayed": -0.005
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.035
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -0.67,
+    "out_f0": 147.9,
+    "env_st": 7.12
+   },
+   "ours": {
+    "level_db": -1.23,
+    "out_f0": 146.8,
+    "env_st": 6.99
+   },
+   "level_diff_db": -0.56,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.15,
+    "out_f0": 201.7,
+    "env_st": 6.92
+   },
+   "ours": {
+    "level_db": -1.58,
+    "out_f0": 200.2,
+    "env_st": 6.92
+   },
+   "level_diff_db": -0.43,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.0,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -1.09,
+    "out_f0": 403.4,
+    "env_st": 7.19
+   },
+   "ours": {
+    "level_db": -0.9,
+    "out_f0": 400.5,
+    "env_st": 6.99
+   },
+   "level_diff_db": 0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -0.5,
+    "out_f0": 537.9,
+    "env_st": 5.41
+   },
+   "ours": {
+    "level_db": -1.13,
+    "out_f0": 534.0,
+    "env_st": 5.75
+   },
+   "level_diff_db": -0.63,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": 0.01,
+    "out_f0": 394.4
+   },
+   "ours": {
+    "level_db": -0.87,
+    "out_f0": 391.4
+   },
+   "level_diff_db": -0.88,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.6,
+    "out_f0": 527.3
+   },
+   "ours": {
+    "level_db": -1.0,
+    "out_f0": 522.8
+   },
+   "level_diff_db": -0.4,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.18,
+    "out_f0": 160.5
+   },
+   "ours": {
+    "level_db": -1.25,
+    "out_f0": 161.0
+   },
+   "level_diff_db": -0.07,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.69,
+    "corr_delayed": -0.002
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.015
+   },
+   "level_diff_db": -0.38,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.1,
+    "out_f0": 146.8,
+    "env_st": 9.32
+   },
+   "ours": {
+    "level_db": -1.29,
+    "out_f0": 146.8,
+    "env_st": 9.05
+   },
+   "level_diff_db": -0.19,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.33,
+    "out_f0": 200.2,
+    "env_st": 8.64
+   },
+   "ours": {
+    "level_db": -1.62,
+    "out_f0": 200.2,
+    "env_st": 8.98
+   },
+   "level_diff_db": -0.29,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.34,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.47,
+    "out_f0": 400.4,
+    "env_st": 9.94
+   },
+   "ours": {
+    "level_db": -0.92,
+    "out_f0": 400.5,
+    "env_st": 8.98
+   },
+   "level_diff_db": -0.45,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -1.68,
+    "out_f0": 533.9,
+    "env_st": 11.18
+   },
+   "ours": {
+    "level_db": -1.13,
+    "out_f0": 534.0,
+    "env_st": 8.7
+   },
+   "level_diff_db": 0.55,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.18,
+    "out_f0": 391.9
+   },
+   "ours": {
+    "level_db": -0.88,
+    "out_f0": 392.0
+   },
+   "level_diff_db": -0.7,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.82,
+    "out_f0": 523.3
+   },
+   "ours": {
+    "level_db": -1.0,
+    "out_f0": 523.7
+   },
+   "level_diff_db": -0.18,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.93,
+    "out_f0": 159.8
+   },
+   "ours": {
+    "level_db": -1.31,
+    "out_f0": 160.3
+   },
+   "level_diff_db": 0.62,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.68,
+    "corr_delayed": 0.0
+   },
+   "ours": {
+    "level_db": -1.08,
+    "corr_delayed": 0.005
+   },
+   "level_diff_db": -0.4,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -4.73,
+    "out_f0": 72.9,
+    "env_st": 6.92
+   },
+   "ours": {
+    "level_db": -3.46,
+    "out_f0": 73.4,
+    "env_st": 6.92
+   },
+   "level_diff_db": 1.27,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -4.81,
+    "out_f0": 99.5,
+    "env_st": 7.06
+   },
+   "ours": {
+    "level_db": -4.15,
+    "out_f0": 100.1,
+    "env_st": 6.92
+   },
+   "level_diff_db": 0.66,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.14,
+   "env_ok": true
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -4.17,
+    "out_f0": 198.9,
+    "env_st": 7.06
+   },
+   "ours": {
+    "level_db": -2.56,
+    "out_f0": 200.2,
+    "env_st": 6.99
+   },
+   "level_diff_db": 1.61,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -4.37,
+    "out_f0": 265.3,
+    "env_st": 7.47
+   },
+   "ours": {
+    "level_db": -3.09,
+    "out_f0": 267.0,
+    "env_st": 6.3
+   },
+   "level_diff_db": 1.28,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -4.04,
+    "out_f0": 194.4
+   },
+   "ours": {
+    "level_db": -2.5,
+    "out_f0": 195.7
+   },
+   "level_diff_db": 1.54,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -4.42,
+    "out_f0": 259.8
+   },
+   "ours": {
+    "level_db": -2.83,
+    "out_f0": 261.4
+   },
+   "level_diff_db": 1.59,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -4.05,
+    "out_f0": 80.6
+   },
+   "ours": {
+    "level_db": -3.25,
+    "out_f0": 80.4
+   },
+   "level_diff_db": 0.8,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.63,
+    "corr_delayed": -0.0
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.015
+   },
+   "level_diff_db": -0.44,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -3.3,
+    "out_f0": 65.4,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": -2.73,
+    "out_f0": 65.4,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.57,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -5.09,
+    "out_f0": 65.4,
+    "env_st": 0.33
+   },
+   "ours": {
+    "level_db": -4.83,
+    "out_f0": 65.4,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.26,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.35,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -10.86,
+    "out_f0": 65.4,
+    "env_st": -0.16
+   },
+   "ours": {
+    "level_db": -10.54,
+    "out_f0": 65.4,
+    "env_st": -0.09
+   },
+   "level_diff_db": 0.32,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -13.11,
+    "out_f0": 65.4,
+    "env_st": -0.36
+   },
+   "ours": {
+    "level_db": -12.82,
+    "out_f0": 65.4,
+    "env_st": -0.5
+   },
+   "level_diff_db": 0.29,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -12.23,
+    "out_f0": 65.4
+   },
+   "ours": {
+    "level_db": -11.74,
+    "out_f0": 65.4
+   },
+   "level_diff_db": 0.49,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -13.5,
+    "out_f0": 65.5
+   },
+   "ours": {
+    "level_db": -13.16,
+    "out_f0": 65.4
+   },
+   "level_diff_db": 0.34,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.51,
+    "out_f0": 65.5
+   },
+   "ours": {
+    "level_db": -2.8,
+    "out_f0": 65.4
+   },
+   "level_diff_db": -1.29,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.9,
+    "out_f0": 97.3,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": -1.07,
+    "out_f0": 98.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.83,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -2.65,
+    "out_f0": 97.3,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": -2.3,
+    "out_f0": 98.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": 0.35,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.07,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -7.39,
+    "out_f0": 97.3,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": -7.68,
+    "out_f0": 98.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.29,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -10.03,
+    "out_f0": 97.3,
+    "env_st": -0.29
+   },
+   "ours": {
+    "level_db": -9.71,
+    "out_f0": 98.0,
+    "env_st": -0.5
+   },
+   "level_diff_db": 0.32,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -8.77,
+    "out_f0": 97.3
+   },
+   "ours": {
+    "level_db": -8.71,
+    "out_f0": 98.0
+   },
+   "level_diff_db": 0.06,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -10.5,
+    "out_f0": 97.3
+   },
+   "ours": {
+    "level_db": -10.06,
+    "out_f0": 98.0
+   },
+   "level_diff_db": 0.44,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.56,
+    "out_f0": 97.3
+   },
+   "ours": {
+    "level_db": -1.44,
+    "out_f0": 97.9
+   },
+   "level_diff_db": -0.88,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 1.1,
+    "out_f0": 175.9,
+    "env_st": -0.91
+   },
+   "ours": {
+    "level_db": 1.3,
+    "out_f0": 174.6,
+    "env_st": -0.71
+   },
+   "level_diff_db": 0.2,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -0.72,
+    "out_f0": 175.9,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": 0.09,
+    "out_f0": 174.6,
+    "env_st": -0.16
+   },
+   "level_diff_db": 0.81,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.14,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -2.29,
+    "out_f0": 175.9,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": -2.7,
+    "out_f0": 174.6,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.41,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -4.4,
+    "out_f0": 175.9,
+    "env_st": 1.9
+   },
+   "ours": {
+    "level_db": -4.81,
+    "out_f0": 174.6,
+    "env_st": -0.5
+   },
+   "level_diff_db": -0.41,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -3.19,
+    "out_f0": 175.9
+   },
+   "ours": {
+    "level_db": -3.74,
+    "out_f0": 174.6
+   },
+   "level_diff_db": -0.55,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -4.9,
+    "out_f0": 175.9
+   },
+   "ours": {
+    "level_db": -5.27,
+    "out_f0": 174.6
+   },
+   "level_diff_db": -0.37,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.4,
+    "out_f0": 175.8
+   },
+   "ours": {
+    "level_db": 1.04,
+    "out_f0": 174.5
+   },
+   "level_diff_db": -0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 2.58,
+    "out_f0": 261.6,
+    "env_st": 0.6
+   },
+   "ours": {
+    "level_db": 1.94,
+    "out_f0": 261.6,
+    "env_st": 0.6
+   },
+   "level_diff_db": -0.64,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 1.43,
+    "out_f0": 261.6,
+    "env_st": -0.57
+   },
+   "ours": {
+    "level_db": 1.42,
+    "out_f0": 261.6,
+    "env_st": 0.33
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": 0.9,
+   "env_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.29,
+    "out_f0": 261.6,
+    "env_st": -0.22
+   },
+   "ours": {
+    "level_db": -1.2,
+    "out_f0": 261.6,
+    "env_st": -0.22
+   },
+   "level_diff_db": -0.91,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -2.21,
+    "out_f0": 261.6,
+    "env_st": 0.46
+   },
+   "ours": {
+    "level_db": -2.21,
+    "out_f0": 261.6,
+    "env_st": -0.91
+   },
+   "level_diff_db": 0.0,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -1.5,
+    "out_f0": 261.6
+   },
+   "ours": {
+    "level_db": -1.68,
+    "out_f0": 261.6
+   },
+   "level_diff_db": -0.18,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -2.68,
+    "out_f0": 261.7
+   },
+   "ours": {
+    "level_db": -2.41,
+    "out_f0": 261.7
+   },
+   "level_diff_db": 0.27,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 2.32,
+    "out_f0": 261.4
+   },
+   "ours": {
+    "level_db": 1.61,
+    "out_f0": 261.3
+   },
+   "level_diff_db": -0.71,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.38,
+    "out_f0": 247.0,
+    "env_st": -0.09
+   },
+   "ours": {
+    "level_db": 1.83,
+    "out_f0": 247.0,
+    "env_st": -0.09
+   },
+   "level_diff_db": -1.55,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 0.45,
+    "out_f0": 246.9,
+    "env_st": 0.46
+   },
+   "ours": {
+    "level_db": 1.34,
+    "out_f0": 247.0,
+    "env_st": -0.22
+   },
+   "level_diff_db": 0.89,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.68,
+   "env_ok": false
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -0.53,
+    "out_f0": 246.9,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": -1.44,
+    "out_f0": 246.9,
+    "env_st": 0.05
+   },
+   "level_diff_db": -0.91,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -2.14,
+    "out_f0": 246.9,
+    "env_st": -2.28
+   },
+   "ours": {
+    "level_db": -2.45,
+    "out_f0": 246.9,
+    "env_st": -1.87
+   },
+   "level_diff_db": -0.31,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -1.4,
+    "out_f0": 246.9
+   },
+   "ours": {
+    "level_db": -1.9,
+    "out_f0": 247.0
+   },
+   "level_diff_db": -0.5,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.68,
+    "out_f0": 247.0
+   },
+   "ours": {
+    "level_db": -2.63,
+    "out_f0": 247.0
+   },
+   "level_diff_db": -1.95,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.15,
+    "out_f0": 246.9
+   },
+   "ours": {
+    "level_db": 1.53,
+    "out_f0": 246.7
+   },
+   "level_diff_db": 0.38,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": 3.91,
+    "out_f0": 367.3,
+    "env_st": -0.22
+   },
+   "ours": {
+    "level_db": 2.87,
+    "out_f0": 370.0,
+    "env_st": -0.16
+   },
+   "level_diff_db": -1.04,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": 2.77,
+    "out_f0": 367.3,
+    "env_st": 0.67
+   },
+   "ours": {
+    "level_db": 2.0,
+    "out_f0": 370.0,
+    "env_st": -0.02
+   },
+   "level_diff_db": -0.77,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.69,
+   "env_ok": false
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": 1.2,
+    "out_f0": 367.3,
+    "env_st": 0.05
+   },
+   "ours": {
+    "level_db": 0.38,
+    "out_f0": 370.0,
+    "env_st": 0.12
+   },
+   "level_diff_db": -0.82,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": 0.05,
+    "out_f0": 367.3,
+    "env_st": -0.64
+   },
+   "ours": {
+    "level_db": -0.95,
+    "out_f0": 370.0,
+    "env_st": -0.57
+   },
+   "level_diff_db": -1.0,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -0.32,
+    "out_f0": 367.3
+   },
+   "ours": {
+    "level_db": -0.23,
+    "out_f0": 370.0
+   },
+   "level_diff_db": 0.09,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -0.36,
+    "out_f0": 367.4
+   },
+   "ours": {
+    "level_db": -0.95,
+    "out_f0": 370.1
+   },
+   "level_diff_db": -0.59,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": 1.59,
+    "out_f0": 367.2
+   },
+   "ours": {
+    "level_db": 2.39,
+    "out_f0": 369.8
+   },
+   "level_diff_db": 0.8,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.38,
+    "out_f0": 129.9,
+    "env_st": 2.18
+   },
+   "ours": {
+    "level_db": -0.28,
+    "out_f0": 130.8,
+    "env_st": 1.97
+   },
+   "level_diff_db": 1.1,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -2.61,
+    "out_f0": 129.9,
+    "env_st": 2.18
+   },
+   "ours": {
+    "level_db": -1.77,
+    "out_f0": 130.8,
+    "env_st": 1.97
+   },
+   "level_diff_db": 0.84,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.21,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -5.67,
+    "out_f0": 129.9,
+    "env_st": 2.04
+   },
+   "ours": {
+    "level_db": -5.31,
+    "out_f0": 130.8,
+    "env_st": 1.97
+   },
+   "level_diff_db": 0.36,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -8.6,
+    "out_f0": 129.9,
+    "env_st": 1.63
+   },
+   "ours": {
+    "level_db": -8.18,
+    "out_f0": 130.8,
+    "env_st": 1.56
+   },
+   "level_diff_db": 0.42,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -7.14,
+    "out_f0": 129.9
+   },
+   "ours": {
+    "level_db": -6.79,
+    "out_f0": 130.8
+   },
+   "level_diff_db": 0.35,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -9.08,
+    "out_f0": 129.9
+   },
+   "ours": {
+    "level_db": -8.49,
+    "out_f0": 130.8
+   },
+   "level_diff_db": 0.59,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.42,
+    "out_f0": 129.8
+   },
+   "ours": {
+    "level_db": -0.71,
+    "out_f0": 130.7
+   },
+   "level_diff_db": 0.71,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.61,
+    "corr_delayed": 0.001
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.041
+   },
+   "level_diff_db": -0.46,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.03,
+    "out_f0": 130.8,
+    "env_st": 7.19
+   },
+   "ours": {
+    "level_db": -2.24,
+    "out_f0": 130.8,
+    "env_st": 6.99
+   },
+   "level_diff_db": -1.21,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -3.18,
+    "out_f0": 130.8,
+    "env_st": 7.33
+   },
+   "ours": {
+    "level_db": -3.58,
+    "out_f0": 130.8,
+    "env_st": 6.99
+   },
+   "level_diff_db": -0.4,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.34,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -8.47,
+    "out_f0": 130.8,
+    "env_st": 7.19
+   },
+   "ours": {
+    "level_db": -7.09,
+    "out_f0": 130.8,
+    "env_st": 6.92
+   },
+   "level_diff_db": 1.38,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -11.07,
+    "out_f0": 130.8,
+    "env_st": 7.81
+   },
+   "ours": {
+    "level_db": -9.98,
+    "out_f0": 130.8,
+    "env_st": 6.51
+   },
+   "level_diff_db": 1.09,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -9.88,
+    "out_f0": 130.8
+   },
+   "ours": {
+    "level_db": -8.58,
+    "out_f0": 130.8
+   },
+   "level_diff_db": 1.3,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -11.6,
+    "out_f0": 130.8
+   },
+   "ours": {
+    "level_db": -10.29,
+    "out_f0": 130.8
+   },
+   "level_diff_db": 1.31,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -1.93,
+    "out_f0": 130.9
+   },
+   "ours": {
+    "level_db": -2.46,
+    "out_f0": 130.8
+   },
+   "level_diff_db": -0.53,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.65,
+    "corr_delayed": 0.002
+   },
+   "ours": {
+    "level_db": -1.07,
+    "corr_delayed": 0.015
+   },
+   "level_diff_db": -0.42,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "vowel u 110 Hz",
+   "ref": {
+    "level_db": -1.58,
+    "out_f0": 130.8,
+    "env_st": 0.53
+   },
+   "ours": {
+    "level_db": 0.25,
+    "out_f0": 130.8,
+    "env_st": -0.02
+   },
+   "level_diff_db": 1.83,
+   "level_judged": true,
+   "level_ok": false
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "vowel a 150 Hz",
+   "ref": {
+    "level_db": -1.33,
+    "out_f0": 130.8,
+    "env_st": 0.19
+   },
+   "ours": {
+    "level_db": -1.21,
+    "out_f0": 130.8,
+    "env_st": 0.05
+   },
+   "level_diff_db": 0.12,
+   "level_judged": true,
+   "level_ok": true,
+   "env_diff_st": -0.14,
+   "env_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "vowel i 300 Hz",
+   "ref": {
+    "level_db": -4.26,
+    "out_f0": 130.8,
+    "env_st": -0.02
+   },
+   "ours": {
+    "level_db": -4.83,
+    "out_f0": 130.8,
+    "env_st": -0.09
+   },
+   "level_diff_db": -0.57,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "vowel a 400 Hz",
+   "ref": {
+    "level_db": -7.44,
+    "out_f0": 130.8,
+    "env_st": -0.43
+   },
+   "ours": {
+    "level_db": -7.7,
+    "out_f0": 130.8,
+    "env_st": -0.57
+   },
+   "level_diff_db": -0.26,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "sung webb_024",
+   "ref": {
+    "level_db": -5.83,
+    "out_f0": 130.8
+   },
+   "ours": {
+    "level_db": -6.31,
+    "out_f0": 130.8
+   },
+   "level_diff_db": -0.48,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "sung webb_010",
+   "ref": {
+    "level_db": -7.87,
+    "out_f0": 130.8
+   },
+   "ours": {
+    "level_db": -8.01,
+    "out_f0": 130.8
+   },
+   "level_diff_db": -0.14,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "rap legacy_061",
+   "ref": {
+    "level_db": -0.19,
+    "out_f0": 130.6
+   },
+   "ours": {
+    "level_db": -0.2,
+    "out_f0": 130.7
+   },
+   "level_diff_db": -0.01,
+   "level_judged": true,
+   "level_ok": true
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "material": "noise",
+   "ref": {
+    "level_db": -0.01,
+    "corr_delayed": 0.989
+   },
+   "ours": {
+    "level_db": -0.28,
+    "corr_delayed": 0.987
+   },
+   "level_diff_db": -0.27,
+   "level_judged": true,
+   "level_ok": true,
+   "noise_mode_ok": true
+  }
+ ],
+ "spreads": [
+  {
+   "case": "P ctl 0, mod -24",
+   "ref_voiced_spread_db": 1.04
+  },
+  {
+   "case": "P ctl 0, mod -16",
+   "ref_voiced_spread_db": 0.32
+  },
+  {
+   "case": "P ctl 0, mod -12",
+   "ref_voiced_spread_db": 0.92
+  },
+  {
+   "case": "P ctl 0, mod -7",
+   "ref_voiced_spread_db": 1.29
+  },
+  {
+   "case": "P ctl 0, mod -5",
+   "ref_voiced_spread_db": 1.59
+  },
+  {
+   "case": "P ctl 0, mod -3",
+   "ref_voiced_spread_db": 1.65
+  },
+  {
+   "case": "P ctl 0, mod -1",
+   "ref_voiced_spread_db": 1.67
+  },
+  {
+   "case": "P ctl 0, mod +1",
+   "ref_voiced_spread_db": 2.15
+  },
+  {
+   "case": "P ctl 0, mod +3",
+   "ref_voiced_spread_db": 1.07
+  },
+  {
+   "case": "P ctl 0, mod +5",
+   "ref_voiced_spread_db": 2.35
+  },
+  {
+   "case": "P ctl 0, mod +7",
+   "ref_voiced_spread_db": 1.61
+  },
+  {
+   "case": "P ctl 0, mod +12",
+   "ref_voiced_spread_db": 2.27
+  },
+  {
+   "case": "P ctl 0, mod +16",
+   "ref_voiced_spread_db": 9.08
+  },
+  {
+   "case": "P ctl 0, mod +24",
+   "ref_voiced_spread_db": 5.54
+  },
+  {
+   "case": "F ctl 0, mod -12",
+   "ref_voiced_spread_db": 1.67
+  },
+  {
+   "case": "F ctl 0, mod -7",
+   "ref_voiced_spread_db": 2.16
+  },
+  {
+   "case": "F ctl 0, mod -3",
+   "ref_voiced_spread_db": 2.68
+  },
+  {
+   "case": "F ctl 0, mod +3",
+   "ref_voiced_spread_db": 2.02
+  },
+  {
+   "case": "F ctl 0, mod +7",
+   "ref_voiced_spread_db": 0.36
+  },
+  {
+   "case": "F ctl 0, mod +12",
+   "ref_voiced_spread_db": 0.93
+  },
+  {
+   "case": "P ctl -5, mod +5",
+   "ref_voiced_spread_db": 1.71
+  },
+  {
+   "case": "P ctl +5, mod -5",
+   "ref_voiced_spread_db": 1.79
+  },
+  {
+   "case": "P ctl -7, mod +1",
+   "ref_voiced_spread_db": 2.11
+  },
+  {
+   "case": "P ctl +5, mod +2",
+   "ref_voiced_spread_db": 1.93
+  },
+  {
+   "case": "P ctl -12, mod -4",
+   "ref_voiced_spread_db": 0.94
+  },
+  {
+   "case": "P ctl +12, mod +4",
+   "ref_voiced_spread_db": 3.49
+  },
+  {
+   "case": "P ctl +1, mod -1",
+   "ref_voiced_spread_db": 1.22
+  },
+  {
+   "case": "F ctl +7, mod -7",
+   "ref_voiced_spread_db": 0.71
+  },
+  {
+   "case": "F ctl -7, mod +7",
+   "ref_voiced_spread_db": 0.68
+  },
+  {
+   "case": "F ctl +7, mod +3",
+   "ref_voiced_spread_db": 1.09
+  },
+  {
+   "case": "F ctl -7, mod -3",
+   "ref_voiced_spread_db": 1.36
+  },
+  {
+   "case": "F ctl +3, mod -6",
+   "ref_voiced_spread_db": 2.69
+  },
+  {
+   "case": "P ctl 0 mod +5, F ctl +7",
+   "ref_voiced_spread_db": 1.19
+  },
+  {
+   "case": "P ctl +5, F ctl 0 mod +7",
+   "ref_voiced_spread_db": 1.75
+  },
+  {
+   "case": "P ctl 0 mod -7, F ctl 0 mod +7",
+   "ref_voiced_spread_db": 0.77
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -12",
+   "ref_voiced_spread_db": 11.99
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod -5",
+   "ref_voiced_spread_db": 9.94
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +5",
+   "ref_voiced_spread_db": 6.3
+  },
+  {
+   "case": "Flatten C2, P ctl 0, mod +12",
+   "ref_voiced_spread_db": 5.26
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -12",
+   "ref_voiced_spread_db": 5.52
+  },
+  {
+   "case": "Flatten B3, P ctl 0, mod -5",
+   "ref_voiced_spread_db": 4.27
+  },
+  {
+   "case": "Flatten C2, P ctl +5, mod -5",
+   "ref_voiced_spread_db": 7.7
+  },
+  {
+   "case": "Flatten C2, P ctl 0, F ctl 0 mod +7",
+   "ref_voiced_spread_db": 10.57
+  },
+  {
+   "case": "Flatten C2, no modulation",
+   "ref_voiced_spread_db": 7.68
+  }
+ ],
+ "summary": {
+  "level_cells": 331,
+  "level_within_1db": 301,
+  "level_worst": -4.54,
+  "level_unjudged_cells": 21,
+  "env_cells": 43,
+  "env_within_05st": 38,
+  "env_worst": -1.85,
+  "noise_cases": 44,
+  "noise_mode_same": 41
+ },
+ "before": {
+  "ours_given": "the totals only",
+  "renderer": "FwPitchBendShifterRender.exe",
+  "summary": {
+   "level_cells": 331,
+   "level_within_1db": 181,
+   "level_worst": -7.45,
+   "level_unjudged_cells": 21,
+   "env_cells": 43,
+   "env_within_05st": 20,
+   "env_worst": 3.78,
+   "noise_cases": 44,
+   "noise_mode_same": 19
+  },
+  "level_db": {
+   "P ctl 0, mod -24 | vowel u 110 Hz": -8.4,
+   "P ctl 0, mod -24 | vowel a 150 Hz": -8.6,
+   "P ctl 0, mod -24 | vowel i 300 Hz": -8.69,
+   "P ctl 0, mod -24 | vowel a 400 Hz": -8.69,
+   "P ctl 0, mod -24 | sung webb_024": -8.67,
+   "P ctl 0, mod -24 | sung webb_010": -8.69,
+   "P ctl 0, mod -24 | rap legacy_061": -7.15,
+   "P ctl 0, mod -24 | noise": -1.08,
+   "P ctl 0, mod -16 | vowel u 110 Hz": -4.08,
+   "P ctl 0, mod -16 | vowel a 150 Hz": -4.08,
+   "P ctl 0, mod -16 | vowel i 300 Hz": -4.05,
+   "P ctl 0, mod -16 | vowel a 400 Hz": -4.06,
+   "P ctl 0, mod -16 | sung webb_024": -4.04,
+   "P ctl 0, mod -16 | sung webb_010": -4.05,
+   "P ctl 0, mod -16 | rap legacy_061": -3.64,
+   "P ctl 0, mod -16 | noise": -1.08,
+   "P ctl 0, mod -12 | vowel u 110 Hz": -2.78,
+   "P ctl 0, mod -12 | vowel a 150 Hz": -2.85,
+   "P ctl 0, mod -12 | vowel i 300 Hz": -2.71,
+   "P ctl 0, mod -12 | vowel a 400 Hz": -2.67,
+   "P ctl 0, mod -12 | sung webb_024": -2.69,
+   "P ctl 0, mod -12 | sung webb_010": -2.67,
+   "P ctl 0, mod -12 | rap legacy_061": -2.58,
+   "P ctl 0, mod -12 | noise": -1.08,
+   "P ctl 0, mod -7 | vowel u 110 Hz": -1.59,
+   "P ctl 0, mod -7 | vowel a 150 Hz": -1.56,
+   "P ctl 0, mod -7 | vowel i 300 Hz": -1.5,
+   "P ctl 0, mod -7 | vowel a 400 Hz": -1.48,
+   "P ctl 0, mod -7 | sung webb_024": -1.47,
+   "P ctl 0, mod -7 | sung webb_010": -1.45,
+   "P ctl 0, mod -7 | rap legacy_061": -1.51,
+   "P ctl 0, mod -7 | noise": -1.08,
+   "P ctl 0, mod -5 | vowel u 110 Hz": -1.29,
+   "P ctl 0, mod -5 | vowel a 150 Hz": -1.29,
+   "P ctl 0, mod -5 | vowel i 300 Hz": -1.26,
+   "P ctl 0, mod -5 | vowel a 400 Hz": -1.24,
+   "P ctl 0, mod -5 | sung webb_024": -1.23,
+   "P ctl 0, mod -5 | sung webb_010": -1.2,
+   "P ctl 0, mod -5 | rap legacy_061": -1.24,
+   "P ctl 0, mod -5 | noise": -1.08,
+   "P ctl 0, mod -3 | vowel u 110 Hz": -0.92,
+   "P ctl 0, mod -3 | vowel a 150 Hz": -0.99,
+   "P ctl 0, mod -3 | vowel i 300 Hz": -1.0,
+   "P ctl 0, mod -3 | vowel a 400 Hz": -1.01,
+   "P ctl 0, mod -3 | sung webb_024": -0.99,
+   "P ctl 0, mod -3 | sung webb_010": -0.99,
+   "P ctl 0, mod -3 | rap legacy_061": -0.96,
+   "P ctl 0, mod -3 | noise": -1.07,
+   "P ctl 0, mod -1 | vowel u 110 Hz": -0.65,
+   "P ctl 0, mod -1 | vowel a 150 Hz": -0.66,
+   "P ctl 0, mod -1 | vowel i 300 Hz": -0.75,
+   "P ctl 0, mod -1 | vowel a 400 Hz": -0.75,
+   "P ctl 0, mod -1 | sung webb_024": -0.77,
+   "P ctl 0, mod -1 | sung webb_010": -0.77,
+   "P ctl 0, mod -1 | rap legacy_061": -0.66,
+   "P ctl 0, mod -1 | noise": -1.08,
+   "P ctl 0, mod +1 | vowel u 110 Hz": -0.59,
+   "P ctl 0, mod +1 | vowel a 150 Hz": -0.61,
+   "P ctl 0, mod +1 | vowel i 300 Hz": -0.67,
+   "P ctl 0, mod +1 | vowel a 400 Hz": -0.67,
+   "P ctl 0, mod +1 | sung webb_024": -0.69,
+   "P ctl 0, mod +1 | sung webb_010": -0.69,
+   "P ctl 0, mod +1 | rap legacy_061": -0.57,
+   "P ctl 0, mod +1 | noise": -1.08,
+   "P ctl 0, mod +3 | vowel u 110 Hz": -0.07,
+   "P ctl 0, mod +3 | vowel a 150 Hz": -0.07,
+   "P ctl 0, mod +3 | vowel i 300 Hz": -0.15,
+   "P ctl 0, mod +3 | vowel a 400 Hz": -0.15,
+   "P ctl 0, mod +3 | sung webb_024": -0.17,
+   "P ctl 0, mod +3 | sung webb_010": -0.17,
+   "P ctl 0, mod +3 | rap legacy_061": -0.1,
+   "P ctl 0, mod +3 | noise": -1.08,
+   "P ctl 0, mod +5 | vowel u 110 Hz": 0.46,
+   "P ctl 0, mod +5 | vowel a 150 Hz": 0.42,
+   "P ctl 0, mod +5 | vowel i 300 Hz": 0.37,
+   "P ctl 0, mod +5 | vowel a 400 Hz": 0.37,
+   "P ctl 0, mod +5 | sung webb_024": 0.35,
+   "P ctl 0, mod +5 | sung webb_010": 0.38,
+   "P ctl 0, mod +5 | rap legacy_061": 0.39,
+   "P ctl 0, mod +5 | noise": -1.07,
+   "P ctl 0, mod +7 | vowel u 110 Hz": 0.7,
+   "P ctl 0, mod +7 | vowel a 150 Hz": 0.68,
+   "P ctl 0, mod +7 | vowel i 300 Hz": 0.63,
+   "P ctl 0, mod +7 | vowel a 400 Hz": 0.63,
+   "P ctl 0, mod +7 | sung webb_024": 0.61,
+   "P ctl 0, mod +7 | sung webb_010": 0.68,
+   "P ctl 0, mod +7 | rap legacy_061": 0.62,
+   "P ctl 0, mod +7 | noise": -1.07,
+   "P ctl 0, mod +12 | vowel u 110 Hz": 1.33,
+   "P ctl 0, mod +12 | vowel a 150 Hz": 1.29,
+   "P ctl 0, mod +12 | vowel i 300 Hz": 1.27,
+   "P ctl 0, mod +12 | vowel a 400 Hz": 1.27,
+   "P ctl 0, mod +12 | sung webb_024": 1.24,
+   "P ctl 0, mod +12 | sung webb_010": 1.33,
+   "P ctl 0, mod +12 | rap legacy_061": 1.22,
+   "P ctl 0, mod +12 | noise": -1.07,
+   "P ctl 0, mod +16 | vowel u 110 Hz": 1.61,
+   "P ctl 0, mod +16 | vowel a 150 Hz": 1.59,
+   "P ctl 0, mod +16 | vowel i 300 Hz": 1.56,
+   "P ctl 0, mod +16 | vowel a 400 Hz": 1.55,
+   "P ctl 0, mod +16 | sung webb_024": 1.51,
+   "P ctl 0, mod +16 | sung webb_010": 1.59,
+   "P ctl 0, mod +16 | rap legacy_061": 1.49,
+   "P ctl 0, mod +16 | noise": -1.07,
+   "P ctl 0, mod +24 | vowel u 110 Hz": 2.52,
+   "P ctl 0, mod +24 | vowel a 150 Hz": 2.52,
+   "P ctl 0, mod +24 | vowel i 300 Hz": 2.5,
+   "P ctl 0, mod +24 | vowel a 400 Hz": 2.49,
+   "P ctl 0, mod +24 | sung webb_024": 2.44,
+   "P ctl 0, mod +24 | sung webb_010": 2.64,
+   "P ctl 0, mod +24 | rap legacy_061": 2.42,
+   "P ctl 0, mod +24 | noise": -1.07,
+   "F ctl 0, mod -12 | vowel u 110 Hz": -0.32,
+   "F ctl 0, mod -12 | vowel a 150 Hz": -0.45,
+   "F ctl 0, mod -12 | vowel i 300 Hz": -0.48,
+   "F ctl 0, mod -12 | vowel a 400 Hz": -0.47,
+   "F ctl 0, mod -12 | sung webb_024": -0.51,
+   "F ctl 0, mod -12 | sung webb_010": -0.45,
+   "F ctl 0, mod -12 | rap legacy_061": -0.32,
+   "F ctl 0, mod -12 | noise": -1.08,
+   "F ctl 0, mod -7 | vowel u 110 Hz": 0.4,
+   "F ctl 0, mod -7 | vowel a 150 Hz": 0.29,
+   "F ctl 0, mod -7 | vowel i 300 Hz": 0.28,
+   "F ctl 0, mod -7 | vowel a 400 Hz": 0.31,
+   "F ctl 0, mod -7 | sung webb_024": 0.28,
+   "F ctl 0, mod -7 | sung webb_010": 0.39,
+   "F ctl 0, mod -7 | rap legacy_061": 0.38,
+   "F ctl 0, mod -7 | noise": -1.08,
+   "F ctl 0, mod -3 | vowel u 110 Hz": 0.28,
+   "F ctl 0, mod -3 | vowel a 150 Hz": 0.12,
+   "F ctl 0, mod -3 | vowel i 300 Hz": 0.13,
+   "F ctl 0, mod -3 | vowel a 400 Hz": 0.16,
+   "F ctl 0, mod -3 | sung webb_024": 0.12,
+   "F ctl 0, mod -3 | sung webb_010": 0.15,
+   "F ctl 0, mod -3 | rap legacy_061": 0.2,
+   "F ctl 0, mod -3 | noise": -1.08,
+   "F ctl 0, mod +3 | vowel u 110 Hz": -1.04,
+   "F ctl 0, mod +3 | vowel a 150 Hz": -1.15,
+   "F ctl 0, mod +3 | vowel i 300 Hz": -1.04,
+   "F ctl 0, mod +3 | vowel a 400 Hz": -1.0,
+   "F ctl 0, mod +3 | sung webb_024": -1.01,
+   "F ctl 0, mod +3 | sung webb_010": -0.98,
+   "F ctl 0, mod +3 | rap legacy_061": -0.97,
+   "F ctl 0, mod +3 | noise": -1.08,
+   "F ctl 0, mod +7 | vowel u 110 Hz": -2.45,
+   "F ctl 0, mod +7 | vowel a 150 Hz": -2.5,
+   "F ctl 0, mod +7 | vowel i 300 Hz": -2.36,
+   "F ctl 0, mod +7 | vowel a 400 Hz": -2.34,
+   "F ctl 0, mod +7 | sung webb_024": -2.34,
+   "F ctl 0, mod +7 | sung webb_010": -2.34,
+   "F ctl 0, mod +7 | rap legacy_061": -2.19,
+   "F ctl 0, mod +7 | noise": -1.07,
+   "F ctl 0, mod +12 | vowel u 110 Hz": -3.26,
+   "F ctl 0, mod +12 | vowel a 150 Hz": -3.34,
+   "F ctl 0, mod +12 | vowel i 300 Hz": -3.23,
+   "F ctl 0, mod +12 | vowel a 400 Hz": -3.21,
+   "F ctl 0, mod +12 | sung webb_024": -3.22,
+   "F ctl 0, mod +12 | sung webb_010": -3.22,
+   "F ctl 0, mod +12 | rap legacy_061": -2.88,
+   "F ctl 0, mod +12 | noise": -1.05,
+   "P ctl -5, mod +5 | vowel u 110 Hz": 0.0,
+   "P ctl -5, mod +5 | vowel a 150 Hz": 0.0,
+   "P ctl -5, mod +5 | vowel i 300 Hz": 0.0,
+   "P ctl -5, mod +5 | vowel a 400 Hz": 0.0,
+   "P ctl -5, mod +5 | sung webb_024": 0.01,
+   "P ctl -5, mod +5 | sung webb_010": 0.01,
+   "P ctl -5, mod +5 | rap legacy_061": 0.0,
+   "P ctl -5, mod +5 | noise": -0.28,
+   "P ctl +5, mod -5 | vowel u 110 Hz": 0.0,
+   "P ctl +5, mod -5 | vowel a 150 Hz": 0.0,
+   "P ctl +5, mod -5 | vowel i 300 Hz": 0.0,
+   "P ctl +5, mod -5 | vowel a 400 Hz": 0.0,
+   "P ctl +5, mod -5 | sung webb_024": 0.01,
+   "P ctl +5, mod -5 | sung webb_010": 0.01,
+   "P ctl +5, mod -5 | rap legacy_061": 0.0,
+   "P ctl +5, mod -5 | noise": -0.28,
+   "P ctl -7, mod +1 | vowel u 110 Hz": -1.4,
+   "P ctl -7, mod +1 | vowel a 150 Hz": -1.43,
+   "P ctl -7, mod +1 | vowel i 300 Hz": -1.38,
+   "P ctl -7, mod +1 | vowel a 400 Hz": -1.35,
+   "P ctl -7, mod +1 | sung webb_024": -1.35,
+   "P ctl -7, mod +1 | sung webb_010": -1.32,
+   "P ctl -7, mod +1 | rap legacy_061": -1.38,
+   "P ctl -7, mod +1 | noise": -1.08,
+   "P ctl +5, mod +2 | vowel u 110 Hz": 0.7,
+   "P ctl +5, mod +2 | vowel a 150 Hz": 0.68,
+   "P ctl +5, mod +2 | vowel i 300 Hz": 0.63,
+   "P ctl +5, mod +2 | vowel a 400 Hz": 0.63,
+   "P ctl +5, mod +2 | sung webb_024": 0.61,
+   "P ctl +5, mod +2 | sung webb_010": 0.68,
+   "P ctl +5, mod +2 | rap legacy_061": 0.62,
+   "P ctl +5, mod +2 | noise": -1.07,
+   "P ctl -12, mod -4 | vowel u 110 Hz": -4.08,
+   "P ctl -12, mod -4 | vowel a 150 Hz": -4.08,
+   "P ctl -12, mod -4 | vowel i 300 Hz": -4.05,
+   "P ctl -12, mod -4 | vowel a 400 Hz": -4.06,
+   "P ctl -12, mod -4 | sung webb_024": -4.04,
+   "P ctl -12, mod -4 | sung webb_010": -4.05,
+   "P ctl -12, mod -4 | rap legacy_061": -3.64,
+   "P ctl -12, mod -4 | noise": -1.08,
+   "P ctl +12, mod +4 | vowel u 110 Hz": 1.61,
+   "P ctl +12, mod +4 | vowel a 150 Hz": 1.59,
+   "P ctl +12, mod +4 | vowel i 300 Hz": 1.56,
+   "P ctl +12, mod +4 | vowel a 400 Hz": 1.55,
+   "P ctl +12, mod +4 | sung webb_024": 1.51,
+   "P ctl +12, mod +4 | sung webb_010": 1.59,
+   "P ctl +12, mod +4 | rap legacy_061": 1.49,
+   "P ctl +12, mod +4 | noise": -1.07,
+   "P ctl +1, mod -1 | vowel u 110 Hz": 0.0,
+   "P ctl +1, mod -1 | vowel a 150 Hz": 0.0,
+   "P ctl +1, mod -1 | vowel i 300 Hz": 0.0,
+   "P ctl +1, mod -1 | vowel a 400 Hz": 0.0,
+   "P ctl +1, mod -1 | sung webb_024": 0.01,
+   "P ctl +1, mod -1 | sung webb_010": 0.01,
+   "P ctl +1, mod -1 | rap legacy_061": 0.0,
+   "P ctl +1, mod -1 | noise": -0.28,
+   "F ctl +7, mod -7 | vowel u 110 Hz": 0.0,
+   "F ctl +7, mod -7 | vowel a 150 Hz": 0.0,
+   "F ctl +7, mod -7 | vowel i 300 Hz": 0.0,
+   "F ctl +7, mod -7 | vowel a 400 Hz": 0.0,
+   "F ctl +7, mod -7 | sung webb_024": 0.01,
+   "F ctl +7, mod -7 | sung webb_010": 0.01,
+   "F ctl +7, mod -7 | rap legacy_061": 0.0,
+   "F ctl +7, mod -7 | noise": -0.28,
+   "F ctl -7, mod +7 | vowel u 110 Hz": 0.0,
+   "F ctl -7, mod +7 | vowel a 150 Hz": 0.0,
+   "F ctl -7, mod +7 | vowel i 300 Hz": 0.0,
+   "F ctl -7, mod +7 | vowel a 400 Hz": 0.0,
+   "F ctl -7, mod +7 | sung webb_024": 0.01,
+   "F ctl -7, mod +7 | sung webb_010": 0.01,
+   "F ctl -7, mod +7 | rap legacy_061": 0.0,
+   "F ctl -7, mod +7 | noise": -0.28,
+   "F ctl +7, mod +3 | vowel u 110 Hz": -2.94,
+   "F ctl +7, mod +3 | vowel a 150 Hz": -3.01,
+   "F ctl +7, mod +3 | vowel i 300 Hz": -2.89,
+   "F ctl +7, mod +3 | vowel a 400 Hz": -2.86,
+   "F ctl +7, mod +3 | sung webb_024": -2.87,
+   "F ctl +7, mod +3 | sung webb_010": -2.85,
+   "F ctl +7, mod +3 | rap legacy_061": -2.61,
+   "F ctl +7, mod +3 | noise": -1.06,
+   "F ctl -7, mod -3 | vowel u 110 Hz": -0.03,
+   "F ctl -7, mod -3 | vowel a 150 Hz": -0.15,
+   "F ctl -7, mod -3 | vowel i 300 Hz": -0.17,
+   "F ctl -7, mod -3 | vowel a 400 Hz": -0.16,
+   "F ctl -7, mod -3 | sung webb_024": -0.19,
+   "F ctl -7, mod -3 | sung webb_010": -0.11,
+   "F ctl -7, mod -3 | rap legacy_061": -0.04,
+   "F ctl -7, mod -3 | noise": -1.07,
+   "F ctl +3, mod -6 | vowel u 110 Hz": 0.28,
+   "F ctl +3, mod -6 | vowel a 150 Hz": 0.12,
+   "F ctl +3, mod -6 | vowel i 300 Hz": 0.13,
+   "F ctl +3, mod -6 | vowel a 400 Hz": 0.16,
+   "F ctl +3, mod -6 | sung webb_024": 0.12,
+   "F ctl +3, mod -6 | sung webb_010": 0.15,
+   "F ctl +3, mod -6 | rap legacy_061": 0.2,
+   "F ctl +3, mod -6 | noise": -1.08,
+   "P ctl 0 mod +5, F ctl +7 | vowel u 110 Hz": -1.85,
+   "P ctl 0 mod +5, F ctl +7 | vowel a 150 Hz": -1.88,
+   "P ctl 0 mod +5, F ctl +7 | vowel i 300 Hz": -1.85,
+   "P ctl 0 mod +5, F ctl +7 | vowel a 400 Hz": -1.83,
+   "P ctl 0 mod +5, F ctl +7 | sung webb_024": -1.83,
+   "P ctl 0 mod +5, F ctl +7 | sung webb_010": -1.81,
+   "P ctl 0 mod +5, F ctl +7 | rap legacy_061": -1.74,
+   "P ctl 0 mod +5, F ctl +7 | noise": -1.08,
+   "P ctl +5, F ctl 0 mod +7 | vowel u 110 Hz": -1.85,
+   "P ctl +5, F ctl 0 mod +7 | vowel a 150 Hz": -1.88,
+   "P ctl +5, F ctl 0 mod +7 | vowel i 300 Hz": -1.85,
+   "P ctl +5, F ctl 0 mod +7 | vowel a 400 Hz": -1.83,
+   "P ctl +5, F ctl 0 mod +7 | sung webb_024": -1.83,
+   "P ctl +5, F ctl 0 mod +7 | sung webb_010": -1.81,
+   "P ctl +5, F ctl 0 mod +7 | rap legacy_061": -1.74,
+   "P ctl +5, F ctl 0 mod +7 | noise": -1.08,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel u 110 Hz": -3.49,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel a 150 Hz": -3.45,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel i 300 Hz": -3.42,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel a 400 Hz": -3.42,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | sung webb_024": -3.41,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | sung webb_010": -3.41,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | rap legacy_061": -3.11,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | noise": -1.08,
+   "Flatten C2, P ctl 0, mod -12 | vowel u 110 Hz": -2.12,
+   "Flatten C2, P ctl 0, mod -12 | vowel a 150 Hz": -4.25,
+   "Flatten C2, P ctl 0, mod -12 | vowel i 300 Hz": -9.92,
+   "Flatten C2, P ctl 0, mod -12 | vowel a 400 Hz": -12.2,
+   "Flatten C2, P ctl 0, mod -12 | sung webb_024": -11.12,
+   "Flatten C2, P ctl 0, mod -12 | sung webb_010": -12.53,
+   "Flatten C2, P ctl 0, mod -12 | rap legacy_061": -2.29,
+   "Flatten C2, P ctl 0, mod -12 | noise": -1.08,
+   "Flatten C2, P ctl 0, mod -5 | vowel u 110 Hz": -0.44,
+   "Flatten C2, P ctl 0, mod -5 | vowel a 150 Hz": -1.74,
+   "Flatten C2, P ctl 0, mod -5 | vowel i 300 Hz": -7.17,
+   "Flatten C2, P ctl 0, mod -5 | vowel a 400 Hz": -9.18,
+   "Flatten C2, P ctl 0, mod -5 | sung webb_024": -8.19,
+   "Flatten C2, P ctl 0, mod -5 | sung webb_010": -9.54,
+   "Flatten C2, P ctl 0, mod -5 | rap legacy_061": -0.84,
+   "Flatten C2, P ctl 0, mod -5 | noise": -1.08,
+   "Flatten C2, P ctl 0, mod +5 | vowel u 110 Hz": 0.81,
+   "Flatten C2, P ctl 0, mod +5 | vowel a 150 Hz": -0.42,
+   "Flatten C2, P ctl 0, mod +5 | vowel i 300 Hz": -3.18,
+   "Flatten C2, P ctl 0, mod +5 | vowel a 400 Hz": -5.3,
+   "Flatten C2, P ctl 0, mod +5 | sung webb_024": -4.23,
+   "Flatten C2, P ctl 0, mod +5 | sung webb_010": -5.75,
+   "Flatten C2, P ctl 0, mod +5 | rap legacy_061": 0.53,
+   "Flatten C2, P ctl 0, mod +5 | noise": -1.07,
+   "Flatten C2, P ctl 0, mod +12 | vowel u 110 Hz": 1.67,
+   "Flatten C2, P ctl 0, mod +12 | vowel a 150 Hz": 1.14,
+   "Flatten C2, P ctl 0, mod +12 | vowel i 300 Hz": -1.49,
+   "Flatten C2, P ctl 0, mod +12 | vowel a 400 Hz": -2.47,
+   "Flatten C2, P ctl 0, mod +12 | sung webb_024": -2.0,
+   "Flatten C2, P ctl 0, mod +12 | sung webb_010": -2.68,
+   "Flatten C2, P ctl 0, mod +12 | rap legacy_061": 1.36,
+   "Flatten C2, P ctl 0, mod +12 | noise": -1.07,
+   "Flatten B3, P ctl 0, mod -12 | vowel u 110 Hz": 2.47,
+   "Flatten B3, P ctl 0, mod -12 | vowel a 150 Hz": 2.0,
+   "Flatten B3, P ctl 0, mod -12 | vowel i 300 Hz": -0.73,
+   "Flatten B3, P ctl 0, mod -12 | vowel a 400 Hz": -1.82,
+   "Flatten B3, P ctl 0, mod -12 | sung webb_024": -1.22,
+   "Flatten B3, P ctl 0, mod -12 | sung webb_010": -1.99,
+   "Flatten B3, P ctl 0, mod -12 | rap legacy_061": 2.14,
+   "Flatten B3, P ctl 0, mod -12 | noise": -1.08,
+   "Flatten B3, P ctl 0, mod -5 | vowel u 110 Hz": 3.41,
+   "Flatten B3, P ctl 0, mod -5 | vowel a 150 Hz": 2.55,
+   "Flatten B3, P ctl 0, mod -5 | vowel i 300 Hz": 0.92,
+   "Flatten B3, P ctl 0, mod -5 | vowel a 400 Hz": -0.38,
+   "Flatten B3, P ctl 0, mod -5 | sung webb_024": 0.25,
+   "Flatten B3, P ctl 0, mod -5 | sung webb_010": -0.47,
+   "Flatten B3, P ctl 0, mod -5 | rap legacy_061": 2.91,
+   "Flatten B3, P ctl 0, mod -5 | noise": -1.08,
+   "Flatten C2, P ctl +5, mod -5 | vowel u 110 Hz": 0.25,
+   "Flatten C2, P ctl +5, mod -5 | vowel a 150 Hz": -1.21,
+   "Flatten C2, P ctl +5, mod -5 | vowel i 300 Hz": -4.83,
+   "Flatten C2, P ctl +5, mod -5 | vowel a 400 Hz": -7.7,
+   "Flatten C2, P ctl +5, mod -5 | sung webb_024": -6.31,
+   "Flatten C2, P ctl +5, mod -5 | sung webb_010": -8.01,
+   "Flatten C2, P ctl +5, mod -5 | rap legacy_061": -0.19,
+   "Flatten C2, P ctl +5, mod -5 | noise": -1.5,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel u 110 Hz": -2.24,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel a 150 Hz": -3.58,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel i 300 Hz": -7.09,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel a 400 Hz": -9.98,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | sung webb_024": -8.58,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | sung webb_010": -10.29,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | rap legacy_061": -2.46,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | noise": -1.07,
+   "Flatten C2, no modulation | vowel u 110 Hz": 0.25,
+   "Flatten C2, no modulation | vowel a 150 Hz": -1.21,
+   "Flatten C2, no modulation | vowel i 300 Hz": -4.83,
+   "Flatten C2, no modulation | vowel a 400 Hz": -7.7,
+   "Flatten C2, no modulation | sung webb_024": -6.31,
+   "Flatten C2, no modulation | sung webb_010": -8.01,
+   "Flatten C2, no modulation | rap legacy_061": -0.19,
+   "Flatten C2, no modulation | noise": -1.5
+  },
+  "env_st": {
+   "P ctl 0, mod -24 | vowel u 110 Hz": null,
+   "P ctl 0, mod -24 | vowel a 150 Hz": null,
+   "P ctl 0, mod -24 | vowel i 300 Hz": -2.56,
+   "P ctl 0, mod -24 | vowel a 400 Hz": -3.04,
+   "P ctl 0, mod -24 | sung webb_024": null,
+   "P ctl 0, mod -24 | sung webb_010": null,
+   "P ctl 0, mod -24 | rap legacy_061": null,
+   "P ctl 0, mod -24 | noise": null,
+   "P ctl 0, mod -16 | vowel u 110 Hz": null,
+   "P ctl 0, mod -16 | vowel a 150 Hz": -2.56,
+   "P ctl 0, mod -16 | vowel i 300 Hz": -2.63,
+   "P ctl 0, mod -16 | vowel a 400 Hz": -2.83,
+   "P ctl 0, mod -16 | sung webb_024": null,
+   "P ctl 0, mod -16 | sung webb_010": null,
+   "P ctl 0, mod -16 | rap legacy_061": null,
+   "P ctl 0, mod -16 | noise": null,
+   "P ctl 0, mod -12 | vowel u 110 Hz": -2.63,
+   "P ctl 0, mod -12 | vowel a 150 Hz": -2.56,
+   "P ctl 0, mod -12 | vowel i 300 Hz": -2.49,
+   "P ctl 0, mod -12 | vowel a 400 Hz": -2.83,
+   "P ctl 0, mod -12 | sung webb_024": null,
+   "P ctl 0, mod -12 | sung webb_010": null,
+   "P ctl 0, mod -12 | rap legacy_061": null,
+   "P ctl 0, mod -12 | noise": null,
+   "P ctl 0, mod -7 | vowel u 110 Hz": -2.56,
+   "P ctl 0, mod -7 | vowel a 150 Hz": -2.56,
+   "P ctl 0, mod -7 | vowel i 300 Hz": -2.7,
+   "P ctl 0, mod -7 | vowel a 400 Hz": -2.56,
+   "P ctl 0, mod -7 | sung webb_024": null,
+   "P ctl 0, mod -7 | sung webb_010": null,
+   "P ctl 0, mod -7 | rap legacy_061": null,
+   "P ctl 0, mod -7 | noise": null,
+   "P ctl 0, mod -5 | vowel u 110 Hz": -2.22,
+   "P ctl 0, mod -5 | vowel a 150 Hz": -2.15,
+   "P ctl 0, mod -5 | vowel i 300 Hz": -2.35,
+   "P ctl 0, mod -5 | vowel a 400 Hz": -4.41,
+   "P ctl 0, mod -5 | sung webb_024": null,
+   "P ctl 0, mod -5 | sung webb_010": null,
+   "P ctl 0, mod -5 | rap legacy_061": null,
+   "P ctl 0, mod -5 | noise": null,
+   "P ctl 0, mod -3 | vowel u 110 Hz": -1.25,
+   "P ctl 0, mod -3 | vowel a 150 Hz": -1.25,
+   "P ctl 0, mod -3 | vowel i 300 Hz": -1.12,
+   "P ctl 0, mod -3 | vowel a 400 Hz": -2.01,
+   "P ctl 0, mod -3 | sung webb_024": null,
+   "P ctl 0, mod -3 | sung webb_010": null,
+   "P ctl 0, mod -3 | rap legacy_061": null,
+   "P ctl 0, mod -3 | noise": null,
+   "P ctl 0, mod -1 | vowel u 110 Hz": -0.5,
+   "P ctl 0, mod -1 | vowel a 150 Hz": -0.64,
+   "P ctl 0, mod -1 | vowel i 300 Hz": -0.77,
+   "P ctl 0, mod -1 | vowel a 400 Hz": -0.91,
+   "P ctl 0, mod -1 | sung webb_024": null,
+   "P ctl 0, mod -1 | sung webb_010": null,
+   "P ctl 0, mod -1 | rap legacy_061": null,
+   "P ctl 0, mod -1 | noise": null,
+   "P ctl 0, mod +1 | vowel u 110 Hz": 0.39,
+   "P ctl 0, mod +1 | vowel a 150 Hz": 0.39,
+   "P ctl 0, mod +1 | vowel i 300 Hz": 0.33,
+   "P ctl 0, mod +1 | vowel a 400 Hz": 0.94,
+   "P ctl 0, mod +1 | sung webb_024": null,
+   "P ctl 0, mod +1 | sung webb_010": null,
+   "P ctl 0, mod +1 | rap legacy_061": null,
+   "P ctl 0, mod +1 | noise": null,
+   "P ctl 0, mod +3 | vowel u 110 Hz": 1.08,
+   "P ctl 0, mod +3 | vowel a 150 Hz": 1.15,
+   "P ctl 0, mod +3 | vowel i 300 Hz": 0.74,
+   "P ctl 0, mod +3 | vowel a 400 Hz": 2.94,
+   "P ctl 0, mod +3 | sung webb_024": null,
+   "P ctl 0, mod +3 | sung webb_010": null,
+   "P ctl 0, mod +3 | rap legacy_061": null,
+   "P ctl 0, mod +3 | noise": null,
+   "P ctl 0, mod +5 | vowel u 110 Hz": 2.11,
+   "P ctl 0, mod +5 | vowel a 150 Hz": 2.04,
+   "P ctl 0, mod +5 | vowel i 300 Hz": 1.9,
+   "P ctl 0, mod +5 | vowel a 400 Hz": -0.43,
+   "P ctl 0, mod +5 | sung webb_024": null,
+   "P ctl 0, mod +5 | sung webb_010": null,
+   "P ctl 0, mod +5 | rap legacy_061": null,
+   "P ctl 0, mod +5 | noise": null,
+   "P ctl 0, mod +7 | vowel u 110 Hz": 2.32,
+   "P ctl 0, mod +7 | vowel a 150 Hz": 2.32,
+   "P ctl 0, mod +7 | vowel i 300 Hz": 2.25,
+   "P ctl 0, mod +7 | vowel a 400 Hz": 1.63,
+   "P ctl 0, mod +7 | sung webb_024": null,
+   "P ctl 0, mod +7 | sung webb_010": null,
+   "P ctl 0, mod +7 | rap legacy_061": null,
+   "P ctl 0, mod +7 | noise": null,
+   "P ctl 0, mod +12 | vowel u 110 Hz": 2.59,
+   "P ctl 0, mod +12 | vowel a 150 Hz": 2.73,
+   "P ctl 0, mod +12 | vowel i 300 Hz": 2.52,
+   "P ctl 0, mod +12 | vowel a 400 Hz": -10.05,
+   "P ctl 0, mod +12 | sung webb_024": null,
+   "P ctl 0, mod +12 | sung webb_010": null,
+   "P ctl 0, mod +12 | rap legacy_061": null,
+   "P ctl 0, mod +12 | noise": null,
+   "P ctl 0, mod +16 | vowel u 110 Hz": 2.32,
+   "P ctl 0, mod +16 | vowel a 150 Hz": 3.14,
+   "P ctl 0, mod +16 | vowel i 300 Hz": 2.25,
+   "P ctl 0, mod +16 | vowel a 400 Hz": 2.87,
+   "P ctl 0, mod +16 | sung webb_024": null,
+   "P ctl 0, mod +16 | sung webb_010": null,
+   "P ctl 0, mod +16 | rap legacy_061": null,
+   "P ctl 0, mod +16 | noise": null,
+   "P ctl 0, mod +24 | vowel u 110 Hz": 2.73,
+   "P ctl 0, mod +24 | vowel a 150 Hz": 1.9,
+   "P ctl 0, mod +24 | vowel i 300 Hz": -11.83,
+   "P ctl 0, mod +24 | vowel a 400 Hz": 11.73,
+   "P ctl 0, mod +24 | sung webb_024": null,
+   "P ctl 0, mod +24 | sung webb_010": null,
+   "P ctl 0, mod +24 | rap legacy_061": null,
+   "P ctl 0, mod +24 | noise": null,
+   "F ctl 0, mod -12 | vowel u 110 Hz": -11.01,
+   "F ctl 0, mod -12 | vowel a 150 Hz": -12.38,
+   "F ctl 0, mod -12 | vowel i 300 Hz": -12.45,
+   "F ctl 0, mod -12 | vowel a 400 Hz": -12.79,
+   "F ctl 0, mod -12 | sung webb_024": null,
+   "F ctl 0, mod -12 | sung webb_010": null,
+   "F ctl 0, mod -12 | rap legacy_061": null,
+   "F ctl 0, mod -12 | noise": null,
+   "F ctl 0, mod -7 | vowel u 110 Hz": -7.44,
+   "F ctl 0, mod -7 | vowel a 150 Hz": -7.23,
+   "F ctl 0, mod -7 | vowel i 300 Hz": -6.82,
+   "F ctl 0, mod -7 | vowel a 400 Hz": -8.12,
+   "F ctl 0, mod -7 | sung webb_024": null,
+   "F ctl 0, mod -7 | sung webb_010": null,
+   "F ctl 0, mod -7 | rap legacy_061": null,
+   "F ctl 0, mod -7 | noise": null,
+   "F ctl 0, mod -3 | vowel u 110 Hz": -3.04,
+   "F ctl 0, mod -3 | vowel a 150 Hz": -2.97,
+   "F ctl 0, mod -3 | vowel i 300 Hz": -3.18,
+   "F ctl 0, mod -3 | vowel a 400 Hz": -5.44,
+   "F ctl 0, mod -3 | sung webb_024": null,
+   "F ctl 0, mod -3 | sung webb_010": null,
+   "F ctl 0, mod -3 | rap legacy_061": null,
+   "F ctl 0, mod -3 | noise": null,
+   "F ctl 0, mod +3 | vowel u 110 Hz": 2.94,
+   "F ctl 0, mod +3 | vowel a 150 Hz": 3.0,
+   "F ctl 0, mod +3 | vowel i 300 Hz": 3.35,
+   "F ctl 0, mod +3 | vowel a 400 Hz": 0.6,
+   "F ctl 0, mod +3 | sung webb_024": null,
+   "F ctl 0, mod +3 | sung webb_010": null,
+   "F ctl 0, mod +3 | rap legacy_061": null,
+   "F ctl 0, mod +3 | noise": null,
+   "F ctl 0, mod +7 | vowel u 110 Hz": 6.92,
+   "F ctl 0, mod +7 | vowel a 150 Hz": 6.99,
+   "F ctl 0, mod +7 | vowel i 300 Hz": 6.99,
+   "F ctl 0, mod +7 | vowel a 400 Hz": 6.3,
+   "F ctl 0, mod +7 | sung webb_024": null,
+   "F ctl 0, mod +7 | sung webb_010": null,
+   "F ctl 0, mod +7 | rap legacy_061": null,
+   "F ctl 0, mod +7 | noise": null,
+   "F ctl 0, mod +12 | vowel u 110 Hz": 11.93,
+   "F ctl 0, mod +12 | vowel a 150 Hz": 12.07,
+   "F ctl 0, mod +12 | vowel i 300 Hz": 12.21,
+   "F ctl 0, mod +12 | vowel a 400 Hz": 10.15,
+   "F ctl 0, mod +12 | sung webb_024": null,
+   "F ctl 0, mod +12 | sung webb_010": null,
+   "F ctl 0, mod +12 | rap legacy_061": null,
+   "F ctl 0, mod +12 | noise": null,
+   "P ctl -5, mod +5 | vowel u 110 Hz": -0.02,
+   "P ctl -5, mod +5 | vowel a 150 Hz": -0.02,
+   "P ctl -5, mod +5 | vowel i 300 Hz": -0.02,
+   "P ctl -5, mod +5 | vowel a 400 Hz": -0.02,
+   "P ctl -5, mod +5 | sung webb_024": null,
+   "P ctl -5, mod +5 | sung webb_010": null,
+   "P ctl -5, mod +5 | rap legacy_061": null,
+   "P ctl -5, mod +5 | noise": null,
+   "P ctl +5, mod -5 | vowel u 110 Hz": -0.02,
+   "P ctl +5, mod -5 | vowel a 150 Hz": -0.02,
+   "P ctl +5, mod -5 | vowel i 300 Hz": -0.02,
+   "P ctl +5, mod -5 | vowel a 400 Hz": -0.02,
+   "P ctl +5, mod -5 | sung webb_024": null,
+   "P ctl +5, mod -5 | sung webb_010": null,
+   "P ctl +5, mod -5 | rap legacy_061": null,
+   "P ctl +5, mod -5 | noise": null,
+   "P ctl -7, mod +1 | vowel u 110 Hz": -2.63,
+   "P ctl -7, mod +1 | vowel a 150 Hz": -2.56,
+   "P ctl -7, mod +1 | vowel i 300 Hz": -2.49,
+   "P ctl -7, mod +1 | vowel a 400 Hz": -1.53,
+   "P ctl -7, mod +1 | sung webb_024": null,
+   "P ctl -7, mod +1 | sung webb_010": null,
+   "P ctl -7, mod +1 | rap legacy_061": null,
+   "P ctl -7, mod +1 | noise": null,
+   "P ctl +5, mod +2 | vowel u 110 Hz": 2.32,
+   "P ctl +5, mod +2 | vowel a 150 Hz": 2.32,
+   "P ctl +5, mod +2 | vowel i 300 Hz": 2.25,
+   "P ctl +5, mod +2 | vowel a 400 Hz": 1.63,
+   "P ctl +5, mod +2 | sung webb_024": null,
+   "P ctl +5, mod +2 | sung webb_010": null,
+   "P ctl +5, mod +2 | rap legacy_061": null,
+   "P ctl +5, mod +2 | noise": null,
+   "P ctl -12, mod -4 | vowel u 110 Hz": null,
+   "P ctl -12, mod -4 | vowel a 150 Hz": -2.56,
+   "P ctl -12, mod -4 | vowel i 300 Hz": -2.63,
+   "P ctl -12, mod -4 | vowel a 400 Hz": -2.83,
+   "P ctl -12, mod -4 | sung webb_024": null,
+   "P ctl -12, mod -4 | sung webb_010": null,
+   "P ctl -12, mod -4 | rap legacy_061": null,
+   "P ctl -12, mod -4 | noise": null,
+   "P ctl +12, mod +4 | vowel u 110 Hz": 2.32,
+   "P ctl +12, mod +4 | vowel a 150 Hz": 3.14,
+   "P ctl +12, mod +4 | vowel i 300 Hz": 2.25,
+   "P ctl +12, mod +4 | vowel a 400 Hz": 2.87,
+   "P ctl +12, mod +4 | sung webb_024": null,
+   "P ctl +12, mod +4 | sung webb_010": null,
+   "P ctl +12, mod +4 | rap legacy_061": null,
+   "P ctl +12, mod +4 | noise": null,
+   "P ctl +1, mod -1 | vowel u 110 Hz": -0.02,
+   "P ctl +1, mod -1 | vowel a 150 Hz": -0.02,
+   "P ctl +1, mod -1 | vowel i 300 Hz": -0.02,
+   "P ctl +1, mod -1 | vowel a 400 Hz": -0.02,
+   "P ctl +1, mod -1 | sung webb_024": null,
+   "P ctl +1, mod -1 | sung webb_010": null,
+   "P ctl +1, mod -1 | rap legacy_061": null,
+   "P ctl +1, mod -1 | noise": null,
+   "F ctl +7, mod -7 | vowel u 110 Hz": -0.02,
+   "F ctl +7, mod -7 | vowel a 150 Hz": -0.02,
+   "F ctl +7, mod -7 | vowel i 300 Hz": -0.02,
+   "F ctl +7, mod -7 | vowel a 400 Hz": -0.02,
+   "F ctl +7, mod -7 | sung webb_024": null,
+   "F ctl +7, mod -7 | sung webb_010": null,
+   "F ctl +7, mod -7 | rap legacy_061": null,
+   "F ctl +7, mod -7 | noise": null,
+   "F ctl -7, mod +7 | vowel u 110 Hz": -0.02,
+   "F ctl -7, mod +7 | vowel a 150 Hz": -0.02,
+   "F ctl -7, mod +7 | vowel i 300 Hz": -0.02,
+   "F ctl -7, mod +7 | vowel a 400 Hz": -0.02,
+   "F ctl -7, mod +7 | sung webb_024": null,
+   "F ctl -7, mod +7 | sung webb_010": null,
+   "F ctl -7, mod +7 | rap legacy_061": null,
+   "F ctl -7, mod +7 | noise": null,
+   "F ctl +7, mod +3 | vowel u 110 Hz": 9.94,
+   "F ctl +7, mod +3 | vowel a 150 Hz": 10.01,
+   "F ctl +7, mod +3 | vowel i 300 Hz": 10.01,
+   "F ctl +7, mod +3 | vowel a 400 Hz": 10.01,
+   "F ctl +7, mod +3 | sung webb_024": null,
+   "F ctl +7, mod +3 | sung webb_010": null,
+   "F ctl +7, mod +3 | rap legacy_061": null,
+   "F ctl +7, mod +3 | noise": null,
+   "F ctl -7, mod -3 | vowel u 110 Hz": -9.5,
+   "F ctl -7, mod -3 | vowel a 150 Hz": -10.39,
+   "F ctl -7, mod -3 | vowel i 300 Hz": -9.57,
+   "F ctl -7, mod -3 | vowel a 400 Hz": -9.57,
+   "F ctl -7, mod -3 | sung webb_024": null,
+   "F ctl -7, mod -3 | sung webb_010": null,
+   "F ctl -7, mod -3 | rap legacy_061": null,
+   "F ctl -7, mod -3 | noise": null,
+   "F ctl +3, mod -6 | vowel u 110 Hz": -3.04,
+   "F ctl +3, mod -6 | vowel a 150 Hz": -2.97,
+   "F ctl +3, mod -6 | vowel i 300 Hz": -3.18,
+   "F ctl +3, mod -6 | vowel a 400 Hz": -5.44,
+   "F ctl +3, mod -6 | sung webb_024": null,
+   "F ctl +3, mod -6 | sung webb_010": null,
+   "F ctl +3, mod -6 | rap legacy_061": null,
+   "F ctl +3, mod -6 | noise": null,
+   "P ctl 0 mod +5, F ctl +7 | vowel u 110 Hz": 9.05,
+   "P ctl 0 mod +5, F ctl +7 | vowel a 150 Hz": 8.98,
+   "P ctl 0 mod +5, F ctl +7 | vowel i 300 Hz": 8.98,
+   "P ctl 0 mod +5, F ctl +7 | vowel a 400 Hz": 8.7,
+   "P ctl 0 mod +5, F ctl +7 | sung webb_024": null,
+   "P ctl 0 mod +5, F ctl +7 | sung webb_010": null,
+   "P ctl 0 mod +5, F ctl +7 | rap legacy_061": null,
+   "P ctl 0 mod +5, F ctl +7 | noise": null,
+   "P ctl +5, F ctl 0 mod +7 | vowel u 110 Hz": 9.05,
+   "P ctl +5, F ctl 0 mod +7 | vowel a 150 Hz": 8.98,
+   "P ctl +5, F ctl 0 mod +7 | vowel i 300 Hz": 8.98,
+   "P ctl +5, F ctl 0 mod +7 | vowel a 400 Hz": 8.7,
+   "P ctl +5, F ctl 0 mod +7 | sung webb_024": null,
+   "P ctl +5, F ctl 0 mod +7 | sung webb_010": null,
+   "P ctl +5, F ctl 0 mod +7 | rap legacy_061": null,
+   "P ctl +5, F ctl 0 mod +7 | noise": null,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel u 110 Hz": 4.45,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel a 150 Hz": 4.45,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel i 300 Hz": 4.31,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | vowel a 400 Hz": 3.69,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | sung webb_024": null,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | sung webb_010": null,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | rap legacy_061": null,
+   "P ctl 0 mod -7, F ctl 0 mod +7 | noise": null,
+   "Flatten C2, P ctl 0, mod -12 | vowel u 110 Hz": -2.56,
+   "Flatten C2, P ctl 0, mod -12 | vowel a 150 Hz": -2.56,
+   "Flatten C2, P ctl 0, mod -12 | vowel i 300 Hz": -2.56,
+   "Flatten C2, P ctl 0, mod -12 | vowel a 400 Hz": -2.9,
+   "Flatten C2, P ctl 0, mod -12 | sung webb_024": null,
+   "Flatten C2, P ctl 0, mod -12 | sung webb_010": null,
+   "Flatten C2, P ctl 0, mod -12 | rap legacy_061": null,
+   "Flatten C2, P ctl 0, mod -12 | noise": null,
+   "Flatten C2, P ctl 0, mod -5 | vowel u 110 Hz": -2.08,
+   "Flatten C2, P ctl 0, mod -5 | vowel a 150 Hz": -2.08,
+   "Flatten C2, P ctl 0, mod -5 | vowel i 300 Hz": -2.22,
+   "Flatten C2, P ctl 0, mod -5 | vowel a 400 Hz": -2.56,
+   "Flatten C2, P ctl 0, mod -5 | sung webb_024": null,
+   "Flatten C2, P ctl 0, mod -5 | sung webb_010": null,
+   "Flatten C2, P ctl 0, mod -5 | rap legacy_061": null,
+   "Flatten C2, P ctl 0, mod -5 | noise": null,
+   "Flatten C2, P ctl 0, mod +5 | vowel u 110 Hz": 2.32,
+   "Flatten C2, P ctl 0, mod +5 | vowel a 150 Hz": 2.04,
+   "Flatten C2, P ctl 0, mod +5 | vowel i 300 Hz": 1.97,
+   "Flatten C2, P ctl 0, mod +5 | vowel a 400 Hz": 1.7,
+   "Flatten C2, P ctl 0, mod +5 | sung webb_024": null,
+   "Flatten C2, P ctl 0, mod +5 | sung webb_010": null,
+   "Flatten C2, P ctl 0, mod +5 | rap legacy_061": null,
+   "Flatten C2, P ctl 0, mod +5 | noise": null,
+   "Flatten C2, P ctl 0, mod +12 | vowel u 110 Hz": 2.45,
+   "Flatten C2, P ctl 0, mod +12 | vowel a 150 Hz": 2.25,
+   "Flatten C2, P ctl 0, mod +12 | vowel i 300 Hz": 2.59,
+   "Flatten C2, P ctl 0, mod +12 | vowel a 400 Hz": 2.11,
+   "Flatten C2, P ctl 0, mod +12 | sung webb_024": null,
+   "Flatten C2, P ctl 0, mod +12 | sung webb_010": null,
+   "Flatten C2, P ctl 0, mod +12 | rap legacy_061": null,
+   "Flatten C2, P ctl 0, mod +12 | noise": null,
+   "Flatten B3, P ctl 0, mod -12 | vowel u 110 Hz": -2.35,
+   "Flatten B3, P ctl 0, mod -12 | vowel a 150 Hz": -2.35,
+   "Flatten B3, P ctl 0, mod -12 | vowel i 300 Hz": -2.9,
+   "Flatten B3, P ctl 0, mod -12 | vowel a 400 Hz": -2.35,
+   "Flatten B3, P ctl 0, mod -12 | sung webb_024": null,
+   "Flatten B3, P ctl 0, mod -12 | sung webb_010": null,
+   "Flatten B3, P ctl 0, mod -12 | rap legacy_061": null,
+   "Flatten B3, P ctl 0, mod -12 | noise": null,
+   "Flatten B3, P ctl 0, mod -5 | vowel u 110 Hz": -0.5,
+   "Flatten B3, P ctl 0, mod -5 | vowel a 150 Hz": -3.11,
+   "Flatten B3, P ctl 0, mod -5 | vowel i 300 Hz": -2.22,
+   "Flatten B3, P ctl 0, mod -5 | vowel a 400 Hz": -1.46,
+   "Flatten B3, P ctl 0, mod -5 | sung webb_024": null,
+   "Flatten B3, P ctl 0, mod -5 | sung webb_010": null,
+   "Flatten B3, P ctl 0, mod -5 | rap legacy_061": null,
+   "Flatten B3, P ctl 0, mod -5 | noise": null,
+   "Flatten C2, P ctl +5, mod -5 | vowel u 110 Hz": -0.02,
+   "Flatten C2, P ctl +5, mod -5 | vowel a 150 Hz": 0.05,
+   "Flatten C2, P ctl +5, mod -5 | vowel i 300 Hz": -0.09,
+   "Flatten C2, P ctl +5, mod -5 | vowel a 400 Hz": -0.57,
+   "Flatten C2, P ctl +5, mod -5 | sung webb_024": null,
+   "Flatten C2, P ctl +5, mod -5 | sung webb_010": null,
+   "Flatten C2, P ctl +5, mod -5 | rap legacy_061": null,
+   "Flatten C2, P ctl +5, mod -5 | noise": null,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel u 110 Hz": 6.99,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel a 150 Hz": 6.99,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel i 300 Hz": 6.92,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | vowel a 400 Hz": 6.51,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | sung webb_024": null,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | sung webb_010": null,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | rap legacy_061": null,
+   "Flatten C2, P ctl 0, F ctl 0 mod +7 | noise": null,
+   "Flatten C2, no modulation | vowel u 110 Hz": -0.02,
+   "Flatten C2, no modulation | vowel a 150 Hz": 0.05,
+   "Flatten C2, no modulation | vowel i 300 Hz": -0.09,
+   "Flatten C2, no modulation | vowel a 400 Hz": -0.57,
+   "Flatten C2, no modulation | sung webb_024": null,
+   "Flatten C2, no modulation | sung webb_010": null,
+   "Flatten C2, no modulation | rap legacy_061": null,
+   "Flatten C2, no modulation | noise": null
+  }
+ }
+}

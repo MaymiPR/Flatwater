@@ -1,0 +1,11 @@
+# One line per plug-in in the suite:  CMake target|product name|AU plugin code|AU manufacturer code
+# The installers, the release workflow and CI read this list; add a line when a new plug-in is ready.
+FwVocalComp|Flatwater Vocal Comp|Fvc1|Fltw
+FwBassLift|Flatwater Bass Lift|Fbs1|Fltw
+FwBassXLift|Flatwater BassX Lift|Fbx1|Fltw
+FwComp|Flatwater Comp|Fcp1|Fltw
+FwDelay|Flatwater Delay|Fdl1|Fltw
+FwBassLeveler|Flatwater Bass Leveler|Fbe1|Fltw
+FwVocalLeveler|Flatwater Vocal Leveler|Fve1|Fltw
+FwVocalChain|Flatwater Vocal Chain|Fch1|Fltw
+FwPitchBend|Flatwater Pitch Bend|Fpb1|Fltw

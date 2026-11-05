@@ -1,0 +1,10 @@
+Flatwater
+=========
+
+Flatwater: Open-source recreations of Waves mixing plug-ins, null-tested against the originals.
+Open source under the GNU Affero General Public License v3: https://github.com/MaymiPR/Flatwater
+
+It is an independent project. It is not affiliated with, endorsed by or sponsored by Waves Audio or Chris Lord-Alge.
+Product names belong to their owners and only describe what each plug-in is modelled on. None of their code, artwork,
+preset files, fonts or other files is included: each plug-in is built from measurements of how the original sounds
+and behaves, and its editor is drawn by Flatwater.

@@ -1,0 +1,22 @@
+# Flatwater Pitch Bend: the plug-in processor (tools/FwPitchBendRender: in out channels fs [parameter ID=real value, fine=1, slot=target:s:source:depth, preset=index, bpm=tempo]).
+@call FwPitchBendRender {in} {out} 2 {fs} {args} block={block}
+pb_defaults_mix         signal=mix   seconds=0.5
+pb_pitch_p5_sine        signal=sine  seconds=1 pitch=5
+pb_pitch_m7_mix         signal=mix   seconds=1 pitch=-7
+pb_pitch_p12_burst      signal=burst seconds=1 pitch=12
+pb_formant_p3_sine      signal=sine  seconds=1 formant=3
+pb_formant_m5_mix       signal=mix   seconds=1 formant=-5
+pb_fine_p50c_mix        signal=mix   seconds=1 fine=1 pitch=0.5 formant=-0.75
+pb_mix50_p4_sine        signal=sine  seconds=1 pitch=4 mix=50
+pb_flatten_c3_sine      signal=sine  seconds=1 flatten=1 flattenNote=12
+pb_noise_p3_noise       signal=noise seconds=0.5 pitch=3
+pb_lfo_pitch_sine       signal=sine  seconds=1 slot=pitch:0:1:25 m1Sync=1 m1Rate=3
+pb_seq_pitch_mix        signal=mix   seconds=1 slot=pitch:0:1:50 m1Type=1 m1Steps=4 m1Sync=1 m1Rate=6
+pb_am_formant_burst     signal=burst seconds=1 slot=formant:0:3:50
+pb_pt_pitch_mix         signal=mix   seconds=1 slot=pitch:0:4:25
+pb_synced_mix_burst     signal=burst seconds=1 slot=mix:0:2:-50 bpm=120
+pb_preset1_sine         signal=sine  seconds=1 preset=1
+pb_preset24_mix         signal=mix   seconds=1 preset=24
+pb_preset33_burst       signal=burst seconds=1 preset=33
+pb_pitch_p5_sine_44k    signal=sine  seconds=1 fs=44100 pitch=5
+pb_pitch_p5_sine_96k    signal=sine  seconds=1 fs=96000 pitch=5

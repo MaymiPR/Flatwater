@@ -1,0 +1,432 @@
+{
+ "what": "timing of the wet path: onset delay (32-sample rms envelope reaching -20 dB under its steady level, output against input), f0 settling after an onset and after a pitch jump (YIN, 1 ms hop: time until the output stays within 20 cents of input f0 x ratio for 20 ms), the f0 lag on vibrato",
+ "onsets": [
+  {
+   "material": "vowel a 100 Hz after silence",
+   "f0": 100,
+   "pitch_st": 0,
+   "onset_delay_samples": 106,
+   "out_rms_first_20ms_minus_steady_db": -3.43,
+   "in_rms_first_20ms_minus_steady_db": -3.59,
+   "f0_settle_ms": 9.8,
+   "first_30ms_cents_vs_target_median": -0.2,
+   "first_30ms_cents_vs_input_f0_median": -0.2
+  },
+  {
+   "material": "vowel a 100 Hz after silence",
+   "f0": 100,
+   "pitch_st": -7,
+   "onset_delay_samples": 119,
+   "out_rms_first_20ms_minus_steady_db": -9.18,
+   "in_rms_first_20ms_minus_steady_db": -3.59,
+   "f0_settle_ms": 39.3,
+   "first_30ms_cents_vs_target_median": 670.3,
+   "first_30ms_cents_vs_input_f0_median": -29.7
+  },
+  {
+   "material": "vowel a 100 Hz after silence",
+   "f0": 100,
+   "pitch_st": 5,
+   "onset_delay_samples": 75,
+   "out_rms_first_20ms_minus_steady_db": -8.6,
+   "in_rms_first_20ms_minus_steady_db": -3.59,
+   "f0_settle_ms": 40.8,
+   "first_30ms_cents_vs_target_median": null,
+   "first_30ms_cents_vs_input_f0_median": null
+  },
+  {
+   "material": "vowel a 100 Hz after silence",
+   "f0": 100,
+   "pitch_st": 12,
+   "onset_delay_samples": 69,
+   "out_rms_first_20ms_minus_steady_db": -10.29,
+   "in_rms_first_20ms_minus_steady_db": -3.59,
+   "f0_settle_ms": 40.8,
+   "first_30ms_cents_vs_target_median": null,
+   "first_30ms_cents_vs_input_f0_median": null
+  },
+  {
+   "material": "vowel a 200 Hz after silence",
+   "f0": 200,
+   "pitch_st": 0,
+   "onset_delay_samples": 105,
+   "out_rms_first_20ms_minus_steady_db": -2.23,
+   "in_rms_first_20ms_minus_steady_db": -2.28,
+   "f0_settle_ms": 5.3,
+   "first_30ms_cents_vs_target_median": -0.1,
+   "first_30ms_cents_vs_input_f0_median": -0.1
+  },
+  {
+   "material": "vowel a 200 Hz after silence",
+   "f0": 200,
+   "pitch_st": -7,
+   "onset_delay_samples": 117,
+   "out_rms_first_20ms_minus_steady_db": -6.78,
+   "in_rms_first_20ms_minus_steady_db": -2.28,
+   "f0_settle_ms": 27.0,
+   "first_30ms_cents_vs_target_median": 672.9,
+   "first_30ms_cents_vs_input_f0_median": -27.1
+  },
+  {
+   "material": "vowel a 200 Hz after silence",
+   "f0": 200,
+   "pitch_st": 5,
+   "onset_delay_samples": 83,
+   "out_rms_first_20ms_minus_steady_db": -7.96,
+   "in_rms_first_20ms_minus_steady_db": -2.28,
+   "f0_settle_ms": 29.3,
+   "first_30ms_cents_vs_target_median": 152.3,
+   "first_30ms_cents_vs_input_f0_median": 652.3
+  },
+  {
+   "material": "vowel a 200 Hz after silence",
+   "f0": 200,
+   "pitch_st": 12,
+   "onset_delay_samples": 78,
+   "out_rms_first_20ms_minus_steady_db": -8.62,
+   "in_rms_first_20ms_minus_steady_db": -2.28,
+   "f0_settle_ms": 29.3,
+   "first_30ms_cents_vs_target_median": -1202.1,
+   "first_30ms_cents_vs_input_f0_median": -2.1
+  },
+  {
+   "material": "vowel a 400 Hz after silence",
+   "f0": 400,
+   "pitch_st": 0,
+   "onset_delay_samples": 106,
+   "out_rms_first_20ms_minus_steady_db": -1.81,
+   "in_rms_first_20ms_minus_steady_db": -1.84,
+   "f0_settle_ms": 2.5,
+   "first_30ms_cents_vs_target_median": 0.0,
+   "first_30ms_cents_vs_input_f0_median": 0.0
+  },
+  {
+   "material": "vowel a 400 Hz after silence",
+   "f0": 400,
+   "pitch_st": -7,
+   "onset_delay_samples": 128,
+   "out_rms_first_20ms_minus_steady_db": -5.46,
+   "in_rms_first_20ms_minus_steady_db": -1.84,
+   "f0_settle_ms": 18.9,
+   "first_30ms_cents_vs_target_median": 0.3,
+   "first_30ms_cents_vs_input_f0_median": -699.7
+  },
+  {
+   "material": "vowel a 400 Hz after silence",
+   "f0": 400,
+   "pitch_st": 5,
+   "onset_delay_samples": 81,
+   "out_rms_first_20ms_minus_steady_db": -8.05,
+   "in_rms_first_20ms_minus_steady_db": -1.84,
+   "f0_settle_ms": 14.5,
+   "first_30ms_cents_vs_target_median": -0.1,
+   "first_30ms_cents_vs_input_f0_median": 499.9
+  },
+  {
+   "material": "vowel a 400 Hz after silence",
+   "f0": 400,
+   "pitch_st": 12,
+   "onset_delay_samples": 76,
+   "out_rms_first_20ms_minus_steady_db": -9.04,
+   "in_rms_first_20ms_minus_steady_db": -1.84,
+   "f0_settle_ms": 17.5,
+   "first_30ms_cents_vs_target_median": 0.4,
+   "first_30ms_cents_vs_input_f0_median": 1200.4
+  }
+ ],
+ "jumps": [
+  {
+   "material": "vowel a 150 to 225 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 225,
+   "pitch_st": 0,
+   "f0_settle_ms": 6.3,
+   "tracker_settle_on_input_ms": 8.5,
+   "frames_off_both_by_100c_first_200ms": 8
+  },
+  {
+   "material": "vowel a 150 to 225 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 225,
+   "pitch_st": 5,
+   "f0_settle_ms": 29.3,
+   "tracker_settle_on_input_ms": 8.5,
+   "frames_off_both_by_100c_first_200ms": 30
+  },
+  {
+   "material": "vowel a 150 to 225 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 225,
+   "pitch_st": -7,
+   "f0_settle_ms": 31.5,
+   "tracker_settle_on_input_ms": 12.7,
+   "frames_off_both_by_100c_first_200ms": 27
+  },
+  {
+   "material": "vowel a 225 to 150 Hz at 1.25 s",
+   "f_from": 225,
+   "f_to": 150,
+   "pitch_st": 0,
+   "f0_settle_ms": 10.3,
+   "tracker_settle_on_input_ms": 10.5,
+   "frames_off_both_by_100c_first_200ms": 12
+  },
+  {
+   "material": "vowel a 225 to 150 Hz at 1.25 s",
+   "f_from": 225,
+   "f_to": 150,
+   "pitch_st": 5,
+   "f0_settle_ms": 38.3,
+   "tracker_settle_on_input_ms": 10.5,
+   "frames_off_both_by_100c_first_200ms": 39
+  },
+  {
+   "material": "vowel a 225 to 150 Hz at 1.25 s",
+   "f_from": 225,
+   "f_to": 150,
+   "pitch_st": -7,
+   "f0_settle_ms": 39.5,
+   "tracker_settle_on_input_ms": 17.7,
+   "frames_off_both_by_100c_first_200ms": 41
+  },
+  {
+   "material": "vowel a 200 to 400 Hz at 1.25 s",
+   "f_from": 200,
+   "f_to": 400,
+   "pitch_st": 0,
+   "f0_settle_ms": 0.6,
+   "tracker_settle_on_input_ms": 0.9,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 200 to 400 Hz at 1.25 s",
+   "f_from": 200,
+   "f_to": 400,
+   "pitch_st": 5,
+   "f0_settle_ms": 125.6,
+   "tracker_settle_on_input_ms": 0.9,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 200 to 400 Hz at 1.25 s",
+   "f_from": 200,
+   "f_to": 400,
+   "pitch_st": -7,
+   "f0_settle_ms": 132.6,
+   "tracker_settle_on_input_ms": 0.8,
+   "frames_off_both_by_100c_first_200ms": 7
+  },
+  {
+   "material": "vowel a 400 to 200 Hz at 1.25 s",
+   "f_from": 400,
+   "f_to": 200,
+   "pitch_st": 0,
+   "f0_settle_ms": 5.6,
+   "tracker_settle_on_input_ms": 5.9,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 400 to 200 Hz at 1.25 s",
+   "f_from": 400,
+   "f_to": 200,
+   "pitch_st": 5,
+   "f0_settle_ms": null,
+   "tracker_settle_on_input_ms": 5.9,
+   "frames_off_both_by_100c_first_200ms": 140
+  },
+  {
+   "material": "vowel a 400 to 200 Hz at 1.25 s",
+   "f_from": 400,
+   "f_to": 200,
+   "pitch_st": -7,
+   "f0_settle_ms": null,
+   "tracker_settle_on_input_ms": 6.8,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 150 to 160 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 160,
+   "pitch_st": 0,
+   "f0_settle_ms": 3.3,
+   "tracker_settle_on_input_ms": 3.5,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 150 to 160 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 160,
+   "pitch_st": 5,
+   "f0_settle_ms": 10.3,
+   "tracker_settle_on_input_ms": 3.5,
+   "frames_off_both_by_100c_first_200ms": 0
+  },
+  {
+   "material": "vowel a 150 to 160 Hz at 1.25 s",
+   "f_from": 150,
+   "f_to": 160,
+   "pitch_st": -7,
+   "f0_settle_ms": 7.5,
+   "tracker_settle_on_input_ms": 3.7,
+   "frames_off_both_by_100c_first_200ms": 9
+  }
+ ],
+ "vibrato_lag": [
+  {
+   "material": "vowel a 150 Hz vibrato 30 c 5 Hz",
+   "f0": 150,
+   "pitch_st": -7,
+   "f0_curve_lag_ms": 0.0,
+   "depth_ratio": 1.024,
+   "cents_err_after_lag": {
+    "n": 1600,
+    "median": 0.02,
+    "abs_p50": 0.75,
+    "abs_p90": 1.71,
+    "mean": -0.02
+   }
+  },
+  {
+   "material": "vowel a 150 Hz vibrato 30 c 5 Hz",
+   "f0": 150,
+   "pitch_st": 5,
+   "f0_curve_lag_ms": 7.0,
+   "depth_ratio": 0.995,
+   "cents_err_after_lag": {
+    "n": 1593,
+    "median": 0.06,
+    "abs_p50": 0.58,
+    "abs_p90": 1.37,
+    "mean": 0.06
+   }
+  },
+  {
+   "material": "vowel a 150 Hz vibrato 100 c 5 Hz",
+   "f0": 150,
+   "pitch_st": -7,
+   "f0_curve_lag_ms": 0.0,
+   "depth_ratio": 1.021,
+   "cents_err_after_lag": {
+    "n": 1577,
+    "median": 0.31,
+    "abs_p50": 1.85,
+    "abs_p90": 4.43,
+    "mean": -0.02
+   }
+  },
+  {
+   "material": "vowel a 150 Hz vibrato 100 c 5 Hz",
+   "f0": 150,
+   "pitch_st": 5,
+   "f0_curve_lag_ms": 7.0,
+   "depth_ratio": 0.994,
+   "cents_err_after_lag": {
+    "n": 1593,
+    "median": -0.03,
+    "abs_p50": 1.19,
+    "abs_p90": 3.15,
+    "mean": -0.03
+   }
+  },
+  {
+   "material": "vowel a 300 Hz vibrato 30 c 5 Hz",
+   "f0": 300,
+   "pitch_st": -7,
+   "f0_curve_lag_ms": 1.0,
+   "depth_ratio": 1.0,
+   "cents_err_after_lag": {
+    "n": 1599,
+    "median": -0.04,
+    "abs_p50": 1.03,
+    "abs_p90": 2.49,
+    "mean": -0.03
+   }
+  },
+  {
+   "material": "vowel a 300 Hz vibrato 30 c 5 Hz",
+   "f0": 300,
+   "pitch_st": 5,
+   "f0_curve_lag_ms": 4.0,
+   "depth_ratio": 1.002,
+   "cents_err_after_lag": {
+    "n": 1596,
+    "median": 0.18,
+    "abs_p50": 1.07,
+    "abs_p90": 2.55,
+    "mean": 0.16
+   }
+  },
+  {
+   "material": "vowel a 300 Hz vibrato 100 c 5 Hz",
+   "f0": 300,
+   "pitch_st": -7,
+   "f0_curve_lag_ms": 1.0,
+   "depth_ratio": 1.002,
+   "cents_err_after_lag": {
+    "n": 1599,
+    "median": -0.08,
+    "abs_p50": 1.25,
+    "abs_p90": 3.49,
+    "mean": -0.04
+   }
+  },
+  {
+   "material": "vowel a 300 Hz vibrato 100 c 5 Hz",
+   "f0": 300,
+   "pitch_st": 5,
+   "f0_curve_lag_ms": 4.0,
+   "depth_ratio": 0.999,
+   "cents_err_after_lag": {
+    "n": 1596,
+    "median": 0.12,
+    "abs_p50": 1.18,
+    "abs_p90": 2.95,
+    "mean": 0.12
+   }
+  }
+ ],
+ "bursts": [
+  {
+   "material": "noise after silence",
+   "pitch_st": 0,
+   "onset_delay_samples": 105,
+   "out_rms_first_20ms_minus_steady_db": -0.48,
+   "in_rms_first_20ms_minus_steady_db": -0.4
+  },
+  {
+   "material": "noise after silence",
+   "pitch_st": 5,
+   "onset_delay_samples": 76,
+   "out_rms_first_20ms_minus_steady_db": -4.92,
+   "in_rms_first_20ms_minus_steady_db": -0.4
+  },
+  {
+   "material": "noise after silence",
+   "pitch_st": -7,
+   "onset_delay_samples": 127,
+   "out_rms_first_20ms_minus_steady_db": -5.2,
+   "in_rms_first_20ms_minus_steady_db": -0.4
+  },
+  {
+   "material": "band 4-10 kHz after silence",
+   "pitch_st": 0,
+   "onset_delay_samples": 106,
+   "out_rms_first_20ms_minus_steady_db": -0.26,
+   "in_rms_first_20ms_minus_steady_db": -0.22
+  },
+  {
+   "material": "band 4-10 kHz after silence",
+   "pitch_st": 5,
+   "onset_delay_samples": 80,
+   "out_rms_first_20ms_minus_steady_db": -4.94,
+   "in_rms_first_20ms_minus_steady_db": -0.22
+  },
+  {
+   "material": "band 4-10 kHz after silence",
+   "pitch_st": -7,
+   "onset_delay_samples": 131,
+   "out_rms_first_20ms_minus_steady_db": -5.13,
+   "in_rms_first_20ms_minus_steady_db": -0.22
+  }
+ ]
+}

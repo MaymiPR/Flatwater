@@ -1,0 +1,6 @@
+# Flatwater Vocal Comp: the DSP (tools/FwVocalCompRender: in out channels fs Compression Gate Gain, in dB). 0.5 s, 48 kHz.
+@call FwVocalCompRender {in} {out} 2 {fs} {args}
+default_mix     signal=mix   0 -80 0
+comp20_mix      signal=mix   -20 -80 0
+comp30_gate_burst signal=burst -30 -40 -3
+comp12_sine     signal=sine  -12 -80 0

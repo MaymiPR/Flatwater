@@ -1,0 +1,40 @@
+# Text files are stored and checked out with LF line endings on every
+# platform; the Windows installer script and the PowerShell scripts keep CRLF.
+* text=auto eol=lf
+*.iss text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary data
+*.wav binary
+*.f32 binary
+*.npy binary
+*.npz binary
+*.png binary
+*.flp binary
+*.fst binary
+*.pkl binary
+*.bin binary
+*.ttf binary
+
+# Generated headers (nets, measured tables, image data, presets: each says which tool writes it). A regeneration
+# rewrites them wholesale, so GitHub collapses their diffs and no formatter or whitespace check touches them.
+plugins/FwBassLift/FwBassLiftGainNet.h linguist-generated=true
+plugins/FwBassLift/FwBassLiftPresets.h linguist-generated=true
+plugins/FwBassLeveler/FwBassLevelerPresets.h linguist-generated=true
+plugins/FwBassXLift/FwBassXLiftNet.h linguist-generated=true
+plugins/FwBassXLift/FwBassXLiftPresets.h linguist-generated=true
+plugins/FwComp/FwCompNet.h linguist-generated=true
+plugins/FwComp/FwCompPresets.h linguist-generated=true
+plugins/FwComp/FwCompTables.h linguist-generated=true
+plugins/FwDelay/FwDelayAnalogTables.h linguist-generated=true
+plugins/FwDelay/FwDelayPresets.h linguist-generated=true
+plugins/FwVocalComp/FwVocalCompNet.h linguist-generated=true
+plugins/FwVocalComp/FwVocalCompPresets.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainCompress.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainCompressNet.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainDeEss.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainEq.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainEqTables.h linguist-generated=true
+plugins/FwVocalChain/FwVocalChainFixed.h linguist-generated=true
+plugins/FwVocalLeveler/FwVocalLevelerFit.h linguist-generated=true
+plugins/FwVocalLeveler/FwVocalLevelerPresets.h linguist-generated=true

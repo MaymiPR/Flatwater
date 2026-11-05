@@ -1,0 +1,21 @@
+# Flatwater Vocal Chain: the plug-in processor (tools/FwVocalChainRender: in out channels fs [parameter ID=real value, colours 0 clear .. 3, noise=0, preset=index]). The Noise off: it is random.
+@call FwVocalChainRender {in} {out} 2 {fs} noise=0 {args} block={block}
+clear_mix          signal=mix   seconds=0.5 bassColor=0 trebleColor=0 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
+defaults_mix       signal=mix   seconds=1
+bass_sub_p10_noise signal=noise seconds=0.5 bass=10 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
+bass_upper_m10_noise signal=noise seconds=0.5 bassColor=3 bass=-10 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
+treble_bite_p10_noise signal=noise seconds=0.5 treble=10 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
+treble_roof_m6_noise signal=noise seconds=0.5 trebleColor=3 treble=-6 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
+push_p10_burst     signal=burst seconds=1 compress=10 sensitivity=6 reverbColor=0 delayColor=0 pitchColor=0
+spank_p5_burst     signal=burst seconds=1 compressColor=2 compress=5 sensitivity=6 reverbColor=0 delayColor=0 pitchColor=0
+wall_0_mix         signal=mix   seconds=1 compressColor=3 sensitivity=6 reverbColor=0 delayColor=0 pitchColor=0
+reverb_large_p5_burst signal=burst seconds=1 reverbColor=2 reverb=5 delayColor=0 pitchColor=0
+delay_eight_p10_burst signal=burst seconds=1 reverbColor=0 delayColor=2 delay=10 pitchColor=0
+pitch_stereo_p10_mix signal=mix seconds=1 reverbColor=0 delayColor=0 pitch=10
+pitch_wide_p10_mix signal=mix   seconds=1 reverbColor=0 delayColor=0 pitchColor=2 pitch=10
+pitch_spreader_p10_mix signal=mix seconds=1 reverbColor=0 delayColor=0 pitchColor=3 pitch=10
+balance_out_mix    signal=mix   seconds=0.5 balance=-4 output=-3 reverbColor=0 delayColor=0 pitchColor=0
+preset7_burst      signal=burst seconds=1 preset=7
+preset28_mix       signal=mix   seconds=1 preset=28
+defaults_mix_44k   signal=mix   seconds=1 fs=44100
+defaults_mix_96k   signal=mix   seconds=1 fs=96000

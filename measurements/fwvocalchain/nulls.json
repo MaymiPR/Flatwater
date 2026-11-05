@@ -1,0 +1,3918 @@
+[
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "clear",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0
+  },
+  "null": -78.92
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 -10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -77.48
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 -7.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -77.6
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 -3",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -77.85
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 +0",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -77.87
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 +2.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -77.7
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 +6",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -77.3
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c1 +10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -73.85
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 -10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -77.56
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 -7.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -77.7
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 -3",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -77.93
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 +0",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -77.87
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 +2.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -77.52
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 +6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -76.88
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 +10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -72.7
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 -10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -77.48
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 -7.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -78.06
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 -3",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -78.97
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 +0",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -77.01
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 +2.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -70.7
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 +6",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -75.31
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c3 +10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -73.85
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -78.55
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -78.66
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -78.82
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -78.92
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -79.05
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -79.19
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c1 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -79.17
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -78.2
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -78.41
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -78.73
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -78.92
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -79.24
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -79.55
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c2 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -75.67
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -78.57
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -78.58
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -78.7
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -78.92
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -79.15
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -79.36
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "treble c3 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -76.77
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "bass c2 +4, treble c3 -6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 4,
+   "treble": -6
+  },
+  "null": -76.96
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -72.47
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c1 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -67.8
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c1 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -68.14
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -76.93
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c2 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -74.05
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c2 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -69.12
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -78.2
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c3 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -76.73
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c3 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -70.39
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c2, sens +5, out -3, bal +3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "sensitivity": 5,
+   "output": -3,
+   "balance": 3
+  },
+  "null": -76.77
+ },
+ {
+  "set": "linear",
+  "fs": 44100,
+  "case": "reverb c3, bass c1 +6, treble c2 +4",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6,
+   "treble": 4
+  },
+  "null": -76.71
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "clear",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0
+  },
+  "null": -76.45
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 -10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -75.56
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 -7.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -75.6
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 -3",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -75.77
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 +0",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -75.8
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 +2.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -75.72
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 +6",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -75.49
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c1 +10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -72.92
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 -10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -75.67
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 -7.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -75.71
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 -3",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -75.84
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 +0",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -75.8
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 +2.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -75.59
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 +6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -75.18
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 +10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -71.91
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 -10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -75.6
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 -7.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -75.94
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 -3",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -76.46
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 +0",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -75.1
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 +2.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -69.74
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 +6",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -73.9
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c3 +10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -73.05
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -76.17
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -76.25
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -76.38
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -76.45
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -76.55
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -76.67
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c1 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -76.98
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -75.93
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -76.07
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -76.31
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -76.45
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -76.71
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -77.01
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c2 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -74.77
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -76.15
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -76.16
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -76.26
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -76.45
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -76.67
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -77.01
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "treble c3 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -75.66
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "bass c2 +4, treble c3 -6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 4,
+   "treble": -6
+  },
+  "null": -75.17
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -72.11
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c1 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -68.02
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c1 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -67.9
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -75.42
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c2 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -73.49
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c2 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -69.29
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -76.1
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c3 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -75.32
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c3 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -69.82
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c2, sens +5, out -3, bal +3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "sensitivity": 5,
+   "output": -3,
+   "balance": 3
+  },
+  "null": -75.48
+ },
+ {
+  "set": "linear",
+  "fs": 48000,
+  "case": "reverb c3, bass c1 +6, treble c2 +4",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6,
+   "treble": 4
+  },
+  "null": -75.21
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "clear",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0
+  },
+  "null": -71.06
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 -10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -72.68
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 -7.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -72.28
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 -3",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -71.49
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 +0",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -71.02
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 +2.5",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -70.42
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 +6",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -69.82
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c1 +10",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -68.06
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 -10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -72.94
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 -7.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -72.53
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 -3",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -71.57
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 +0",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -71.02
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 +2.5",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -70.35
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 +6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -69.67
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 +10",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -68.14
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 -10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -10
+  },
+  "null": -73.39
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 -7.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -7.5
+  },
+  "null": -73.66
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 -3",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": -3
+  },
+  "null": -70.16
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 +0",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 0
+  },
+  "null": -70.38
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 +2.5",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 2.5
+  },
+  "null": -60.34
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 +6",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6
+  },
+  "null": -68.99
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c3 +10",
+  "kw": {
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 10
+  },
+  "null": -61.01
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -70.9
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -70.95
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -71.02
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -71.06
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -71.1
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -71.16
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c1 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -71.52
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -70.61
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -70.79
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -70.98
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -71.06
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -71.22
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -71.44
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c2 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -71.93
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 -10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -10
+  },
+  "null": -71.2
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 -7.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -7.5
+  },
+  "null": -71.16
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 -3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": -3
+  },
+  "null": -71.1
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 0
+  },
+  "null": -71.06
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 +2.5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 2.5
+  },
+  "null": -71.07
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 +6",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 6
+  },
+  "null": -71.17
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "treble c3 +10",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "treble": 10
+  },
+  "null": -70.98
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "bass c2 +4, treble c3 -6",
+  "kw": {
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 4,
+   "treble": -6
+  },
+  "null": -70.13
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c1 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -69.3
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c1 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -66.72
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c1 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 1,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -65.84
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c2 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -70.92
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c2 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -70.41
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c2 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -66.99
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c3 +0",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 0
+  },
+  "null": -71.01
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c3 +5",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": 5
+  },
+  "null": -71.01
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c3 -7.3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "reverb": -7.3
+  },
+  "null": -67.29
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c2, sens +5, out -3, bal +3",
+  "kw": {
+   "bass_color": 0,
+   "treble_color": 0,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "sensitivity": 5,
+   "output": -3,
+   "balance": 3
+  },
+  "null": -70.91
+ },
+ {
+  "set": "linear",
+  "fs": 96000,
+  "case": "reverb c3, bass c1 +6, treble c2 +4",
+  "kw": {
+   "bass_color": 1,
+   "treble_color": 2,
+   "compress_color": 0,
+   "reverb_color": 3,
+   "delay_color": 0,
+   "pitch_color": 0,
+   "bass": 6,
+   "treble": 4
+  },
+  "null": -69.91
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "defaults",
+  "kw": {},
+  "pitch": "Stereo",
+  "null": -40.61,
+  "without_doubler": -41.02
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 00",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 0.0,
+   "treble_color": 1,
+   "compress": 0.0,
+   "compress_color": 1,
+   "reverb": 0.0,
+   "reverb_color": 1,
+   "delay": 0.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -40.61,
+  "without_doubler": -41.02
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 06",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 9.9,
+   "treble_color": 3,
+   "compress": 10.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": 10.0,
+   "delay_color": 3,
+   "pitch": 10.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -4.57,
+  "without_doubler": -24.12
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 12",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 8.0,
+   "treble_color": 1,
+   "compress": 7.0,
+   "compress_color": 3,
+   "reverb": 0.0,
+   "reverb_color": 0,
+   "delay": 0.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -31.92,
+  "without_doubler": -31.92
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 18",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 3.0,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -18.06,
+  "without_doubler": -26.18
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 24",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 2,
+   "treble": 7.0,
+   "treble_color": 3,
+   "compress": 0.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": -2.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -29.38,
+  "without_doubler": -29.38
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 30",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 5.0,
+   "treble_color": 2,
+   "compress": 8.0,
+   "compress_color": 2,
+   "reverb": -3.0,
+   "reverb_color": 2,
+   "delay": 1.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -28.19,
+  "without_doubler": -28.26
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 36",
+  "kw": {
+   "bass": 1.5,
+   "bass_color": 3,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 3.0,
+   "compress_color": 1,
+   "reverb": 1.5,
+   "reverb_color": 2,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -30.5,
+  "without_doubler": -30.47
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "preset 42",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 7.6,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -18.52,
+  "without_doubler": -26.19
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 0",
+  "kw": {
+   "bass": -6.4,
+   "treble": 2.8,
+   "compress": -0.7,
+   "reverb": -2.6,
+   "delay": -2.9,
+   "pitch": 5.8,
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 2,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -2.4,
+   "output": 5.6,
+   "balance": 5.0
+  },
+  "pitch": "Wide",
+  "null": -10.84,
+  "without_doubler": -35.22
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 1",
+  "kw": {
+   "bass": 2.7,
+   "treble": 5.1,
+   "compress": 0.3,
+   "reverb": 6.5,
+   "delay": -1.0,
+   "pitch": -3.2,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -0.8,
+   "output": 2.0,
+   "balance": -5.8
+  },
+  "pitch": "Wide",
+  "null": -15.23,
+  "without_doubler": -42.36
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 2",
+  "kw": {
+   "bass": -1.0,
+   "treble": -2.7,
+   "compress": -6.1,
+   "reverb": 1.9,
+   "delay": -1.3,
+   "pitch": -4.0,
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 3,
+   "reverb_color": 3,
+   "delay_color": 3,
+   "pitch_color": 3,
+   "sensitivity": 1.3,
+   "output": -1.9,
+   "balance": 5.4
+  },
+  "pitch": "Spreader",
+  "null": -29.76,
+  "without_doubler": -37.83
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 3",
+  "kw": {
+   "bass": 1.3,
+   "treble": -1.3,
+   "compress": 8.0,
+   "reverb": -3.6,
+   "delay": 3.9,
+   "pitch": -3.7,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 1,
+   "pitch_color": 0,
+   "sensitivity": -0.1,
+   "output": 1.0,
+   "balance": -3.7
+  },
+  "pitch": "clear",
+  "null": -42.06,
+  "without_doubler": -42.06
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 4",
+  "kw": {
+   "bass": 4.6,
+   "treble": 1.0,
+   "compress": 2.4,
+   "reverb": -2.6,
+   "delay": -1.6,
+   "pitch": -0.1,
+   "bass_color": 3,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -1.0,
+   "output": -6.0,
+   "balance": 3.5
+  },
+  "pitch": "Wide",
+  "null": -23.67,
+  "without_doubler": -45.71
+ },
+ {
+  "set": "full",
+  "fs": 44100,
+  "part": 30,
+  "case": "random 5",
+  "kw": {
+   "bass": 0.4,
+   "treble": -3.5,
+   "compress": -0.0,
+   "reverb": -8.1,
+   "delay": 8.1,
+   "pitch": 9.8,
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 1,
+   "reverb_color": 1,
+   "delay_color": 2,
+   "pitch_color": 2,
+   "sensitivity": -2.2,
+   "output": 0.8,
+   "balance": -1.0
+  },
+  "pitch": "Wide",
+  "null": -12.35,
+  "without_doubler": -32.07
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "defaults",
+  "kw": {},
+  "pitch": "Stereo",
+  "null": -42.46,
+  "without_doubler": -42.51
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 00",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 0.0,
+   "treble_color": 1,
+   "compress": 0.0,
+   "compress_color": 1,
+   "reverb": 0.0,
+   "reverb_color": 1,
+   "delay": 0.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -42.46,
+  "without_doubler": -42.51
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 06",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 9.9,
+   "treble_color": 3,
+   "compress": 10.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": 10.0,
+   "delay_color": 3,
+   "pitch": 10.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -17.08,
+  "without_doubler": -25.96
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 12",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 8.0,
+   "treble_color": 1,
+   "compress": 7.0,
+   "compress_color": 3,
+   "reverb": 0.0,
+   "reverb_color": 0,
+   "delay": 0.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -31.9,
+  "without_doubler": -31.9
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 18",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 3.0,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -16.09,
+  "without_doubler": -27.28
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 24",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 2,
+   "treble": 7.0,
+   "treble_color": 3,
+   "compress": 0.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": -2.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -29.53,
+  "without_doubler": -29.53
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 30",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 5.0,
+   "treble_color": 2,
+   "compress": 8.0,
+   "compress_color": 2,
+   "reverb": -3.0,
+   "reverb_color": 2,
+   "delay": 1.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -28.5,
+  "without_doubler": -28.47
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 36",
+  "kw": {
+   "bass": 1.5,
+   "bass_color": 3,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 3.0,
+   "compress_color": 1,
+   "reverb": 1.5,
+   "reverb_color": 2,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -33.55,
+  "without_doubler": -33.6
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "preset 42",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 7.6,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -16.58,
+  "without_doubler": -27.08
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 0",
+  "kw": {
+   "bass": -6.4,
+   "treble": 2.8,
+   "compress": -0.7,
+   "reverb": -2.6,
+   "delay": -2.9,
+   "pitch": 5.8,
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 2,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -2.4,
+   "output": 5.6,
+   "balance": 5.0
+  },
+  "pitch": "Wide",
+  "null": -29.53,
+  "without_doubler": -36.22
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 1",
+  "kw": {
+   "bass": 2.7,
+   "treble": 5.1,
+   "compress": 0.3,
+   "reverb": 6.5,
+   "delay": -1.0,
+   "pitch": -3.2,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -0.8,
+   "output": 2.0,
+   "balance": -5.8
+  },
+  "pitch": "Wide",
+  "null": -29.96,
+  "without_doubler": -57.01
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 2",
+  "kw": {
+   "bass": -1.0,
+   "treble": -2.7,
+   "compress": -6.1,
+   "reverb": 1.9,
+   "delay": -1.3,
+   "pitch": -4.0,
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 3,
+   "reverb_color": 3,
+   "delay_color": 3,
+   "pitch_color": 3,
+   "sensitivity": 1.3,
+   "output": -1.9,
+   "balance": 5.4
+  },
+  "pitch": "Spreader",
+  "null": -18.18,
+  "without_doubler": -39.01
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 3",
+  "kw": {
+   "bass": 1.3,
+   "treble": -1.3,
+   "compress": 8.0,
+   "reverb": -3.6,
+   "delay": 3.9,
+   "pitch": -3.7,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 1,
+   "pitch_color": 0,
+   "sensitivity": -0.1,
+   "output": 1.0,
+   "balance": -3.7
+  },
+  "pitch": "clear",
+  "null": -54.52,
+  "without_doubler": -54.52
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 4",
+  "kw": {
+   "bass": 4.6,
+   "treble": 1.0,
+   "compress": 2.4,
+   "reverb": -2.6,
+   "delay": -1.6,
+   "pitch": -0.1,
+   "bass_color": 3,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -1.0,
+   "output": -6.0,
+   "balance": 3.5
+  },
+  "pitch": "Wide",
+  "null": -40.26,
+  "without_doubler": -57.2
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 30,
+  "case": "random 5",
+  "kw": {
+   "bass": 0.4,
+   "treble": -3.5,
+   "compress": -0.0,
+   "reverb": -8.1,
+   "delay": 8.1,
+   "pitch": 9.8,
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 1,
+   "reverb_color": 1,
+   "delay_color": 2,
+   "pitch_color": 2,
+   "sensitivity": -2.2,
+   "output": 0.8,
+   "balance": -1.0
+  },
+  "pitch": "Wide",
+  "null": -31.09,
+  "without_doubler": -40.14
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "defaults",
+  "kw": {},
+  "pitch": "Stereo",
+  "null": -38.45,
+  "without_doubler": -38.97
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 00",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 0.0,
+   "treble_color": 1,
+   "compress": 0.0,
+   "compress_color": 1,
+   "reverb": 0.0,
+   "reverb_color": 1,
+   "delay": 0.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -38.45,
+  "without_doubler": -38.97
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 06",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 9.9,
+   "treble_color": 3,
+   "compress": 10.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": 10.0,
+   "delay_color": 3,
+   "pitch": 10.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -4.79,
+  "without_doubler": -24.16
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 12",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 8.0,
+   "treble_color": 1,
+   "compress": 7.0,
+   "compress_color": 3,
+   "reverb": 0.0,
+   "reverb_color": 0,
+   "delay": 0.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -29.52,
+  "without_doubler": -29.52
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 18",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 3.0,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -23.27,
+  "without_doubler": -27.82
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 24",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 2,
+   "treble": 7.0,
+   "treble_color": 3,
+   "compress": 0.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": -2.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -30.19,
+  "without_doubler": -30.19
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 30",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 5.0,
+   "treble_color": 2,
+   "compress": 8.0,
+   "compress_color": 2,
+   "reverb": -3.0,
+   "reverb_color": 2,
+   "delay": 1.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -27.24,
+  "without_doubler": -27.25
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 36",
+  "kw": {
+   "bass": 1.5,
+   "bass_color": 3,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 3.0,
+   "compress_color": 1,
+   "reverb": 1.5,
+   "reverb_color": 2,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -32.57,
+  "without_doubler": -33.03
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "preset 42",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 7.6,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -23.65,
+  "without_doubler": -27.72
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 0",
+  "kw": {
+   "bass": -6.4,
+   "treble": 2.8,
+   "compress": -0.7,
+   "reverb": -2.6,
+   "delay": -2.9,
+   "pitch": 5.8,
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 2,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -2.4,
+   "output": 5.6,
+   "balance": 5.0
+  },
+  "pitch": "Wide",
+  "null": -6.97,
+  "without_doubler": -28.15
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 1",
+  "kw": {
+   "bass": 2.7,
+   "treble": 5.1,
+   "compress": 0.3,
+   "reverb": 6.5,
+   "delay": -1.0,
+   "pitch": -3.2,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -0.8,
+   "output": 2.0,
+   "balance": -5.8
+  },
+  "pitch": "Wide",
+  "null": -18.91,
+  "without_doubler": -30.18
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 2",
+  "kw": {
+   "bass": -1.0,
+   "treble": -2.7,
+   "compress": -6.1,
+   "reverb": 1.9,
+   "delay": -1.3,
+   "pitch": -4.0,
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 3,
+   "reverb_color": 3,
+   "delay_color": 3,
+   "pitch_color": 3,
+   "sensitivity": 1.3,
+   "output": -1.9,
+   "balance": 5.4
+  },
+  "pitch": "Spreader",
+  "null": -32.11,
+  "without_doubler": -33.42
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 3",
+  "kw": {
+   "bass": 1.3,
+   "treble": -1.3,
+   "compress": 8.0,
+   "reverb": -3.6,
+   "delay": 3.9,
+   "pitch": -3.7,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 1,
+   "pitch_color": 0,
+   "sensitivity": -0.1,
+   "output": 1.0,
+   "balance": -3.7
+  },
+  "pitch": "clear",
+  "null": -47.74,
+  "without_doubler": -47.74
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 4",
+  "kw": {
+   "bass": 4.6,
+   "treble": 1.0,
+   "compress": 2.4,
+   "reverb": -2.6,
+   "delay": -1.6,
+   "pitch": -0.1,
+   "bass_color": 3,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -1.0,
+   "output": -6.0,
+   "balance": 3.5
+  },
+  "pitch": "Wide",
+  "null": -11.59,
+  "without_doubler": -41.18
+ },
+ {
+  "set": "full",
+  "fs": 48000,
+  "part": 33,
+  "case": "random 5",
+  "kw": {
+   "bass": 0.4,
+   "treble": -3.5,
+   "compress": -0.0,
+   "reverb": -8.1,
+   "delay": 8.1,
+   "pitch": 9.8,
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 1,
+   "reverb_color": 1,
+   "delay_color": 2,
+   "pitch_color": 2,
+   "sensitivity": -2.2,
+   "output": 0.8,
+   "balance": -1.0
+  },
+  "pitch": "Wide",
+  "null": -4.67,
+  "without_doubler": -42.13
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "defaults",
+  "kw": {},
+  "pitch": "Stereo",
+  "null": -18.08,
+  "without_doubler": -42.17
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 00",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 0.0,
+   "treble_color": 1,
+   "compress": 0.0,
+   "compress_color": 1,
+   "reverb": 0.0,
+   "reverb_color": 1,
+   "delay": 0.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -18.08,
+  "without_doubler": -42.17
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 06",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 9.9,
+   "treble_color": 3,
+   "compress": 10.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": 10.0,
+   "delay_color": 3,
+   "pitch": 10.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -4.5,
+  "without_doubler": -25.44
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 12",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 8.0,
+   "treble_color": 1,
+   "compress": 7.0,
+   "compress_color": 3,
+   "reverb": 0.0,
+   "reverb_color": 0,
+   "delay": 0.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -31.04,
+  "without_doubler": -31.04
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 18",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 3.0,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -9.32,
+  "without_doubler": -26.93
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 24",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 2,
+   "treble": 7.0,
+   "treble_color": 3,
+   "compress": 0.0,
+   "compress_color": 3,
+   "reverb": 10.0,
+   "reverb_color": 3,
+   "delay": -2.0,
+   "delay_color": 0,
+   "pitch": 0.0,
+   "pitch_color": 0,
+   "balance": 0.0
+  },
+  "pitch": "clear",
+  "null": -28.84,
+  "without_doubler": -28.84
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 30",
+  "kw": {
+   "bass": 0.0,
+   "bass_color": 1,
+   "treble": 5.0,
+   "treble_color": 2,
+   "compress": 8.0,
+   "compress_color": 2,
+   "reverb": -3.0,
+   "reverb_color": 2,
+   "delay": 1.0,
+   "delay_color": 1,
+   "pitch": 0.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -13.75,
+  "without_doubler": -27.93
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 36",
+  "kw": {
+   "bass": 1.5,
+   "bass_color": 3,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 3.0,
+   "compress_color": 1,
+   "reverb": 1.5,
+   "reverb_color": 2,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 1,
+   "balance": 0.0
+  },
+  "pitch": "Stereo",
+  "null": -32.12,
+  "without_doubler": -33.39
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "preset 42",
+  "kw": {
+   "bass": -3.0,
+   "bass_color": 2,
+   "treble": 6.0,
+   "treble_color": 2,
+   "compress": 7.0,
+   "compress_color": 2,
+   "reverb": 7.6,
+   "reverb_color": 3,
+   "delay": 6.0,
+   "delay_color": 3,
+   "pitch": 3.0,
+   "pitch_color": 3,
+   "balance": 0.0
+  },
+  "pitch": "Spreader",
+  "null": -9.95,
+  "without_doubler": -26.82
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 0",
+  "kw": {
+   "bass": -6.4,
+   "treble": 2.8,
+   "compress": -0.7,
+   "reverb": -2.6,
+   "delay": -2.9,
+   "pitch": 5.8,
+   "bass_color": 2,
+   "treble_color": 3,
+   "compress_color": 2,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -2.4,
+   "output": 5.6,
+   "balance": 5.0
+  },
+  "pitch": "Wide",
+  "null": -6.48,
+  "without_doubler": -35.48
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 1",
+  "kw": {
+   "bass": 2.7,
+   "treble": 5.1,
+   "compress": 0.3,
+   "reverb": 6.5,
+   "delay": -1.0,
+   "pitch": -3.2,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 0,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -0.8,
+   "output": 2.0,
+   "balance": -5.8
+  },
+  "pitch": "Wide",
+  "null": -27.67,
+  "without_doubler": -56.81
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 2",
+  "kw": {
+   "bass": -1.0,
+   "treble": -2.7,
+   "compress": -6.1,
+   "reverb": 1.9,
+   "delay": -1.3,
+   "pitch": -4.0,
+   "bass_color": 3,
+   "treble_color": 0,
+   "compress_color": 3,
+   "reverb_color": 3,
+   "delay_color": 3,
+   "pitch_color": 3,
+   "sensitivity": 1.3,
+   "output": -1.9,
+   "balance": 5.4
+  },
+  "pitch": "Spreader",
+  "null": -19.88,
+  "without_doubler": -38.55
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 3",
+  "kw": {
+   "bass": 1.3,
+   "treble": -1.3,
+   "compress": 8.0,
+   "reverb": -3.6,
+   "delay": 3.9,
+   "pitch": -3.7,
+   "bass_color": 0,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 1,
+   "pitch_color": 0,
+   "sensitivity": -0.1,
+   "output": 1.0,
+   "balance": -3.7
+  },
+  "pitch": "clear",
+  "null": -54.26,
+  "without_doubler": -54.26
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 4",
+  "kw": {
+   "bass": 4.6,
+   "treble": 1.0,
+   "compress": 2.4,
+   "reverb": -2.6,
+   "delay": -1.6,
+   "pitch": -0.1,
+   "bass_color": 3,
+   "treble_color": 1,
+   "compress_color": 0,
+   "reverb_color": 2,
+   "delay_color": 3,
+   "pitch_color": 2,
+   "sensitivity": -1.0,
+   "output": -6.0,
+   "balance": 3.5
+  },
+  "pitch": "Wide",
+  "null": -11.48,
+  "without_doubler": -57.13
+ },
+ {
+  "set": "full",
+  "fs": 96000,
+  "part": 30,
+  "case": "random 5",
+  "kw": {
+   "bass": 0.4,
+   "treble": -3.5,
+   "compress": -0.0,
+   "reverb": -8.1,
+   "delay": 8.1,
+   "pitch": 9.8,
+   "bass_color": 1,
+   "treble_color": 0,
+   "compress_color": 1,
+   "reverb_color": 1,
+   "delay_color": 2,
+   "pitch_color": 2,
+   "sensitivity": -2.2,
+   "output": 0.8,
+   "balance": -1.0
+  },
+  "pitch": "Wide",
+  "null": -3.36,
+  "without_doubler": -39.82
+ }
+]

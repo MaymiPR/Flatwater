@@ -1,0 +1,300 @@
+{
+ "what": "grain time scale (semitones; how far Pitch alone moves the formants) against Pitch, f0 150 Hz, from marker probes (structure.json has the method)",
+ "rows": [
+  {
+   "pitch_st": 2,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 285.1,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 0.9528,
+   "grain_time_scale_in_st": 0.84,
+   "expected_from_formant_only_st": 0,
+   "tracks": 4,
+   "grain_track_span_samples_median": 288.0,
+   "grain_track_span_in_periods": 0.9,
+   "copies_per_marker_mean": 2.05,
+   "read_delay_min": 69,
+   "read_delay_max": 367,
+   "marker_gain_min": 0.893,
+   "marker_gain_max": 1.926,
+   "marker_gain_mean": 1.257,
+   "marker_gain_mean_per_output_period": 1.12
+  },
+  {
+   "pitch_st": 3,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 269.1,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 0.9305,
+   "grain_time_scale_in_st": 1.25,
+   "expected_from_formant_only_st": 0,
+   "tracks": 4,
+   "grain_track_span_samples_median": 272.0,
+   "grain_track_span_in_periods": 0.85,
+   "copies_per_marker_mean": 2.05,
+   "read_delay_min": 66,
+   "read_delay_max": 346,
+   "marker_gain_min": 0.756,
+   "marker_gain_max": 1.932,
+   "marker_gain_mean": 1.032,
+   "marker_gain_mean_per_output_period": 0.868
+  },
+  {
+   "pitch_st": 4,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 254.0,
+   "markers": 40,
+   "markers_moving_the_grains": 6,
+   "grain_time_scale": 0.9063,
+   "grain_time_scale_in_st": 1.7,
+   "expected_from_formant_only_st": 0,
+   "tracks": 3,
+   "grain_track_span_samples_median": 272.0,
+   "grain_track_span_in_periods": 0.85,
+   "copies_per_marker_mean": 1.71,
+   "read_delay_min": 187,
+   "read_delay_max": 318,
+   "marker_gain_min": 0.826,
+   "marker_gain_max": 1.041,
+   "marker_gain_mean": 0.918,
+   "marker_gain_mean_per_output_period": 0.729
+  },
+  {
+   "pitch_st": 6,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 226.3,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 0.8654,
+   "grain_time_scale_in_st": 2.5,
+   "expected_from_formant_only_st": 0,
+   "tracks": 4,
+   "grain_track_span_samples_median": 408.0,
+   "grain_track_span_in_periods": 1.27,
+   "copies_per_marker_mean": 2.33,
+   "read_delay_min": 154,
+   "read_delay_max": 429,
+   "marker_gain_min": 0.702,
+   "marker_gain_max": 1.649,
+   "marker_gain_mean": 1.052,
+   "marker_gain_mean_per_output_period": 0.744
+  },
+  {
+   "pitch_st": 8,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 201.6,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 0.8652,
+   "grain_time_scale_in_st": 2.51,
+   "expected_from_formant_only_st": 0,
+   "tracks": 5,
+   "grain_track_span_samples_median": 384.0,
+   "grain_track_span_in_periods": 1.2,
+   "copies_per_marker_mean": 2.27,
+   "read_delay_min": 116,
+   "read_delay_max": 362,
+   "marker_gain_min": 0.835,
+   "marker_gain_max": 2.07,
+   "marker_gain_mean": 1.276,
+   "marker_gain_mean_per_output_period": 0.804
+  },
+  {
+   "pitch_st": -2,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 359.2,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 1.0497,
+   "grain_time_scale_in_st": -0.84,
+   "expected_from_formant_only_st": 0,
+   "tracks": 3,
+   "grain_track_span_samples_median": 288.0,
+   "grain_track_span_in_periods": 0.9,
+   "copies_per_marker_mean": 1.73,
+   "read_delay_min": 145,
+   "read_delay_max": 223,
+   "marker_gain_min": 0.92,
+   "marker_gain_max": 1.279,
+   "marker_gain_mean": 1.148,
+   "marker_gain_mean_per_output_period": 1.289
+  },
+  {
+   "pitch_st": -3,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 380.5,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 1.0753,
+   "grain_time_scale_in_st": -1.26,
+   "expected_from_formant_only_st": 0,
+   "tracks": 2,
+   "grain_track_span_samples_median": 392.0,
+   "grain_track_span_in_periods": 1.23,
+   "copies_per_marker_mean": 1.23,
+   "read_delay_min": 294,
+   "read_delay_max": 369,
+   "marker_gain_min": 0.0,
+   "marker_gain_max": 1.319,
+   "marker_gain_mean": 0.813,
+   "marker_gain_mean_per_output_period": 0.966
+  },
+  {
+   "pitch_st": -4,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 403.2,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 1.1013,
+   "grain_time_scale_in_st": -1.67,
+   "expected_from_formant_only_st": 0,
+   "tracks": 2,
+   "grain_track_span_samples_median": 384.0,
+   "grain_track_span_in_periods": 1.2,
+   "copies_per_marker_mean": 1.23,
+   "read_delay_min": 294,
+   "read_delay_max": 394,
+   "marker_gain_min": 0.0,
+   "marker_gain_max": 1.317,
+   "marker_gain_mean": 0.761,
+   "marker_gain_mean_per_output_period": 0.959
+  },
+  {
+   "pitch_st": -5,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 427.1,
+   "markers": 40,
+   "markers_moving_the_grains": 9,
+   "grain_time_scale": 1.1278,
+   "grain_time_scale_in_st": -2.08,
+   "expected_from_formant_only_st": 0,
+   "tracks": 4,
+   "grain_track_span_samples_median": 232.0,
+   "grain_track_span_in_periods": 0.72,
+   "copies_per_marker_mean": 1.74,
+   "read_delay_min": 127,
+   "read_delay_max": 340,
+   "marker_gain_min": 0.897,
+   "marker_gain_max": 1.188,
+   "marker_gain_mean": 1.044,
+   "marker_gain_mean_per_output_period": 1.393
+  },
+  {
+   "pitch_st": -6,
+   "formant_st": 0,
+   "f0": 150,
+   "period_in": 320.0,
+   "period_out": 452.5,
+   "markers": 40,
+   "markers_moving_the_grains": 0,
+   "grain_time_scale": 1.1555,
+   "grain_time_scale_in_st": -2.5,
+   "expected_from_formant_only_st": 0,
+   "tracks": 3,
+   "grain_track_span_samples_median": 384.0,
+   "grain_track_span_in_periods": 1.2,
+   "copies_per_marker_mean": 1.65,
+   "read_delay_min": 135,
+   "read_delay_max": 398,
+   "marker_gain_min": 0.917,
+   "marker_gain_max": 1.305,
+   "marker_gain_mean": 1.08,
+   "marker_gain_mean_per_output_period": 1.528
+  }
+ ],
+ "beta_by_pitch": [
+  [
+   -12,
+   -2.54
+  ],
+  [
+   -7,
+   -2.5
+  ],
+  [
+   -6,
+   -2.5
+  ],
+  [
+   -5,
+   -2.08
+  ],
+  [
+   -4,
+   -1.67
+  ],
+  [
+   -3,
+   -1.26
+  ],
+  [
+   -2,
+   -0.84
+  ],
+  [
+   -1,
+   -0.41
+  ],
+  [
+   0,
+   -0.0
+  ],
+  [
+   1,
+   0.41
+  ],
+  [
+   2,
+   0.84
+  ],
+  [
+   3,
+   1.25
+  ],
+  [
+   4,
+   1.7
+  ],
+  [
+   5,
+   2.08
+  ],
+  [
+   6,
+   2.5
+  ],
+  [
+   8,
+   2.51
+  ],
+  [
+   12,
+   2.5
+  ]
+ ],
+ "fit_clip": {
+  "k": 0.418,
+  "limit_st": 2.51,
+  "rms_st": 0.012
+ }
+}

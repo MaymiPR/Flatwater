@@ -1,0 +1,5 @@
+# Flatwater Delay: the DSP (tools/FwDelayRender: in out channels fs [key=value]: time time_r (ms) feedback mix depth hipass lopass (0 to 100 or Hz) rate pingpong lofi analog block). 1 s.
+@call FwDelayRender {in} {out} 2 {fs} {args} block={block}
+t120_fb40_burst signal=burst seconds=1 time=120 feedback=40 mix=50
+pingpong_burst  signal=burst seconds=1 time=80 time_r=160 feedback=30 mix=100 pingpong=1
+mod_filters_analog_mix signal=mix seconds=1 time=60 feedback=20 mix=50 depth=50 rate=2 hipass=200 lopass=5000 analog=1
