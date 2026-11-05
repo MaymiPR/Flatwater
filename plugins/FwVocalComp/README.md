@@ -1,6 +1,9 @@
 # Flatwater Vocal Comp
 
-<img src="../../docs/images/fwvocalcomp.png" alt="Flatwater Vocal Comp editor on dark blue: the Gate fader over the Energy meter on the left, the large Comp fader in the centre window, the Gain fader and the Output meters on the right" width="371">
+<img
+  src="../../docs/images/fwvocalcomp.png"
+  alt="Flatwater Vocal Comp editor on dark blue: the Gate fader over the Energy meter on the left, the large Comp fader in the centre window, the Gain fader and the Output meters on the right"
+  width="371">
 
 Part of [Flatwater](../../README.md). Flatwater Vocal Comp is a vocal compressor, gate and limiter behind three
 controls. It recreates Waves Renaissance Vox. Comp sets how hard the voice is compressed: lowering it adds gain

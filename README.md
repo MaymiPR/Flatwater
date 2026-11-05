@@ -19,7 +19,11 @@ Open-source recreations of Waves mixing plug-ins, null-tested against the origin
 VST3, CLAP, AU and standalone apps for Windows, macOS and Linux.
 
 <p align="center">
-  <img src="docs/screenshots/hero.png" alt="Three Flatwater editors side by side in the suite's dark look: Flatwater Vocal Chain's six-fader vocal chain, Flatwater Comp's compressor with a VU meter, and Flatwater Vocal Leveler's narrow fader panel" width="100%">
+  <img
+    src="docs/screenshots/hero.png"
+    alt="Three Flatwater editors side by side in the suite's dark look: Flatwater Vocal Chain's six-fader vocal chain,
+    Flatwater Comp's compressor with a VU meter, and Flatwater Vocal Leveler's narrow fader panel"
+    width="100%">
 </p>
 
 | | Plug-in | Recreates | What it does |
@@ -59,7 +63,10 @@ originals are the reference for every behaviour; each plug-in's measurements say
 - **The same toolbar everywhere** (ours): undo and redo, a preset menu with factory presets and your own, A / B setups
   with copy, and a window-size menu.
 
-  <img src="docs/images/toolbar.png" alt="The Flatwater toolbar: logo, Mode drop-down, undo and redo, preset box with previous and next arrows, A to B, Setup A and Save, then the menu button" width="643">
+  <img
+    src="docs/images/toolbar.png"
+    alt="The Flatwater toolbar: logo, Mode drop-down, undo and redo, preset box with previous and next arrows, A to B, Setup A and Save, then the menu button"
+    width="643">
 
 - **Every format from one build:** VST3, CLAP and a standalone app on all three systems, plus AU on macOS.
 
