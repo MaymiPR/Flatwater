@@ -21,7 +21,8 @@ VST3, CLAP, AU and standalone apps for Windows, macOS and Linux.
 <p align="center">
   <img
     src="docs/screenshots/hero.png"
-    alt="Three Flatwater editors side by side in the suite's dark look: Flatwater Vocal Chain's six-fader vocal chain, Flatwater Comp's compressor with a VU meter, and Flatwater Vocal Leveler's narrow fader panel"
+    alt="Three Flatwater editors side by side in the suite's dark look: Flatwater Vocal Chain's six-fader vocal chain,
+    Flatwater Comp's compressor with a VU meter, and Flatwater Vocal Leveler's narrow fader panel"
     width="100%">
 </p>
 

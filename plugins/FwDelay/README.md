@@ -2,7 +2,9 @@
 
 <img
   src="../../docs/images/fwdelay.png"
-  alt="Flatwater Delay editor: an orange panel with the TAP pad and LoFi button on the left, the large DELAY and FEEDBACK knobs around an amber time display, the Depth, Rate, HiPass and LoPass knobs with the Link wheel below, an output meter, and Dry/Wet, Output and Analog knobs on the right"
+  alt="Flatwater Delay editor: an orange panel with the TAP pad and LoFi button on the left, the large DELAY and
+  FEEDBACK knobs around an amber time display, the Depth, Rate, HiPass and LoPass knobs with the Link wheel below, an
+  output meter, and Dry/Wet, Output and Analog knobs on the right"
   width="480">
 
 Part of [Flatwater](../../README.md). Flatwater Delay is a hybrid delay for slap-back, echoes, ping-pong, flanging and

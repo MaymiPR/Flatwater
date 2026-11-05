@@ -2,7 +2,9 @@
 
 <img
   src="../../docs/images/fwbasslift.png"
-  alt="Flatwater Bass Lift editor on dark blue: the IN switch over the Original Bass meter on the left, the large Intensity fader in the centre window, the Gain fader and the Output meters on the right, the Freq slider at the bottom"
+  alt="Flatwater Bass Lift editor on dark blue: the IN switch over the Original Bass meter on the left, the large
+  Intensity fader in the centre window, the Gain fader and the Output meters on the right, the Freq slider at the
+  bottom"
   width="371">
 
 Part of [Flatwater](../../README.md). Flatwater Bass Lift is a psychoacoustic bass enhancer. It recreates Waves

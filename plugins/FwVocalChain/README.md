@@ -2,7 +2,9 @@
 
 <img
   src="../../docs/images/fwvocalchain.png"
-  alt="Flatwater Vocal Chain editor: a red header plate over a dark metal panel, the Input Sens fader and input meter on the left, six stage faders from Bass to Pitch with a colour button and a flavour display above each, and the output meter and Output fader on the right"
+  alt="Flatwater Vocal Chain editor: a red header plate over a dark metal panel, the Input Sens fader and input meter
+  on the left, six stage faders from Bass to Pitch with a colour button and a flavour display above each, and the
+  output meter and Output fader on the right"
   width="480">
 
 Part of [Flatwater](../../README.md). Flatwater Vocal Chain is a whole vocal chain on six faders: EQ, compression,
