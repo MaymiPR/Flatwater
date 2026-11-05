@@ -1,6 +1,9 @@
 # Flatwater Comp
 
-<img src="../../docs/images/fwcomp.png" alt="Flatwater Comp editor: an orange panel with a backlit VU meter in the centre, the large Threshold knob under it, Analog, Ratio, Punch and Attack knobs on the left, Output, Mix and Release knobs on the right, the IN, GR, OUT and LIMITER buttons on top and the BPM, HOST, MS buttons beside a BPM display" width="480">
+<img
+  src="../../docs/images/fwcomp.png"
+  alt="Flatwater Comp editor: an orange panel with a backlit VU meter in the centre, the large Threshold knob under it, Analog, Ratio, Punch and Attack knobs on the left, Output, Mix and Release knobs on the right, the IN, GR, OUT and LIMITER buttons on top and the BPM, HOST, MS buttons beside a BPM display"
+  width="480">
 
 Part of [Flatwater](../../README.md). Flatwater Comp is a hybrid compressor: a precise compressor with modelled analog
 colour. It recreates Waves H-Comp. Punch lets transients through even at a fast attack. The release can follow the

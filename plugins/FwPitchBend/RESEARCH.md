@@ -53,23 +53,23 @@ such as 0.075 are shown rounded up: 0.08); the choices are evenly spaced.
 
 | # | Name | Range, taper | Default | Shown as |
 |---|---|---|---|---|
-| 1, 10 | Mod1 / Mod2 Warp | 0.01 · 10000^v | 1.00 | `1.00 ` |
-| 2, 11 | Mod1 / Mod2 Level | 0 ... 1, linear | 1.00 | `1.00 ` |
-| 3, 12 | Mod1 / Mod2 Rate Synced | 24 choices, 32B ... 1/64T (slowest first) | 1B | `1B `, `1/8D `, `1/16T ` |
+| 1, 10 | Mod1 / Mod2 Warp | 0.01 · 10000^v | 1.00 | `"1.00 "` |
+| 2, 11 | Mod1 / Mod2 Level | 0 ... 1, linear | 1.00 | `"1.00 "` |
+| 3, 12 | Mod1 / Mod2 Rate Synced | 24 choices, 32B ... 1/64T (slowest first) | 1B | `"1B "`, `"1/8D "`, `"1/16T "` |
 | 4, 13 | Mod1 / Mod2 Rate | 0.06 · 500^v Hz | 0.500 Hz | `0.500 Hz` |
 | 5, 14 | Mod1 / Mod2 Sync On/Off | Note / ms | Note | |
 | 6, 15 | Mod1 / Mod2 Phase | 0 ... 1, linear | 0.000 | |
 | 7, 16 | Mod1 / Mod2 Type | LFO / Seq | LFO | |
-| 8, 17 | Mod1 / Mod2 Smooth | 1000^v | 1.5 | `1.5 ` |
+| 8, 17 | Mod1 / Mod2 Smooth | 1000^v | 1.5 | `"1.5 "` |
 | 9, 18 | Mod1 / Mod2 Steps | 2 ... 16 (rounded) | 16 | |
 | 19, 20 | AM Attack, AM Release | 0.1 · 10000^v ms | 10.0 ms, 100.0 ms | `10.0 ms` |
 | 21 | AM Level | 0 ... 2, linear | 1.00 | |
 | 22 | PT Smooth | 1000^v | 10.0 | |
 | 23 | PT Offset | -1 ... 1, linear | 0.00 | |
 | 24 | PT Level | 0 ... 2, linear | 1.00 | |
-| 25, 26 | Pitch, Formant | -12 ... +12 semitones, linear | 0 | `-5 semitones ` (whole semitones) |
-| 27 | Mix | 0 ... 100, linear | 100.0 | `100.0 ` |
-| 28 | Flatten Note | 24 choices, C2 ... B3 | C3 | `C3 ` |
+| 25, 26 | Pitch, Formant | -12 ... +12 semitones, linear | 0 | `"-5 semitones "` (whole semitones) |
+| 27 | Mix | 0 ... 100, linear | 100.0 | `"100.0 "` |
+| 28 | Flatten Note | 24 choices, C2 ... B3 | C3 | `"C3 "` |
 | 29 | Flatten On/Off | Off / On | Off | |
 
 Not host parameters (P3): Fine, the modulation slots and their depths, the shapes, and whether a rate in Hz runs free.

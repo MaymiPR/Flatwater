@@ -1,6 +1,9 @@
 # Flatwater Bass Leveler
 
-<img src="../../docs/images/fwbassleveler.png" alt="Flatwater Bass Leveler editor: a narrow panel with the Target slider, the Sensitivity knob, the Response switch and the Spill and Artifacts knobs on top, and the Range, Rider and Output faders on a cream panel below" width="320">
+<img
+  src="../../docs/images/fwbassleveler.png"
+  alt="Flatwater Bass Leveler editor: a narrow panel with the Target slider, the Sensitivity knob, the Response switch and the Spill and Artifacts knobs on top, and the Range, Rider and Output faders on a cream panel below"
+  width="320">
 
 Part of [Flatwater](../../README.md). Flatwater Bass Leveler rides the level of a bass track note by note. It
 recreates Waves Bass Rider. It finds each note's attack, sustain and release and sets a gain per note toward a target

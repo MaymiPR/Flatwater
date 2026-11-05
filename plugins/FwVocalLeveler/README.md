@@ -1,6 +1,9 @@
 # Flatwater Vocal Leveler
 
-<img src="../../docs/images/fwvocalleveler.png" alt="Flatwater Vocal Leveler editor: a narrow panel with the Target slider, the Ride and Idle LEDs, the Fast / Slow switch and the Vocal and Music sensitivity knobs on top, the Range, Rider and Output faders below, and the OFF, WRITE and READ automation buttons at the bottom" width="320">
+<img
+  src="../../docs/images/fwvocalleveler.png"
+  alt="Flatwater Vocal Leveler editor: a narrow panel with the Target slider, the Ride and Idle LEDs, the Fast / Slow switch and the Vocal and Music sensitivity knobs on top, the Range, Rider and Output faders below, and the OFF, WRITE and READ automation buttons at the bottom"
+  width="320">
 
 Part of [Flatwater](../../README.md). Flatwater Vocal Leveler rides the level of a vocal in real time, like a hand on
 the fader. It recreates Waves Vocal Rider. It adds no latency and needs no pre-scan. It changes only the gain, not the

@@ -108,6 +108,5 @@ and display family. Its layout was measured on the screenshots (D4).
 88 factory presets of 45 values each (all read back through the reference: `nulltest/read_ref_presets_hd.py`, to the
 local `build/ref_presets_HDelay.json`): Full Reset, PA Default, 22 Classics, 11 Modulation, 11 Ambience, 22 Special FX
 (several with Feedback over 100), and 20 signed by engineers whose names are in the preset names. 34 are for the
-stereo components only. They use Host or ms sync (none BPM), Ping Pong on 39, LoFi on 30, every Analog mode, Mix mostly
-
-100. Flatwater's presets carry them over by their values under Flatwater names (no person's or product's name).
+stereo components only. They use Host or ms sync (none BPM), Ping Pong on 39, LoFi on 30, every Analog mode, Mix mostly 100.
+Flatwater's presets carry them over by their values under Flatwater names (no person's or product's name).
