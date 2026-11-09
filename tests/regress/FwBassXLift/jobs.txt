@@ -1,5 +1,5 @@
-# Flatwater BassX Lift: the DSP (tools/FwBassXLiftRender: in out channels fs [key=value]: input freq decay response ratio highpass orig harm monitor block).
-@call FwBassXLiftRender {in} {out} 2 {fs} {args} block={block}
+# Flatwater BassX Lift: the DSP (plugins/FwBassXLift/tools/BxRender: in out channels fs [key=value]: input freq decay response ratio highpass orig harm monitor block).
+@call BxRender {in} {out} 2 {fs} {args} block={block}
 default_mix     signal=mix
 default_burst   signal=burst
 f60_hp_mix      signal=mix   freq=60 highpass=1

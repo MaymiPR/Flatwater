@@ -9,7 +9,7 @@ behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 | Source | What it is |
 |---|---|
 | D1 | The official product page, [waves.com/plugins/h-delay-hybrid-delay](https://www.waves.com/plugins/h-delay-hybrid-delay), and the manual linked from it, [h-delay-hybrid-delay.pdf](https://assets.wavescdn.com/pdf/plugins/h-delay-hybrid-delay.pdf) (H-Delay Hybrid Delay User Guide) |
-| D2 | The original plug-in observed in a host: its parameters, its editor and its 88 factory presets (read back through the reference plug-in, `nulltest/read_ref_presets_hd.py`) |
+| D2 | The original plug-in observed in a host: its parameters, its editor and its 88 factory presets (read back through the reference plug-in, `plugins/FwDelay/nulltest/read_ref_presets.py`) |
 | D3 | The original plug-in as a host loads it (`nulltest/probe_hdelay.py`): components H-Delay Mono, H-Delay Stereo and H-Delay Mono/Stereo (one input and two outputs, which pedalboard cannot load); automatable parameters below; no side-chain bus |
 | D4 | Screenshots of the real editor taken with `tools/MeterCapture` (git-ignored `reference/hdelay/`): stereo and mono at the defaults, MS sync, a Delay drag, Ping Pong, LoFi, Dual |
 
@@ -100,13 +100,13 @@ and display family. Its layout was measured on the screenshots (D4).
   LoPass under FILTERS.
 - The plug-in's name in large type at the lower left. Value texts are shown while a knob is dragged; Alt resets; text
   entry on the knobs and the displays. A 40 px drag up on Delay in MS moved it 375 to 415 ms.
-- New against Flatwater Comp's widget kit (`FwHybridUI`): the tap pad, the vertical bar meter with its scale, the Link
+- New against Flatwater Comp's widget kit (`shared/ui/HybridUI`): the tap pad, the vertical bar meter with its scale, the Link
   wheel, the delay display's layouts (note / BPM, ms, Ping Pong, Dual) and the stepped note scale on the Delay knob.
 
 ## Presets (D2)
 
-88 factory presets of 45 values each (all read back through the reference: `nulltest/read_ref_presets_hd.py`, to the
-local `build/ref_presets_HDelay.json`): Full Reset, PA Default, 22 Classics, 11 Modulation, 11 Ambience, 22 Special FX
+88 factory presets of 45 values each (all read back through the reference: `plugins/FwDelay/nulltest/read_ref_presets.py`, to the
+local `build/ref_presets_HDelay.json`): a reset, a live-sound start, 22 Classics, 11 Modulation, 11 Ambience, 22 Special FX
 (several with Feedback over 100), and 20 signed by engineers whose names are in the preset names. 34 are for the
 stereo components only. They use Host or ms sync (none BPM), Ping Pong on 39, LoFi on 30, every Analog mode, Mix mostly 100.
 Flatwater's presets carry them over by their values under Flatwater names (no person's or product's name).

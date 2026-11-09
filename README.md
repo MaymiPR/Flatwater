@@ -28,15 +28,15 @@ VST3, CLAP, AU and standalone apps for Windows, macOS and Linux.
 
 | | Plug-in | Recreates | What it does |
 |---|---|---|---|
-| <img src="docs/images/fwvocalcomp.png" alt="Flatwater Vocal Comp editor: Gate fader, Comp meter and Gain fader" width="120"> | **[Flatwater Vocal Comp](plugins/FwVocalComp)** | Waves Renaissance Vox | Three-control vocal compressor, gate and limiter |
-| <img src="docs/images/fwbasslift.png" alt="Flatwater Bass Lift editor: Freq, Intensity and Gain controls" width="120"> | **[Flatwater Bass Lift](plugins/FwBassLift)** | Waves Renaissance Bass | Psychoacoustic bass enhancer |
-| <img src="docs/images/fwbassxlift.png" alt="Flatwater BassX Lift editor: bass enhancer with harmonics compressor, filters and monitor modes" width="120"> | **[Flatwater BassX Lift](plugins/FwBassXLift)** | Waves MaxxBass | Bass enhancer with a harmonics compressor, filters and monitor modes |
-| <img src="docs/images/fwcomp.png" alt="Flatwater Comp editor: compressor with a large Threshold knob and a VU meter" width="120"> | **[Flatwater Comp](plugins/FwComp)** | Waves H-Comp | Hybrid compressor with punch, tempo-synced release, analog modes and a limiter |
-| <img src="docs/images/fwdelay.png" alt="Flatwater Delay editor: delay with time, feedback, filters, modulation and analog controls" width="120"> | **[Flatwater Delay](plugins/FwDelay)** | Waves H-Delay | Hybrid delay with tape-style time changes, ping-pong, modulation, filters and LoFi |
-| <img src="docs/images/fwbassleveler.png" alt="Flatwater Bass Leveler editor: narrow panel with Target, Range and Rider faders" width="120"> | **[Flatwater Bass Leveler](plugins/FwBassLeveler)** | Waves Bass Rider | Note-by-note bass level rider |
-| <img src="docs/images/fwvocalleveler.png" alt="Flatwater Vocal Leveler editor: narrow panel with Target, sensitivity knobs and Range, Rider and Output faders" width="120"> | **[Flatwater Vocal Leveler](plugins/FwVocalLeveler)** | Waves Vocal Rider | Real-time vocal level rider |
-| <img src="docs/images/fwvocalchain.png" alt="Flatwater Vocal Chain editor: six stage faders from Bass to Pitch" width="120"> | **[Flatwater Vocal Chain](plugins/FwVocalChain)** | Waves CLA Vocals | One fader per stage vocal chain: EQ, compression, de-essing, reverb, delay, doubling |
-| <img src="docs/images/fwpitchbend.png" alt="Flatwater Pitch Bend editor: large Pitch and Formant knobs and the modulator panel" width="120"> | **[Flatwater Pitch Bend](plugins/FwPitchBend)** | Waves Vocal Bender | Real-time pitch and formant shifter for a voice, with Flatten and four modulators |
+| <img src="docs/screenshots/fwvocalcomp.png" alt="Flatwater Vocal Comp editor: Gate fader, Comp meter and Gain fader" width="120"> | **[Flatwater Vocal Comp](plugins/FwVocalComp)** | Waves Renaissance Vox | Three-control vocal compressor, gate and limiter |
+| <img src="docs/screenshots/fwbasslift.png" alt="Flatwater Bass Lift editor: Freq, Intensity and Gain controls" width="120"> | **[Flatwater Bass Lift](plugins/FwBassLift)** | Waves Renaissance Bass | Psychoacoustic bass enhancer |
+| <img src="docs/screenshots/fwbassxlift.png" alt="Flatwater BassX Lift editor: bass enhancer with harmonics compressor, filters and monitor modes" width="120"> | **[Flatwater BassX Lift](plugins/FwBassXLift)** | Waves MaxxBass | Bass enhancer with a harmonics compressor, filters and monitor modes |
+| <img src="docs/screenshots/fwcomp.png" alt="Flatwater Comp editor: compressor with a large Threshold knob and a VU meter" width="120"> | **[Flatwater Comp](plugins/FwComp)** | Waves H-Comp | Hybrid compressor with punch, tempo-synced release, analog modes and a limiter |
+| <img src="docs/screenshots/fwdelay.png" alt="Flatwater Delay editor: delay with time, feedback, filters, modulation and analog controls" width="120"> | **[Flatwater Delay](plugins/FwDelay)** | Waves H-Delay | Hybrid delay with tape-style time changes, ping-pong, modulation, filters and LoFi |
+| <img src="docs/screenshots/fwbassleveler.png" alt="Flatwater Bass Leveler editor: narrow panel with Target, Range and Rider faders" width="120"> | **[Flatwater Bass Leveler](plugins/FwBassLeveler)** | Waves Bass Rider | Note-by-note bass level rider |
+| <img src="docs/screenshots/fwvocalleveler.png" alt="Flatwater Vocal Leveler editor: narrow panel with Target, sensitivity knobs and Range, Rider and Output faders" width="120"> | **[Flatwater Vocal Leveler](plugins/FwVocalLeveler)** | Waves Vocal Rider | Real-time vocal level rider |
+| <img src="docs/screenshots/fwvocalchain.png" alt="Flatwater Vocal Chain editor: six stage faders from Bass to Pitch" width="120"> | **[Flatwater Vocal Chain](plugins/FwVocalChain)** | Waves CLA Vocals | One fader per stage vocal chain: EQ, compression, de-essing, reverb, delay, doubling |
+| <img src="docs/screenshots/fwpitchbend.png" alt="Flatwater Pitch Bend editor: large Pitch and Formant knobs and the modulator panel" width="120"> | **[Flatwater Pitch Bend](plugins/FwPitchBend)** | Waves Vocal Bender | Real-time pitch and formant shifter for a voice, with Flatten and four modulators |
 
 > Flatwater is an independent project. It is not affiliated with, endorsed by or sponsored by Waves Audio or
 > Chris Lord-Alge. Product names are theirs and only describe what each plug-in is modelled on. No code, models,
@@ -64,7 +64,7 @@ originals are the reference for every behaviour; each plug-in's measurements say
   with copy, and a window-size menu.
 
   <img
-    src="docs/images/toolbar.png"
+    src="docs/screenshots/flatwater-toolbar.png"
     alt="The Flatwater toolbar: logo, Mode drop-down, undo and redo, preset box with previous and next arrows, A to B, Setup A and Save, then the menu button"
     width="643">
 
@@ -130,7 +130,7 @@ better: −60 dB is inaudible in practice, 0 dB is no match.
 | [Flatwater Vocal Chain](plugins/FwVocalChain/NULLTESTS.md) | held-out vocal parts, the whole chain: median −33.2 dB with the doubler clear, −36.0 dB on Stereo; 43 factory presets: median −30.1 dB | not measured | the Bass, Treble and Reverb stages: median −75.7 dB | the Wide and Spreader doublers, matched in level, spectrum and delay but not sample for sample (medians −9 to −24 dB) |
 | [Flatwater Pitch Bend](plugins/FwPitchBend/NULLTESTS.md) | with no shift: −67 dB on a sung take; shifted, matched by what is heard: 62 of 80 factory preset and take pairs within the level, pitch and tone targets | the modulators through Mix: 38 of 38 within 0.003 to 0.01 of the range | no shift, and the modulators' laws (to 0.0001 rms) | any shift on a real voice: its own shifter, so no sample null (a steady vowel cancels to −13 to −27 dB with small Formant moves) |
 
-Each plug-in's name links to every case in its NULLTESTS.md; [docs/RESULTS.md](docs/RESULTS.md) explains each result and how each model was found.
+Each plug-in's name links to every case in its NULLTESTS.md; [docs/results.md](docs/results.md) explains each result and how each model was found.
 
 ## Building from source
 
@@ -143,7 +143,7 @@ Found a bug or a difference from the original? Open an
 [issue](https://github.com/MaymiPR/Flatwater/issues/new/choose) and attach the settings or a preset that shows it.
 To change the code, read [CONTRIBUTING.md](CONTRIBUTING.md) for the tests, the null tests against the originals and
 the release steps. Changes per version are in [CHANGELOG.md](CHANGELOG.md); open items per plug-in are in
-[docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md).
+[docs/improvements.md](docs/improvements.md).
 
 ## Security
 

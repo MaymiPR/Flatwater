@@ -2,7 +2,7 @@
 
 The current values of every stage of Flatwater Pitch Bend, measured on the original it recreates (Vocal Bender), with
 the method and the residual or confidence of each. The data is in
-[measurements/fwpitchbend/](../../measurements/fwpitchbend); the generated case tables are in
+[measurements/FwPitchBend/](../../measurements/FwPitchBend); the generated case tables are in
 [NULLTESTS.md](NULLTESTS.md) and [NULLTESTS-presets.md](NULLTESTS-presets.md).
 
 ## Setup
@@ -10,13 +10,13 @@ the method and the residual or confidence of each. The data is in
 | Item | Value |
 |---|---|
 | Reference | Vocal Bender (Waves), the Mono and Stereo components, from a licensed install |
-| Host | `tools/RefRender` through `nulltest/pb_host.py`, a fresh instance per render; the settings only the editor sets are written into the reference's saved state (`nulltest/pb_state.py`) |
+| Host | `tools/RefRender` through `plugins/FwPitchBend/nulltest/vb.py`, a fresh instance per render; the settings only the editor sets are written into the reference's saved state (`plugins/FwPitchBend/nulltest/editor_state.py`) |
 | Rates | 48 kHz unless noted; 44.1 and 96 kHz checks |
-| Hosting check | `nulltest/first_null_fwpitchbend.py`: latency 0 on both components; the host Bypass is the input (-282 dB); two renders of the same input and settings null to -280 dB (deterministic, so every stage compares render against render); our renderer equals the VST3 (-282 dB) |
+| Hosting check | `plugins/FwPitchBend/nulltest/first_null.py`: latency 0 on both components; the host Bypass is the input (-282 dB); two renders of the same input and settings null to -280 dB (deterministic, so every stage compares render against render); our renderer equals the VST3 (-282 dB) |
 | Modulator readout | Mix is an exact crossfade (section 1), so m(t), the Mix the reference applies, reads any modulator's output sample by sample: Pitch +12 for a wet far from the dry, noise input, 16-sample windows |
-| Shifter battery | `nulltest/measure_pitchbend_shifter.py`: about 2,600 renders of the Mono component at Mix 100; per case in `measurements/fwpitchbend/shifter/SUMMARY.md` and its JSON files |
-| Modulator battery | `nulltest/measure_pitchbend_mods.py` (`measurements/fwpitchbend/mods/`); the nulls `nulltest/null_pitchbend_mods.py` |
-| Scorecard | `nulltest/score_pitchbend_shifter.py` (`measurements/fwpitchbend/shifter/ours.json`); thresholds M1 to M8 in `SUMMARY.md` |
+| Shifter battery | `plugins/FwPitchBend/nulltest/measure_shifter.py`: about 2,600 renders of the Mono component at Mix 100; per case in `measurements/FwPitchBend/shifter/SUMMARY.md` and its JSON files |
+| Modulator battery | `plugins/FwPitchBend/nulltest/measure_mods.py` (`measurements/FwPitchBend/mods/`); the nulls `plugins/FwPitchBend/nulltest/null_mods.py` |
+| Scorecard | `plugins/FwPitchBend/nulltest/score_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`); thresholds M1 to M8 in `SUMMARY.md` |
 
 A shifter does not null sample for sample once it shifts, so the shifter is judged on the scorecard (behaviour) and
 the modulators, which are exact or fitted laws, are nulled through Mix: an exact law away from the jumps against
@@ -55,7 +55,7 @@ the modulators, which are exact or fitted laws, are nulled through Mix: an exact
 | Depth on Pitch | in the knob's units: depth 25, 50, 75, 100 of a +1 source give +6.1, +12.0, +17.9, +24.0 st; the sum of the slots clips at +-24, twice the knob's range (two slots adding past +24 give +24; base +5 with +12 gives +17) | pitch of the output | exact at the clip |
 | Depth on Formant | clips at the knob's +-12 (depth 75 and 100 both give +12.05) | the same | exact |
 | Depth curve of a modulated Pitch | not quite linear: with constant sources +6.122 for depth 25 x 1 and 50 x 0.5 but +6.148 for 100 x 0.25; +12.000 for 50 x 1 and 100 x 0.5; +9.075 for 37.5 x 1 and 75 x 0.5, +9.096 for 100 x 0.375, +9.040 for 50 x 0.75; at depth 100 the excess rises to +15 cents near +5 st, is 0 at +12 and -20 cents near +19; two slots on one source add as one slot of their summed depth; static knob settings are exact | the same | open: no law fits every case; ours is linear (at most about 20 cents off) |
-| Knobs against modulation | the output's pitch and the Formant part of the envelope follow the modulated totals; the envelope's share of Pitch (β) follows the Pitch knob only (knob -5 with +5 modulated: -2.0 st, pitch unshifted); the knobs also decide the level (section 9) | `nulltest/measure_pitchbend_control.py`, `shifter/control.json` | the envelope within 0.5 st on 38 of 43 cells |
+| Knobs against modulation | the output's pitch and the Formant part of the envelope follow the modulated totals; the envelope's share of Pitch (β) follows the Pitch knob only (knob -5 with +5 modulated: -2.0 st, pitch unshifted); the knobs also decide the level (section 9) | `plugins/FwPitchBend/nulltest/measure_control.py`, `shifter/control.json` | the envelope within 0.5 st on 38 of 43 cells |
 
 ## 3. M1 and M2: LFO and sequencer
 
@@ -108,7 +108,7 @@ the held values and the fixed delay above seen through the window. Per sample wi
 | Rate | a 1.5, p 3.905 (s 0.05 gives x1.30, 0.1 x1.68, 0.25 x3.72, 0.5 x15.6, clipped at 30 Hz); the same on a synced rate (1 beat at 120 bpm with s 0.1 runs at 3.37 Hz, not at a synced length); independent of the base rate (x1.6845 at 0.2, 1 and 4 Hz) | the same | exact |
 | Phase, Level (M1, M2) | Phase adds and wraps (-0.25 is 0.75); Level adds | the same | exact |
 | Timing | a modulator's own controls follow their sources sample by sample (stepped modulation lands without a block's lag); a free rate's count starts its delay late rather than subtracting it, so a moving rate does not jump the cycle; the free period is made whole ticks before the modulation scales it (1 Hz x 1.6845 runs at 1.6843 Hz) | the same | exact |
-| Pitch and Formant | follow their slots sample by sample: on a 220 Hz sine the reference's output frequency crosses a step's midpoint 2.9 ms after the step (spread 0.8 ms, the same at every place in the host block, free or synced), on a vowel 1.4 ms after; ours runs the shifter in steps of 16 samples at the totals there: 2.8 ms on the sine, 3.4 on the vowel (an output period is decided as its grain starts, a period ahead); a 2 Hz LFO on Pitch lines up with no lag | `nulltest/measure_pitchbend_modpitch.py`: a 0 / +6 st sequence, 250 ms steps, at all 16 places in the host block | measured |
+| Pitch and Formant | follow their slots sample by sample: on a 220 Hz sine the reference's output frequency crosses a step's midpoint 2.9 ms after the step (spread 0.8 ms, the same at every place in the host block, free or synced), on a vowel 1.4 ms after; ours runs the shifter in steps of 16 samples at the totals there: 2.8 ms on the sine, 3.4 on the vowel (an output period is decided as its grain starts, a period ahead); a 2 Hz LFO on Pitch lines up with no lag | `plugins/FwPitchBend/nulltest/measure_modpitch.py`: a 0 / +6 st sequence, 250 ms steps, at all 16 places in the host block | measured |
 
 Method notes: a pitch tracker's crossings on a vowel suggest a rule of one block late; that is the tracker's own lag.
 The case table is generated in [NULLTESTS.md](NULLTESTS.md), the modulators section.
@@ -120,7 +120,7 @@ The case table is generated in [NULLTESTS.md](NULLTESTS.md), the modulators sect
 | No shift | a fixed fractional delay of 105.531 samples at 48 kHz (2.199 ms; 211.063 at 96 kHz, 120.438 at 44.1 kHz), the same for every f0, material and level; 105.53125 is the best 1/32-sample delay on a vibrato vowel | the shifter battery | -57 ... -68 dB on voice after it; scorecard M4 delay error 0.0002 samples |
 | Silence | comes out as exactly 0 | the same | exact |
 | Grain latch | at a total of 0 from the start the output is the pass-through bit for bit; once Pitch has moved (by the knob, +3 and back to 0, or by modulation, a +3 step among 0 steps) it never returns: 4.5 ... 7 s later the residual against the pass-through is still +1.3 ... +2.2 dB, at the input's level (0.00 dB on a vowel, +0.01 on the sung take); ours keeps its grains running once they have run | the same | the latched level matches (-0.00 and +0.03 dB) |
-| Reset on a stopped input | once the input has played, a run of digital silence or of any constant (a DC of 1e-5 ... 1e-3 too, but not a sine of 1e-9, nor a voice at -80 dBFS) of about 22 ms stops the grains and the latch; from then on the pass-through is the input exactly 39 samples late (residual -143 dB) where before it is 105.53 samples late. The run: 1030 samples at 48 kHz from a place 0 mod 8 of the processing (1029 does not reset), 1029 from 3 mod 8, 976 ... 980 at 44.1 kHz, 2101 ... 2400 at 96; the delay 39 samples at 44.1 and 48 kHz, 78 at 96. The pre-roll's silence before anything played does not count; every phrase gap of the takes (0.25 s of zeros) and the silence between a DAW's regions resets it | `nulltest/measure_pitchbend_modpitch.py silence` | ours: the run 1024 samples at 48 kHz on an 8-sample grid, scaled with the rate; the delay 39 x the rate's multiple of 48 kHz |
+| Reset on a stopped input | once the input has played, a run of digital silence or of any constant (a DC of 1e-5 ... 1e-3 too, but not a sine of 1e-9, nor a voice at -80 dBFS) of about 22 ms stops the grains and the latch; from then on the pass-through is the input exactly 39 samples late (residual -143 dB) where before it is 105.53 samples late. The run: 1030 samples at 48 kHz from a place 0 mod 8 of the processing (1029 does not reset), 1029 from 3 mod 8, 976 ... 980 at 44.1 kHz, 2101 ... 2400 at 96; the delay 39 samples at 44.1 and 48 kHz, 78 at 96. The pre-roll's silence before anything played does not count; every phrase gap of the takes (0.25 s of zeros) and the silence between a DAW's regions resets it | `plugins/FwPitchBend/nulltest/measure_modpitch.py silence` | ours: the run 1024 samples at 48 kHz on an 8-sample grid, scaled with the rate; the delay 39 x the rate's multiple of 48 kHz |
 
 ## 8. The shifter: pitch, formant and grains
 
@@ -144,17 +144,17 @@ The case table is generated in [NULLTESTS.md](NULLTESTS.md), the modulators sect
 |---|---|---|---|
 | Input level | the output level does not depend on the input's level | -40 ... -6 dBFS | <= 0.3 dB |
 | Per setting | moves -3.5 ... +1.8 dB with the setting; noise -0.6 dB | the shifter battery | measured |
-| Per material | within a setting the level follows the input's peakiness (kurtosis over 20 ms windows, energy weighted): a straight line per setting in ln kurtosis, -1 ... -2.7 dB per unit, a peakier voice coming out quieter; the spread across materials, 0.76 dB rms per setting (median), leaves 0.40 after the fit (f0 as a second variable takes off at most 0.13 more); the grid replaces an additive Pitch + Formant law (off by up to about 2 dB in combination: +12 / +12 is -3.4 dB on the reference) | `nulltest/measure_pitchbend_level_grid.py`, `shifter/levelgrid.json`, `SUMMARY.md` section 8: a 13 x 11 Pitch x Formant grid (142 settings) over 20 materials (vowels 80 ... 300 Hz, two bandwidths, sung and spoken phrases) | scorecard M3 140 of 143 cells |
+| Per material | within a setting the level follows the input's peakiness (kurtosis over 20 ms windows, energy weighted): a straight line per setting in ln kurtosis, -1 ... -2.7 dB per unit, a peakier voice coming out quieter; the spread across materials, 0.76 dB rms per setting (median), leaves 0.40 after the fit (f0 as a second variable takes off at most 0.13 more); the grid replaces an additive Pitch + Formant law (off by up to about 2 dB in combination: +12 / +12 is -3.4 dB on the reference) | `plugins/FwPitchBend/nulltest/measure_level_grid.py`, `shifter/levelgrid.json`, `SUMMARY.md` section 8: a 13 x 11 Pitch x Formant grid (142 settings) over 20 materials (vowels 80 ... 300 Hz, two bandwidths, sung and spoken phrases) | scorecard M3 140 of 143 cells |
 | Near no shift | the reference's level rises from 0 dB at no shift through +0.16, +0.47, +0.94, +1.9 and +2.9 dB at 0.02, 0.05, 0.1, 0.25 and 0.5 semitone to about +3.5 at +-1 (both signs alike); ours applies its +-1 level times tanh(abs(shift) / 0.36 st) | a vowel, free mode, every knob at 0 | measured |
-| Under Flatten and past +-12 | the level target follows the shift each grain really makes (under Flatten, the note against the voice's pitch), with a Flatten level model fitted from -36 to +30 st of real shift and the Pitch table carried to +-24; a high sung voice flattened to C2 comes out within 0.1 ... 0.8 dB of the reference (-5.1 ... -7.9 dB) | `nulltest/measure_pitchbend_level_flatten.py`, `shifter/level_flatten.json` | 188 of 220 judged cells within 1 dB |
-| With the knobs at 0 | with every knob at 0 (and no Flatten) modulated Pitch is not level-corrected (+1 ... +5 dB, its own measured table) and noise passes as the delayed input; with a knob set, the Pitch table applies at the total; the shifter takes both the knobs' values and the totals | `nulltest/measure_pitchbend_control.py`, `shifter/control.json` | 301 of 331 judged cells within 1 dB |
+| Under Flatten and past +-12 | the level target follows the shift each grain really makes (under Flatten, the note against the voice's pitch), with a Flatten level model fitted from -36 to +30 st of real shift and the Pitch table carried to +-24; a high sung voice flattened to C2 comes out within 0.1 ... 0.8 dB of the reference (-5.1 ... -7.9 dB) | `plugins/FwPitchBend/nulltest/measure_level_flatten.py`, `shifter/level_flatten.json` | 188 of 220 judged cells within 1 dB |
+| With the knobs at 0 | with every knob at 0 (and no Flatten) modulated Pitch is not level-corrected (+1 ... +5 dB, its own measured table) and noise passes as the delayed input; with a knob set, the Pitch table applies at the total; the shifter takes both the knobs' values and the totals | `plugins/FwPitchBend/nulltest/measure_control.py`, `shifter/control.json` | 301 of 331 judged cells within 1 dB |
 | Not modelled | a 4.5 ... 7 dB dip of the reference at +12 with Formant -3 ... -5 on 300 Hz voices only, and a -3 dB ridge where F + β equals Pitch, both only at the grid points | the level grid | open |
 
 ## 10. The shifter: a moving pitch
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Reference lag | about 1.5 ms behind the input's pitch at Formant -12 ... +1; from Formant +2 one input period more, rising with the time scale (+6: 12 ms at 120 Hz, 7 at 200; +12: 19.5 and 10.5); with Pitch set, 1 ... 7 ms at 200 Hz (11 at 120, Pitch +12); it keeps the vibrato's full swing (rms 1 ... 7 cents) | `nulltest/measure_pitchbend_modpitch.py vibrato`: a vowel with 100 cents of vibrato at 5 Hz, static settings, Fine on; a pulse train with the same vibrato shows the same lags in its output pulses, so they are the grains' spacing | measured |
+| Reference lag | about 1.5 ms behind the input's pitch at Formant -12 ... +1; from Formant +2 one input period more, rising with the time scale (+6: 12 ms at 120 Hz, 7 at 200; +12: 19.5 and 10.5); with Pitch set, 1 ... 7 ms at 200 Hz (11 at 120, Pitch +12); it keeps the vibrato's full swing (rms 1 ... 7 cents) | `plugins/FwPitchBend/nulltest/measure_modpitch.py vibrato`: a vowel with 100 cents of vibrato at 5 Hz, static settings, Fine on; a pulse train with the same vibrato shows the same lags in its output pulses, so they are the grains' spacing | measured |
 | Ours | the read point and spacing of section 8; on the grid (Formant -12 ... +12, Pitch -12 ... +12, 120 and 200 Hz) within 2 ms of the reference on 27 of 34 settings (every one at 200 Hz), tracking as closely or closer on Formant, 1 ... 2 times its rms on Pitch; at Formant -12 ... +1 within 1 ms | the same | one note's delay is set once at its first grain, so at Formant +4 ... +12 and Pitch +12 ours lies 1 ... 4 ms off, as far as the reference's own 120 and 200 Hz lags are from one rule |
 
 ## 11. Sample nulls with a shift
@@ -189,7 +189,7 @@ since the grains are spaced by the period where they read.
 | The 2.2 ms wet delay with its comb at mid Mix; chords left mostly unshifted | copied |
 | The pitch detector's octave-down hysteresis (an octave drop 400 to 200 Hz never followed) | not copied: ours follows the drop in 26 ... 28 ms |
 | The +1.8 dB on noise at Pitch +-1 | not copied: ours -0.2 ... -1.1 dB (noise correlation with the delayed input <= 0.07) |
-| A rate in Hz with Sync off snapped to a synced length | not copied: Sync off is a free rate in Hz; the factory presets carry the length the reference plays at 120 bpm as a synced rate (`tools/make_presets_pitchbend.py`) |
+| A rate in Hz with Sync off snapped to a synced length | not copied: Sync off is a free rate in Hz; the factory presets carry the length the reference plays at 120 bpm as a synced rate (`plugins/FwPitchBend/scripts/make_presets.py`) |
 | The original's drawn LFO shapes | not shipped: presets that use one get the nearest of our own shapes (shape substituted) |
 
 ## Declined changes
@@ -200,7 +200,7 @@ since the grains are spaced by the period where they read.
 
 ## Factory presets
 
-`nulltest/null_pitchbend_presets.py` (`measurements/fwpitchbend/presets_null.json`): 62 of the 80 preset and take pairs
+`plugins/FwPitchBend/nulltest/null_presets.py` (`measurements/FwPitchBend/presets_null.json`): 62 of the 80 preset and take pairs
 meet every target (level, pitch, tone); 67 of 80 with the reference's own shapes loaded into ours. The median pitch
 difference is 2.3 cents on the sung take and 6.5 on the spoken one; the median sample null on the sung take is +1.5 dB
 (no cancellation on a voice, section 11). Where the pairs miss:
@@ -218,7 +218,7 @@ Every pair: [NULLTESTS-presets.md](NULLTESTS-presets.md).
 
 The shifter decides on near-equal values (voicing, its marks, which period a grain reads), so a unit in the last place
 from a C library's exp, log or sin could move a grain on another system. Its transcendental functions and the
-modulators' come from `FwPitchBendMath.h` (on `Source/common/FwMath.h`, with sin and cos of its own), which give the
+modulators' come from `plugins/FwPitchBend/Source/dsp/Math.h` (on `shared/dsp/Math.h`, with sin and cos of its own), which give the
 same bits wherever doubles round to nearest. The knobs' exponential tapers (Rate, Warp, Smooth, AM's times, PT's
 Smooth) round their value to 1e-5, so a value set comes back as itself (in double precision a free rate set to 4 Hz
 otherwise comes back a hair over and runs a whole 8-sample tick short, which fails four modulator null cases). The
@@ -252,7 +252,7 @@ The reference is the original named in Setup, run from a licensed install.
 - Fitted from the reference's output: the constants of our own methods (a YIN detector, pitch-synchronous overlap-add,
   the modulators by their laws): the no-shift delay, β, the level per setting and per material, the gate, the
   modulators' timing and ranges.
-- Redrawn: the editor, drawn in code in Flatwater's own look (`Source/common/FwTheme.h`) on the original's measured
+- Redrawn: the editor, drawn in code in Flatwater's own look (`shared/ui/Theme.h`) on the original's measured
   layout (the positions and sizes of the controls, the knobs' angle ranges, the drag speeds); our own fluted caps, arcs,
   icons and lettering; no table of the original's pixels ships. The modulators' shape library is our own (shapes by
   their math and our own step patterns).

@@ -55,9 +55,10 @@ the set the CI workflow and the local check (`scripts/check.ps1`, `scripts/check
 
 ## Output
 
-Each plug-in lands in `build/plugins/<Name>/<Name>_artefacts/Release/` (`VST3/`, `CLAP/`, `AU/`, `Standalone/`), for
-example `build/plugins/FwVocalComp/FwVocalComp_artefacts/Release/VST3/Flatwater Vocal Comp.vst3`. A copy of every VST3
-also lands in `build/plugins/`. Copy the plug-ins to your plug-in folders, or run a standalone app from there.
+Each plug-in lands in `build/<Id>_artefacts/Release/` (`VST3/`, `CLAP/`, `AU/`, `Standalone/`), for example
+`build/FwVocalComp_artefacts/Release/VST3/Flatwater Vocal Comp.vst3`, and every other target (the tests, the
+renderers, the snapshot tools) in `build/<Target>_artefacts/Release/`. A copy of every VST3 also lands in
+`build/plugins/`. Copy the plug-ins to your plug-in folders, or run a standalone app from there.
 
 The same build makes the unit tests; run them with:
 

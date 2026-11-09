@@ -10,7 +10,7 @@ The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | V1 | The public manual, [vocal-rider.pdf](https://assets.wavescdn.com/pdf/plugins/vocal-rider.pdf); the product page [waves.com/plugins/vocal-rider](https://www.waves.com/plugins/vocal-rider) |
 | V2 | The original plug-in observed in a host: its parameters (ranges, steps, defaults) and its 13 factory presets, each loaded into the original and read back |
-| V3 | The original's VST3 as a host sees it (`nulltest/probe_vocalleveler.py`, and `tools/RefRender`, which prints the input buses and enables a mono side-chain on mono components): Vocal Rider Mono, Vocal Rider Stereo, Vocal Rider Live Mono, Vocal Rider Live Stereo |
+| V3 | The original's VST3 as a host sees it (`plugins/FwVocalLeveler/nulltest/probe_parameters.py`, and `tools/RefRender`, which prints the input buses and enables a mono side-chain on mono components): Vocal Rider Mono, Vocal Rider Stereo, Vocal Rider Live Mono, Vocal Rider Live Stereo |
 | V4 | Frames of the real editor read back from its OpenGL drawing (`tools/MeterCapture gl=1 in=...`, 320 x 598, git-ignored `reference/fwvocalleveler/shots/`), with voice-like syllables (`reference/fwvocalleveler/syllables.f32`) |
 
 ## Documented behaviour (V1)
@@ -46,7 +46,7 @@ The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (V2)
 
-Flatwater Vocal Leveler's parameters (`FwVocalLevelerProcessor.cpp`). The meters, the Ride / Idle LEDs, the clip LED, the Effective Range and the Idle value in dB are display
+Flatwater Vocal Leveler's parameters (`plugins/FwVocalLeveler/Source/PluginProcessor.cpp`). The meters, the Ride / Idle LEDs, the clip LED, the Effective Range and the Idle value in dB are display
 only, not parameters. The original's presets do not store Spill.
 
 | ID | Label | Range, step | Default | Notes |
@@ -91,7 +91,7 @@ measured on the editor's frames (V4, `reference/fwvocalleveler/shots/default_400
 
 ## Presets (V2)
 
-13 presets (Full Reset and 12 riding styles: smooth, moderate, fast, low, high, rocky, loud, a VCA, an attenuator, a
+13 presets (a reset and 12 riding styles: smooth, moderate, fast, low, high, rocky, loud, a VCA, an attenuator, a
 hard-limit ride, a de-compression with the full +-12 range). Each stores Target, Music and Vocal Sensitivity, Range
 Min and Max, Output, Idle, Attack and the Attack-tied internal settings above; the rest are shared. Flatwater's
 presets carry them over by their values under Flatwater names; their null test loads the reference's own preset states

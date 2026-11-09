@@ -34,11 +34,11 @@ measurements/**/*.npy
 **/__pycache__/
 
 # Compiled helpers of the null tests (built locally by their .bat files)
-nulltest/*.exe
-nulltest/*.obj
-nulltest/*.exp
-nulltest/*.lib
-nulltest/*.dll
+**/nulltest/*.exe
+**/nulltest/*.obj
+**/nulltest/*.exp
+**/nulltest/*.lib
+**/nulltest/*.dll
 
 # Signing material never enters the repository (it lives in GitHub's Actions secrets)
 *.p12

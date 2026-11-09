@@ -40,7 +40,7 @@ behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (C2, C3), in preset-array order
 
-Flatwater Comp's parameters (IDs from `FwCompProcessor.h`), in the original's parameter order:
+Flatwater Comp's parameters (IDs from `plugins/FwComp/Source/PluginProcessor.h`), in the original's parameter order:
 
 | ID | Label | Range | Default | Control | Notes |
 |---|---|---|---|---|---|
@@ -91,9 +91,9 @@ The layout was measured on the screenshot (C4); the next section gives the measu
   its facets lit by their angle to the light, casting a soft shadow about (1.7, 5) px away, 0.45 deep. Bodies: small
   radius 32.4, cap ring 20; Ratio / Mix skirt 53.9, ten flutes at 44.3 +- 1.7, cap 32.5; Threshold skirt 73, flutes at
   61.3 +- 2.3, cap 44. The knob centres were measured on the captures (Threshold: (320.65, 333.35)). Cast shadows: the
-  panel darkened by 0.35 to 0.42 under a disc offset (5 to 8, 16 to 25) px. `tools/fit_hybrid_knobs.py` measures the
+  panel darkened by 0.35 to 0.42 under a disc offset (5 to 8, 16 to 25) px. `plugins/FwComp/scripts/fit_knobs.py` measures the
   shading on the captures and reports it; Flatwater Comp's knobs are drawn in Flatwater's own dark look on these
-  measured sizes (`Source/common/FwHybridUI.cpp`), with no fitted data.
+  measured sizes (`shared/ui/HybridUI.cpp`), with no fitted data.
 - Scales: ticks every 14 degrees, small knobs r 33.8 ... 40 (1.7 px), Ratio / Mix r 56.2 ... 64.3, Threshold 19 ticks
   r 72.2 ... 80.4. Labels Arial Black 10.75 px stretched 1.2x; numbers Arial Bold 8.6 px; each placed at its measured
   ink centre. The Threshold legend (0, THRESHOLD, -48): Arial Black 12.6 px, one glyph per measured angle at r 85
@@ -114,6 +114,6 @@ The layout was measured on the screenshot (C4); the next section gives the measu
 
 ## Presets (C2)
 
-26 presets: Full Reset, PA Default, 21 genre and instrument presets (drums, kick, bass, piano, guitars, strings,
+26 presets: a reset, a live-sound start, 21 genre and instrument presets (drums, kick, bass, piano, guitars, strings,
 vocal, mastering, parallel, a broken-radio effect), and presets carrying artist names or other products' names.
 Flatwater's presets carry them over by their values under Flatwater names.

@@ -10,7 +10,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | B1 | The public manual, [bass-rider.pdf](https://assets.wavescdn.com/pdf/plugins/bass-rider.pdf); the product page [waves.com/plugins/bass-rider](https://www.waves.com/plugins/bass-rider) |
 | B2 | The original plug-in observed in a host: its parameters (ranges, steps, defaults) and its 17 factory presets, each loaded into the original and read back |
-| B3 | The original's VST3 as a host sees it (`nulltest/probe_bassleveler.py`): Bass Rider Mono, Bass Rider Stereo, Bass Rider Live Mono, Bass Rider Live Stereo; no side-chain bus |
+| B3 | The original's VST3 as a host sees it (`plugins/FwBassLeveler/nulltest/probe_parameters.py`): Bass Rider Mono, Bass Rider Stereo, Bass Rider Live Mono, Bass Rider Live Stereo; no side-chain bus |
 | B4 | Frames of the real editor read back from its OpenGL drawing (`tools/MeterCapture gl=1`, 320 x 560, git-ignored `reference/fwbassleveler/`) |
 
 ## Documented behaviour (B1)
@@ -40,7 +40,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (B2, B3), in preset-array order
 
-Flatwater Bass Leveler's parameters (`FwBassLevelerProcessor.cpp`), in the order the original stores them in its
+Flatwater Bass Leveler's parameters (`plugins/FwBassLeveler/Source/PluginProcessor.cpp`), in the order the original stores them in its
 presets. The meters, the Rider fader, the Effective Range and the Idle value in dB are display only, not parameters.
 
 | ID | Label | Range, step | Default | Notes |
@@ -80,7 +80,7 @@ editors). The layout of every control was measured on the editor's frames (B4,
 
 ## Presets (B2)
 
-17 presets (Full Reset, PA Default, and 15 for bass styles: slow / fast, fretless, upright, picked, slap, fret noise,
+17 presets (a reset, a live-sound start, and 15 for bass styles: slow / fast, fretless, upright, picked, slap, fret noise,
 stage, a suppressor with Max 0). They change only Output, Range Min / Max, Sensitivity, Response, Idle, Artifacts and
 Spill (and Target in the first two). Flatwater's presets carry them over by their values under Flatwater names; their
 null test loads the reference's own preset states (`RefRender state=`, [NULLTESTS-presets.md](NULLTESTS-presets.md)).

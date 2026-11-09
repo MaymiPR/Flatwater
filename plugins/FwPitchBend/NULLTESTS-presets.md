@@ -3,7 +3,7 @@
 Each of the reference's 40 presets loaded into its state (its stored values, hidden ones included, and its two
 shape tables), against Flatwater Pitch Bend's preset of the same settings (Flatwater names), both stereo at
 48 kHz and 120 bpm from song position 0, on a sung and a spoken take of the vocal corpus (about 8 s each). Made by
-`nulltest/null_pitchbend_presets.py`. Our shifter is our own method, so the outputs are compared by what is heard,
+`plugins/FwPitchBend/nulltest/null_presets.py`. Our shifter is our own method, so the outputs are compared by what is heard,
 not sample by sample (after the first 0.1 s):
 
 - **level**: the output's rms, ours minus the reference's, dB (target within 1.5);

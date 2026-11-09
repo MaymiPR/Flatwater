@@ -1,6 +1,6 @@
 # Flatwater Delay: null test against the reference
 
-`nulltest/nulltest_fwdelay.py`: Flatwater Delay's DSP (`tools/FwDelayRender`, the plug-in's own code) against the reference H-Delay,
+`plugins/FwDelay/nulltest/nulltest.py`: Flatwater Delay's DSP (`plugins/FwDelay/tools/DeRender`, the plug-in's own code) against the reference H-Delay,
 rendered through `tools/RefRender`. Residual = 20 log10(rms(ours - reference) / rms(reference)) in dB, over 4 s of each
 signal after a 3 s silent pre-roll. Columns: a drum loop, a bass line, a voice-like signal (left, and 0.8 of it on the
 right). 48 kHz; Analog Off unless a case names a mode. The cases set Feedback at the input's start (see MEASUREMENTS.md,

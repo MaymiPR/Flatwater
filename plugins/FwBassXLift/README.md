@@ -1,7 +1,7 @@
 # Flatwater BassX Lift
 
 <img
-  src="../../docs/images/fwbassxlift.png"
+  src="../../docs/screenshots/fwbassxlift.png"
   alt="Flatwater BassX Lift editor: a graph of the Original Bass and Harmonics bands over the Frequency slider, the
   Ratio, Response, Filter and Decay controls below, the Input, Original Bass and Harmonic Bass faders, and the Output
   meters with the Audio, Harmonics and Original Bass monitor buttons"

@@ -1,5 +1,5 @@
-# Flatwater Vocal Leveler: the plug-in processor (tools/FwVocalLevelerRender: in out channels fs [parameter ID=real value, preset=index]). 1 s.
-@call FwVocalLevelerRender {in} {out} 2 {fs} {args} block={block}
+# Flatwater Vocal Leveler: the plug-in processor (plugins/FwVocalLeveler/tools/VlRender: in out channels fs [parameter ID=real value, preset=index]). 1 s.
+@call VlRender {in} {out} 2 {fs} {args} block={block}
 default_mix     signal=mix   seconds=1
 preset1_burst   signal=burst seconds=1 preset=1
 target18_fast_mix signal=mix seconds=1 target=-18 attack=1

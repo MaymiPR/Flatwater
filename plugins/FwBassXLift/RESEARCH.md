@@ -43,7 +43,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (M2, M3), in preset-array order
 
-Flatwater BassX Lift's parameters (IDs from `FwBassXLiftProcessor.h`), in the original's parameter order:
+Flatwater BassX Lift's parameters (IDs from `plugins/FwBassXLift/Source/PluginProcessor.h`), in the original's parameter order:
 
 | ID | Label | Range | Default | Control | Notes |
 |---|---|---|---|---|---|
@@ -61,7 +61,7 @@ Flatwater BassX Lift's parameters (IDs from `FwBassXLiftProcessor.h`), in the or
 The output meters, the graph curves and the clip light are display values in the editor, not parameters.
 
 Presets do not change the Input fader. Some older factory presets store High-pass values outside the three settings;
-they are converted through the reference itself, as for Flatwater Bass Lift (`nulltest/read_ref_presets_mb.py`):
+they are converted through the reference itself, as for Flatwater Bass Lift (`plugins/FwBassXLift/nulltest/read_ref_presets.py`):
 those High-pass states wrap modulo 3 (3 and 6 give 6 dB/oct, 4 gives 12, 5 and 17 give 24); every other value follows
 the scales of the measured tapers, which reproduce all 16 presets the reference converted itself.
 
@@ -72,11 +72,12 @@ save, menu; no Skins button). The band graph (dB grid +6 ... -24, frequency mark
 upper left, with the Frequency slider under it; the Ratio, Response and Decay knobs (values under them) and the
 High-pass popup sit below; the Input, Original Bass and Harmonics faders (values under them), the two output meters
 (peak text above, clip light) and the Monitor buttons fill the right. The positions are measured on the screenshot
-(M4). The editor uses widgets beyond the suite's first widget kit (`Source/common/FwRenUI.h`): the band graph, vertical faders, rotary knobs,
+(M4). The editor uses widgets beyond the suite's first widget kit (`shared/ui/RenUI.h`): the band graph, vertical faders, rotary knobs,
 a popup selector, radio buttons, and a toolbar without Skins.
 
 ## Presets (M2)
 
-22 presets: 12 factory (Full Reset, PA Default, Ultralow Extender, Light, Medium, Aggressive, Multimedia, PC Laptop,
-an effects preset, BoomBaxx, Hi-fi / Lo-fi system enhancer) and 10 artist presets in six artist groups. They are
-carried over by their setting values only, with new Flatwater names (no artist names, no vendor product names).
+22 presets: 12 factory presets (a reset, a live-sound start, an ultra-low extender, three intensities, two for small
+computer speakers, an effects preset, a portable-radio setting and two system enhancers) and 10 artist presets in six
+artist groups. They are carried over by their setting values only, with new Flatwater names (no artist names, no
+vendor product names).

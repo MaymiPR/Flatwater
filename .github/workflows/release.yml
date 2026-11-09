@@ -90,7 +90,7 @@ jobs:
           foreach ($line in Get-Content packaging/plugins.txt) {
             if (-not $line.Trim() -or $line.StartsWith('#')) { continue }
             $t, $p, $code, $mfr = $line.Split([char]0x7C)
-            $plug = Resolve-Path "build/plugins/${t}/${t}_artefacts/Release/VST3/$p.vst3"
+            $plug = Resolve-Path "build/${t}_artefacts/Release/VST3/$p.vst3"
             # pluginval is a GUI-subsystem program: wait for it and read its real exit code
             $r = Start-Process -FilePath "pluginval/pluginval.exe" -NoNewWindow -Wait -PassThru `
                    -ArgumentList @("--strictness-level", "10", "--skip-gui-tests", "--timeout-ms", "900000", "--validate", "`"$plug`"")
@@ -111,7 +111,7 @@ jobs:
           foreach ($line in Get-Content packaging/plugins.txt) {
             if (-not $line.Trim() -or $line.StartsWith('#')) { continue }
             $t, $p, $code, $mfr = $line.Split([char]0x7C)
-            & $fc.FullName (Resolve-Path "build/plugins/${t}/${t}_artefacts/Release/VST3/$p.vst3")
+            & $fc.FullName (Resolve-Path "build/${t}_artefacts/Release/VST3/$p.vst3")
             if ($LASTEXITCODE -ne 0) { $failed++ }
           }
           if ($failed -ne 0) { exit 1 }
@@ -126,7 +126,7 @@ jobs:
           $pfx = Join-Path $env:RUNNER_TEMP "signing.pfx"
           [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_PFX))
           $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" | Sort-Object FullName -Descending | Select-Object -First 1
-          $files = Get-ChildItem build\plugins\*\*_artefacts\Release -Recurse -File -Include *.dll, *.exe, *.vst3, *.clap
+          $files = Get-ChildItem build\*_artefacts\Release -Recurse -File -Include *.dll, *.exe, *.vst3, *.clap
           foreach ($f in $files) {
             & $signtool.FullName sign /f $pfx /p $env:WINDOWS_CERTIFICATE_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $f.FullName
             if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -145,7 +145,7 @@ jobs:
           PROFILE: ${{ secrets.AZURE_TRUSTED_SIGNING_PROFILE }}
         run: |
           dotnet tool install --global sign --prerelease
-          $files = (Get-ChildItem build\plugins\*\*_artefacts\Release -Recurse -File -Include *.dll, *.exe, *.vst3, *.clap).FullName
+          $files = (Get-ChildItem build\*_artefacts\Release -Recurse -File -Include *.dll, *.exe, *.vst3, *.clap).FullName
           sign code trusted-signing --trusted-signing-endpoint $env:ENDPOINT --trusted-signing-account $env:ACCOUNT `
             --trusted-signing-certificate-profile $env:PROFILE --timestamp-url http://timestamp.acs.microsoft.com -v Information $files
           if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -215,7 +215,7 @@ jobs:
             foreach ($line in Get-Content packaging/plugins.txt) {
               if (-not $line.Trim() -or $line.StartsWith('#')) { continue }
               $t, $p, $code, $mfr = $line.Split([char]0x7C)
-              Copy-Item "build/plugins/${t}/${t}_artefacts/Release/$fmt/*" $stage -Recurse -Force
+              Copy-Item "build/${t}_artefacts/Release/$fmt/*" $stage -Recurse -Force
             }
             Copy-Item LICENSE "$stage/LICENSE.txt"; Copy-Item packaging/THIRD-PARTY-NOTICES.txt $stage
             Compress-Archive -Path "$stage/*" -DestinationPath "dist/Flatwater-$version-Windows-$fmt.zip" -Force
@@ -317,7 +317,7 @@ jobs:
             SIGN=(--force --deep --sign -)   # ad hoc: no certificate in the secrets
           fi
           grep -v '^#' packaging/plugins.txt | grep -v '^\s*$' | while IFS='|' read -r t p _ _; do
-            A="build/plugins/${t}/${t}_artefacts/Release"
+            A="build/${t}_artefacts/Release"
             for b in "$A/AU/$p.component" "$A/VST3/$p.vst3" "$A/CLAP/$p.clap" "$A/Standalone/$p.app"; do
               lipo -info "$b/Contents/MacOS/$p"
               codesign "${SIGN[@]}" "$b"
@@ -481,7 +481,7 @@ jobs:
           curl -fsSL -o pluginval.zip "$PLUGINVAL/pluginval_Linux.zip"
           unzip -q pluginval.zip
           grep -v '^#' packaging/plugins.txt | grep -v '^\s*$' | while IFS='|' read -r t p _ _; do
-            xvfb-run -a ./pluginval --strictness-level 10 --skip-gui-tests --timeout-ms 900000 --validate "build/plugins/${t}/${t}_artefacts/Release/VST3/$p.vst3"
+            xvfb-run -a ./pluginval --strictness-level 10 --skip-gui-tests --timeout-ms 900000 --validate "build/${t}_artefacts/Release/VST3/$p.vst3"
           done
 
       - name: Installer (tarball with install script, every plug-in)
@@ -492,7 +492,7 @@ jobs:
           D="Flatwater-$V-Linux"
           mkdir -p "$D/VST3" "$D/CLAP" dist
           grep -v '^#' packaging/plugins.txt | grep -v '^\s*$' | while IFS='|' read -r t p _ _; do
-            A="build/plugins/${t}/${t}_artefacts/Release"
+            A="build/${t}_artefacts/Release"
             cp -R "$A/VST3/$p.vst3" "$D/VST3/"
             cp "$A/CLAP/$p.clap" "$D/CLAP/"
             if [ -f "$A/Standalone/$p" ]; then mkdir -p "$D/Standalone" && cp "$A/Standalone/$p" "$D/Standalone/"; fi

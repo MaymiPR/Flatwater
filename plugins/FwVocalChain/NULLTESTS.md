@@ -1,10 +1,10 @@
 # Flatwater Vocal Chain: null tests
 
 Residuals of Flatwater Vocal Chain against the reference (its Stereo component), lower is better: the energy of the
-difference under the reference output's, in dB. Written by `nulltest/nulltest_fwvocalchain.py report` from
-`measurements/fwvocalchain/nulls.json`; our processor through `FwVocalChainRender`, the reference through
-`nulltest/cv_ref.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the
-corpus (`nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).
+difference under the reference output's, in dB. Written by `plugins/FwVocalChain/nulltest/nulltest.py report` from
+`measurements/FwVocalChain/nulls.json`; our processor through `ChRender`, the reference through
+`plugins/FwVocalChain/nulltest/cv.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the
+corpus (`scripts/nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Summary
 
@@ -99,7 +99,7 @@ Pitch stage clear.
 
 The Pitch stage's Wide and Spreader colours are pitch shifters that pick their splice points from the signal,
 so a voice parts from the reference at a splice where the two pick different steps; they are compared in
-behaviour (`nulltest/behaviour_vocalchain_doubler.py`, 48 kHz, Pitch +10, every other colour clear, the wet
+behaviour (`plugins/FwVocalChain/nulltest/compare_doubler.py`, 48 kHz, Pitch +10, every other colour clear, the wet
 signal alone): the level, the third-octave spectrum (100 Hz .. 12 kHz) ours less the reference's, and on noise
 the voice's delay (5th / 50th / 95th percentile) and the strongest cycle of its movement. Stereo for scale.
 

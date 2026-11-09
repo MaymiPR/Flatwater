@@ -1,6 +1,6 @@
 # Flatwater BassX Lift: null tests
 
-Flatwater BassX Lift against MaxxBass, case by case (written by `nulltest/nulltest_fwbassxlift.py`; the JSON beside this file holds the same rows).
+Flatwater BassX Lift against MaxxBass, case by case (written by `plugins/FwBassXLift/nulltest/nulltest.py`; the JSON beside this file holds the same rows).
 
 | Freq | Ratio | Response | Decay | High-pass | Original Bass | Harmonics | Signal | Total residual (dB) | Generated part (dB) |
 |---|---|---|---|---|---|---|---|---|---|
