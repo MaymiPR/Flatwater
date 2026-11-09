@@ -1,12 +1,13 @@
-"""Generates the factory preset tables of Flatwater Bass Lift, Flatwater Vocal Comp, Flatwater BassX Lift, Flatwater Comp, Flatwater Delay and Flatwater Bass Leveler (plugins/<P>/<P>Presets.h).
+"""Generates the factory preset tables of Flatwater Bass Lift, Flatwater Vocal Comp, Flatwater BassX Lift, Flatwater Comp, Flatwater Delay and Flatwater Bass Leveler (plugins/<P>/Source/Presets.h).
 
 Input: build/ref_presets_RBass.json and build/ref_presets_RVox.json, written by scripts/nulltest/read_ref_presets.py, and
 build/ref_presets_MaxxBass.json, written by plugins/FwBassXLift/nulltest/read_ref_presets.py, and build/ref_presets_HComp.json, written
 by plugins/FwComp/nulltest/read_ref_presets.py, and build/ref_presets_HDelay.json, written by plugins/FwDelay/nulltest/read_ref_presets.py, and
 build/ref_presets_BassRider.json, written by plugins/FwBassLeveler/nulltest/read_ref_presets.py,
-from the reference presets of the local install (setting values only). The preset names below are our own: no artist
-names, no Waves product names, no other trademarks; each one describes what the setting is for, so it stays
-recognisable. Groups: "Essentials" (the reference's factory set) and "Studio" (its artist set).
+from the reference presets of the local install (setting values only). Each table maps a preset's position in the
+reference's preset file (or in its sorted preset folder), in the order the reader lists them, to our group and name; no
+reference preset name or path is kept here. The preset names are our own: no artist names, no vendor product names,
+no other trademarks; each one describes what the setting is for, so it stays recognisable. Groups: "Essentials" (the reference's factory set) and "Studio" (its artist set).
 
     python scripts/make_presets.py
 """
@@ -15,135 +16,139 @@ import json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 
-# reference file (relative path) -> (group, our name)
+# position in the reference's preset folder (read_ref_presets.py: the sorted file list) -> (group, our name); the
+# positions left out are its reset presets
 BASS_NAMES = {
-    r"Factory\Bassic Setup.xps": ("Essentials", "Basic Bass"),
-    r"Factory\Big Bottoms.xps": ("Essentials", "Deep Floor"),
-    r"Factory\Bombasstic.xps": ("Essentials", "Bass Bomb"),
-    r"Factory\Bottoms Up.xps": ("Essentials", "Bottom Lift"),
-    r"Factory\Fuzz Bass.xps": ("Essentials", "Grit Bass"),
-    r"Factory\Nose Job.xps": ("Essentials", "Upper Bass Lift"),
-    r"Factory\Small Speaker Prep.xps": ("Essentials", "Earbud Weight"),
-    r"Factory\Under Drive.xps": ("Essentials", "Low Drive"),
-    r"Artists\Ben Mink\Low Boost Elec. Fiddle.xps": ("Studio", "Electric Fiddle Low Lift"),
-    r"Artists\Dave Aron\Synth Bass RBass.xps": ("Studio", "Synth Bass Weight"),
-    r"Artists\Dave Darlington\Acappella Bass Voice.xps": ("Studio", "Vocal Bass Line"),
-    r"Artists\Dave Darlington\Kick Drum Seriousness.xps": ("Studio", "Serious Kick"),
-    r"Artists\Dave Pensado\Bass.xps": ("Studio", "Low Glue"),
-    r"Artists\Dave Pensado\Burg Bass.xps": ("Studio", "Heavy Low Line"),
-    r"Artists\Dave Pensado\Kik Lo.xps": ("Studio", "Kick Low End"),
-    r"Artists\Dave Pensado\Live Bass.xps": ("Studio", "Stage Bass Round"),
-    r"Artists\Dave Pensado\RBass WS.xps": ("Studio", "Bass Workstation"),
-    r"Artists\Gil Norton\808 Sub.xps": ("Studio", "Boom Sub"),
-    r"Artists\Gil Norton\Bass GTR Rock.xps": ("Studio", "Rock Bass Guitar"),
-    r"Artists\Gil Norton\Bass GTR Sub.xps": ("Studio", "Four-String Sub"),
-    r"Artists\JBeatzz\Jbeatzz 808.xps": ("Studio", "Trap Boom"),
-    r"Artists\Lu Diaz\Boost That Sub.xps": ("Studio", "Sub Push"),
-    r"Artists\Luizinho Mazzei\808 Fight.xps": ("Studio", "Boom Fight"),
-    r"Artists\MarioSo DeJesus\NelFlow SubWoofer Bass.xps": ("Studio", "Club System Low"),
-    r"Artists\MarioSo DeJesus\Nesty Tone Bass Pop.xps": ("Studio", "Pop Bass Tone"),
-    r"Artists\Mark Ralph\Live Bass Love.xps": ("Studio", "Live Bass Warmth"),
-    r"Artists\Mark Ralph\Prophet's Octave.xps": ("Studio", "Poly Synth Octave"),
-    r"Artists\Michael Brauer\808.xps": ("Studio", "Boom Low"),
-    r"Artists\Michael Brauer\Bass.xps": ("Studio", "Low Bloom"),
-    r"Artists\Michael Brauer\Sub Bass Send.xps": ("Studio", "Sub Feed"),
-    r"Artists\Michael Brauer\Toms.xps": ("Studio", "Tom Depth"),
-    r"Artists\Mike Hedges\Drumsareus.xps": ("Studio", "Drum Bus Weight"),
-    r"Artists\Ott\1950s Snare.xps": ("Studio", "Vintage Snare"),
-    r"Artists\Ott\Closer Percussion.xps": ("Studio", "Near-Miked Hits"),
-    r"Artists\Ott\Laptop Tablas.xps": ("Studio", "Small Tablas"),
-    r"Artists\Ott\Smaller Than It Sounds.xps": ("Studio", "Bigger Than It Is"),
-    r"Artists\Ott\Soft Tape Breakbeat.xps": ("Studio", "Dusty Loop Low End"),
-    r"Artists\Ross Hogarth\Bass 1.xps": ("Studio", "Bass Shape 1"),
-    r"Artists\Ross Hogarth\Bass 2.xps": ("Studio", "Bass Shape 2"),
-    r"Artists\Ross Hogarth\Bass 3.xps": ("Studio", "Bass Shape 3"),
-    r"Artists\Scott Gershin\Knock Knock.xps": ("Studio", "Door Knock"),
-    r"Artists\Scott Gershin\Lo Lo Thump For Guns.xps": ("Studio", "Gunshot Low Thump"),
-    r"Artists\Scott Gershin\Mid Range Gun Boost.xps": ("Studio", "Gunshot Mid Boost"),
-    r"Artists\Scott Gershin\Music Lo End Tone.xps": ("Studio", "Score Low End"),
-    r"Artists\Todd Parker\Parker Bass Thump.xps": ("Studio", "Low Punch"),
+    0: ('Studio', 'Electric Fiddle Low Lift'),
+    1: ('Studio', 'Synth Bass Weight'),
+    2: ('Studio', 'Vocal Bass Line'),
+    3: ('Studio', 'Serious Kick'),
+    4: ('Studio', 'Low Glue'),
+    5: ('Studio', 'Heavy Low Line'),
+    6: ('Studio', 'Kick Low End'),
+    7: ('Studio', 'Stage Bass Round'),
+    8: ('Studio', 'Bass Workstation'),
+    9: ('Studio', 'Boom Sub'),
+    10: ('Studio', 'Rock Bass Guitar'),
+    11: ('Studio', 'Four-String Sub'),
+    12: ('Studio', 'Trap Boom'),
+    13: ('Studio', 'Sub Push'),
+    14: ('Studio', 'Boom Fight'),
+    15: ('Studio', 'Club System Low'),
+    16: ('Studio', 'Pop Bass Tone'),
+    17: ('Studio', 'Live Bass Warmth'),
+    18: ('Studio', 'Poly Synth Octave'),
+    19: ('Studio', 'Boom Low'),
+    20: ('Studio', 'Low Bloom'),
+    21: ('Studio', 'Sub Feed'),
+    22: ('Studio', 'Tom Depth'),
+    23: ('Studio', 'Drum Bus Weight'),
+    24: ('Studio', 'Vintage Snare'),
+    25: ('Studio', 'Near-Miked Hits'),
+    26: ('Studio', 'Small Tablas'),
+    27: ('Studio', 'Bigger Than It Is'),
+    28: ('Studio', 'Dusty Loop Low End'),
+    29: ('Studio', 'Bass Shape 1'),
+    30: ('Studio', 'Bass Shape 2'),
+    31: ('Studio', 'Bass Shape 3'),
+    32: ('Studio', 'Door Knock'),
+    33: ('Studio', 'Gunshot Low Thump'),
+    34: ('Studio', 'Gunshot Mid Boost'),
+    35: ('Studio', 'Score Low End'),
+    36: ('Studio', 'Low Punch'),
+    37: ('Essentials', 'Basic Bass'),
+    38: ('Essentials', 'Deep Floor'),
+    39: ('Essentials', 'Bass Bomb'),
+    40: ('Essentials', 'Bottom Lift'),
+    41: ('Essentials', 'Grit Bass'),
+    42: ('Essentials', 'Upper Bass Lift'),
+    43: ('Essentials', 'Earbud Weight'),
+    44: ('Essentials', 'Low Drive'),
 }
+# the same for Flatwater Vocal Comp
 VOCAL_NAMES = {
-    r"Factory\25db Comp No Gate.xps": ("Essentials", "Heavy Squash Ungated"),
-    r"Factory\Ball Game Sports Cast.xps": ("Essentials", "Stadium Announcer"),
-    r"Factory\Hissy Lecture Intelligizer.xps": ("Essentials", "Noisy Lecture Cleanup"),
-    r"Factory\Out Door News Cast.xps": ("Essentials", "Outdoor Reporter"),
-    r"Artists\Chris Baseford\BG Vocal.xps": ("Studio", "Background Vocal"),
-    r"Artists\Chris Baseford\Lead Vocal.xps": ("Studio", "Main Voice Control"),
-    r"Artists\Dave Darlington\Easy Vocal.xps": ("Studio", "Gentle Lead"),
-    r"Artists\Dave Darlington\In Yo Face Vocal.xps": ("Studio", "Up Front Vocal"),
-    r"Artists\Dave Pensado\Good Vocal.xps": ("Studio", "Grounded Voice"),
-    r"Artists\Dave Pensado\Start.xps": ("Studio", "First Pass"),
-    r"Artists\Eddie Kramer\Female Vocal\Gentle Compression.xps": ("Studio", "Soft Vocal Squeeze"),
-    r"Artists\Eddie Kramer\Metal Drums\Metal Snare Gate.xps": ("Studio", "Snare Choke"),
-    r"Artists\Greg Wells\Vocal Control.xps": ("Studio", "Steady Vocal"),
-    r"Artists\Lu Diaz\Vocal Presence.xps": ("Studio", "Vocal Forward"),
-    r"Artists\Mark Ralph\Gasping For Air.xps": ("Studio", "Breath Control"),
-    r"Artists\Mark Ralph\Vocal Tracking.xps": ("Studio", "Tracking Vocal"),
-    r"Artists\Michael Brauer\Backing Vocal.xps": ("Studio", "Backing Stack"),
-    r"Artists\Michael Brauer\Lead Vox.xps": ("Studio", "Lead Up Front"),
-    r"Artists\Miles Comaskey\BGV Stack.xps": ("Studio", "BGV Pile"),
-    r"Artists\RENEGADE EL REY\Less Is More.xps": ("Studio", "Light Touch"),
-    r"Artists\Sterling Winfield\Dyn Mic Vox Squeeze.xps": ("Studio", "Handheld Mic Hold"),
+    0: ('Studio', 'Background Vocal'),
+    1: ('Studio', 'Main Voice Control'),
+    2: ('Studio', 'Gentle Lead'),
+    3: ('Studio', 'Up Front Vocal'),
+    4: ('Studio', 'Grounded Voice'),
+    5: ('Studio', 'First Pass'),
+    6: ('Studio', 'Soft Vocal Squeeze'),
+    7: ('Studio', 'Snare Choke'),
+    8: ('Studio', 'Steady Vocal'),
+    9: ('Studio', 'Vocal Forward'),
+    10: ('Studio', 'Breath Control'),
+    11: ('Studio', 'Tracking Vocal'),
+    12: ('Studio', 'Backing Stack'),
+    13: ('Studio', 'Lead Up Front'),
+    14: ('Studio', 'BGV Pile'),
+    15: ('Studio', 'Light Touch'),
+    16: ('Studio', 'Handheld Mic Hold'),
+    17: ('Essentials', 'Heavy Squash Ungated'),
+    18: ('Essentials', 'Stadium Announcer'),
+    19: ('Essentials', 'Noisy Lecture Cleanup'),
+    20: ('Essentials', 'Outdoor Reporter'),
 }
 
 
-# Flatwater BassX Lift: reference preset name -> (group, our name). "Essentials": the reference's factory set, "Studio": its artist set.
-MAXX_NAMES = {
-    "MaxxBass Full Reset": ("Essentials", "Default"),
-    "PA Default": ("Essentials", "PA System"),
-    "Ultralow Extender": ("Essentials", "Deepest Reach"),
-    "Light": ("Essentials", "Subtle Lift"),
-    "Medium": ("Essentials", "Even Lift"),
-    "Aggressive": ("Essentials", "Full Lift"),
-    "Multimedia": ("Essentials", "Desktop Speakers"),
-    "PC Laptop": ("Essentials", "Laptop Speakers"),
-    "Dies Bassum": ("Essentials", "Deep Sub Push"),
-    "BoomBaxx": ("Essentials", "Portable Radio"),
-    "Hi-fi system enhancer": ("Essentials", "Home Stereo Polish"),
-    "Lo-fi system enhancer": ("Essentials", "Cheap Speaker Polish"),
-    "Pensado B M": ("Studio", "Bass Mix Weight"),
-    "Pensado Bass 1": ("Studio", "Bass Focus 1"),
-    "Pensado Bass 2": ("Studio", "Bass Focus 2"),
-    "Pensado Bass 3": ("Studio", "Bass Focus 3"),
-    "Pensado Vocal": ("Studio", "Vocal Warmth"),
-    "Hedges Mix Bass Fixer": ("Studio", "Mix Low Repair"),
-    "Russo Good E. Bass": ("Studio", "Electric Bass Body"),
-    "Bass Chain": ("Studio", "Low Stack"),
-    "MaxxBass JC E-Bass": ("Studio", "Electric Bass Lift"),
-    "Parker Kick RX": ("Studio", "Kick Harmonics"),
-}
+# Flatwater BassX Lift: the reference's presets in the order of its preset file -> (group, our name). "Essentials": the
+# reference's factory set, "Studio": its artist set.
+MAXX_NAMES = [
+    ('Essentials', 'Default'),
+    ('Essentials', 'PA System'),
+    ('Essentials', 'Deepest Reach'),
+    ('Essentials', 'Subtle Lift'),
+    ('Essentials', 'Even Lift'),
+    ('Essentials', 'Full Lift'),
+    ('Essentials', 'Desktop Speakers'),
+    ('Essentials', 'Laptop Speakers'),
+    ('Essentials', 'Deep Sub Push'),
+    ('Essentials', 'Portable Radio'),
+    ('Essentials', 'Home Stereo Polish'),
+    ('Essentials', 'Cheap Speaker Polish'),
+    ('Studio', 'Bass Mix Weight'),
+    ('Studio', 'Bass Focus 1'),
+    ('Studio', 'Bass Focus 2'),
+    ('Studio', 'Bass Focus 3'),
+    ('Studio', 'Vocal Warmth'),
+    ('Studio', 'Mix Low Repair'),
+    ('Studio', 'Electric Bass Body'),
+    ('Studio', 'Low Stack'),
+    ('Studio', 'Electric Bass Lift'),
+    ('Studio', 'Kick Harmonics'),
+]
 
 
-# Flatwater Comp: reference preset name -> (group, our name). "Studio": the reference's guest presets.
-HCOMP_NAMES = {
-    "Full Reset": ("Essentials", "Default"),
-    "PA Default": ("Essentials", "Live Sound Start"),
-    "Drums Punch": ("Essentials", "Kit Smack"),
-    "Drums Pie": ("Essentials", "Drum Body"),
-    "Drums Kid": ("Essentials", "Light Kit"),
-    "Drums Heavy": ("Essentials", "Heavy Drums"),
-    "Pumping Drums": ("Essentials", "Pumping Kit"),
-    "Tight Kit": ("Essentials", "Snug Drums"),
-    "Phat Kick": ("Essentials", "Round Kick"),
-    "Transient Enhancer": ("Essentials", "Transient Lift"),
-    "Serious Squasher": ("Essentials", "Hard Squash"),
-    "Tight Vocal": ("Essentials", "Firm Voice"),
-    "Parallel Compression": ("Essentials", "Parallel Blend"),
-    "Bold Bass": ("Essentials", "Thick Bass Hold"),
-    "Punchy Piano&amp;Rhodes": ("Essentials", "Punchy Keys"),
-    "Lead Guitar": ("Essentials", "Solo Guitar Sustain"),
-    "Fuzz Guitar": ("Essentials", "Dirty Guitar Hold"),
-    "Strings": ("Essentials", "Orchestral Section"),
-    "Mastering": ("Essentials", "Master Glue"),
-    "Easy Does it Snare Comp": ("Studio", "Gentle Snare"),
-    "160 Style Drum Crunch": ("Studio", "Classic Kit Crush"),
-    "Punch in the Drum Nuts": ("Studio", "Drum Knockout"),
-    "Tasty Drum Group": ("Studio", "Kit Bus"),
-    "Dave Aron - Rock Vocal": ("Studio", "Loud Band Voice"),
-    "FOHDave Kit Parallel Comp": ("Studio", "Stage Drums Blend"),
-    "Broken Radio": ("Studio", "Lo-Fi Radio"),
-}
+# Flatwater Comp: the reference's presets in the order of its preset file -> (group, our name). "Studio": the
+# reference's guest presets.
+HCOMP_NAMES = [
+    ('Essentials', 'Default'),
+    ('Essentials', 'Live Sound Start'),
+    ('Essentials', 'Kit Smack'),
+    ('Essentials', 'Drum Body'),
+    ('Essentials', 'Light Kit'),
+    ('Essentials', 'Heavy Drums'),
+    ('Essentials', 'Pumping Kit'),
+    ('Essentials', 'Snug Drums'),
+    ('Essentials', 'Round Kick'),
+    ('Essentials', 'Transient Lift'),
+    ('Essentials', 'Hard Squash'),
+    ('Essentials', 'Firm Voice'),
+    ('Essentials', 'Parallel Blend'),
+    ('Essentials', 'Thick Bass Hold'),
+    ('Essentials', 'Punchy Keys'),
+    ('Essentials', 'Solo Guitar Sustain'),
+    ('Essentials', 'Dirty Guitar Hold'),
+    ('Essentials', 'Orchestral Section'),
+    ('Essentials', 'Master Glue'),
+    ('Studio', 'Gentle Snare'),
+    ('Studio', 'Classic Kit Crush'),
+    ('Studio', 'Drum Knockout'),
+    ('Studio', 'Kit Bus'),
+    ('Studio', 'Loud Band Voice'),
+    ('Studio', 'Stage Drums Blend'),
+    ('Studio', 'Lo-Fi Radio'),
+]
 
 
 def num(v, lo, hi, nd=2):
@@ -172,12 +177,11 @@ def vocal_values(rw):
 
 def write(product, src, names, conv):
     data = json.load(open(os.path.join(ROOT, "build", src)))
-    by = {d["file"]: d for d in data}
-    missing = [f for f in by if f not in names and "reset" not in f.lower()]
+    missing = [k for k, d in enumerate(data) if k not in names and "reset" not in d["file"].lower()]
     assert not missing, missing
     rows = []
-    for f, (group, name) in names.items():
-        vals = conv(by[f]["realworld"])
+    for k, (group, name) in names.items():
+        vals = conv(data[k]["realworld"])
         rows.append('    { "%s", "%s", { %s } },' % (group, name, ", ".join('{ "%s", %rf }' % (kv[0], float(kv[1])) for kv in vals)))
     rows.sort(key=lambda r: (0 if '"Essentials"' in r else 1, r))
     out = os.path.join(ROOT, "plugins", product, "Source", "Presets.h")
@@ -195,11 +199,11 @@ NL = "\n"
 
 def write_maxx():
     data = json.load(open(os.path.join(ROOT, "build", "ref_presets_MaxxBass.json")))
-    assert sorted(d["name"] for d in data) == sorted(MAXX_NAMES), "preset list changed"
+    assert len(data) == len(MAXX_NAMES) == 22, "preset list changed"
     db = lambda v, hi: -100.0 if v == float("-inf") or v <= -99.9 else num(v, -100, hi, 1)
     rows = []
-    for d in data:
-        group, name = MAXX_NAMES[d["name"]]; s = d["settings"]
+    for k, d in enumerate(data):
+        group, name = MAXX_NAMES[k]; s = d["settings"]
         vals = [("freq", num(s["frequency"], 32, 256, 0)), ("decay", num(s["harmonics_decay"], -24, -9, 1)),
                 ("response", num(s["response"], 10, 30, 1)), ("ratio", num(s["ratio"], 1, 4, 2)), ("highpass", int(s["highpass"])),
                 ("origBass", db(s["orig_bass_gain"], 12)), ("harmonics", db(s["harmonics_gain"], 12)), ("monitor", 0)]
@@ -222,10 +226,10 @@ def write_hcomp():
     # 6 Attack, 7 Release, 8 Release Note (index), 9 Sync (0 BPM, 1 Host, 2 ms), 10 BPM, 13 Limiter (1 On), 28 Analog
     # (0 Off .. 4); '*' leaves a parameter at its default
     data = json.load(open(os.path.join(ROOT, "build", "ref_presets_HComp.json")))
-    assert sorted(d["name"] for d in data) == sorted(HCOMP_NAMES), "preset list changed"
+    assert len(data) == len(HCOMP_NAMES) == 26, "preset list changed"
     rows = []
-    for d in data:
-        group, name = HCOMP_NAMES[d["name"]]; r = d["raw"]
+    for k, d in enumerate(data):
+        group, name = HCOMP_NAMES[k]; r = d["raw"]
         get = lambda i: None if i >= len(r) or r[i] == '*' else float(r[i])
         spec = ((0, "threshold", -48, 0, 1), (1, "ratio", 1, 50, 2), (3, "punch", 0, 30, 1), (4, "mix", 0, 100, 1),
                 (5, "output", -18, 18, 1), (6, "attack", 0.5, 100, 2), (7, "release", 3, 3000, 2), (8, "releaseNote", 0, 19, 0),

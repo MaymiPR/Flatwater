@@ -18,25 +18,49 @@ import read_ref_presets as R
 
 OUT = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'Source', 'Presets.h')
 
-# the reference's preset -> (our group, our name)
+# position in the reference's preset folder (sorted file names, as read_ref_presets.py lists them) -> (our group, our
+# name); the position left out is its reset preset
 NAMES = {
-    '2 Deep': ('Character', 'Deeper Voice'), 'Age Modifier': ('Character', 'Younger'), 'Chipmunk': ('Character', 'Tiny Voice'),
-    'Early Morning': ('Character', 'Groggy Voice'), 'Little Loud': ('Character', 'Pushy'), 'M2F': ('Character', 'Higher Register'),
-    'Mickey': ('Character', 'Cartoon'),
-    'BV Perfect Fourth': ('Harmony', 'Fourth Above'), 'Dad Support': ('Harmony', 'Octave Below Blend'),
-    'GF Support': ('Harmony', 'Fifth Above Blend'), 'Male Bass BV': ('Harmony', 'Bass Backing'),
-    'Drunken Double': ('Double', 'Loose Double'), 'Glitchy Double': ('Double', 'Stutter Twin'),
-    'High Double Tracker': ('Double', 'Tracked Double High'), 'Low Double Tracker': ('Double', 'Tracked Double Low'),
-    'Phicker': ('Double', 'Thin Double'), 'Real ADT Double': ('Double', 'Tape Double'),
-    'Addison': ('Movement', 'Breathing Formant'), 'Character Morph': ('Movement', 'Shape Shifter'), 'Crusin Accent': ('Movement', 'Drawl'),
-    'Dark Magician': ('Movement', 'Deep Warble'), 'Fake Vibrato': ('Movement', 'Wavering Voice'),
-    'Get Off The Stage': ('Movement', 'Pitch Follower Down'), 'Mic Swap w. Fans': ('Movement', 'Fan Wobble'),
-    'Siren': ('Movement', 'Alarm'), 'Tape-head': ('Movement', 'Warped Tape'), 'Too Cold': ('Movement', 'Shiver'),
-    'Unda Wata': ('Movement', 'Submerged'), 'Wow': ('Movement', 'Wobble'),
-    'Broken Bot': ('Robot', 'Stepping Robot'), 'Game Over': ('Robot', 'Arcade Steps'), 'Gliding Slug': ('Robot', 'Glide Robot'),
-    'NVisitor': ('Robot', 'Alien Steps'), 'Scratcher': ('Robot', 'Vinyl Scrub'),
-    'Just a SEQ': ('Sequence', 'Plain Sequence'), 'Lullabied': ('Sequence', 'Lullaby Steps'), 'Odyssey': ('Sequence', 'Long Journey'),
-    'Overdose': ('Sequence', 'Twin Sequences'), 'Taking Over': ('Sequence', 'Rising Steps'), 'Tech Chop': ('Sequence', 'Chopped Melody'),
+    0: ('Character', 'Deeper Voice'),
+    1: ('Movement', 'Breathing Formant'),
+    2: ('Character', 'Younger'),
+    3: ('Harmony', 'Fourth Above'),
+    4: ('Robot', 'Stepping Robot'),
+    5: ('Movement', 'Shape Shifter'),
+    6: ('Character', 'Tiny Voice'),
+    7: ('Movement', 'Drawl'),
+    8: ('Harmony', 'Octave Below Blend'),
+    9: ('Movement', 'Deep Warble'),
+    10: ('Double', 'Loose Double'),
+    11: ('Character', 'Groggy Voice'),
+    12: ('Movement', 'Wavering Voice'),
+    14: ('Harmony', 'Fifth Above Blend'),
+    15: ('Robot', 'Arcade Steps'),
+    16: ('Movement', 'Pitch Follower Down'),
+    17: ('Robot', 'Glide Robot'),
+    18: ('Double', 'Stutter Twin'),
+    19: ('Double', 'Tracked Double High'),
+    20: ('Sequence', 'Plain Sequence'),
+    21: ('Character', 'Pushy'),
+    22: ('Double', 'Tracked Double Low'),
+    23: ('Sequence', 'Lullaby Steps'),
+    24: ('Character', 'Higher Register'),
+    25: ('Harmony', 'Bass Backing'),
+    26: ('Movement', 'Fan Wobble'),
+    27: ('Character', 'Cartoon'),
+    28: ('Robot', 'Alien Steps'),
+    29: ('Sequence', 'Long Journey'),
+    30: ('Sequence', 'Twin Sequences'),
+    31: ('Double', 'Thin Double'),
+    32: ('Double', 'Tape Double'),
+    33: ('Robot', 'Vinyl Scrub'),
+    34: ('Movement', 'Alarm'),
+    35: ('Sequence', 'Rising Steps'),
+    36: ('Movement', 'Warped Tape'),
+    37: ('Sequence', 'Chopped Melody'),
+    38: ('Movement', 'Shiver'),
+    39: ('Movement', 'Submerged'),
+    40: ('Movement', 'Wobble'),
 }
 GROUP_ORDER = ['Character', 'Harmony', 'Double', 'Movement', 'Robot', 'Sequence']
 
@@ -128,12 +152,11 @@ def fmt(x):
 
 def main():
     rows, subst = [], []
-    for path in sorted(glob.glob(os.path.join(R.PRESETS, '*.xps'))):
-        name = os.path.basename(path)[:-4]
+    for k, path in enumerate(sorted(glob.glob(os.path.join(R.PRESETS, '*.xps')))):
         p = R.read(path)
         if p is None: continue                                    # the reset preset: our Default
-        if name not in NAMES: raise SystemExit('a preset without our name: ' + name)
-        group, ours = NAMES[name]
+        if k not in NAMES: raise SystemExit('a preset without our name: position %d' % k)
+        group, ours = NAMES[k]
         vals, notes = values(p, tables(path))
         used = [k for k, m in enumerate(p['mods']) if any(src == 'M%d' % (k + 1) for lst in p['slots'].values() for src, _ in lst)]
         notes = [n for n in notes if int(n[1]) - 1 in used and p['mods'][int(n[1]) - 1]['type'] == 'LFO']

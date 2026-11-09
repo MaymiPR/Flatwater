@@ -4,7 +4,7 @@ in our terms: the controls, the modulators' settings, the modulation slots, and 
 shape is only named "drawn" (the original's shape library is not shipped; presets using a drawn shape get one of
 ours, "shape substituted"). The preset folder is the Vocal Bender folder under local.yaml's ref_presets_dir.
 
-    python -I read_ref_presets.py            -> measurements/FwPitchBend/presets.json and a table on the console
+    python -I read_ref_presets.py            -> measurements/FwPitchBend/presets.json (by position) and a table on the console
 """
 import base64, glob, json, os, re, sys, zlib
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -70,14 +70,15 @@ def read(path):
 
 
 def main():
-    res = {}
-    for f in sorted(glob.glob(os.path.join(PRESETS, '*.xps'))):
-        name = os.path.basename(f)[:-4]
+    res, names = {}, {}
+    for k, f in enumerate(sorted(glob.glob(os.path.join(PRESETS, '*.xps')))):
         p = read(f)
-        res[name] = p if p is not None else 'the defaults (a reset preset)'
+        res[str(k)] = p if p is not None else 'the defaults (a reset preset)'   # keyed by the position in the folder
+        names[str(k)] = os.path.basename(f)[:-4]                                # (the console table only)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(res, open(OUT, 'w'), indent=1)
-    for name, p in res.items():
+    for key, p in res.items():
+        name = names[key]
         if isinstance(p, str): print('%-22s %s' % (name, p)); continue
         sl = ' '.join('%s<-%s' % (t, ','.join('%s%+g' % (a, b) for a, b in L)) for t, L in p['slots'].items())
         print('%-22s P%+5g F%+6g mix %5.1f%s%s | M1 %s %s | M2 %s %s | %s' % (

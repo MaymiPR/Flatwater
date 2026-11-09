@@ -61,10 +61,10 @@ def presets():
     """[(our name, program k, the reference's {place: value}, its tables, the substituted modulators)]"""
     order = our_order()
     out = []
-    for path in sorted(glob.glob(os.path.join(R.PRESETS, '*.xps'))):
+    for pos, path in enumerate(sorted(glob.glob(os.path.join(R.PRESETS, '*.xps')))):
         p = R.read(path)
         if p is None: continue
-        group, ours = MP.NAMES[os.path.basename(path)[:-4]]
+        group, ours = MP.NAMES[pos]
         text = open(path, encoding='utf-8', errors='replace').read()
         vals = re.search(r'<Parameters Type="RealWorld">(.*?)</Parameters>', text, re.S).group(1).split()
         changes = {i: float(a) for i, a in enumerate(vals) if a != '*'}
