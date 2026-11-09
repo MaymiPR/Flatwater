@@ -77,6 +77,7 @@ a popup selector, radio buttons, and a toolbar without Skins.
 
 ## Presets (M2)
 
-22 presets: 12 factory (Full Reset, PA Default, Ultralow Extender, Light, Medium, Aggressive, Multimedia, PC Laptop,
-an effects preset, BoomBaxx, Hi-fi / Lo-fi system enhancer) and 10 artist presets in six artist groups. They are
-carried over by their setting values only, with new Flatwater names (no artist names, no vendor product names).
+22 presets: 12 factory presets (a reset, a live-sound start, an ultra-low extender, three intensities, two for small
+computer speakers, an effects preset, a portable-radio setting and two system enhancers) and 10 artist presets in six
+artist groups. They are carried over by their setting values only, with new Flatwater names (no artist names, no
+vendor product names).

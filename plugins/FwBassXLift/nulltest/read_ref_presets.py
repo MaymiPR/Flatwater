@@ -57,7 +57,7 @@ for m in re.finditer(r'<Preset [^>]*Name="([^"]*)".*?<Parameters Type="(\w+)">([
         inner = re.sub(r'<Parameters Type="RealWorld">([^<]*)</Parameters>', lambda q: '<Parameters Type="%s">%s</Parameters>' % (kind, text), inner0)
         p.raw_state = W.set_inner(base, inner.encode("latin-1"))
         got = W.get_values(p.raw_state)
-        if got is not None and (got != W.get_values(base) or name.endswith("Full Reset")):
+        if got is not None and (got != W.get_values(base) or not out):
             done = got; break
     form = by_formula(kind, vals)
     if done is not None:

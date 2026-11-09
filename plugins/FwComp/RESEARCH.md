@@ -114,6 +114,6 @@ The layout was measured on the screenshot (C4); the next section gives the measu
 
 ## Presets (C2)
 
-26 presets: Full Reset, PA Default, 21 genre and instrument presets (drums, kick, bass, piano, guitars, strings,
+26 presets: a reset, a live-sound start, 21 genre and instrument presets (drums, kick, bass, piano, guitars, strings,
 vocal, mastering, parallel, a broken-radio effect), and presets carrying artist names or other products' names.
 Flatwater's presets carry them over by their values under Flatwater names.
