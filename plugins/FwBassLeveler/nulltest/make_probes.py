@@ -1,6 +1,6 @@
 """The note-detector probe set for fitting Flatwater Bass Leveler's riding model: short synthetic signals (steady notes, legato
 dips, decays, re-attacks, gaps) at several Response / Sensitivity / Artifacts settings, each rendered once through the
-reference and cached with the reference's applied gain (measurements/fwbassleveler/probes.npz: data from the reference's
+reference and cached with the reference's applied gain (measurements/FwBassLeveler/probes.npz: data from the reference's
 audio only, no audio kept but the probe signals' recipes, rebuilt here).
 
     python -I make_probes.py            render the missing probes (fresh instances; about 10 minutes)
@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'probes.npz')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'probes.npz')
 FS = 48000
 
 

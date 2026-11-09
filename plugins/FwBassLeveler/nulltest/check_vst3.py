@@ -1,6 +1,6 @@
 """Phase 5 checks for Flatwater Bass Leveler: (1) the built VST3 (hosted by tools/RefRender) against the offline renderer
 (BlRender, the same processor), (2) the reference against Flatwater Bass Leveler at 44.1 and 96 kHz, in the Live
-components and in stereo, (3) CPU. Prints a table for docs/VALIDATION.md.
+components and in stereo, (3) CPU. Prints a table for docs/validation.md.
 
     python -I check_vst3.py
 """

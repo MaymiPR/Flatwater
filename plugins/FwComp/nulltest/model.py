@@ -2,11 +2,11 @@
 import os, json
 import numpy as np
 
-_RES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwcomp', 'results.json')))
+_RES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwComp', 'results.json')))
 KM = _RES['knee_model']
 
 
-_SH = np.loadtxt(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwcomp', 'static_h.csv'), delimiter=',', skiprows=1)
+_SH = np.loadtxt(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwComp', 'static_h.csv'), delimiter=',', skiprows=1)
 _ST = {'x': _SH[:, 0], 'h': _SH[:, 1]}
 
 

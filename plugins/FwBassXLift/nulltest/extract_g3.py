@@ -120,7 +120,7 @@ def _check_jacobian():
 if __name__ == "__main__":
     import glob
     _check_jacobian()
-    fs = sorted(glob.glob(os.path.join(_here, "..", "..", "..", "measurements", "fwbassxlift", "train", "train_*.npz")), key=lambda f: -float(np.load(f)["err"]))[:8]
+    fs = sorted(glob.glob(os.path.join(_here, "..", "..", "..", "measurements", "FwBassXLift", "train", "train_*.npz")), key=lambda f: -float(np.load(f)["err"]))[:8]
     for f in fs:
         z = np.load(f)
         x = z["x"].astype(np.float64); G = z["G"].astype(np.float64)

@@ -1,6 +1,6 @@
 import numpy as np, os
 from scipy.signal import lfilter
-D = np.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalcomp', 'ramp.npz'))
+D = np.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'ramp.npz'))
 c = -24; M = 10**(-c/20); dc = 0.01; s = 48000
 def law(x): return 0.99*M/(1 + (M-1)*x)
 def truepeak(x):

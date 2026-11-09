@@ -1,7 +1,7 @@
 """Flatwater Bass Lift identification step 3: harmonic responses vs fundamental frequency at fixed levels, to place the filters before or
 after the nonlinearity. Original Bass out, Intensity 0. For each Freq setting, level and f0, stores the complex output
 component of harmonics 1..8 (phase referred to the input sine, i.e. divided by exp(j h phi_x)).
-Writes measurements/fwbasslift/sweep.json."""
+Writes measurements/FwBassLift/sweep.json."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -9,7 +9,7 @@ import numpy as np
 import refhost as R
 
 FS = 48000
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "sweep.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "sweep.json")
 NH = 8
 
 

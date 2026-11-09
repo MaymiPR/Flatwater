@@ -2,7 +2,7 @@
 with Adam on the probes of build/hc_torch_set.npz.
 
     python -I train_release2.py check            gradient against finite differences
-    python -I train_release2.py train [iters]    writes measurements/fwcomp/release_law6.json
+    python -I train_release2.py train [iters]    writes measurements/FwComp/release_law6.json
     python -I train_release2.py report
 """
 import sys, os, json, time
@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, '..', '..', '..', 'build')
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law6.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law6.json')
 FX = np.array([0, 0.5, 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 25, 30, 40, 50], float)
 AX = np.array([0, 0.5, 1, 1.5, 2, 3, 5], float)
 WX = np.array([0, 0.5, 1, 2, 3, 4, 6, 8, 12, 16, 20, 30], float)

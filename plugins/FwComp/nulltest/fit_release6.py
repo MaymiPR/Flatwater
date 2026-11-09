@@ -1,7 +1,7 @@
 """Flatwater Comp Phase 4: H-Comp's release, sixth form (gain_fast6.c): the fourth form (fit_release4.py, slow average) with a
 learned correction of the release-time factor (a small MLP over R and its distance to three averages).
 
-    python -I fit_release6.py fit [nfev] [joint]    measurements/fwcomp/release_law6.json (joint: the tables too)
+    python -I fit_release6.py fit [nfev] [joint]    measurements/FwComp/release_law6.json (joint: the tables too)
     python -I fit_release6.py report
 """
 import sys, os, json
@@ -14,7 +14,7 @@ I4.FORM = 4                                         # the base law is the fourth
 
 FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law6.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law6.json')
 NIN, NH = 5, 8
 NNET = NH * NIN + NH + NH + 1
 dll = ct.CDLL(os.path.join(HERE, 'gain_fast6.dll'))

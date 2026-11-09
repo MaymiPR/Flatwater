@@ -2,7 +2,7 @@
 
 Each example: a 2 s mono signal at a random Compression (gate off, Gain 0), the reference's output, and the Flatwater Vocal Comp
 internals for the same input from plugins/FwVocalComp/tools/VcRender (dump=1): detector level v, fast ratio, analytical slow ratio, per
-processed sample (index i + 64 acts on input i). Writes measurements/fwvocalcomp/train/<split>_<n>.npz (git-ignored).
+processed sample (index i + 64 acts on input i). Writes measurements/FwVocalComp/train/<split>_<n>.npz (git-ignored).
 
     python -I render_trainset.py <split> <count> <seed>
 """
@@ -16,7 +16,7 @@ import null_fwvocalcomp as N
 
 FS = 48000
 SECS = 2.0
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwvocalcomp", "train")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwVocalComp", "train")
 os.makedirs(OUT, exist_ok=True)
 
 

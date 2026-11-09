@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np, model as M
 from scipy.optimize import least_squares
 FS = 48000; F = 80.0
-D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift")
+D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift")
 pin = json.load(open(os.path.join(D, "pin.json")))
 raw = json.load(open(os.path.join(D, "raw_decay0.json")))
 lev = json.load(open(os.path.join(D, "levels_decay0.json")))

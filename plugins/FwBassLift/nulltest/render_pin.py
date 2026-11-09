@@ -1,6 +1,6 @@
 """Flatwater Bass Lift identification: low carrier tone plus a 'pinning' tone that the wide level detector sees but the l band does
 not (Decay 0). Separates the gain stage driven by l itself (it makes the 3rd harmonic of low notes) from the one driven
-by the wider band. -> measurements/fwbasslift/pin.json: complex h1, h3, h5 of the carrier."""
+by the wider band. -> measurements/FwBassLift/pin.json: complex h1, h3, h5 of the carrier."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -26,4 +26,4 @@ for f0, fb in ((15, 157.5), (20, 210), (30, 195), (40, 220)):     # fb an odd mu
             h = [comp(g, k * f0) for k in (1, 3, 5)]
             out.append(dict(f0=f0, fb=fb, LA=LA, LB=LB, h=[[v.real, v.imag] for v in h]))
             print(f0, LA, LB, " ".join("%.1f" % (20 * np.log10(abs(v) + 1e-15)) for v in h), flush=True)
-json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "pin.json"), "w"))
+json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "pin.json"), "w"))

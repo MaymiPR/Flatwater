@@ -3,7 +3,7 @@ threshold and attack margin (Sensitivity) on a grid around its value, keeping th
 probes and traces it changes). The narrow valleys between the detector's thresholds (a note released or not) are
 what the CMA-ES steps over.
 
-    python -I fit_polish.py [passes] [globals[=a,b]]   updates measurements/fwbassleveler/detector_fit.json (globals: the
+    python -I fit_polish.py [passes] [globals[=a,b]]   updates measurements/FwBassLeveler/detector_fit.json (globals: the
                                                        global values too, or those named, on the whole cost)
 A value moves only for a gain over MIN_GAIN (smaller gains are noise that costs held-out material).
 """

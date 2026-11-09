@@ -2,7 +2,7 @@
 
     python -I fit_analog2.py <mode> [nfev]       writes build/hc_analog<mode>_fit2.json
     ANALOG_PREFIX=hd: H-Delay's datasets (plugins/FwDelay/nulltest/measure_analog.py), build/hd_analog<mode>_fit2.json, starting from H-Comp's
-    fit of the same mode; "export" then writes measurements/fwdelay/analog_model.json
+    fit of the same mode; "export" then writes measurements/FwDelay/analog_model.json
 
 L: gain times first-order sections; H1, H2: first-order sections (1 + s/wz) / (1 + s/wp) (bilinear); g a table over u
 (piecewise linear, knots on a log-like scale, both signs: odd and even parts free).
@@ -115,14 +115,14 @@ def main():
 
 
 def export():
-    """measurements/fwcomp/analog_model.json from the fits (a mode not fitted yet: its starting point)."""
+    """measurements/FwComp/analog_model.json from the fits (a mode not fitted yet: its starting point)."""
     modes = {}
     for m in (1, 2, 3, 4):
         p = os.path.join(BUILD, '%s_analog%d_fit2.json' % (PREFIX, m))
         if PREFIX == 'hd' and m == 4 and not os.path.exists(p): p = os.path.join(BUILD, 'hc_analog4_fit2.json')   # (H-Comp's)
         modes[str(m)] = json.load(open(p))['q'] if os.path.exists(p) else list(map(float, q_init(m)))
         print('mode', m, 'fitted' if os.path.exists(p) else 'NOT fitted (start values)')
-    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'refdelay' if PREFIX == 'hd' else 'hcomp', 'analog_model.json')
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwDelay' if PREFIX == 'hd' else 'FwComp', 'analog_model.json')
     json.dump({'NL': NL, 'N1': N1, 'N2': N2, 'knots': KN.tolist(), 'modes': modes, 'bandpass_modes': list(BP_MODES),
                'model': 'y = (1 + gain) L(x) + H2(g(H1(x))) + noise; q = [L (log fz, log fp) x NL, H1 x N1, H2 x N2, gain, g on knots, (log f0, log Q of a band-pass before H1, bandpass_modes only)]'},
               open(out, 'w'), indent=1)

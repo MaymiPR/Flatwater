@@ -1,7 +1,7 @@
 # Flatwater Vocal Leveler
 
 <img
-  src="../../docs/images/fwvocalleveler.png"
+  src="../../docs/screenshots/fwvocalleveler.png"
   alt="Flatwater Vocal Leveler editor: a narrow panel with the Target slider, the Ride and Idle LEDs, the Fast / Slow
   switch and the Vocal and Music sensitivity knobs on top, the Range, Rider and Output faders below, and the OFF,
   WRITE and READ automation buttons at the bottom"

@@ -1,7 +1,7 @@
 # Flatwater Comp: measurements
 
 The current values of every stage of Flatwater Comp, measured on the original it recreates (H-Comp), with the method
-and the residual or confidence of each. The data and plots are in [measurements/fwcomp/](../../measurements/fwcomp).
+and the residual or confidence of each. The data and plots are in [measurements/FwComp/](../../measurements/FwComp).
 
 ## Setup
 
@@ -12,7 +12,7 @@ and the residual or confidence of each. The data and plots are in [measurements/
 | Parameter order | Sync is set before Release: the reference does not keep a Release value set while it is synced to a note |
 | Gain readout | the detector reads the sample peak, so an alternating +-a signal (Nyquist) is a constant level to it, and with Analog Off the output is g[n] x[n]: the gain trace is y / x, exact at every sample; static curves, attack, release, Punch, Mix and the limiter are measured that way, and sine staircases check the static curves |
 | Identification scripts | `plugins/FwComp/nulltest/fit_detector.py`, `plugins/FwComp/nulltest/fit_struct.py` (detector, smoothing, order of the stages), `ident_hc_release*.py`, `plugins/FwComp/nulltest/fit_release_w0.py`, `plugins/FwComp/nulltest/fit_release_real.py`, `plugins/FwComp/nulltest/fit_release3.py` to `plugins/FwComp/nulltest/fit_release8.py` (release), `plugins/FwComp/nulltest/probe_analog.py`, `fit_hc_analog*.py` (Analog stage); the C models `gain_fast*.c`; `plugins/FwComp/nulltest/fit_release_cma.py` (CMA-ES) |
-| Tables | `static_h.npz`, `makeup*.csv`, `release_law*.json`, `release_w0.json`, `analog_model.json`, `analog_noise.csv` in `measurements/fwcomp/`, exported to `plugins/FwComp/Source/dsp/Tables.h` by `plugins/FwComp/scripts/export_tables.py` |
+| Tables | `static_h.npz`, `makeup*.csv`, `release_law*.json`, `release_w0.json`, `analog_model.json`, `analog_noise.csv` in `measurements/FwComp/`, exported to `plugins/FwComp/Source/dsp/Tables.h` by `plugins/FwComp/scripts/export_tables.py` |
 
 ## 1. Path and latency
 
@@ -157,7 +157,7 @@ plug-in a playing transport. Probes: `plugins/FwComp/nulltest/make_vu_probe.py` 
 `plugins/FwComp/nulltest/make_vu_cal.py` (a level staircase and sine / square pairs) and descending steps; for GR the probe carries a
 -54 dBFS 6170 Hz pilot whose gain through the compressor shows its gain during the silences too (`plugins/FwComp/nulltest/measure_pilot_gain.py`).
 Angles: `plugins/FwComp/nulltest/read_vu_angles.py`; pivot: `plugins/FwComp/nulltest/fit_pivot.py`; fits: `plugins/FwComp/nulltest/fit_gr_needle.py`, `plugins/FwComp/nulltest/fit_io_needle.py`; the print:
-`plugins/FwComp/nulltest/measure_vu_face.py`. Summary: `measurements/fwcomp/needle.json`; the law in `plugins/FwComp/Source/ui/Needle.h`.
+`plugins/FwComp/nulltest/measure_vu_face.py`. Summary: `measurements/FwComp/needle.json`; the law in `plugins/FwComp/Source/ui/Needle.h`.
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|

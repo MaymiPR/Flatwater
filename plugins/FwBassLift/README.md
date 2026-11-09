@@ -1,7 +1,7 @@
 # Flatwater Bass Lift
 
 <img
-  src="../../docs/images/fwbasslift.png"
+  src="../../docs/screenshots/fwbasslift.png"
   alt="Flatwater Bass Lift editor on dark blue: the IN switch over the Original Bass meter on the left, the large
   Intensity fader in the centre window, the Gain fader and the Output meters on the right, the Freq slider at the
   bottom"

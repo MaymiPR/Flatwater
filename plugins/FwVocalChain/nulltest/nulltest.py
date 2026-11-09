@@ -4,7 +4,7 @@ input, aligned (both report their latency); the null is the difference's energy 
     python -I nulltest.py [linear | all]
     python -I nulltest.py full [part]       (the whole chain on held-out vocal part 30, or another)
     python -I nulltest.py report [jobs]     (every case at 44.1, 48 and 96 kHz: writes
-                                                         measurements/fwvocalchain/nulls.json and NULLTESTS.md)
+                                                         measurements/FwVocalChain/nulls.json and NULLTESTS.md)
     python -I nulltest.py md                (NULLTESTS.md again from nulls.json and doubler.json)
 
 WVC_RENDER in the environment names another ChRender (an older build, to compare).
@@ -98,7 +98,7 @@ def full(part=30):
 
 RATES = (44100, 48000, 96000)
 FULL_PARTS = (30, 33)
-OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwvocalchain', 'nulls.json')
+OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalChain', 'nulls.json')
 OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwVocalChain', 'NULLTESTS.md')
 PITCH = {0: 'clear', 1: 'Stereo', 2: 'Wide', 3: 'Spreader'}
 
@@ -133,7 +133,7 @@ def _full_job(job):
 
 def report(jobs=6):
     """every linear case at each rate, the whole chain on two held-out vocals at 48 kHz and on one at the other rates;
-    the results to measurements/fwvocalchain/nulls.json, and NULLTESTS.md written from them"""
+    the results to measurements/FwVocalChain/nulls.json, and NULLTESTS.md written from them"""
     from concurrent.futures import ProcessPoolExecutor
     work = [(_linear_job, (fs, n, kw)) for fs in RATES for n, kw in linear_cases()]
     work += [(_full_job, (fs, part, n, kw)) for fs in RATES for part in (FULL_PARTS if fs == FS else FULL_PARTS[:1])
@@ -159,7 +159,7 @@ def write_md(res):
     L = ['# Flatwater Vocal Chain: null tests', '',
          'Residuals of Flatwater Vocal Chain against the reference CLA Vocals (Stereo), lower is better: the energy of the',
          "difference under the reference output's, in dB. Written by `plugins/FwVocalChain/nulltest/nulltest.py report` from",
-         '`measurements/fwvocalchain/nulls.json` (%s); our processor through `ChRender`, the reference through'
+         '`measurements/FwVocalChain/nulls.json` (%s); our processor through `ChRender`, the reference through'
          % datetime.date.today().isoformat(),
          "`plugins/FwVocalChain/nulltest/cv.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the",
          'corpus (`scripts/nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).', '',

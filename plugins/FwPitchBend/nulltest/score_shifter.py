@@ -1,10 +1,10 @@
-"""Flatwater Pitch Bend, Phase 3: the shifter's scorecard (measurements/fwpitchbend/shifter/SUMMARY.md, M1 .. M8) run on
+"""Flatwater Pitch Bend, Phase 3: the shifter's scorecard (measurements/FwPitchBend/shifter/SUMMARY.md, M1 .. M8) run on
 OUR shifter alone (plugins/FwPitchBend/tools/PbShifterRender) next to the reference's numbers (the JSON files of
 measure_shifter.py in the same folder). The same signals and the same measures as that battery.
 
     python -I -B score_shifter.py [m1 m1b m2 m3 m4 m5 m6 m7 m8 blocks cpu | all]
 
-Writes measurements/fwpitchbend/shifter/ours.json (merged per metric) and prints: metric, reference, ours, threshold,
+Writes measurements/FwPitchBend/shifter/ours.json (merged per metric) and prints: metric, reference, ours, threshold,
 PASS / FAIL. Renders of ours are cached in nulltest/renders/pbshift_ours/ by the renderer's own hash, the input and
 the settings. FW_SHIFTER_RENDER overrides the renderer's path (default: the build folder's Release exe).
 """

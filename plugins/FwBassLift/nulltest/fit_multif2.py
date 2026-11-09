@@ -5,12 +5,12 @@ import numpy as np, model as M
 from scipy.optimize import least_squares
 FS=48000
 sets=[]
-tr=np.load(os.path.join(ROOT, "measurements/fwbasslift/transients.npz"))
+tr=np.load(os.path.join(ROOT, "measurements/FwBassLift/transients.npz"))
 for F in (80,160,256):
     for nm in ("kick","notes","riff"):
         for rep in range(3): sets.append((F,tr["x_%s_%d" % (nm,F)].astype(np.float64),tr["lin_%s_%d" % (nm,F)],"TR_%s" % nm))
 for F in (40,80,160,256):
-    d=np.load(os.path.join(ROOT, "measurements/fwbasslift/fitdata_%d.npz" % F))
+    d=np.load(os.path.join(ROOT, "measurements/FwBassLift/fitdata_%d.npz" % F))
     for n in d.files:
         if n.startswith("gen_"): sets.append((F,d["x_"+n[4:]].astype(np.float64),d[n],n[4:]))
 sl=slice(FS//10,None)

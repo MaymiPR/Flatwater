@@ -3,7 +3,7 @@ probe set as H-Comp's (plugins/FwComp/nulltest/probe_analog.py), fitted with the
 
     python -I measure_analog.py collect <mode>     build/hd_analog<mode>.npz
     python -I measure_analog.py noise              build/hd_analog_noise.npz
-    python -I measure_analog.py noisetable         measurements/fwdelay/analog_noise.csv
+    python -I measure_analog.py noisetable         measurements/FwDelay/analog_noise.csv
 """
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -63,7 +63,7 @@ def noise_table():
     a = np.array(rows)
     for j in range(1, 5):
         bad = np.isnan(a[:, j]); a[bad, j] = np.interp(np.log(a[bad, 0]), np.log(a[~bad, 0]), a[~bad, j])
-    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'refdelay', 'analog_noise.csv')
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwDelay', 'analog_noise.csv')
     np.savetxt(out, a, delimiter=',', header='hz,mode1_db,mode2_db,mode3_db,mode4_db', comments='', fmt='%.4f')
     print('wrote', out)
 

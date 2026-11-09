@@ -3,7 +3,7 @@ on the factory presets' two takes.
 
     python -I -B measure_level_grid.py ref     the reference on a Pitch x Formant grid (whole semitones, the
                                                          host parameters) over vowels and phrases; writes
-                                                         measurements/fwpitchbend/shifter/levelgrid.json
+                                                         measurements/FwPitchBend/shifter/levelgrid.json
     python -I -B measure_level_grid.py fit     the fit per setting (a straight line in the input's ln kurtosis)
                                                          and the C++ tables plugins/FwPitchBend/Source/dsp/Shifter.cpp carries (printed)
     python -I -B measure_level_grid.py takes   ours (FW_SHIFTER_RENDER, as score_shifter.py) against

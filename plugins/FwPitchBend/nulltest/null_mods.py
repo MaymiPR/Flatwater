@@ -6,7 +6,7 @@ samples later, far enough from the dry on noise). Each case: the rms and the lar
 readings are blurred by the reading window); an exact law is judged away from the jumps (target 0.003 rms), a fitted
 one over the whole curve (0.01).
 
-    python -I null_mods.py [case ...]        -> measurements/fwpitchbend/mods/null.json and a table
+    python -I null_mods.py [case ...]        -> measurements/FwPitchBend/mods/null.json and a table
 """
 import sys, os, json, subprocess
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +16,7 @@ import editor_state as S
 import measure_mods as M
 
 FS = 48000
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwpitchbend', 'mods', 'null.json')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwPitchBend', 'mods', 'null.json')
 
 
 def ours(x, keys, tables=None):

@@ -1,5 +1,5 @@
 """Writes plugins/FwVocalLeveler/Source/dsp/Fit.h: the riding model's constants, the reference's hidden values
-(plugins/FwVocalLeveler/nulltest/model.py DEFAULTS), or with --fit the local fit (measurements/fwvocalleveler/riding_fit.json, written by
+(plugins/FwVocalLeveler/nulltest/model.py DEFAULTS), or with --fit the local fit (measurements/FwVocalLeveler/riding_fit.json, written by
 plugins/FwVocalLeveler/nulltest/fit_model.py).
 
     python -I plugins/FwVocalLeveler/scripts/export_fit.py [--fit]
@@ -9,12 +9,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'nulltest'))   # plugins/FwVocalLeveler/nulltest/
 import model as M
 
-FIT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwvocalleveler', 'riding_fit.json')
+FIT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalLeveler', 'riding_fit.json')
 OUT = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwVocalLeveler', 'Source', 'dsp', 'Fit.h')
 p = dict(M.DEFAULTS)
 src = "the reference's hidden values (plugins/FwVocalLeveler/nulltest/model.py DEFAULTS)"
 if '--fit' in sys.argv:
-    d = json.load(open(FIT)); p.update(d['params']); src = 'measurements/fwvocalleveler/riding_fit.json (mean null %.2f dB)' % d['cost']
+    d = json.load(open(FIT)); p.update(d['params']); src = 'measurements/FwVocalLeveler/riding_fit.json (mean null %.2f dB)' % d['cost']
 names = [('c', 'c'), ('bias', 'bias'), ('followerAttackSlow', 'fatt_s'), ('followerAttackFast', 'fatt_f'), ('followerRelease', 'frel'),
          ('followerHold', 'fhold'), ('followerPower', 'fpow'), ('vadAttack', 'vatt'), ('vadRelease', 'vrel'), ('vk', 'vk'),
          ('rideAttackSlow', 'ratt_s'), ('rideAttackFast', 'ratt_f'), ('rideRelease', 'rrel'),

@@ -1,5 +1,5 @@
 """Writes plugins/FwBassXLift/Source/dsp/Net.h: the trained level-control GRU (build/fwbassxliftnet/net_h<H>.pt) and the measured
-output scale K(F) per whole-Hz Freq setting (measurements/fwbassxlift/k_out_table.json).
+output scale K(F) per whole-Hz Freq setting (measurements/FwBassXLift/k_out_table.json).
 
     <torch python> plugins/FwBassXLift/scripts/export_net.py [hidden] [weights.pt]
 """
@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 H = int(sys.argv[1]) if len(sys.argv) > 1 else 32
 src = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "..", "..", "build", "fwbassxliftnet", f"net_h{H}_e2e.pt")
 sd = torch.load(src, map_location="cpu")
-kt = json.load(open(os.path.join(HERE, "..", "..", "..", "measurements", "fwbassxlift", "k_out_table.json")))
+kt = json.load(open(os.path.join(HERE, "..", "..", "..", "measurements", "FwBassXLift", "k_out_table.json")))
 K = [kt[str(F)][0] for F in range(32, 257)]
 
 

@@ -2,7 +2,7 @@
 
 The current values of every stage of Flatwater Bass Lift, measured on the original it recreates (Renaissance Bass),
 with the method and the residual or confidence of each. The data and plots are in
-[measurements/fwbasslift/](../../measurements/fwbasslift). F stands for the Freq setting throughout.
+[measurements/FwBassLift/](../../measurements/FwBassLift). F stands for the Freq setting throughout.
 
 ## Setup
 
@@ -13,7 +13,7 @@ with the method and the residual or confidence of each. The data and plots are i
 | Hidden parameters | the parameters the VST3 does not expose (Original Bass In / Out, Response, Ratio, Decay and the rest) are written into the reference's saved state, which holds all its parameter values (`nulltest/wavesstate.py`); the reference ignores some otherwise valid states depending on the payload size, so every write is padded and verified by reading it back; Freq, Intensity and Gain are set as normal parameters; Input (the first in the original's parameter order) stays at 0 when written this way and is not measured |
 | Signals | sine tones (component amplitudes and phases by synchronous detection over whole periods), level steps, DC-free parameter sweeps, two-tone kernels, AM and beating tones, kicks, bass notes and a riff |
 | Identification scripts | `nulltest/ident_rbass_linear.py`, `plugins/FwBassLift/nulltest/measure_generator.py`, `plugins/FwBassLift/nulltest/measure_sweep.py`, `plugins/FwBassLift/nulltest/measure_k2.py`, `plugins/FwBassLift/nulltest/render_fitdata.py`, `plugins/FwBassLift/nulltest/model.py` (the Python model) |
-| Data files | `linear_paths.json`, `k2_grid6.json`, `levels_decay0.json`, `cs_vs_f0.json`, `am70.json`, `beat70.json`, `dyn_env70.json` and others in `measurements/fwbasslift/` |
+| Data files | `linear_paths.json`, `k2_grid6.json`, `levels_decay0.json`, `cs_vs_f0.json`, `am70.json`, `beat70.json`, `dyn_env70.json` and others in `measurements/FwBassLift/` |
 | Generated part | Intensity is an exact gain on the generated path, so a second render at another Intensity splits the generated part off the reference's output in every null test |
 
 ## 1. Path, latency and output trim
@@ -119,7 +119,7 @@ It is a learned model of the reference's gain control, not an identification of 
 The reference's meters cannot be read through the plug-in interface, so they were filmed: `tools/MeterCapture` hosts
 the plug-in, plays a test signal through it in real time, records its output, and grabs the editor about 40 times a
 second; `scripts/nulltest/read_meter_frames.py` turns the frames into bar heights (numbers in
-[measurements/fwbasslift/meters](../../measurements/fwbasslift/meters); the screenshots stay out of the repository).
+[measurements/FwBassLift/meters](../../measurements/FwBassLift/meters); the screenshots stay out of the repository).
 Signals: tone bursts and level steps at 25 / 50 / 300 / 1000 Hz, 5 / 20 / 100 ms bursts (`scripts/nulltest/make_meter_probe.py`),
 a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Meter.h`).
 
@@ -133,7 +133,7 @@ a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Met
 | Implementation | the audio thread only collects peaks; the editor applies the law at 60 frames per second with the real time between frames, so the movement does not depend on the host's buffer size | | |
 
 The same films of the original Flatwater Vocal Comp recreates (Compression -12 dB, the same probe and bass-line
-signals; bar heights in [measurements/fwvocalcomp/meters](../../measurements/fwvocalcomp/meters)):
+signals; bar heights in [measurements/FwVocalComp/meters](../../measurements/FwVocalComp/meters)):
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|

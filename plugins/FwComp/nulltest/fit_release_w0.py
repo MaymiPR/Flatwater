@@ -1,5 +1,5 @@
 """Flatwater Comp Phase 4: fit rel_eff = min(release, release * w0(S), K / (R - S)^p) with the slow state charging from the
-output (gain_fast2.c), on the burst cases. Writes measurements/fwcomp/release_w0.json.
+output (gain_fast2.c), on the burst cases. Writes measurements/FwComp/release_w0.json.
 
     python -I fit_release_w0.py [nfev]
 """

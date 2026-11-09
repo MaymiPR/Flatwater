@@ -14,4 +14,4 @@ for name, lv in (('-20 -> -50 -> -20', (-20, -50, -20)), ('-20 -> -70 -> -20', (
     t1 = FS; t2 = int(2.5*FS)
     print(name, 'closing (ms after the drop):', [(ms, round(float(g[t1 + int(ms*48)]), 2)) for ms in (0, 1, 2, 5, 10, 20, 50, 100, 200, 300, 400, 500, 600, 800, 1000, 1400)])
     print(' ' * len(name), 'opening (samples around the rise):', [(k, round(float(g[t2 + k]), 2)) for k in (-96, -64, -48, -32, -16, -8, -1, 0, 8, 32, 64, 128)])
-np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalcomp', 'gate_traj.npz'), **out)
+np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'gate_traj.npz'), **out)

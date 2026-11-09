@@ -6,7 +6,7 @@ through modulation). The reference against ours (plugins/FwPitchBend/tools/PbShi
     python -I -B measure_level_flatten.py [grid | ours | modpath]
 
 grid: renders the reference (cached in nulltest/renders/pbshift/) and ours (cached in nulltest/renders/pbshift_ours/),
-writes measurements/fwpitchbend/shifter/level_flatten.json and prints the table. ours: the same with only our side
+writes measurements/FwPitchBend/shifter/level_flatten.json and prints the table. ours: the same with only our side
 re-rendered against the saved reference numbers (the first such run keeps the earlier numbers as "before").
 modpath: the reference only, how its level and envelope follow a Pitch reached through modulation against the same
 Pitch set directly (the "modpath" section of the JSON). FW_SHIFTER_RENDER picks our renderer, as in the scorecard.

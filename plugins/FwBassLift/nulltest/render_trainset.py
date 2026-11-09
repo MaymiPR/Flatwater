@@ -2,7 +2,7 @@
 
 Each example: a 2 s mono signal, a Freq setting and Decay 0 / 1, and the reference's exact generated part, split off
 with two renders at Intensity -12 and -24 dB (both below the generated-signal limiter; Intensity is an exact gain
-there). Original Bass out. Writes measurements/fwbasslift/train/<split>_<n>.npz (git-ignored).
+there). Original Bass out. Writes measurements/FwBassLift/train/<split>_<n>.npz (git-ignored).
 
     python -I render_trainset.py <split> <count> <seed>
 """
@@ -16,7 +16,7 @@ import refhost as R
 FS = 48000
 N = 2 * FS
 FREQS = (32, 40, 50, 63, 80, 100, 125, 160, 200, 256)
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "train")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "train")
 os.makedirs(OUT, exist_ok=True)
 
 

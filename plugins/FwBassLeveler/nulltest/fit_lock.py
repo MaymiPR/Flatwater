@@ -9,7 +9,7 @@ end, or one the reference does not ride, gives no label; one the reference never
 only "not yet".
 
     python -I fit_lock.py oracle             the corpus with the model locking at the labelled moments (the upper bound)
-    python -I fit_lock.py train [hidden]     train (torch), write measurements/fwbassleveler/lock_net.json
+    python -I fit_lock.py train [hidden]     train (torch), write measurements/FwBassLeveler/lock_net.json
     python -I fit_lock.py eval [thr]         the corpus with the learned lock against the rule
 """
 import sys, os, json, ctypes
@@ -19,7 +19,7 @@ import numpy as np
 import model as B, fit_detector as F, bass_corpus as K, render_corpus as CR, compare_corpus as E
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-NET = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'lock_net.json')
+NET = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'lock_net.json')
 FS = 48000
 LIB = B._lib
 NIN = LIB.br_lock_inputs()

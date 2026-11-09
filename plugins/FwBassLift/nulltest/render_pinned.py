@@ -1,6 +1,6 @@
 """Flatwater Bass Lift identification: low carriers with the wide level detector pinned by a strong tone (-3 dBFS, an odd multiple
 of f0/2 near 200 Hz: no collisions with the carrier's harmonics), Decay 0. The carrier's gain variations then come
-almost only from the gain stage driven by l. -> measurements/fwbasslift/pinned.json (cosine-referenced h1..h9)."""
+almost only from the gain stage driven by l. -> measurements/FwBassLift/pinned.json (cosine-referenced h1..h9)."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -27,4 +27,4 @@ for f0 in (10, 12, 15, 18, 22, 27, 33, 40, 48, 56):
             h = [comp(g, k * f0) for k in range(1, 10, 2)]
             out.append(dict(f0=f0, fb=fb, LA=LA, LB=LB, h=[[v.real, v.imag] for v in h]))
     print(f0, "done", flush=True)
-json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "pinned.json"), "w"))
+json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "pinned.json"), "w"))

@@ -15,7 +15,7 @@ for L in (-10, -20, -30):
         lev = 20*np.log10(np.maximum(inv_law(g), 1e-9))
         res[(L, d)] = lev
     print(L, flush=True)
-np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalcomp', 'slow_dc.npz'),
+np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'slow_dc.npz'),
          keys=np.array(list(res.keys())), **{f'{k[0]}_{k[1]}': v for k, v in res.items()})
 s0 = int(0.5*FS)
 for (L, d), lev in res.items():

@@ -118,7 +118,7 @@ if __name__ == '__main__' and sys.argv[1] == 'noise':
 
 
 def noise_table():
-    """measurements/fwcomp/analog_noise.csv: the noise PSD (dB re 1/Hz, one-sided) per mode in log bands."""
+    """measurements/FwComp/analog_noise.csv: the noise PSD (dB re 1/Hz, one-sided) per mode in log bands."""
     d = np.load(os.path.join(BUILD, 'hc_analog_noise.npz'))
     edges = np.geomspace(20.0, 24000.0, 41)
     centres = np.sqrt(edges[:-1] * edges[1:])
@@ -133,7 +133,7 @@ def noise_table():
     a = np.array(rows)
     for j in range(1, 5):                                   # bands narrower than a bin: interpolate
         bad = np.isnan(a[:, j]); a[bad, j] = np.interp(np.log(a[bad, 0]), np.log(a[~bad, 0]), a[~bad, j])
-    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwcomp', 'analog_noise.csv')
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwComp', 'analog_noise.csv')
     np.savetxt(out, a, delimiter=',', header='hz,mode1_db,mode2_db,mode3_db,mode4_db', comments='', fmt='%.4f')
     print('wrote', out)
 

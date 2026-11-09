@@ -1,7 +1,7 @@
 """Checks Flatwater Vocal Leveler's riding model (model.c) against the reference renders (render_reference.py) by a local fit: CMA-ES over
 the continuous constants (times in log), started at the reference's hidden values (model.DEFAULTS). The objective is
 the mean null in dB over the probes and the training corpus parts (0 .. 23); the held-out parts (24 .. 35) are only
-reported. The result goes to measurements/fwvocalleveler/riding_fit.json; the plug-in keeps the hidden values unless the
+reported. The result goes to measurements/FwVocalLeveler/riding_fit.json; the plug-in keeps the hidden values unless the
 fit finds a clear gain (it did not: MEASUREMENTS.md "Flatwater Vocal Leveler: Phase 4").
 
     python -I fit_model.py fit [gens]          the local fit
@@ -16,7 +16,7 @@ import compare_model as E
 import model as M
 import vocal_corpus as V
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalleveler', 'riding_fit.json')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalLeveler', 'riding_fit.json')
 # (name, log scale?, low, high); the starts are model.DEFAULTS
 FREE = [('c', False, -3, 3), ('bias', False, -60, -30), ('fatt_s', True, 1, 500), ('fatt_f', True, 0.5, 200),
         ('frel', True, 50, 10000), ('fhold', True, 100, 50000), ('fpow', False, 0.5, 3.0), ('vatt', True, 0.001, 10),

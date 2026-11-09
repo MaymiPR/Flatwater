@@ -3,7 +3,7 @@
 
     python -I -B measure_shifter.py <command> [...]
 
-Commands (each writes JSON / PNG to measurements/fwpitchbend/shifter/):
+Commands (each writes JSON / PNG to measurements/FwPitchBend/shifter/):
     noshift     what the wet path does at Pitch 0 / Formant 0: delay, fractional delay, residual, on several inputs
     structure   pulse trains, clicks and a sweep at no shift and shifted: where the output's pulses are
     pitch       pitch accuracy: vowels and corpus voice at f0 80 .. 600 Hz, semitone and cents shifts, settling
@@ -25,7 +25,7 @@ from scipy.signal import lfilter, butter, sosfiltfilt, correlate
 import vb as H
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwpitchbend', 'shifter')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwPitchBend', 'shifter')
 CACHE = os.path.join(H.TMP, 'pbshift')
 os.makedirs(OUT, exist_ok=True); os.makedirs(CACHE, exist_ok=True)
 FS = 48000

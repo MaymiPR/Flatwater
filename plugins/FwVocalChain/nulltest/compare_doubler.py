@@ -7,7 +7,7 @@ input (white noise at -20 dBFS rms, a held-out vocal at -6 dBFS peaks, 20 s) and
 - delay: the voice's delay tracked as the cross-correlation peak of the wet against the dry in 2048-sample windows
   (noise only): its 5th / 50th / 95th percentiles (ms) and the modulation's period (the track's strongest cycle, s);
 - L / R: the correlation of the two wet sides.
-Writes measurements/fwvocalchain/doubler.json (NULLTESTS.md takes its table from there).
+Writes measurements/FwVocalChain/doubler.json (NULLTESTS.md takes its table from there).
 
     python -I compare_doubler.py
 """
@@ -21,7 +21,7 @@ import vocal_corpus as V
 import nulltest as N
 
 FS = 48000
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwvocalchain', 'doubler.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalChain', 'doubler.json')
 CLEAR = dict(N.CLEAR)
 
 

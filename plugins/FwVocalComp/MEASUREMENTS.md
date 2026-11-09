@@ -2,7 +2,7 @@
 
 The current values of every stage of Flatwater Vocal Comp, measured on the original it recreates (Renaissance Vox),
 with the method and the residual or confidence of each. The data (JSON, CSV tables, plots) is in
-[measurements/fwvocalcomp/](../../measurements/fwvocalcomp); large raw arrays (`.npz`) are left out and regenerate
+[measurements/FwVocalComp/](../../measurements/FwVocalComp); large raw arrays (`.npz`) are left out and regenerate
 with the scripts.
 
 ## Setup
@@ -125,9 +125,9 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_gate.py` fits the gate on DC s
 - The gain-reduction meter's ballistics and the Energy and Output meter values: the VST3 exposes only Bypass,
   Compression, Gate, Gain (plus generic MIDI controllers), no meter parameters, so the meters are compared on the
   editor, not through a host (the meter laws: [Flatwater Bass Lift's MEASUREMENTS.md, section
-  10](../FwBassLift/MEASUREMENTS.md#10-meters); the comparison: [docs/VALIDATION.md](../../docs/VALIDATION.md)).
+  10](../FwBassLift/MEASUREMENTS.md#10-meters); the comparison: [docs/validation.md](../../docs/validation.md)).
 - Transients with the compressor and the limiter engaged together: only steady tones were driven through both.
-- Real dry vocal stems: every voice signal in the null tests is synthetic ([docs/IMPROVEMENTS.md](../../docs/IMPROVEMENTS.md)).
+- Real dry vocal stems: every voice signal in the null tests is synthetic ([docs/improvements.md](../../docs/improvements.md)).
 
 ## 9. Differences from the product documentation
 

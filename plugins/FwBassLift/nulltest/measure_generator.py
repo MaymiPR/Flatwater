@@ -2,7 +2,7 @@
 Linear paths (step 1): original = HP3(Freq) when Original Bass is out; generated = K * LP3(Freq/3) * HP3(Freq)^2 at low level.
 Here: tones of amplitude A at f0, Intensity 0, Original Bass out. Each output harmonic h is divided by HP3(h f0)^2 (and the
 original HP3 path is removed at h = 1); the generator's input is A * LP3(f0) (amplitude and phase known).
-Writes measurements/fwbasslift/nl.json: for each f0 and A the complex generator output per harmonic, phase-referred to the
+Writes measurements/FwBassLift/nl.json: for each f0 and A the complex generator output per harmonic, phase-referred to the
 generator's input."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -12,7 +12,7 @@ from scipy.signal import butter, freqs as afreqs
 import refhost as R
 
 FS = 48000
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "nl.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "nl.json")
 FSET = 160.0
 NH = 12
 

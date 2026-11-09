@@ -2,7 +2,7 @@
 copes with the rough error surface where least squares and gradient steps stall. Data: fit_release8.py cases()
 (settled probes, double-burst memory probes, realistic envelopes, the null-test material weighted x3).
 
-    python -I fit_release_cma.py [generations] [sigma]     writes measurements/fwcomp/release_law.json and release_w0.json
+    python -I fit_release_cma.py [generations] [sigma]     writes measurements/FwComp/release_law.json and release_w0.json
                                                           (the previous ones are kept in build/*.before_cma.json)
 """
 import sys, os, json, time, shutil

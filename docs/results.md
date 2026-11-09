@@ -202,5 +202,5 @@ Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on 
 ## See also
 
 [RESEARCH.md](../RESEARCH.md) (documented behaviour), [MEASUREMENTS.md](../MEASUREMENTS.md) (what was measured and
-identified), [VALIDATION.md](VALIDATION.md) (unit tests, pluginval, the render regression),
-[IMPROVEMENTS.md](IMPROVEMENTS.md) (open items), [learned-blocks.md](learned-blocks.md) (the learned-block procedure).
+identified), [validation.md](validation.md) (unit tests, pluginval, the render regression),
+[improvements.md](improvements.md) (open items), [learned-blocks.md](learned-blocks.md) (the learned-block procedure).

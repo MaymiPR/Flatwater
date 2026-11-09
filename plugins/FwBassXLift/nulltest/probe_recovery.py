@@ -35,4 +35,4 @@ for ratio in (1.0, 2.0, 4.0):
             key = f"r{ratio:g}_resp{resp:g}_gap{gap:g}"
             out[key] = dict(err=round(err, 1), g_db=pts, end_of_loud=round(float(20 * np.log10(np.median(g[s0 - int(gap * FS) - 2400: s0 - int(gap * FS) - 480]))), 2))
             print(key, out[key], flush=True)
-json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbassxlift", f"recovery_F{F:g}.json"), "w"), indent=1)
+json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassXLift", f"recovery_F{F:g}.json"), "w"), indent=1)

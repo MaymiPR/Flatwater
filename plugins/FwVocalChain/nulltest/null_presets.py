@@ -3,7 +3,7 @@ faders, colours and Balance it stores, set as host parameters, the only way they
 as 0; Sensitivity and Output stay at 0, as the reference keeps them when a preset loads), Flatwater Vocal Chain loading
 its factory preset (ChRender preset=k). Three held-out vocal parts at -6 dBFS peaks after 6 s of silence (the
 delays settled, the doubler started in step), 48 kHz; each preset also with the Pitch stage clear in both. Writes
-measurements/fwvocalchain/presets.json and plugins/FwVocalChain/NULLTESTS-presets.md.
+measurements/FwVocalChain/presets.json and plugins/FwVocalChain/NULLTESTS-presets.md.
 
     python -I null_presets.py [jobs]
 """
@@ -19,7 +19,7 @@ import nulltest as N
 
 FS = 48000
 PARTS = (24, 27, 33)
-OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwvocalchain', 'presets.json')
+OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalChain', 'presets.json')
 OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwVocalChain', 'NULLTESTS-presets.md')
 
 

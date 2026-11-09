@@ -5,7 +5,7 @@ m = <out - dry, wet - dry> / |wet - dry|^2 over a short window (both channels). 
 output through the Mix slot's depth and the Mix range's clip.
 
     python -I measure_mods.py <experiment> [...]       experiments: see EXPERIMENTS below; 'all' runs them
-Results: measurements/fwpitchbend/mods/<experiment>.json
+Results: measurements/FwPitchBend/mods/<experiment>.json
 """
 import sys, os, json, math
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +14,7 @@ import vb as H
 import editor_state as S
 
 FS = 48000
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwpitchbend', 'mods')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwPitchBend', 'mods')
 WIN = 16
 _wet = {}
 

@@ -1,7 +1,7 @@
 # Flatwater Delay
 
 <img
-  src="../../docs/images/fwdelay.png"
+  src="../../docs/screenshots/fwdelay.png"
   alt="Flatwater Delay editor: an orange panel with the TAP pad and LoFi button on the left, the large DELAY and
   FEEDBACK knobs around an amber time display, the Depth, Rate, HiPass and LoPass knobs with the Link wheel below, an
   output meter, and Dry/Wet, Output and Analog knobs on the right"

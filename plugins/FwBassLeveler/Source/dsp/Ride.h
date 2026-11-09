@@ -170,7 +170,7 @@ public:
     double energy = -300.0;          // the level read (dB), what the Energy meter shows
     int64_t preHold = 0;             // the look-ahead in samples (set by the processor)
 
-    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/fwbassleveler/detector_fit.json; plugins/FwBassLeveler/nulltest/export_detector.py)
+    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; plugins/FwBassLeveler/nulltest/export_detector.py)
     double slowAtt = 9.8499, slowRel = 1351.1864, refRel = 5677.9174, hyst = 0.0043, relMs = 1.3193, holdMs = 53.7331,
            followAtt = 10.4011, followRel = 345.0301, bandHi = 172.0, bandLo = 78.0, reRideLo = 36.7818, reRideHi = 49.2817, reRideDepth = 4.4, offMs = 26.5947, offRelMs = 6.6073, winMs = 1.1550, floorDb = -48.75;
     // at Sensitivity 0 .. 100 by 25: the rise over S that is a new note, the margin over F that keeps the attack, and a

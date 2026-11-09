@@ -3,7 +3,7 @@ gain traces on musical material (measure_traces.py): CMA-ES on the sum over prob
 reference gain| (clipped at 2 dB) plus 0.1 x the same over the traces' 10 ms blocks, plus CW x the same over the bass
 corpus's training parts at every recorded setting (scripts/nulltest/bass_corpus.py, render_corpus.py); prints the mismatches.
 
-    python -I fit_detector.py [generations [sigma]]  writes measurements/fwbassleveler/detector_fit.json
+    python -I fit_detector.py [generations [sigma]]  writes measurements/FwBassLeveler/detector_fit.json
     python -I fit_detector.py check              the current fit's mismatches, probe by probe
 """
 import sys, os, json
@@ -16,7 +16,7 @@ import make_probes as PR
 import measure_traces as TR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'detector_fit.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'detector_fit.json')
 SETTINGS = [(r, s) for r in ('Slow', 'Fast') for s in (0.0, 25.0, 50.0, 75.0, 100.0)]
 # the free parameters: (name, start, transform) with 'log' kept positive
 GLOBAL = [('slow_att', 30.0, 'log'), ('slow_rel', 1000.0, 'log'), ('ref_rel', 5000.0, 'log'), ('hyst', 0.3, 'log'),

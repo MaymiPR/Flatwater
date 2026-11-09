@@ -22,4 +22,4 @@ for name, ev in (('impulse 1 smp +0.5', [0.5]), ('block 24 smp +0.3', [0.3]*24),
         post = [(k, round(float(g[e+k]-g0), 2)) for k in (0, 4, 8, 16, 24, 32, 48, 64, 96, 192, 480, 960)]
         print(f'{who:4s} {name:22s} before start: {pre}')
         print(f'{"":4s} {"":22s} after end:    {post}')
-np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalcomp', 'ramp.npz'), **{f'{k[0]}|{k[1]}': v for k, v in OUT.items()})
+np.savez(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'ramp.npz'), **{f'{k[0]}|{k[1]}': v for k, v in OUT.items()})

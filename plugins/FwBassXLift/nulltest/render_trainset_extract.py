@@ -1,7 +1,7 @@
 """Training set for the Flatwater BassX Lift learned gain: reference renders of the generated part G (MaxxBass monitor) and the
 level-control gain g(t) extracted from them with the identified structure (extract_g2.py).
 
-    python -I render_trainset_extract.py split count seed [noextract]   -> measurements/fwbassxlift/train/<split>_<seed>_<i>.npz
+    python -I render_trainset_extract.py split count seed [noextract]   -> measurements/FwBassXLift/train/<split>_<seed>_<i>.npz
     (noextract: the reference render only, for the end-to-end training; g is left empty)
 """
 import sys, os
@@ -14,7 +14,7 @@ import render_trainset as RT
 import extract_g2 as E
 
 FS = 48000
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbassxlift", "train")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassXLift", "train")
 os.makedirs(OUT, exist_ok=True)
 
 if __name__ == "__main__":

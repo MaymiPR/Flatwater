@@ -1,7 +1,7 @@
 # Validation
 
 The current validation state of every Flatwater plug-in. The null tests against the originals are in
-[RESULTS.md](RESULTS.md) and each plug-in's NULLTESTS.md.
+[results.md](results.md) and each plug-in's NULLTESTS.md.
 
 ## State
 

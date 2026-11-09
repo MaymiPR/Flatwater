@@ -1,7 +1,7 @@
 """The reference Bass Rider's applied gain on musical material, for fitting Flatwater Bass Leveler's riding model alongside the
 probes: the bass line (reference/fwbassleveler/bassline.f32) and synthetic bass parts (compare_model.synth_notes), at the
 defaults and a few settings; cached as 10 ms medians where the input is loud enough to read a gain
-(measurements/fwbassleveler/traces.npz).
+(measurements/FwBassLeveler/traces.npz).
 
     python -I measure_traces.py            render the missing traces
     import measure_traces as T; T.load()   [(name, settings, block centres in samples, reference gain per block), ...]
@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'traces.npz')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'traces.npz')
 FS = 48000
 BLOCK = 480
 

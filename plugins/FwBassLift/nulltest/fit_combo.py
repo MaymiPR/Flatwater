@@ -7,7 +7,7 @@ from scipy.optimize import least_squares
 import fit_twodet as H                      # harmonic cases and helpers (its fit does not run on import)
 FS = 48000
 B = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build")
-D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift")
+D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift")
 sets = []
 for F in (40, 80, 160, 256):
     d = np.load(os.path.join(D, "fitdata_%d.npz" % F))

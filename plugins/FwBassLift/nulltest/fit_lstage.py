@@ -6,7 +6,7 @@ import numpy as np, model as M
 from scipy.optimize import least_squares
 FS = 48000; F = 80.0
 B = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build")
-pin = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "pinned.json")))
+pin = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "pinned.json")))
 which = os.environ.get("CASES", "pinned")
 cases = [r for r in pin if (r["LB"] is not None) == (which == "pinned") or which == "all"]
 

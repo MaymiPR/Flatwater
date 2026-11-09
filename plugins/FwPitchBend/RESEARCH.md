@@ -11,7 +11,7 @@ into this repository, and its shape library is not shipped. The measured behavio
 |---|---|
 | P1 | The public manual, Vocal Bender User Guide (12 pages, also on waves.com) |
 | P2 | The original's VST3 as a host sees it (ParamDump, 41 points per parameter): Vocal Bender Mono and Vocal Bender Stereo (version 17.1), category Fx, Pitch Shift; 1 in / 1 out and 2 in / 2 out, latency 0, tail 0, no programs, 29 parameters and the host's Bypass (130 more are MIDI controllers, not automatable) |
-| P3 | The original's saved state and its 41 factory presets read in our terms (`plugins/FwPitchBend/nulltest/editor_state.py`, `plugins/FwPitchBend/nulltest/read_ref_presets.py`, `measurements/fwpitchbend/presets.json`): the settings only its editor sets (Fine, the modulation slots, the modulators' shapes), checked by loading changed states back into the original and reading them again |
+| P3 | The original's saved state and its 41 factory presets read in our terms (`plugins/FwPitchBend/nulltest/editor_state.py`, `plugins/FwPitchBend/nulltest/read_ref_presets.py`, `measurements/FwPitchBend/presets.json`): the settings only its editor sets (Fine, the modulation slots, the modulators' shapes), checked by loading changed states back into the original and reading them again |
 | P4 | The original's audio (`plugins/FwPitchBend/nulltest/vb.py`, `plugins/FwPitchBend/nulltest/measure_mods.py`, `plugins/FwPitchBend/nulltest/measure_shifter.py`; [MEASUREMENTS.md](MEASUREMENTS.md)) |
 | P5 | The original's editor captured in a host (git-ignored `reference/fwpitchbend/ui/`) |
 
@@ -88,7 +88,7 @@ normalised value); Pitch and Formant from the host are whole semitones while Fin
 
 ## Presets (P3)
 
-40 factory presets and a reset (`measurements/fwpitchbend/presets.json`). Their modulators' shapes, by their math:
+40 factory presets and a reset (`measurements/FwPitchBend/presets.json`). Their modulators' shapes, by their math:
 sine, triangle, square or flat in most; a drawn LFO shape in 11 (in 10 of them the drawn modulator is assigned: these
 become shape substituted with the nearest of our own shapes); step sequences in 15 (2, 8 or 16 steps). Flatten in 7,
 Fine in 5. Every preset keeps the original's values under a Flatwater name.

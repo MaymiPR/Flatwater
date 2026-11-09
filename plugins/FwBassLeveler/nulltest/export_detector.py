@@ -1,4 +1,4 @@
-"""Writes the note detector's fitted constants (measurements/fwbassleveler/detector_fit.json, from fit_detector.py) into
+"""Writes the note detector's fitted constants (measurements/FwBassLeveler/detector_fit.json, from fit_detector.py) into
 plugins/FwBassLeveler/Source/dsp/Ride.h, so the plug-in rides as the fitted model does.
 
     python -I export_detector.py
@@ -6,14 +6,14 @@ plugins/FwBassLeveler/Source/dsp/Ride.h, so the plug-in rides as the fitted mode
 import os, re, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FIT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'detector_fit.json')
+FIT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'detector_fit.json')
 HDR = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwBassLeveler', 'Source', 'dsp', 'Ride.h')
 
 d = json.load(open(FIT))
 g = d['globals']
 sens = ['0', '25', '50', '75', '100']
 arr = lambda vals: '{ %s }' % ', '.join('%.4f' % v for v in vals)
-block = """    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/fwbassleveler/detector_fit.json; export_detector.py)
+block = """    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; export_detector.py)
     double slowAtt = %.4f, slowRel = %.4f, refRel = %.4f, hyst = %.4f, relMs = %.4f, holdMs = %.4f,
            followAtt = %.4f, followRel = %.4f, bandHi = 172.0, bandLo = 78.0, reRideLo = %.4f, reRideHi = %.4f, reRideDepth = 4.4, offMs = %.4f, offRelMs = %.4f, winMs = %.4f, floorDb = -48.75;
     // at Sensitivity 0 .. 100 by 25: the rise over S that is a new note, the margin over F that keeps the attack, and a

@@ -1,14 +1,14 @@
 # Flatwater Delay: measurements
 
 The current values of every stage of Flatwater Delay, measured on the original it recreates (H-Delay), with the
-method and the residual or confidence of each. The data is in [measurements/fwdelay/](../../measurements/fwdelay).
+method and the residual or confidence of each. The data is in [measurements/FwDelay/](../../measurements/FwDelay).
 
 ## Setup
 
 | Item | Value |
 |---|---|
 | Reference | H-Delay (Waves), the H-Delay Stereo, Mono and Mono/Stereo components, from a licensed install |
-| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/hd.py`); `nulltest/measure_hdelay.py` writes `measurements/fwdelay/results.json` and the echo kernels (`kernel_*.csv`); 48 kHz unless noted |
+| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/hd.py`); `nulltest/measure_hdelay.py` writes `measurements/FwDelay/results.json` and the echo kernels (`kernel_*.csv`); 48 kHz unless noted |
 | Defaults of the probes | Analog Off, Feedback 0, Mix 100, Delay 375 ms, small impulses (0.001) |
 | Pre-roll | the reference shows but does not process values set before its first block, so RefRender renders a silent pre-roll (`preroll=`) and sets the values after its first block; both sides get the same pre-roll in whole blocks (a 3 s pre-roll is 144 384 samples, not 144 000, which matters while a glide or the LFO runs) |
 | First block | the reference's first block runs at its defaults, Analog mode 2 included, and puts that noise into its delay line; cases start with Feedback 0 and set the case's Feedback at the input's start |
@@ -121,7 +121,7 @@ method and the residual or confidence of each. The data is in [measurements/fwde
 | Glide offset 15.5 or 16.5 samples | 30 dB lost on a falling glide |
 | Double- or float-precision variants of the glide update | do not reproduce the reference's 1/32 phase steps in a glide's slow tail |
 | The filters on the line's input | do not null with a moving delay |
-| A correction EQ for Analog mode 3 | cannot fix it: the mismatch is non-linear at low level, not a smooth filter; mode 3 needs a different structure ([docs/IMPROVEMENTS.md](../../docs/IMPROVEMENTS.md)) |
+| A correction EQ for Analog mode 3 | cannot fix it: the mismatch is non-linear at low level, not a smooth filter; mode 3 needs a different structure ([docs/improvements.md](../../docs/improvements.md)) |
 
 ## 12. The editor
 

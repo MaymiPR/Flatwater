@@ -3,7 +3,7 @@
     python -I measure_reference.py [section ...]
 
 Sections: linear static detector freqdet timing punch release_pd makeup knee mix output analog stereo rates sync plots
-(default: all). Results go to <repo>/measurements/fwcomp/: results.json, csv tables and png plots.
+(default: all). Results go to <repo>/measurements/FwComp/: results.json, csv tables and png plots.
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -15,7 +15,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import refhost as R
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwcomp")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwComp")
 os.makedirs(OUT, exist_ok=True)
 FS = 48000
 RES_PATH = os.path.join(OUT, "results.json")

@@ -1,5 +1,5 @@
 """The C++ ride (Flatwater Bass Leveler's processor, run by BlRender) against the fitting model (model.c with the fit in
-measurements/fwbassleveler/detector_fit.json): the same material, the gain applied by each, sample by sample. They are the
+measurements/FwBassLeveler/detector_fit.json): the same material, the gain applied by each, sample by sample. They are the
 same model, so they should agree to rounding.
 
     python -I check_port.py

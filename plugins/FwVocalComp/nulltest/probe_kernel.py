@@ -3,7 +3,7 @@ import sys, os; sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, refhost as R
 FS = 48000; c = -24; M = 10**(-c/20); A = 0.1
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'fwvocalcomp', 'kernel_patterns.npz')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'kernel_patterns.npz')
 def xdet(g_db): g = 10**(g_db/20); return (0.99*M/g - 1)/(M - 1)
 rng = np.random.default_rng(7)
 pats = []

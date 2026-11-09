@@ -11,7 +11,7 @@ ear hears (after the first 0.1 s):
   null    the residual (dB), for the record
 A preset whose LFO is one of ours in place of a drawn one ("shape substituted") is run twice: as it ships, and with
 the reference's own table loaded into ours (PbRender table=), which tells the shape apart from the rest.
-Writes plugins/FwPitchBend/NULLTESTS-presets.md and measurements/fwpitchbend/presets_null.json.
+Writes plugins/FwPitchBend/NULLTESTS-presets.md and measurements/FwPitchBend/presets_null.json.
 
     python -I -B null_presets.py [our preset name ...]
 """
@@ -31,7 +31,7 @@ FS = 48000
 BPM = 120
 SKIP = FS // 10
 OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'NULLTESTS-presets.md')
-OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwpitchbend', 'presets_null.json')
+OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwPitchBend', 'presets_null.json')
 HEADER = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'Source', 'Presets.h')
 TARGETS = dict(level=1.5, pitch=15.0, gross=0.10, tone=3.0)
 

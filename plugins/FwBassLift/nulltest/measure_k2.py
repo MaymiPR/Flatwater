@@ -3,7 +3,7 @@ Original Bass out (hp=1), Intensity 0, Freq 80. Each pair (fa, fb) of integer-Hz
 fa+fb and fb-fa can only come from the generator's quadratic part (the original path is linear, the level control's ripple
 only makes odd-order products at low level). Stores the complex sum/difference components, phase-referred to the input
 tones (sin convention), divided by the known output high-pass HP3(Freq)^2.
-Writes measurements/fwbasslift/k2.json."""
+Writes measurements/FwBassLift/k2.json."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -14,7 +14,7 @@ import refhost as R
 FS = 48000
 F = 80.0
 LEVEL = float(os.environ.get("K2_LEVEL", "-60"))
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", os.environ.get("K2_OUT", "k2_%d.json" % -int(float(os.environ.get("K2_LEVEL", "-60")))))
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", os.environ.get("K2_OUT", "k2_%d.json" % -int(float(os.environ.get("K2_LEVEL", "-60")))))
 GRID = [int(v) for v in os.environ.get("K2_GRID", "11,15,21,29,41,57,79,113").split(",")]
 
 

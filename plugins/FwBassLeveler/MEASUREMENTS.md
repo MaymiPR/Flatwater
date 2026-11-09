@@ -66,7 +66,7 @@ Measured release depths (the dip before a re-attack counts):
 | Slow | 12 to 13 dB | 12 to 13 dB | 1 to 2 dB | under 1 dB |
 | Fast | 4 to 5 dB | 1 to 2 dB | | under 1 dB |
 
-The fitted constants (`measurements/fwbassleveler/detector_fit.json`, CMA-ES over probes, traces and the training
+The fitted constants (`measurements/FwBassLeveler/detector_fit.json`, CMA-ES over probes, traces and the training
 corpus, 25 generations, cost 2891):
 
 | Constant | Value |
@@ -123,7 +123,7 @@ envelope seems to hold after a re-ride).
 ## 6. Learned blocks
 
 None ships. A learned lock was tried (`plugins/FwBassLeveler/nulltest/fit_lock.py`; `plugins/FwBassLeveler/nulltest/model.c` lock modes, off by default; data in
-`measurements/fwbassleveler/lock_net.json`):
+`measurements/FwBassLeveler/lock_net.json`):
 
 | Item | Value |
 |---|---|
@@ -191,7 +191,7 @@ The reference is the original Bass Rider, run from a licensed install.
 - Measured: about 1,200 probe signals through the reference's VST3 in a host and its riding on a corpus of 36 bass
   parts, its applied gain read from its output.
 - Fitted or learned from the reference's output: the level read, the gain law, the note detector, the release,
-  re-attack and Idle rules, identified on those measurements (`measurements/fwbassleveler/detector_fit.json`); no
+  re-attack and Idle rules, identified on those measurements (`measurements/FwBassLeveler/detector_fit.json`); no
   learned block ships.
 - Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the

@@ -1,7 +1,7 @@
 # Flatwater Comp
 
 <img
-  src="../../docs/images/fwcomp.png"
+  src="../../docs/screenshots/fwcomp.png"
   alt="Flatwater Comp editor: an orange panel with a backlit VU meter in the centre, the large Threshold knob under
   it, Analog, Ratio, Punch and Attack knobs on the left, Output, Mix and Release knobs on the right, the IN, GR, OUT
   and LIMITER buttons on top and the BPM, HOST, MS buttons beside a BPM display"

@@ -5,7 +5,7 @@ step sequence (measure_level_flatten.mod_job's recipe, here on Pitch and on Form
 
     python -I -B measure_control.py [ref | all]
 
-ref: the reference only (prints its numbers); all: both sides, writes measurements/fwpitchbend/shifter/control.json.
+ref: the reference only (prints its numbers); all: both sides, writes measurements/FwPitchBend/shifter/control.json.
 FW_CONTROL_IGNORE=1 gives ours the totals only (the interface before the controls were passed); a later run keeps that
 run's numbers as "before".
 Per case and material: level (output rms minus input rms from 0.5 s, dB), the output f0, the envelope shift (vowels:

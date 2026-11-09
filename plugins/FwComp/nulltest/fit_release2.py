@@ -3,7 +3,7 @@
     python -I fit_release2.py [stage ...]     stages: slow fast joint report (default: all, in order)
 
 Knot tables (log rates): Fs (the slow release, x release time), As (an absolute part near unity gain), C (the slow
-state's charge), Ff (the fast fall toward the slow state). Results in measurements/fwcomp/release_law.json.
+state's charge), Ff (the fast fall toward the slow state). Results in measurements/FwComp/release_law.json.
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -17,7 +17,7 @@ from fit_release import load
 FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
 dll = ct.CDLL(os.path.join(HERE, 'gain_fast2.dll'))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law.json')
 
 KN = {'Fs': [0, 0.5, 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 25, 30, 40, 50],
       'As': [0, 0.5, 1, 1.5, 2, 3, 5],

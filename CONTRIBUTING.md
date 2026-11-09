@@ -25,7 +25,7 @@ unit tests and renderer, and on Windows its snapshot tool.
 
 | Test | What it does | Command |
 |---|---|---|
-| `<Name>Tests` (one per plug-in) | the plug-in's parameters (ranges, defaults, texts), its DSP laws against the reference's measured values, latency, presets, state and editor; [docs/VALIDATION.md](docs/VALIDATION.md) lists what each covers | `ctest --test-dir build -C Release --output-on-failure` |
+| `<Name>Tests` (one per plug-in) | the plug-in's parameters (ranges, defaults, texts), its DSP laws against the reference's measured values, latency, presets, state and editor; [docs/validation.md](docs/validation.md) lists what each covers | `ctest --test-dir build -C Release --output-on-failure` |
 | Render regression | the cases in `tests/regress/<Name>/jobs.txt` (every plug-in has cases) through that plug-in's offline renderer against the committed goldens; our output does not change unless intended (`--update` after an intended DSP change, committed with it) | `python scripts/render_regress.py --build build` |
 | Null tests | the same signals through the original and through ours; the residual in dB | [Null tests](#null-tests) |
 | Repository checks | absolute paths, old names, attribution forms, document style, whitespace | `python scripts/check_repo.py` |
@@ -98,7 +98,7 @@ administrator rights.
 | `measurements/` | the measurement data behind the plug-ins' MEASUREMENTS.md (published) |
 | `scripts/` | `bump_version.py`, `release_notes.py`, `render_regress.py`, `make_site.py`, `check_repo.py`, `check.ps1`, `check.sh`, and `doc_index.py` (the root MEASUREMENTS.md and RESEARCH.md indexes) |
 | `packaging/` | the installers; `plugins.txt` lists the plug-ins they hold |
-| `docs/` | the build guide, RESULTS.md (every plug-in's null tests in one page), VALIDATION.md, IMPROVEMENTS.md, learned-blocks.md, `branding/` (banners, icon, social preview, `colours.json`), `images/` and `screenshots/` |
+| `docs/` | the build guide, results.md (every plug-in's null tests in one page), validation.md, improvements.md, learned-blocks.md, `branding/` (banners, icon, social preview, `colours.json`), `images/` and `screenshots/` |
 | `.github/` | `workflows/` (Lint, CI, Build and release, Release checklist, Landing page), the issue forms, the pull request template, `RELEASE_CHECKLIST.md`, `dependabot.yml`, CODEOWNERS |
 | `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders; [scripts/nulltest/README.md](scripts/nulltest/README.md) lists the keys this suite adds |
 
@@ -112,7 +112,7 @@ learned blocks), the original plug-ins installed and named in `local.yaml`, and 
 are `nulltest_<name>.py` (every case for one plug-in; `--out` writes the report) and `nulltest_<name>_presets.py`
 (the factory presets against the originals' own); Flatwater Pitch Bend's are `plugins/FwPitchBend/nulltest/null_mods.py`,
 `plugins/FwPitchBend/nulltest/null_presets.py` and `plugins/FwPitchBend/nulltest/score_shifter.py`. They write `plugins/<Name>/NULLTESTS.md` and
-`NULLTESTS-presets.md`, summarised in [docs/RESULTS.md](docs/RESULTS.md). None of this runs in CI, which has no
+`NULLTESTS-presets.md`, summarised in [docs/results.md](docs/results.md). None of this runs in CI, which has no
 originals.
 
 ## Versions
@@ -131,5 +131,5 @@ plug-in raises the middle number, a fix the last. Tags are `vx.y.z`; `vx.y.z-rc.
 | No tools option: the renderers and snapshot tools are always built, the Windows hosts on Windows | the render regression and the snapshots need them on every build |
 | `measurements/` is published | the measurement data of this suite is public (approval recorded 2026-10-18) |
 | `local.yaml` carries keys beyond `local.example.yaml`: the reference's preset files and FL Studio's sample packs | the preset null tests and the corpora read them ([scripts/nulltest/README.md](scripts/nulltest/README.md)) |
-| Root `MEASUREMENTS.md` and `RESEARCH.md` are indexes written by `scripts/doc_index.py`; `docs/` adds RESULTS.md, VALIDATION.md, IMPROVEMENTS.md and learned-blocks.md | nine plug-ins share one repository |
-| The plug-in images are in `docs/images/` (`fw<plug-in>.png`); `docs/screenshots/` holds `hero.png` | the plug-in pages link them there |
+| Root `MEASUREMENTS.md` and `RESEARCH.md` are indexes written by `scripts/doc_index.py`; `docs/` adds results.md, validation.md, improvements.md and learned-blocks.md | nine plug-ins share one repository |
+| The plug-in images are in `docs/screenshots/` (`fw<plug-in>.png`); `docs/screenshots/` holds `hero.png` | the plug-in pages link them there |

@@ -5,7 +5,7 @@ a charge at a level for a time, then a quiet gap in which the gain reduction rel
 (threshold, ratio, level), the charge time and the release time.
 
     python -I fit_release3.py collect          build/hc_rel3_cases.npz
-    python -I fit_release3.py fit [nfev]       measurements/fwcomp/release_law3.json
+    python -I fit_release3.py fit [nfev]       measurements/FwComp/release_law3.json
     python -I fit_release3.py report           the probe cases and the realistic envelopes (fit_release_real.py)
 """
 import sys, os, json
@@ -21,7 +21,7 @@ FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, '..', '..', '..', 'build')
 CACHE = os.path.join(BUILD, 'hc_rel3_cases.npz')
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law3.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law3.json')
 LEAD, QUIET = int(0.02 * FS), 0.0003
 
 FX = np.array([0, 0.5, 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 25, 30, 40, 50], float)
@@ -91,7 +91,7 @@ def run(q, Rt, att, rel):
 
 
 def initial():
-    law = json.load(open(os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law.json')))
+    law = json.load(open(os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law.json')))
     kn, x = law['knots'], np.array(law['x'])
     i = 0; parts = {}
     for k in law['order']: parts[k] = x[i:i + len(kn[k])]; i += len(kn[k])

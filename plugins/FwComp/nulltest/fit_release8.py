@@ -2,7 +2,7 @@
 plug-in uses) on probes from a settled state (fit_release4.py) and the realistic envelopes (fit_release_real.py),
 instead of the start-up probes it was first fitted on. The start-up state itself is not modelled by this form.
 
-    python -I fit_release8.py fit [nfev]       writes measurements/fwcomp/release_law.json and release_w0.json
+    python -I fit_release8.py fit [nfev]       writes measurements/FwComp/release_law.json and release_w0.json
     python -I fit_release8.py report
 """
 import sys, os, json

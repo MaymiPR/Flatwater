@@ -8,7 +8,7 @@ are kept for the start-up state itself).
 The probe is the alternating signal e[n] (-1)^n (the detector reads |x|, the gain is y / x exactly).
 
     python -I fit_release4.py collect          build/hc_rel4_cases.npz
-    python -I fit_release4.py fit [nfev]       measurements/fwcomp/release_law4.json
+    python -I fit_release4.py fit [nfev]       measurements/FwComp/release_law4.json
     python -I fit_release4.py report
 """
 import sys, os, json
@@ -24,7 +24,7 @@ FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, '..', '..', '..', 'build')
 CACHE = os.path.join(BUILD, 'hc_rel4_cases.npz')
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law4.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law4.json')
 LEAD, QUIET = FS, 0.0003
 AVG = 1                                 # S is the plain average of R (gain_fast4.c avg)
 FORM = 5                                # 5: a second, faster average S2 with its own table (gain_fast5.c)
@@ -146,7 +146,7 @@ def run(q, Rt, att, rel, S_init=0.0, startup=False):
 
 
 def initial():
-    law = json.load(open(os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law.json')))
+    law = json.load(open(os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law.json')))
     kn, x = law['knots'], np.array(law['x'])
     i = 0; parts = {}
     for k in law['order']: parts[k] = x[i:i + len(kn[k])]; i += len(kn[k])

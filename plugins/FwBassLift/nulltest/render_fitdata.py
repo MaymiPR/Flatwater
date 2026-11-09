@@ -1,6 +1,6 @@
 """Renders the RBass fitting set: the generated path alone, split off with two Intensity settings (Intensity is an exact
 gain on the generated path), for tones, level steps, two-tones, noise and decaying notes.
-    python -I render_fitdata.py [freq]        -> measurements/fwbasslift/fitdata_<freq>.npz (git-ignored)"""
+    python -I render_fitdata.py [freq]        -> measurements/FwBassLift/fitdata_<freq>.npz (git-ignored)"""
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -10,7 +10,7 @@ import refhost as R
 
 FS = 48000
 F = float(sys.argv[1]) if len(sys.argv) > 1 else 80.0
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "fitdata_%d.npz" % int(F))
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "fitdata_%d.npz" % int(F))
 G24 = 10 ** (-24 / 20)
 
 

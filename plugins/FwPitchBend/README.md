@@ -1,7 +1,7 @@
 # Flatwater Pitch Bend
 
 <img
-  src="../../docs/images/fwpitchbend.png"
+  src="../../docs/screenshots/fwpitchbend.png"
   alt="Flatwater Pitch Bend editor: two large Pitch and Formant knobs with the Link knob and Fine switch between them,
   the Flatten switch and note on the left, the Mix knob on the right, the M1, M2, AM and PT tabs, and the open
   modulator panel on M1: a sine shape with Rate, Warp, Phase, Smooth and Level"

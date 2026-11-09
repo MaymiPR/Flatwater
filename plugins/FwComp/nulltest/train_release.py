@@ -6,7 +6,7 @@ ln w = ln w1(R - S1) + m(R / 20, (R - S1) / 10, (R - S2) / 10, (R - S3) / 10, ln
 of R (one-pole on the linear gain; tau1 learned, 30 and 5 ms), all S at S0 after a reset; then the attack one-pole
 (falling only) and the two moving averages (38, 27). F, A, w1 are log tables on knots, m a small MLP.
 
-    <venv python> train_release.py [iterations] [batch]        writes measurements/fwcomp/release_law6.json
+    <venv python> train_release.py [iterations] [batch]        writes measurements/FwComp/release_law6.json
 """
 import sys, os, json, time
 import numpy as np
@@ -15,7 +15,7 @@ import torch
 torch.set_num_threads(8)
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.path.join(HERE, '..', '..', '..', 'build')
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwcomp', 'release_law6.json')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwComp', 'release_law6.json')
 FS = 48000.0
 FX = [0, 0.5, 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 25, 30, 40, 50]
 AX = [0, 0.5, 1, 1.5, 2, 3, 5]

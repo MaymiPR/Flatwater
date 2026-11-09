@@ -1,7 +1,7 @@
 # Flatwater Vocal Comp
 
 <img
-  src="../../docs/images/fwvocalcomp.png"
+  src="../../docs/screenshots/fwvocalcomp.png"
   alt="Flatwater Vocal Comp editor on dark blue: the Gate fader over the Energy meter on the left, the large Comp fader in the centre window, the Gain fader and the Output meters on the right"
   width="371">
 

@@ -18,7 +18,7 @@ import torch
 
 FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(HERE, "..", "..", "..", "measurements", "fwbassxlift", "train")
+DATA = os.path.join(HERE, "..", "..", "..", "measurements", "FwBassXLift", "train")
 OUTD = os.path.join(HERE, "..", "..", "..", "build", "fwbassxliftnet")
 os.makedirs(OUTD, exist_ok=True)
 dev = torch.device("cuda")
@@ -149,7 +149,7 @@ def g_highpass(F, hp):
 
 
 TAG = os.environ.get("MB_TAG", "")
-KT = {int(k): v[0] for k, v in json.load(open(os.path.join(HERE, "..", "..", "..", "measurements", "fwbassxlift", "k_out_table.json"))).items()}
+KT = {int(k): v[0] for k, v in json.load(open(os.path.join(HERE, "..", "..", "..", "measurements", "FwBassXLift", "k_out_table.json"))).items()}
 IRL = 1 << 15
 
 

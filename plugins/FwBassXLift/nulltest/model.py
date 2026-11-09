@@ -44,7 +44,7 @@ def k_out(F):
     """the output scale of G per Freq setting (measured table, whole Hz 32 ... 256)"""
     global _KT
     if _KT is None:
-        t = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbassxlift", "k_out_table.json")))
+        t = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassXLift", "k_out_table.json")))
         _KT = {int(k): v[0] for k, v in t.items()}
     return _KT[int(round(min(max(F, 32), 256)))]
 

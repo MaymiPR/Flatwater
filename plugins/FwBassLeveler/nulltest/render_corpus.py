@@ -1,6 +1,6 @@
 """The reference Bass Rider's riding on the bass corpus (scripts/nulltest/bass_corpus.py): its applied gain on every part at a set of
 settings, through pedalboard (lined up with the input), kept at 0.5 ms (the 2 ms least-squares gain trace, every 24th
-sample) in measurements/fwbassleveler/corpus/<part>_<setting>.npy (git-ignored).
+sample) in measurements/FwBassLeveler/corpus/<part>_<setting>.npy (git-ignored).
 
     python -I render_corpus.py [parts]      render the missing ones (parts: e.g. 0-35, default all)
     import render_corpus as CR; CR.load(k, setting)  -> (gain at 48 kHz, interpolated from the 0.5 ms trace)
@@ -12,7 +12,7 @@ import numpy as np
 import bass_corpus as K
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'fwbassleveler', 'corpus')
+OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'corpus')
 DEC = 24
 SETTINGS = {'default': {}, 'fast': {'response': 'Fast'}, 's0': {'sensitivity': 0.0}, 's100': {'sensitivity': 100.0},
             'fast25': {'response': 'Fast', 'sensitivity': 25.0}, 'fast100': {'response': 'Fast', 'sensitivity': 100.0},

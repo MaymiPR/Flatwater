@@ -22,7 +22,7 @@ import torch
 
 FS = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(HERE, "..", "..", "..", "measurements", "fwbasslift", "train")
+DATA = os.path.join(HERE, "..", "..", "..", "measurements", "FwBassLift", "train")
 OUTD = os.path.join(HERE, "..", "..", "..", "build", "gainnet")
 os.makedirs(OUTD, exist_ok=True)
 dev = torch.device("cuda")

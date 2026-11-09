@@ -1,6 +1,6 @@
 """Renders transient material (the null test's kick-like and bass-notes signals, plus a fast bass riff) through the
 reference at several Freq settings, generated part split off with the Intensity render (-24 dB, where the limiter
-never acts) and the limited Intensity 0 render kept too. -> measurements/fwbasslift/transients.npz (git-ignored)"""
+never acts) and the limited Intensity 0 render kept too. -> measurements/FwBassLift/transients.npz (git-ignored)"""
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
@@ -25,4 +25,4 @@ for F in (80, 160, 256):
         out["lin_%s_%d" % (name, F)] = (lo - hp) * 10 ** (24 / 20)     # unlimited generated part at Intensity 0
         out["lim_%s_%d" % (name, F)] = y0 - hp                          # what the reference outputs (limited)
         print(F, name, "peak unlimited %.2f" % np.max(np.abs(out["lin_%s_%d" % (name, F)])), flush=True)
-np.savez_compressed(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "fwbasslift", "transients.npz"), **out)
+np.savez_compressed(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "transients.npz"), **out)
