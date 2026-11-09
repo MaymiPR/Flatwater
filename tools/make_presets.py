@@ -18,42 +18,42 @@ ROOT = os.path.join(HERE, "..")
 # reference file (relative path) -> (group, our name)
 BASS_NAMES = {
     r"Factory\Bassic Setup.xps": ("Essentials", "Basic Bass"),
-    r"Factory\Big Bottoms.xps": ("Essentials", "Big Bottom End"),
+    r"Factory\Big Bottoms.xps": ("Essentials", "Deep Floor"),
     r"Factory\Bombasstic.xps": ("Essentials", "Bass Bomb"),
     r"Factory\Bottoms Up.xps": ("Essentials", "Bottom Lift"),
-    r"Factory\Fuzz Bass.xps": ("Essentials", "Fuzzy Bass"),
+    r"Factory\Fuzz Bass.xps": ("Essentials", "Grit Bass"),
     r"Factory\Nose Job.xps": ("Essentials", "Upper Bass Lift"),
-    r"Factory\Small Speaker Prep.xps": ("Essentials", "Small Speaker Ready"),
+    r"Factory\Small Speaker Prep.xps": ("Essentials", "Earbud Weight"),
     r"Factory\Under Drive.xps": ("Essentials", "Low Drive"),
     r"Artists\Ben Mink\Low Boost Elec. Fiddle.xps": ("Studio", "Electric Fiddle Low Lift"),
     r"Artists\Dave Aron\Synth Bass RBass.xps": ("Studio", "Synth Bass Weight"),
     r"Artists\Dave Darlington\Acappella Bass Voice.xps": ("Studio", "Vocal Bass Line"),
     r"Artists\Dave Darlington\Kick Drum Seriousness.xps": ("Studio", "Serious Kick"),
-    r"Artists\Dave Pensado\Bass.xps": ("Studio", "Bass Glue"),
-    r"Artists\Dave Pensado\Burg Bass.xps": ("Studio", "Burly Bass"),
+    r"Artists\Dave Pensado\Bass.xps": ("Studio", "Low Glue"),
+    r"Artists\Dave Pensado\Burg Bass.xps": ("Studio", "Heavy Low Line"),
     r"Artists\Dave Pensado\Kik Lo.xps": ("Studio", "Kick Low End"),
-    r"Artists\Dave Pensado\Live Bass.xps": ("Studio", "Live Bass Body"),
+    r"Artists\Dave Pensado\Live Bass.xps": ("Studio", "Stage Bass Round"),
     r"Artists\Dave Pensado\RBass WS.xps": ("Studio", "Bass Workstation"),
     r"Artists\Gil Norton\808 Sub.xps": ("Studio", "Boom Sub"),
     r"Artists\Gil Norton\Bass GTR Rock.xps": ("Studio", "Rock Bass Guitar"),
-    r"Artists\Gil Norton\Bass GTR Sub.xps": ("Studio", "Bass Guitar Sub"),
+    r"Artists\Gil Norton\Bass GTR Sub.xps": ("Studio", "Four-String Sub"),
     r"Artists\JBeatzz\Jbeatzz 808.xps": ("Studio", "Trap Boom"),
     r"Artists\Lu Diaz\Boost That Sub.xps": ("Studio", "Sub Push"),
     r"Artists\Luizinho Mazzei\808 Fight.xps": ("Studio", "Boom Fight"),
-    r"Artists\MarioSo DeJesus\NelFlow SubWoofer Bass.xps": ("Studio", "Subwoofer Bass"),
+    r"Artists\MarioSo DeJesus\NelFlow SubWoofer Bass.xps": ("Studio", "Club System Low"),
     r"Artists\MarioSo DeJesus\Nesty Tone Bass Pop.xps": ("Studio", "Pop Bass Tone"),
     r"Artists\Mark Ralph\Live Bass Love.xps": ("Studio", "Live Bass Warmth"),
     r"Artists\Mark Ralph\Prophet's Octave.xps": ("Studio", "Poly Synth Octave"),
     r"Artists\Michael Brauer\808.xps": ("Studio", "Boom Low"),
-    r"Artists\Michael Brauer\Bass.xps": ("Studio", "Bass Bloom"),
-    r"Artists\Michael Brauer\Sub Bass Send.xps": ("Studio", "Sub Send"),
+    r"Artists\Michael Brauer\Bass.xps": ("Studio", "Low Bloom"),
+    r"Artists\Michael Brauer\Sub Bass Send.xps": ("Studio", "Sub Feed"),
     r"Artists\Michael Brauer\Toms.xps": ("Studio", "Tom Depth"),
     r"Artists\Mike Hedges\Drumsareus.xps": ("Studio", "Drum Bus Weight"),
     r"Artists\Ott\1950s Snare.xps": ("Studio", "Vintage Snare"),
-    r"Artists\Ott\Closer Percussion.xps": ("Studio", "Close Percussion"),
+    r"Artists\Ott\Closer Percussion.xps": ("Studio", "Near-Miked Hits"),
     r"Artists\Ott\Laptop Tablas.xps": ("Studio", "Small Tablas"),
     r"Artists\Ott\Smaller Than It Sounds.xps": ("Studio", "Bigger Than It Is"),
-    r"Artists\Ott\Soft Tape Breakbeat.xps": ("Studio", "Tape Breakbeat"),
+    r"Artists\Ott\Soft Tape Breakbeat.xps": ("Studio", "Dusty Loop Low End"),
     r"Artists\Ross Hogarth\Bass 1.xps": ("Studio", "Bass Shape 1"),
     r"Artists\Ross Hogarth\Bass 2.xps": ("Studio", "Bass Shape 2"),
     r"Artists\Ross Hogarth\Bass 3.xps": ("Studio", "Bass Shape 3"),
@@ -61,21 +61,21 @@ BASS_NAMES = {
     r"Artists\Scott Gershin\Lo Lo Thump For Guns.xps": ("Studio", "Gunshot Low Thump"),
     r"Artists\Scott Gershin\Mid Range Gun Boost.xps": ("Studio", "Gunshot Mid Boost"),
     r"Artists\Scott Gershin\Music Lo End Tone.xps": ("Studio", "Score Low End"),
-    r"Artists\Todd Parker\Parker Bass Thump.xps": ("Studio", "Bass Thump"),
+    r"Artists\Todd Parker\Parker Bass Thump.xps": ("Studio", "Low Punch"),
 }
 VOCAL_NAMES = {
-    r"Factory\25db Comp No Gate.xps": ("Essentials", "Heavy Comp No Gate"),
+    r"Factory\25db Comp No Gate.xps": ("Essentials", "Heavy Squash Ungated"),
     r"Factory\Ball Game Sports Cast.xps": ("Essentials", "Stadium Announcer"),
     r"Factory\Hissy Lecture Intelligizer.xps": ("Essentials", "Noisy Lecture Cleanup"),
     r"Factory\Out Door News Cast.xps": ("Essentials", "Outdoor Reporter"),
     r"Artists\Chris Baseford\BG Vocal.xps": ("Studio", "Background Vocal"),
-    r"Artists\Chris Baseford\Lead Vocal.xps": ("Studio", "Lead Vocal Control"),
+    r"Artists\Chris Baseford\Lead Vocal.xps": ("Studio", "Main Voice Control"),
     r"Artists\Dave Darlington\Easy Vocal.xps": ("Studio", "Gentle Lead"),
     r"Artists\Dave Darlington\In Yo Face Vocal.xps": ("Studio", "Up Front Vocal"),
-    r"Artists\Dave Pensado\Good Vocal.xps": ("Studio", "Solid Vocal"),
-    r"Artists\Dave Pensado\Start.xps": ("Studio", "Starting Point"),
+    r"Artists\Dave Pensado\Good Vocal.xps": ("Studio", "Grounded Voice"),
+    r"Artists\Dave Pensado\Start.xps": ("Studio", "First Pass"),
     r"Artists\Eddie Kramer\Female Vocal\Gentle Compression.xps": ("Studio", "Soft Vocal Squeeze"),
-    r"Artists\Eddie Kramer\Metal Drums\Metal Snare Gate.xps": ("Studio", "Hard Snare Gate"),
+    r"Artists\Eddie Kramer\Metal Drums\Metal Snare Gate.xps": ("Studio", "Snare Choke"),
     r"Artists\Greg Wells\Vocal Control.xps": ("Studio", "Steady Vocal"),
     r"Artists\Lu Diaz\Vocal Presence.xps": ("Studio", "Vocal Forward"),
     r"Artists\Mark Ralph\Gasping For Air.xps": ("Studio", "Breath Control"),
@@ -84,32 +84,32 @@ VOCAL_NAMES = {
     r"Artists\Michael Brauer\Lead Vox.xps": ("Studio", "Lead Up Front"),
     r"Artists\Miles Comaskey\BGV Stack.xps": ("Studio", "BGV Pile"),
     r"Artists\RENEGADE EL REY\Less Is More.xps": ("Studio", "Light Touch"),
-    r"Artists\Sterling Winfield\Dyn Mic Vox Squeeze.xps": ("Studio", "Dynamic Mic Squeeze"),
+    r"Artists\Sterling Winfield\Dyn Mic Vox Squeeze.xps": ("Studio", "Handheld Mic Hold"),
 }
 
 
 # Flatwater BassX Lift: reference preset name -> (group, our name). "Essentials": the reference's factory set, "Studio": its artist set.
 MAXX_NAMES = {
-    "MaxxBass Full Reset": ("Essentials", "Full Reset"),
+    "MaxxBass Full Reset": ("Essentials", "Default"),
     "PA Default": ("Essentials", "PA System"),
-    "Ultralow Extender": ("Essentials", "Ultra Low Extend"),
-    "Light": ("Essentials", "Light"),
-    "Medium": ("Essentials", "Medium"),
-    "Aggressive": ("Essentials", "Aggressive"),
-    "Multimedia": ("Essentials", "Multimedia Speakers"),
+    "Ultralow Extender": ("Essentials", "Deepest Reach"),
+    "Light": ("Essentials", "Subtle Lift"),
+    "Medium": ("Essentials", "Even Lift"),
+    "Aggressive": ("Essentials", "Full Lift"),
+    "Multimedia": ("Essentials", "Desktop Speakers"),
     "PC Laptop": ("Essentials", "Laptop Speakers"),
     "Dies Bassum": ("Essentials", "Deep Sub Push"),
-    "BoomBaxx": ("Essentials", "Boombox"),
-    "Hi-fi system enhancer": ("Essentials", "Hi-Fi Enhancer"),
-    "Lo-fi system enhancer": ("Essentials", "Lo-Fi Enhancer"),
+    "BoomBaxx": ("Essentials", "Portable Radio"),
+    "Hi-fi system enhancer": ("Essentials", "Home Stereo Polish"),
+    "Lo-fi system enhancer": ("Essentials", "Cheap Speaker Polish"),
     "Pensado B M": ("Studio", "Bass Mix Weight"),
     "Pensado Bass 1": ("Studio", "Bass Focus 1"),
     "Pensado Bass 2": ("Studio", "Bass Focus 2"),
     "Pensado Bass 3": ("Studio", "Bass Focus 3"),
     "Pensado Vocal": ("Studio", "Vocal Warmth"),
-    "Hedges Mix Bass Fixer": ("Studio", "Mix Bass Fixer"),
+    "Hedges Mix Bass Fixer": ("Studio", "Mix Low Repair"),
     "Russo Good E. Bass": ("Studio", "Electric Bass Body"),
-    "Bass Chain": ("Studio", "Bass Chain"),
+    "Bass Chain": ("Studio", "Low Stack"),
     "MaxxBass JC E-Bass": ("Studio", "Electric Bass Lift"),
     "Parker Kick RX": ("Studio", "Kick Harmonics"),
 }
@@ -117,31 +117,31 @@ MAXX_NAMES = {
 
 # Flatwater Comp: reference preset name -> (group, our name). "Studio": the reference's guest presets.
 HCOMP_NAMES = {
-    "Full Reset": ("Essentials", "Full Reset"),
+    "Full Reset": ("Essentials", "Default"),
     "PA Default": ("Essentials", "Live Sound Start"),
-    "Drums Punch": ("Essentials", "Drum Punch"),
+    "Drums Punch": ("Essentials", "Kit Smack"),
     "Drums Pie": ("Essentials", "Drum Body"),
     "Drums Kid": ("Essentials", "Light Kit"),
     "Drums Heavy": ("Essentials", "Heavy Drums"),
     "Pumping Drums": ("Essentials", "Pumping Kit"),
-    "Tight Kit": ("Essentials", "Tight Kit"),
-    "Phat Kick": ("Essentials", "Fat Kick"),
+    "Tight Kit": ("Essentials", "Snug Drums"),
+    "Phat Kick": ("Essentials", "Round Kick"),
     "Transient Enhancer": ("Essentials", "Transient Lift"),
     "Serious Squasher": ("Essentials", "Hard Squash"),
-    "Tight Vocal": ("Essentials", "Tight Vocal"),
+    "Tight Vocal": ("Essentials", "Firm Voice"),
     "Parallel Compression": ("Essentials", "Parallel Blend"),
-    "Bold Bass": ("Essentials", "Bold Bass"),
+    "Bold Bass": ("Essentials", "Thick Bass Hold"),
     "Punchy Piano&amp;Rhodes": ("Essentials", "Punchy Keys"),
-    "Lead Guitar": ("Essentials", "Lead Guitar"),
-    "Fuzz Guitar": ("Essentials", "Fuzz Guitar"),
-    "Strings": ("Essentials", "Strings"),
+    "Lead Guitar": ("Essentials", "Solo Guitar Sustain"),
+    "Fuzz Guitar": ("Essentials", "Dirty Guitar Hold"),
+    "Strings": ("Essentials", "Orchestral Section"),
     "Mastering": ("Essentials", "Master Glue"),
     "Easy Does it Snare Comp": ("Studio", "Gentle Snare"),
-    "160 Style Drum Crunch": ("Studio", "Vintage Drum Crunch"),
+    "160 Style Drum Crunch": ("Studio", "Classic Kit Crush"),
     "Punch in the Drum Nuts": ("Studio", "Drum Knockout"),
-    "Tasty Drum Group": ("Studio", "Drum Group"),
-    "Dave Aron - Rock Vocal": ("Studio", "Rock Vocal"),
-    "FOHDave Kit Parallel Comp": ("Studio", "Live Kit Parallel"),
+    "Tasty Drum Group": ("Studio", "Kit Bus"),
+    "Dave Aron - Rock Vocal": ("Studio", "Loud Band Voice"),
+    "FOHDave Kit Parallel Comp": ("Studio", "Stage Drums Blend"),
     "Broken Radio": ("Studio", "Lo-Fi Radio"),
 }
 
@@ -247,20 +247,20 @@ def write_hcomp():
 
 # Flatwater Delay: the reference's presets in their order; the first 68 are its factory set, the last 20 its guest set
 HDELAY_NAMES = [
-    "Full Reset", "Live Sound Start", "Ping Pong", "Basic Stereo", "Basic Stereo LoFi", "LoFi Slap", "Band-Pass Echo",
-    "Basic Echo", "Tape Echo", "Dub Echo", "Wide Echo", "Tape Runaway (Loud)", "Quarter Ping Pong", "Just Right Echo",
-    "Filtered Dub 1/4T", "Vintage Echo", "Straight Eighths", "Sixteenths", "Dark Dub 1/8D", "Old School Insert",
-    "Filtered Echo", "Filtered Bounce 1/8T", "Slap Insert", "Basic Slap", "Chorus Echo", "Chorus", "Springy Drums",
-    "Rap Vocal Echo", "Left Side Guitar", "Deep Chorus", "Light Flanger Insert", "Metal Doubler", "Flanger",
-    "Modulated Feedback", "Modulation Machine", "Far Away", "Bathroom", "Flutter Echo", "Tiled Room", "Identity Blur",
-    "Lost Space", "Rotating Speaker", "Spring Stereo", "Spring Mono", "Next Room", "Dawn", "Thin Straw", "Old Radio",
-    "Whisker Wobble", "Rough Edge", "Broken Machine", "Horror Voices", "Strange Voices", "Low Rumble (Loud)",
-    "Fast Siren", "Springy Wobble", "Robot Voice", "Saucer (Loud)", "Spectre", "Dark Haunt (Loud)", "Grainy Rain",
-    "Telephone", "Broken Filter", "Machines Talking", "LoFi Endless Loop", "Siren Drive (Loud)", "Hard Slap",
+    "Default", "Live Sound Start", "Side to Side", "Plain Stereo", "Plain Stereo Worn", "Worn Slap", "Band-Pass Echo",
+    "Plain Echo", "Tape Echo", "Dub Echo", "Wide Echo", "Tape Runaway (Loud)", "Quarter Side to Side", "Just Right Echo",
+    "Filtered Dub 1/4T", "Vintage Echo", "Even Eighths", "Sixteenths", "Murky Dub 1/8D", "Retro Insert",
+    "Filtered Echo", "Narrow Bounce 1/8T", "Short Bounce Insert", "Plain Slap", "Chorus Echo", "Thick Shimmer", "Bouncy Kit",
+    "Rap Vocal Echo", "Hard Left Six-String", "Deep Chorus", "Soft Jet Insert", "Clang Double", "Flanger",
+    "Moving Repeats", "Wobble Engine", "Far Away", "Washroom", "Fluttering Repeats", "Ceramic Room", "Identity Blur",
+    "Lost Space", "Spinning Cabinet", "Coil Stereo", "Coil Mono", "Through the Wall", "Dawn", "Thin Straw", "Vintage Wireless",
+    "Whisker Wobble", "Rough Edge", "Broken Machine", "Haunted Voices", "Strange Voices", "Low Rumble (Loud)",
+    "Quick Alarm", "Springy Wobble", "Robot Voice", "Saucer (Loud)", "Spectre", "Dark Haunt (Loud)", "Granular Drizzle",
+    "Phone Line", "Faulty Filter", "Machines Talking", "Worn Infinite Loop", "Siren Drive (Loud)", "Hard Slap",
     "Simple Echo",
-    "Bouncing Balls", "Top Echo", "Vocal Echo", "Beat Vocal 1", "Beat Vocal 2", "Long Vocal", "Psycho Spin",
-    "Vocal 1/16D", "Blur Echo", "Filtered Studio Echo", "Studio Vocal Slap", "Long Slow Vocal", "Vocal FX", "Go-To Echo",
-    "Panning Radio", "Off Stage", "Rotor (Loud)", "Quarter Note Echo", "Eighth Note Echo", "Rock Vocal Echo"]
+    "Bouncing Balls", "Top Echo", "Vocal Echo", "Beat Vocal 1", "Beat Vocal 2", "Long Vocal", "Dizzy Spiral",
+    "Vocal 1/16D", "Blur Echo", "Filtered Studio Echo", "Studio Vocal Slap", "Lazy Vocal Trail", "Voice Effects Rack", "Go-To Echo",
+    "Roaming Wireless", "Off Stage", "Rotor (Loud)", "Quarter Note Echo", "Eighth Note Echo", "Rock Vocal Echo"]
 
 
 def write_hdelay():
@@ -298,9 +298,9 @@ def write_hdelay():
 
 # the reference's 17 presets, in its order, with our names
 BASSLEVELER_NAMES = [
-    "Full Reset", "Live PA Start", "Gentle Ride", "Fingerstyle Slow", "Fretless Slow", "Acoustic Bass Slow", "Upright Bass",
+    "Default", "Live PA Start", "Soft Touch", "Fingerstyle Slow", "Fretless Slow", "Unplugged Bass Ease", "Upright Bass",
     "Fast Fingers", "Wide Dynamics", "Clean and Lively", "Fast, Artifacts Ignored", "Picked Bass Fast", "Fast Eighths",
-    "Fret Noise Ignored", "Slap Through the Amp", "Bass Tamer", "Stage Ready"]
+    "Squeak Proof", "Slap Through the Amp", "Bass Tamer", "Gig Night"]
 
 
 def write_bassleveler():
@@ -335,7 +335,7 @@ def write_bassleveler():
 
 # the reference's 13 presets, in its order, with our names
 VOCALRIDER_NAMES = [
-    "Full Reset", "Gentle Ride", "Steady Lead", "Quick Ride", "Low Ride", "High Ride", "Big Swings", "Loud Mix",
+    "Default", "Gentle Ride", "Steady Lead", "Quick Ride", "Floor Ride", "Upper Ride", "Big Swings", "Loud Mix",
     "Loud Lead", "Auto Fader", "Level Tamer", "Ceiling Ride", "Open Up"]
 
 
@@ -380,10 +380,10 @@ write_vocalrider()
 # FwVocalChain.ref_presets, or FW_CLAV_PRESETS. A preset stores the six faders, their colours and Balance; Sensitivity, Output and the In/Out link stay
 # where they are (the reference ignores the Sensitivity and Output it stores).
 VOCALCHAIN_NAMES = [
-    ("Essentials", "Full Reset"), ("Essentials", "Lead Starter"), ("Essentials", "Lead Starter Dry"),
+    ("Essentials", "Default"), ("Essentials", "Lead Starter"), ("Essentials", "Lead Starter Dry"),
     ("Essentials", "Wide Double"), ("Essentials", "Up Front Dry"), ("Essentials", "Up Front"),
     ("Essentials", "Everything Up"), ("Essentials", "Everything Up Dry"), ("Essentials", "Slap Lead"),
-    ("Essentials", "Chamber Lead"), ("Essentials", "Live Room"), ("Essentials", "Moody"),
+    ("Essentials", "Chamber Lead"), ("Essentials", "Open Room"), ("Essentials", "Brooding"),
     ("Essentials", "Bright Wall Dry"), ("Essentials", "Heavy Wall"), ("Essentials", "Rock Lead High"),
     ("Essentials", "Rock Lead High Dry"), ("Essentials", "Rock Lead Low"), ("Essentials", "Rock Lead Low Dry"),
     ("Essentials", "Space Lead"), ("Essentials", "Spoken Word"), ("Essentials", "All Clear"),
@@ -391,9 +391,9 @@ VOCALCHAIN_NAMES = [
     ("Backing", "Backing Wash"), ("Backing", "Backing Left"), ("Backing", "Backing Right"),
     ("Backing", "Backing Orbit"), ("Backing", "Backing Close"), ("Backing", "Backing Chamber"),
     ("Backing", "Backing Rock"), ("Studio", "Distant Choir"), ("Studio", "Presence Vocal"),
-    ("Studio", "Snare Wide"), ("Studio", "Parallel Air"), ("Studio", "Robotic Vocal"),
+    ("Studio", "Broad Snare"), ("Studio", "Parallel Air"), ("Studio", "Robotic Vocal"),
     ("Studio", "Eerie Vocal"), ("Studio", "Wider Percussion"), ("Backing", "Backing Lo-Fi"),
-    ("Studio", "Background Space"), ("Studio", "Vocal Space"), ("Studio", "Compressed Vocal"),
+    ("Studio", "Background Space"), ("Studio", "Vocal Space"), ("Studio", "Squeezed Voice"),
     ("Studio", "Wet Ad-Libs")]
 
 

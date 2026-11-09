@@ -207,7 +207,7 @@ difference is 2.3 cents on the sung take and 6.5 on the spoken one; the median s
 
 | Cause | Presets | Measured |
 |---|---|---|
-| The spoken take's pitch track | Scratch, Glide Robot, Pitch Follower Down (AM or PT moving the pitch) | 11 ... 25 % of frames more than 50 cents apart against a 10 % target; PT on Pitch at depth 25 alone passes (3 % gross): the difference comes with Flatten or the full depth |
+| The spoken take's pitch track | Vinyl Scrub, Glide Robot, Pitch Follower Down (AM or PT moving the pitch) | 11 ... 25 % of frames more than 50 cents apart against a 10 % target; PT on Pitch at depth 25 alone passes (3 % gross): the difference comes with Flatten or the full depth |
 | Shape substituted | Wobble | passes on both takes with the reference's table loaded into ours |
 | Blends at Mix about 35 % with AM or PT | Bass Backing, Tracked Double Low | the pitch column measures which of the two voices a tracker hears; with the AM slot removed both sides pass, and AM itself matches on that voice to 0.0003 rms |
 | Fast sweeps | Arcade Steps | where the tracks part, they part at whole-harmonic ratios, the tracker reading a harmonic of one output |

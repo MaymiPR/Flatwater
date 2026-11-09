@@ -9,7 +9,7 @@ matched in behaviour, not sample for sample (NULLTESTS.md). Written by `nulltest
 
 | # | preset | doubler | part 24 (dB) | part 27 (dB) | part 33 (dB) | Pitch clear, median (dB) |
 |---:|---|---|---:|---:|---:|---:|
-| 1 | Essentials: Full Reset | Stereo | -43.6 | -45.6 | -38.5 | -44.0 |
+| 1 | Essentials: Default | Stereo | -43.6 | -45.6 | -38.5 | -44.0 |
 | 2 | Essentials: Lead Starter | Stereo | -35.3 | -33.5 | -29.7 | -33.6 |
 | 3 | Essentials: Lead Starter Dry | clear | -35.4 | -33.7 | -29.8 | -33.7 |
 | 4 | Essentials: Wide Double | Spreader | -20.8 | -5.9 | -7.2 | -29.0 |
@@ -19,8 +19,8 @@ matched in behaviour, not sample for sample (NULLTESTS.md). Written by `nulltest
 | 8 | Essentials: Everything Up Dry | Stereo | -27.2 | -30.2 | -25.3 | -27.8 |
 | 9 | Essentials: Slap Lead | clear | -37.9 | -34.0 | -36.4 | -36.4 |
 | 10 | Essentials: Chamber Lead | Stereo | -27.7 | -29.5 | -26.9 | -27.7 |
-| 11 | Essentials: Live Room | clear | -32.0 | -31.1 | -31.5 | -31.5 |
-| 12 | Essentials: Moody | Wide | -36.2 | -32.2 | -16.2 | -33.2 |
+| 11 | Essentials: Open Room | clear | -32.0 | -31.1 | -31.5 | -31.5 |
+| 12 | Essentials: Brooding | Wide | -36.2 | -32.2 | -16.2 | -33.2 |
 | 13 | Essentials: Bright Wall Dry | clear | -30.6 | -32.0 | -29.5 | -30.6 |
 | 14 | Essentials: Heavy Wall | clear | -30.1 | -31.6 | -30.2 | -30.2 |
 | 15 | Essentials: Rock Lead High | Stereo | -38.9 | -32.3 | -29.3 | -32.4 |
@@ -42,7 +42,7 @@ matched in behaviour, not sample for sample (NULLTESTS.md). Written by `nulltest
 | 31 | Backing: Backing Rock | Stereo | -30.1 | -30.9 | -27.2 | -30.1 |
 | 32 | Studio: Distant Choir | Stereo | -42.2 | -35.9 | -28.8 | -40.3 |
 | 33 | Studio: Presence Vocal | Wide | -43.2 | -45.3 | -26.4 | -43.5 |
-| 34 | Studio: Snare Wide | Wide | -54.7 | -50.1 | -25.2 | -78.3 |
+| 34 | Studio: Broad Snare | Wide | -54.7 | -50.1 | -25.2 | -78.3 |
 | 35 | Studio: Parallel Air | Stereo | -46.5 | -41.5 | -38.8 | -78.3 |
 | 36 | Studio: Robotic Vocal | Wide | -34.3 | -32.1 | -11.2 | -35.8 |
 | 37 | Studio: Eerie Vocal | Stereo | -33.7 | -34.2 | -32.6 | -33.8 |
@@ -50,7 +50,7 @@ matched in behaviour, not sample for sample (NULLTESTS.md). Written by `nulltest
 | 39 | Backing: Backing Lo-Fi | Stereo | -30.3 | -29.5 | -28.8 | -29.7 |
 | 40 | Studio: Background Space | Spreader | -3.5 | -9.3 | -24.5 | -34.8 |
 | 41 | Studio: Vocal Space | Spreader | -17.3 | -29.6 | -29.0 | -34.5 |
-| 42 | Studio: Compressed Vocal | Spreader | -19.2 | -30.4 | -17.1 | -32.3 |
+| 42 | Studio: Squeezed Voice | Spreader | -19.2 | -30.4 | -17.1 | -32.3 |
 | 43 | Studio: Wet Ad-Libs | Spreader | -23.8 | -11.7 | -23.6 | -28.2 |
 
 Over the 129 renders: median **-30.1 dB**, worst -3.5; with the Pitch stage clear median **-31.2 dB**, worst -24.2.

@@ -111,12 +111,12 @@ either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -
 | Set | Result |
 |---|---|
 | Sample rates | 44.1 kHz as 48 kHz; 96 kHz below 20 kHz -46 ... -61 dB on the delay path (the band round the 24 kHz kernel cutoff differs) |
-| The reference's own 88 presets, loaded as it loads them (drums, bass and voice-like, each with its own Analog mode) | median -53.2 dB; Analog Off -78.1, mode 3 -41.2; Fast Siren chaotic (self-oscillation through the filters) |
+| The reference's own 88 presets, loaded as it loads them (drums, bass and voice-like, each with its own Analog mode) | median -53.2 dB; Analog Off -78.1, mode 3 -41.2; Quick Alarm chaotic (self-oscillation through the filters) |
 
 - Analog modes: mode 4 nulls at -80 ... -90 dB; modes 1 to 3 add random noise as the reference does, which no null can
   remove (-53 / -51 / -40 dB with their noise), and mode 3's model is the weakest part (about -41 dB).
 - Limits: the slow tail of a glide (-40 ... -80 dB while it settles), LoFi (-70 dB), and Feedback above 100 % with the
-  filters on, where the loop self-oscillates chaotically (the preset Fast Siren): such a loop nulls only for its first
+  filters on, where the loop self-oscillates chaotically (the preset Quick Alarm): such a loop nulls only for its first
   fraction of a second, in any model short of a bit-exact one.
 - How: the reference's interpolator (a 32-phase Kaiser sinc), its tape glide, the gain stage in the loop, its float
   triangle LFO, the filters, Ping Pong's routing and every parameter's resolution were identified on the reference by

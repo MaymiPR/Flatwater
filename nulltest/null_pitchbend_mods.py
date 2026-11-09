@@ -131,7 +131,7 @@ CASES.update({
 for _a, _r in ((10, 100), (1, 1000), (100, 10), (1000, 1), (30, 300), (300, 1)):
     CASES['am%g_%g' % (_a, _r)] = ('fitted', {S.MIX: 0.0, **S.slot('mix', 0, S.AM, 100), S.AM_ATTACK: float(_a), S.AM_RELEASE: float(_r)},
                                    {'mix': 0, 'slot': 'mix:0:3:100', 'amAttack': _a, 'amRelease': _r}, None, 'steps', 120)
-# AM on the spoken take at a fast preset's attack and release (Scratch: 6.3 / 26.3 ms)
+# AM on the spoken take at a fast preset's attack and release (Vinyl Scrub: 6.3 / 26.3 ms)
 CASES['am_spoken'] = ('fitted', {S.MIX: 0.0, **S.slot('mix', 0, S.AM, 100), S.AM_ATTACK: 6.3, S.AM_RELEASE: 26.3},
                       {'mix': 0, 'slot': 'mix:0:3:100', 'amAttack': 6.3, 'amRelease': 26.3}, None, 'spoken', 120)
 

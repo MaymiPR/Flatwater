@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Improved
+
+- Factory presets: 98 presets in the nine plug-ins renamed, so that no preset name repeats or closely follows the
+  original's; each preset keeps its setting values, and a project that uses one loads as before. The factory default
+  preset is named Default in every plug-in.
+
 ## 1.0.0 (2026-11-04)
 
 The first public release: nine plug-ins, each a recreation of a Waves original, identified from measurements of the

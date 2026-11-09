@@ -51,7 +51,7 @@ method and the residual or confidence of each. The data is in [measurements/fwde
 | Type | RBJ biquads in the loop with fixed Qs, HiPass Q 0.8 and LoPass Q 0.95, on the line's output (after the read; with a moving delay the two places differ, and only the output nulls); the second echo is filtered twice | impulses at HiPass 100 / 1000 Hz and LoPass 1000 Hz | within 0.05 dB; nulls -90 to -100 dB |
 | Frequency warping | w0 = 2 atan(pi f / fs), so LoPass 4000 sits at 3912 Hz and 15000 at 11 859 Hz (this is why LoPass 5000 reads 0.3 to 0.7 dB under an unwarped biquad near its cutoff) | impulses | exact |
 | Off | HiPass Off at the bottom, LoPass Off at the top; set from outside LoPass is Off from about 20 099 up; loaded from a preset only at exactly 20 100, its reset value (section 6) | presets, parameter sweeps | exact |
-| Self-oscillation | Feedback above 100 % with HiPass and / or LoPass on (as in the preset Fast Siren) is chaotic: in the model a 1e-6 change of the input grows to -4 dB within 3 s, so such a loop nulls for its first fraction of a second and then cannot, by any model short of a bit-exact one | the model | known limit |
+| Self-oscillation | Feedback above 100 % with HiPass and / or LoPass on (as in the preset Quick Alarm) is chaotic: in the model a 1e-6 change of the input grows to -4 dB within 3 s, so such a loop nulls for its first fraction of a second and then cannot, by any model short of a bit-exact one | the model | known limit |
 
 ## 5. LFO
 

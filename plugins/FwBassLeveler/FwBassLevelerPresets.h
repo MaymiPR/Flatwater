@@ -9,12 +9,12 @@ namespace fwbassleveler
 inline const std::vector<fw::FactoryPreset>& factoryPresets()
 {
     static const std::vector<fw::FactoryPreset> list {
-    { "Essentials", "Full Reset", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "target", -14.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 50.0f }, { "spill", -40.0f } } },
+    { "Essentials", "Default", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "target", -14.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 50.0f }, { "spill", -40.0f } } },
     { "Essentials", "Live PA Start", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "target", -14.0f }, { "sensitivity", 50.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 68.2f }, { "spill", -30.0f } } },
-    { "Essentials", "Gentle Ride", { { "output", 0.0f }, { "rangeMin", -3.0f }, { "rangeMax", 3.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 0.0f }, { "spill", -40.0f } }, { "target" } },
+    { "Essentials", "Soft Touch", { { "output", 0.0f }, { "rangeMin", -3.0f }, { "rangeMax", 3.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 0.0f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Fingerstyle Slow", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 74.1f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Fretless Slow", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 91.8f }, { "spill", -40.0f } }, { "target" } },
-    { "Essentials", "Acoustic Bass Slow", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 65.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 77.1f }, { "spill", -40.0f } }, { "target" } },
+    { "Essentials", "Unplugged Bass Ease", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 65.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 77.1f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Upright Bass", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 100.0f }, { "spill", -33.0f } }, { "target" } },
     { "Essentials", "Fast Fingers", { { "output", 0.0f }, { "rangeMin", -9.0f }, { "rangeMax", 9.0f }, { "sensitivity", 80.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 90.0f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Wide Dynamics", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 100.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 60.0f }, { "spill", -40.0f } }, { "target" } },
@@ -22,10 +22,10 @@ inline const std::vector<fw::FactoryPreset>& factoryPresets()
     { "Essentials", "Fast, Artifacts Ignored", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 50.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 85.3f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Picked Bass Fast", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 68.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 74.1f }, { "spill", -40.0f } }, { "target" } },
     { "Essentials", "Fast Eighths", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 74.5f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 50.0f }, { "spill", -40.0f } }, { "target" } },
-    { "Essentials", "Fret Noise Ignored", { { "output", 0.0f }, { "rangeMin", -8.0f }, { "rangeMax", 6.0f }, { "sensitivity", 50.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 91.8f }, { "spill", -26.5f } }, { "target" } },
+    { "Essentials", "Squeak Proof", { { "output", 0.0f }, { "rangeMin", -8.0f }, { "rangeMax", 6.0f }, { "sensitivity", 50.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 91.8f }, { "spill", -26.5f } }, { "target" } },
     { "Essentials", "Slap Through the Amp", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "sensitivity", 32.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 84.1f }, { "spill", -16.0f } }, { "target" } },
     { "Essentials", "Bass Tamer", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 0.0f }, { "sensitivity", 75.0f }, { "response", 1.0f }, { "idle", 0.98f }, { "artifacts", 50.0f }, { "spill", -40.0f } }, { "target" } },
-    { "Essentials", "Stage Ready", { { "output", 0.0f }, { "rangeMin", -9.0f }, { "rangeMax", 9.0f }, { "sensitivity", 80.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 80.0f }, { "spill", -30.0f } }, { "target" } },
+    { "Essentials", "Gig Night", { { "output", 0.0f }, { "rangeMin", -9.0f }, { "rangeMax", 9.0f }, { "sensitivity", 80.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 80.0f }, { "spill", -30.0f } }, { "target" } },
     };
     return list;
 }

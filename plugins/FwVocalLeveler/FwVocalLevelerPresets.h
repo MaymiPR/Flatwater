@@ -9,12 +9,12 @@ namespace fwvocalleveler
 inline const std::vector<fw::FactoryPreset>& factoryPresets()
 {
     static const std::vector<fw::FactoryPreset> list {
-    { "Essentials", "Full Reset", { { "target", -21.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -6.0f }, { "rangeMax", 6.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 0.0f }, { "automation", 0.0f } } },
+    { "Essentials", "Default", { { "target", -21.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -6.0f }, { "rangeMax", 6.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 0.0f }, { "automation", 0.0f } } },
     { "Essentials", "Gentle Ride", { { "target", -23.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -2.0f }, { "rangeMax", 2.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 0.0f } } },
     { "Essentials", "Steady Lead", { { "target", -13.1f }, { "musicSensitivity", 4.3f }, { "rangeMin", -2.6f }, { "rangeMax", 6.1f }, { "vocalSensitivity", 0.0f }, { "output", 0.1f }, { "idle", 0.63f }, { "attack", 0.0f } } },
     { "Essentials", "Quick Ride", { { "target", -14.2f }, { "musicSensitivity", 0.0f }, { "rangeMin", -3.0f }, { "rangeMax", 3.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 1.0f } } },
-    { "Essentials", "Low Ride", { { "target", -30.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 0.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.28f }, { "attack", 1.0f } } },
-    { "Essentials", "High Ride", { { "target", -17.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -6.0f }, { "rangeMax", 8.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.57f }, { "attack", 1.0f } } },
+    { "Essentials", "Floor Ride", { { "target", -30.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 0.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.28f }, { "attack", 1.0f } } },
+    { "Essentials", "Upper Ride", { { "target", -17.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -6.0f }, { "rangeMax", 8.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.57f }, { "attack", 1.0f } } },
     { "Essentials", "Big Swings", { { "target", -42.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -8.4f }, { "rangeMax", 7.4f }, { "vocalSensitivity", 12.0f }, { "output", 3.8f }, { "idle", 0.5f }, { "attack", 1.0f } } },
     { "Essentials", "Loud Mix", { { "target", -10.5f }, { "musicSensitivity", 0.0f }, { "rangeMin", -3.3f }, { "rangeMax", 8.7f }, { "vocalSensitivity", 0.4f }, { "output", 0.1f }, { "idle", 0.71f }, { "attack", 1.0f } } },
     { "Essentials", "Loud Lead", { { "target", -10.5f }, { "musicSensitivity", 5.6f }, { "rangeMin", -2.6f }, { "rangeMax", 6.1f }, { "vocalSensitivity", 0.0f }, { "output", 0.1f }, { "idle", 0.72f }, { "attack", 1.0f } } },
