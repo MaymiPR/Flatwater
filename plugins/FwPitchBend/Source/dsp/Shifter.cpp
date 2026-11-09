@@ -5,7 +5,7 @@
 
 // Flatwater Pitch Bend's shifter (the header has the method). Numbers marked "measured" come from
 // measurements/fwpitchbend/shifter/SUMMARY.md; the rest are our own choices, tuned on its scorecard
-// (nulltest/score_pitchbend_shifter.py).
+// (plugins/FwPitchBend/nulltest/score_shifter.py).
 namespace fwpitchbend
 {
 namespace
@@ -42,7 +42,7 @@ constexpr double wetFadeS = 0.010;                         // the delay path <->
 constexpr float noiseGain = 1.047f;           // +0.4 dB: re-granulated noise at the measured -0.6 dB
 constexpr double levelS = 0.080;              // the voiced level's averaging time
 
-// measured (levelgrid.json, printed by nulltest/measure_pitchbend_level_grid.py fit): the reference's voiced level
+// measured (levelgrid.json, printed by plugins/FwPitchBend/nulltest/measure_level_grid.py fit): the reference's voiced level
 // (output minus input, dB) per Pitch and Formant total, with every control set, over vowels at 80 .. 300 Hz and sung
 // and spoken phrases; a straight line in the ln kurtosis of the input (20 ms windows, energy-weighted), gridI its
 // value at kurtRef (a typical voice) and gridS its slope. The grid is read bilinearly.

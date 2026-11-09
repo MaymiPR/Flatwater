@@ -10,7 +10,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | C1 | The official product page, [waves.com/plugins/cla-vocals](https://www.waves.com/plugins/cla-vocals), and the manual linked from it, [cla-vocals.pdf](https://assets.wavescdn.com/pdf/plugins/cla-vocals.pdf) |
 | C2 | The original plug-in observed in a host: its parameters and state, its 43 factory presets, the chain's own stored settings, and its editor on both components |
-| C3 | The original plug-in as a host loads it (`nulltest/probe_vocalchain.py`): the Stereo component and the Mono/Stereo component (1 in, 2 out: pedalboard cannot host it; `tools/RefRender` can, loaded by `name@uid`, since by name alone it loads another plug-in; `RefRender --list` prints the uids) |
+| C3 | The original plug-in as a host loads it (`plugins/FwVocalChain/nulltest/probe_parameters.py`): the Stereo component and the Mono/Stereo component (1 in, 2 out: pedalboard cannot host it; `tools/RefRender` can, loaded by `name@uid`, since by name alone it loads another plug-in; `RefRender --list` prints the uids) |
 | C4 | Frames of the real editor read back from its OpenGL drawing (`tools/MeterCapture` with `gl=1`, 738 x 474 including the toolbar, git-ignored `reference/fwvocalchain/shots/`) |
 
 ## Documented behaviour (C1)

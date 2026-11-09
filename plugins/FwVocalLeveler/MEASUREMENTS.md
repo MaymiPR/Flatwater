@@ -9,12 +9,12 @@ own hidden default or preset values; none is fitted. The data is in [measurement
 | Item | Value |
 |---|---|
 | Reference | Vocal Rider (Waves), the Mono, Stereo, Live Mono and Live Stereo components, from a licensed install |
-| Host | the reference's VST3 through `nulltest/measure_vocalleveler.py` (a fresh instance per render) and `tools/RefRender`, 48 kHz unless noted |
+| Host | the reference's VST3 through `plugins/FwVocalLeveler/nulltest/measure_reference.py` (a fresh instance per render) and `tools/RefRender`, 48 kHz unless noted |
 | Gain readout | the applied gain as output over input, sample by sample: a least-squares ratio over 1 to 20 ms; a -80 dBFS pilot at 3001 Hz exposes the gain in silences; no latency, so nothing is aligned |
-| Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `measure_vocalleveler.py` is named in the tables |
-| Corpus | `nulltest/vocal_corpus.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
-| Reference renders | `nulltest/vr_ref.py`: the probes and the 36 parts at ten settings each, 620 renders |
-| Model | `nulltest/vrmodel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `nulltest/vr_fit.py report` scores it over the cached renders |
+| Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `plugins/FwVocalLeveler/nulltest/measure_reference.py` is named in the tables |
+| Corpus | `scripts/nulltest/vocal_corpus.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
+| Reference renders | `plugins/FwVocalLeveler/nulltest/render_reference.py`: the probes and the 36 parts at ten settings each, 620 renders |
+| Model | `plugins/FwVocalLeveler/nulltest/model.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
 
 ## 1. The level read
 
@@ -59,7 +59,7 @@ under the peak; just after a 12 dB drop 10 of each 24-sample half period pass, s
 Method notes: the constants are the reference's hidden defaults and preset values: law scale 0 dB, floor -42 dB,
 threshold 14 dB; the follower's attack 50 / 10 ms, release 1009 ms and hold 5000 ms, squared; the detector's attack
 and release 0.01 ms; the ride's attack 0.55 / 0.35 ms and release 1000 ms; the park glide 1205 ms; the park hold 500 /
-50 ms. A local CMA-ES from these values over 17 constants (`nulltest/vr_fit.py fit`, 500 cases) found no better point
+50 ms. A local CMA-ES from these values over 17 constants (`plugins/FwVocalLeveler/nulltest/fit_model.py fit`, 500 cases) found no better point
 in 176 candidates (mean null -63.8 dB at the start, the best other candidate -44.5); single nudges (the follower's
 attack at Fast 8 or 12 ms, the detector's attack and release 0.1 ms, the ride's attack at Fast 0.2 or 0.6 ms, the park
 hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz are within 0.022 dB.
@@ -74,8 +74,8 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| C++ against the model | 25 cases | `nulltest/check_fwvocalleveler_port.py` | worst difference 0.0000 dB |
-| Median null over the 620 renders | probes -70.5 dB, training parts -60.8, held-out parts -62.3 (per setting -50 ... -69 dB; Attack Fast the weakest, about -50, at word onsets) | `vr_fit.py report` | |
+| C++ against the model | 25 cases | `plugins/FwVocalLeveler/nulltest/check_port.py` | worst difference 0.0000 dB |
+| Median null over the 620 renders | probes -70.5 dB, training parts -60.8, held-out parts -62.3 (per setting -50 ... -69 dB; Attack Fast the weakest, about -50, at word onsets) | `plugins/FwVocalLeveler/nulltest/fit_model.py report` | |
 | The plug-in on fresh renders | -47 ... -74 dB, Stereo, Live, 44.1 and 96 kHz included | [NULLTESTS.md](NULLTESTS.md) | |
 | The factory presets | the reference's 13 presets loaded into its own state against ours: median -60.9 dB, worst -37.9 | [NULLTESTS-presets.md](NULLTESTS-presets.md) | |
 

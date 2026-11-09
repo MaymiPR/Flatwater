@@ -1,6 +1,6 @@
 #pragma once
 // Flatwater Comp's VU needle and limiter lamp, as filmed on the reference (MEASUREMENTS.md "Flatwater Comp needle"; the editor's OpenGL
-// frames read back in tools/MeterCapture gl=1, fitted by nulltest/fit_gr_needle.py and fit_io_needle.py).
+// frames read back in tools/MeterCapture gl=1, fitted by plugins/FwComp/nulltest/fit_gr_needle.py and plugins/FwComp/nulltest/fit_io_needle.py).
 //
 //   strip   the needle takes one of 71 positions: frame k = round (70 v), each at a whole number of degrees from
 //           vertical (+ right) about its pivot, -58 ... 59 (the filmed table)

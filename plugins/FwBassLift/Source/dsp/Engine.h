@@ -19,7 +19,7 @@
 //       signal: -42 dB median, kicks -32 ... -43 dB),
 //       added to both channels;
 //   * learned gain (default): the level-to-gain block above is replaced by a small recurrent network (GRU) trained on
-//     reference renders (nulltest/train_gain.py); it reads x, b, l, u = HP3(Freq) l and Freq and gives the gain ahead
+//     reference renders (plugins/FwBassLift/nulltest/train_net.py); it reads x, b, l, u = HP3(Freq) l and Freq and gives the gain ahead
 //     of the first high-pass (g_pre) and after it (g_post): n = C0 g_post HP3(Freq)(g_pre l), the product uses
 //     C0 g_pre g_post. It runs on its own 48 kHz clock (the rate it was trained at) at any host sample rate.
 //   * Gain: output trim with a short glide, then a hard clip to the 16-bit range [-1, 32767/32768] (no knee, no time
@@ -37,7 +37,7 @@ inline constexpr double pi = 3.14159265358979323846;
 struct Tuning
 {
     // fitted jointly to time-domain renders at Freq 40 / 80 / 160 / 256, transients (kicks, bass notes, a riff) and the
-    // steady harmonic and detector-pinning sets (nulltest/fit_combo.py, MEASUREMENTS.md "Flatwater Bass Lift model")
+    // steady harmonic and detector-pinning sets (plugins/FwBassLift/nulltest/fit_combo.py, MEASUREMENTS.md "Flatwater Bass Lift model")
     double C0 = 315.9608630559933, E0 = 0.030499720821978243, p = 0.55503236720374;                // gain law
     double cA = 1.0386281298252804, QA = 1.7618851483536635, cB = 10.374984;                // level band (x Freq)
     double kr = 1.0;                                               // rectifier exponent

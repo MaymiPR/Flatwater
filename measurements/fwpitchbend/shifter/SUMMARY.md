@@ -4,8 +4,8 @@ A pitch shifter does not null sample for sample, so this is a behaviour battery:
 formant envelope, level, timing, unvoiced and difficult input, and Flatten, measured from its audio, plus enough of
 its structure to build our own shifter in Phase 3 and a scorecard to judge it by.
 
-- Script: `nulltest/measure_pitchbend_shifter.py` (`noshift structure beta pitch formant level timing unvoiced flatten
-  plots`, or `all`). Renders are cached in `nulltest/renders/pbshift/` (git-ignored); a re-run renders only what is
+- Script: `plugins/FwPitchBend/nulltest/measure_shifter.py` (`noshift structure beta pitch formant level timing unvoiced flatten
+  plots`, or `all`). Renders are cached in `plugins/FwPitchBend/nulltest/renders/pbshift/` (git-ignored); a re-run renders only what is
   new. About 2,600 renders in all, 1 to 2 s each with four in parallel.
 - Results: one JSON per command in this folder, plus `formant_envelope_shift.png`, `structure_marker_maps.png` and
   `timing_onset_settle.png`.
@@ -265,7 +265,7 @@ The thresholds are proposals, set wider than the tracker's floor and the spread 
 
 ## 8. Added in Phase 3 (2026-11-03): level per material, the time scale's limit, speech
 
-**The voiced level follows the waveform's peakiness** (`nulltest/measure_pitchbend_level_grid.py`, `levelgrid.json`).
+**The voiced level follows the waveform's peakiness** (`plugins/FwPitchBend/nulltest/measure_level_grid.py`, `levelgrid.json`).
 Pitch -12 .. +12 by Formant -12 .. +12 (142 settings) over 20 materials: vowels /a/ /i/ /u/ at 80, 150, 220, 300 Hz,
 /a/ with its formant bandwidths halved and doubled, 4 sung and 2 spoken phrases.
 

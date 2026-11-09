@@ -72,8 +72,8 @@ shows one output meter.
 ## Presets (B3, converted)
 
 All 45 factory and artist presets of the reference (Full Reset excluded) are carried over as Flatwater Bass Lift
-factory presets by their setting values only (`nulltest/read_ref_presets.py` converts the reference's presets through
-the reference itself, `tools/make_presets.py` writes `plugins/FwBassLift/Source/Presets.h`). Every name is new: no
+factory presets by their setting values only (`scripts/nulltest/read_ref_presets.py` converts the reference's presets through
+the reference itself, `scripts/make_presets.py` writes `plugins/FwBassLift/Source/Presets.h`). Every name is new: no
 artist names, no vendor product names, no other trademarks; the name says what the setting is for. The same is done
 for Flatwater Vocal Comp (21 presets; the reference's presets store its linear scales, checked against the two it
 converts itself).

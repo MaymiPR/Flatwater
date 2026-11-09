@@ -2,8 +2,8 @@
 
 Each of the reference's 13 presets loaded into its state (its stored values, hidden ones included), against
 Flatwater Vocal Leveler's preset of the same settings (Flatwater names), both Mono, on held-out vocal parts of the corpus
-(`nulltest/vocal_corpus.py`); the output residual after the first 0.1 s, dB (lower is better). Made by
-`nulltest/nulltest_fwvocalleveler_presets.py`. The Music Sensitivity a preset stores has no effect on either
+(`scripts/nulltest/vocal_corpus.py`); the output residual after the first 0.1 s, dB (lower is better). Made by
+`plugins/FwVocalLeveler/nulltest/null_presets.py`. The Music Sensitivity a preset stores has no effect on either
 side here (no side-chain).
 
 | preset | part 24 | part 27 | part 33 |

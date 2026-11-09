@@ -1,6 +1,6 @@
 # Flatwater Delay: factory presets against the reference's own presets
 
-`nulltest/nulltest_fwdelay_refpresets.py`: each of H-Delay's 88 factory presets loaded into the reference as the
+`plugins/FwDelay/nulltest/null_presets.py`: each of H-Delay's 88 factory presets loaded into the reference as the
 reference loads it (the preset array from its preset file in the licensed install, written into its state; RefRender
 `state=`), against Flatwater Delay's DSP (`plugins/FwDelay/tools/DeRender`) with the matching Flatwater Delay preset (Flatwater names), its values as
 stored, as Flatwater Delay uses a preset's values (MEASUREMENTS.md section 6: the two parameter paths). Drum loop, bass

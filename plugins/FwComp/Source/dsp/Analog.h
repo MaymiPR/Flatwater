@@ -1,5 +1,5 @@
 #pragma once
-// Flatwater Comp's Analog stage, as identified on the reference (MEASUREMENTS.md "Flatwater Comp", nulltest/fit_hc_analog2.py): the last
+// Flatwater Comp's Analog stage, as identified on the reference (MEASUREMENTS.md "Flatwater Comp", plugins/FwComp/nulltest/fit_analog2.py): the last
 // stage, after the output gain and the limiter, per channel and the same for every setting of the compressor.
 //
 //   y = (1 + gain) L(x) + H2( g( H1(x) ) ) + noise

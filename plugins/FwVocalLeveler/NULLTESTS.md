@@ -2,11 +2,11 @@
 
 Residuals of Flatwater Vocal Leveler's output against the reference's, after the first 0.1 s, in dB (lower is better),
 and the error of the applied gain where the input is loud enough to read it. The plug-in runs through its own
-processor offline (`VlRender`); the reference plug-in through its VST3 (a fresh instance per case). The vocal parts are held-out parts of the corpus (`nulltest/vocal_corpus.py` 24 .. 35: FL Studio's own vocal
+processor offline (`VlRender`); the reference plug-in through its VST3 (a fresh instance per case). The vocal parts are held-out parts of the corpus (`scripts/nulltest/vocal_corpus.py` 24 .. 35: FL Studio's own vocal
 phrases strung into 20 s parts with wandering levels, gaps and room noise); they were not used to identify the model.
 How the model was found: [MEASUREMENTS.md](MEASUREMENTS.md).
 
-## The fixed cases (`nulltest/nulltest_fwvocalleveler.py`)
+## The fixed cases (`plugins/FwVocalLeveler/nulltest/nulltest.py`)
 
 | case | residual (dB) | gain error median (dB) | 90 % (dB) |
 |---|---|---|---|
@@ -24,10 +24,10 @@ How the model was found: [MEASUREMENTS.md](MEASUREMENTS.md).
 | vocal part 33, 44.1 kHz | -63.5 | 0.003 | 0.008 |
 | vocal part 34, 96 kHz, Fast | -53.2 | 0.005 | 0.037 |
 
-## The model over all cached renders (`nulltest/vr_fit.py report`)
+## The model over all cached renders (`plugins/FwVocalLeveler/nulltest/fit_model.py report`)
 
-The same model (`nulltest/vrmodel.c`, identical to the plug-in's C++ to 0.0000 dB) against the 620 reference renders
-of `nulltest/vr_ref.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at ten
+The same model (`plugins/FwVocalLeveler/nulltest/model.c`, identical to the plug-in's C++ to 0.0000 dB) against the 620 reference renders
+of `plugins/FwVocalLeveler/nulltest/render_reference.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at ten
 settings. Median null in dB per setting:
 
 | set | all | default | Fast | VS +6 | VS -6 | Target -30 | Target -12 | ±12 | -3 .. +9 | Fast ±12 | Live, Spill -30 |

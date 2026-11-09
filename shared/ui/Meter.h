@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-// Meter ballistics identified on the reference meters (tools/MeterCapture + nulltest/fit_meter.py, see MEASUREMENTS.md
+// Meter ballistics identified on the reference meters (tools/MeterCapture + scripts/nulltest/fit_meter.py, see MEASUREMENTS.md
 // "Meter ballistics"): each editor frame takes the highest peak since the last frame; the bar jumps up to it at once and
 // otherwise moves toward it as a one-pole on linear amplitude with a 0.325 s time constant. In silence that is a
 // straight 26.7 dB/s fall; after a level drop with the signal still playing the bar settles gently onto the new level.

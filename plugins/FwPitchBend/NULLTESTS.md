@@ -19,7 +19,7 @@ laws, are null-tested through the Mix control. How each part was identified is i
 
 ## The modulators
 
-`nulltest/null_pitchbend_mods.py` (`measurements/fwpitchbend/mods/null.json`): each case's control value over time,
+`plugins/FwPitchBend/nulltest/null_mods.py` (`measurements/fwpitchbend/mods/null.json`): each case's control value over time,
 read through Mix on both sides, ours against the reference; rms after 0.1 s, over the whole curve and away from its
 jumps (more than 600 samples from a step or a wrap). The cases are described in MEASUREMENTS.md, sections 3 to 6.
 
@@ -70,7 +70,7 @@ falling, creaky end of a phrase), which neither reproduces from the other.
 
 ## The shifter's scorecard
 
-`nulltest/score_pitchbend_shifter.py` (`measurements/fwpitchbend/shifter/ours.json`; the reference's numbers in
+`plugins/FwPitchBend/nulltest/score_shifter.py` (`measurements/fwpitchbend/shifter/ours.json`; the reference's numbers in
 `measurements/fwpitchbend/shifter/`). The same signals and measures on both shifters:
 
 | metric | reference | ours | threshold | result |

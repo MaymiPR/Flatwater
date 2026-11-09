@@ -61,7 +61,7 @@ Flatwater BassX Lift's parameters (IDs from `plugins/FwBassXLift/Source/PluginPr
 The output meters, the graph curves and the clip light are display values in the editor, not parameters.
 
 Presets do not change the Input fader. Some older factory presets store High-pass values outside the three settings;
-they are converted through the reference itself, as for Flatwater Bass Lift (`nulltest/read_ref_presets_mb.py`):
+they are converted through the reference itself, as for Flatwater Bass Lift (`plugins/FwBassXLift/nulltest/read_ref_presets.py`):
 those High-pass states wrap modulo 3 (3 and 6 give 6 dB/oct, 4 gives 12, 5 and 17 give 24); every other value follows
 the scales of the measured tapers, which reproduce all 16 presets the reference converted itself.
 

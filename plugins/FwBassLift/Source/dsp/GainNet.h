@@ -1,6 +1,6 @@
 #pragma once
 // Learned gain control of the Flatwater Bass Lift generated path (GRU, 32 hidden units), trained on renders of the
-// reference by nulltest/train_gain.py and written by tools/export_gainnet.py. Do not edit by hand.
+// reference by plugins/FwBassLift/nulltest/train_net.py and written by plugins/FwBassLift/scripts/export_net.py. Do not edit by hand.
 // Inputs per 48 kHz step: |asinh(v / 1e-3)| / 8 for x, b, l, u, and ln(Freq / 80). Outputs: ln g_pre, ln g_post.
 // PyTorch GRU layout: rows [reset; update; new].
 

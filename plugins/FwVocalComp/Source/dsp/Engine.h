@@ -14,7 +14,7 @@
 //     with the GateRel time (130 ms by default; identified on a DC carrier); its gain is shaped by the same two moving
 //     averages, so it opens just ahead of a rise; gate and compressor detect the input in parallel and their gains
 //     multiply (checked on steady tones to 0.01 dB);
-//   * slow path, learned part: a small GRU (SlowNet, trained on renders of the reference by nulltest/train_fwvocalcomp.py)
+//   * slow path, learned part: a small GRU (SlowNet, trained on renders of the reference by plugins/FwVocalComp/nulltest/train_net.py)
 //     corrects the analytical slow ratio on a 12 kHz clock; the result never goes below the static-law ratio at the
 //     loudest level of the last second, and the correction fades out while the fast ratio stays flat (a steady tone),
 //     so steady signals keep the identified paths exactly;
@@ -88,7 +88,7 @@ private:
     int len = 1, pos = 0;
 };
 
-// The learned correction of the slow ratio (nulltest/train_fwvocalcomp.py, BASE=analytical): one GRU step per 1/12000 s
+// The learned correction of the slow ratio (plugins/FwVocalComp/nulltest/train_net.py, BASE=analytical): one GRU step per 1/12000 s
 // (4 samples at 48 kHz; a phase accumulator at other rates). Per step it reads the peak level v, the smallest fast
 // ratio and the last analytical slow ratio, plus running minima / maxima of them over the step history; its output c
 // (ln) is applied to the following samples, moving linearly from the second-to-last to the last finished step.

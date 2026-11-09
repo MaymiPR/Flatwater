@@ -1,5 +1,5 @@
 {
- "note": "local CMA-ES (vr_fit.py fit, sigma 0.05, 16 per generation) from the hidden values over 17 constants; stopped after 11 generations (176 candidates): none beat the start",
+ "note": "local CMA-ES (fit_model.py fit, sigma 0.05, 16 per generation) from the hidden values over 17 constants; stopped after 11 generations (176 candidates): none beat the start",
  "cases": 500,
  "cost_hidden": -63.814,
  "cost": -63.814,

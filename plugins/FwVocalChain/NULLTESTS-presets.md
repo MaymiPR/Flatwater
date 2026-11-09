@@ -5,7 +5,7 @@ Sensitivity and Output at 0, as the reference keeps them when a preset loads) ag
 its factory preset of the same place (our names). Residual in dB, lower is better: three held-out vocal parts at
 -6 dBFS peaks after 6 s of silence, 48 kHz, the Noise off in both. "Pitch clear" is the same preset with the Pitch
 stage cleared in both: the doubler's Wide and Spreader colours pick their splice points from the signal and are
-matched in behaviour, not sample for sample (NULLTESTS.md). Written by `nulltest/nulltest_fwvocalchain_presets.py`.
+matched in behaviour, not sample for sample (NULLTESTS.md). Written by `plugins/FwVocalChain/nulltest/null_presets.py`.
 
 | # | preset | doubler | part 24 (dB) | part 27 (dB) | part 33 (dB) | Pitch clear, median (dB) |
 |---:|---|---|---:|---:|---:|---:|

@@ -1,5 +1,5 @@
 #pragma once
-// Flatwater Comp's compressor, as identified on the reference (MEASUREMENTS.md "Flatwater Comp", nulltest/ident_hc_*.py).
+// Flatwater Comp's compressor, as identified on the reference (MEASUREMENTS.md "Flatwater Comp", plugins/FwComp/nulltest/fit_*.py).
 //
 //   detector  the larger channel's |x|, held over the next 64 samples (the look-ahead; Punch delays it by 1 ms per unit)
 //   static    GR = h((1 - 1/ratio) * max(0, 20 log10(peak + 0.001) - threshold)), h a measured table
@@ -9,7 +9,7 @@
 //   attack    a one-pole on the linear gain (falling only), time constant = Attack
 //   smoothing two box filters (38 and 27 samples), then makeup, the dry / wet mix and the output gain
 //   limiter   a 64-sample look-ahead peak limiter on the output (Off: as the reference's "clip", On: held longer)
-//   learned   a small GRU (GainNet, trained on renders of the reference by nulltest/train_fwcomp.py) reads these states
+//   learned   a small GRU (GainNet, trained on renders of the reference by plugins/FwComp/nulltest/train_net.py) reads these states
 //             and the settings every 16 samples and corrects the gain (dB, held over the step; none without
 //             reduction): where the reference's level detection departs from this structure (low notes with long
 //             attacks, long releases, deep compression)
@@ -170,7 +170,7 @@ public:
             double g = sum2 / (double) b2.size();
             if (learned)
             {
-                // the steps fall on samples la, la + 16, ... after a reset, as in the training (render_trainset_fwcomp.py)
+                // the steps fall on samples la, la + 16, ... after a reset, as in the training (plugins/FwComp/nulltest/render_trainset.py)
                 if (netCount >= la && (netCount - la) % (16 * scale) == 0)
                 {
                     const double out = -20.0 * fw::math::log10 (std::max (g, 1e-6));
@@ -179,7 +179,7 @@ public:
                         (float) (R / 24.0), (float) (S / 24.0), (float) (-20.0 * fw::math::log10 (std::max (g1, 1e-6)) / 24.0), (float) (out / 24.0),
                         (float) (fw::math::log (set.attackMs) / fw::math::log (100.0)), (float) (fw::math::log (set.releaseMs) / fw::math::log (3000.0)),
                         (float) (1.0 / set.ratio), (float) (set.punch / 30.0), (float) (set.thresholdDb / 48.0) };
-                    // the guards (as in nulltest/train_fwcomp.py): no correction without reduction, nor while the target
+                    // the guards (as in plugins/FwComp/nulltest/train_net.py): no correction without reduction, nor while the target
                     // stayed within 0.05 dB over the last 60 steps (20 ms: a steady tone, which the analytical model nulls)
                     flatHist[(size_t) flatPos] = (float) Rt; flatPos = (flatPos + 1) % flatSteps;
                     if (flatFill < flatSteps) ++flatFill;
@@ -232,7 +232,7 @@ public:
 
     double gainReductionDb() const { return R; }
     bool learned = true;                               // the learned correction (GainNet); off: the analytical model alone
-    std::vector<float>* trace = nullptr;               // plugins/FwComp/tools/CoRender trace=: the model's states for nulltest/train_fwcomp.py
+    std::vector<float>* trace = nullptr;               // plugins/FwComp/tools/CoRender trace=: the model's states for plugins/FwComp/nulltest/train_net.py
     int limEstimate = 3;                               // how the limiter estimates the output (3: the current gain times the pending peak; 0-2 tried, worse)
     // the deepest reduction of the smoothed compressor gain during the last process() call (dB, positive)
     double blockGainReductionDb() const { return minGain < 1.0 ? -20.0 * fw::math::log10 (std::max (minGain, 1e-6)) : 0.0; }
@@ -290,7 +290,7 @@ private:
         return fw::math::exp (logv[i] + f * (logv[i + 1] - logv[i]));
     }
 
-    // the fourth / fifth form (ident_hc_rel4.py): the release time shrinks as R rises above two averages of itself,
+    // the fourth / fifth form (plugins/FwComp/nulltest/fit_release4.py): the release time shrinks as R rises above two averages of itself,
     // a slow one (the reference's Crest detector) and a faster one, so short events release almost at once and long
     // ones at the Release time; after a reset the averages start high (the reference releases slowly at first)
     void stepRelease4 (double t)

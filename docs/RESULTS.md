@@ -22,7 +22,7 @@ page summarises them. How each model was found is in each plug-in's MEASUREMENTS
 
 ## Flatwater Pitch Bend
 
-`nulltest/null_pitchbend_presets.py`, `nulltest/null_pitchbend_mods.py`, `nulltest/score_pitchbend_shifter.py`:
+`plugins/FwPitchBend/nulltest/null_presets.py`, `plugins/FwPitchBend/nulltest/null_mods.py`, `plugins/FwPitchBend/nulltest/score_shifter.py`:
 
 - With every control at 0 both pass the voice through with the same delay: -67 dB on a sung take, the delay within
   0.0002 samples.
@@ -43,7 +43,7 @@ page summarises them. How each model was found is in each plug-in's MEASUREMENTS
 
 ## Flatwater Vocal Chain
 
-`nulltest/nulltest_fwvocalchain.py`, held-out vocal parts at -6 dBFS peaks, the Noise off in both:
+`plugins/FwVocalChain/nulltest/nulltest.py`, held-out vocal parts at -6 dBFS peaks, the Noise off in both:
 
 - Bass, Treble and Reverb stages with the others cleared (55 cases): median -75.7 dB at 48 kHz, worst -67.9 dB;
   -77.7 dB at 44.1 kHz and -71.0 dB at 96 kHz.
@@ -62,7 +62,7 @@ page summarises them. How each model was found is in each plug-in's MEASUREMENTS
 
 ## Flatwater Vocal Leveler
 
-`nulltest/nulltest_fwvocalleveler.py`: -74 dB on level steps and -47 ... -66 dB on vocal parts held out from the
+`plugins/FwVocalLeveler/nulltest/nulltest.py`: -74 dB on level steps and -47 ... -66 dB on vocal parts held out from the
 identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idle values, Stereo, and at 44.1 and
 96 kHz. Attack Fast is the weakest (about -50 dB), at word onsets.
 
@@ -81,7 +81,7 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 
 ## Flatwater Bass Leveler
 
-`nulltest/nulltest_fwbassleveler.py`. The level read, the gain law, the 42 ms look-ahead, the smoothing and the hold
+`plugins/FwBassLeveler/nulltest/nulltest.py`. The level read, the gain law, the 42 ms look-ahead, the smoothing and the hold
 null at -48 ... -49 dB on steady tones and level steps; a bass line at -30 dB at nearly every Sensitivity x Response
 setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
 
@@ -104,7 +104,7 @@ setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
 
 ## Flatwater Delay
 
-`nulltest/nulltest_fwdelay.py`. The delay path nulls: defaults, ms and synced times, the filters, Ping Pong from
+`plugins/FwDelay/nulltest/nulltest.py`. The delay path nulls: defaults, ms and synced times, the filters, Ping Pong from
 either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -81 dB; glides inside the input
 -60 ... -83 dB.
 
@@ -126,7 +126,7 @@ either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -
 
 ## Flatwater Comp
 
-`nulltest/nulltest_fwcomp.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
+`plugins/FwComp/nulltest/null_fwcomp.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
 output limiter, the four Analog modes): median -48.7 dB, worst -22.1 dB; the reference's 26 factory presets (each on
 voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
 
@@ -155,7 +155,7 @@ voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
 
 ## Flatwater Vocal Comp
 
-`nulltest/nulltest_fwvocalcomp.py`:
+`plugins/FwVocalComp/nulltest/null_fwvocalcomp.py`:
 
 | Set | Result |
 |---|---|
@@ -171,13 +171,13 @@ guarded so steady signals stay exact). Details: [NULLTESTS-grid.md](../plugins/F
 
 ## Flatwater BassX Lift
 
-`nulltest/nulltest_fwbassxlift.py`, 12 signals x 8 settings (Freq, Ratio, Response, Decay, High-pass, the Original
+`plugins/FwBassXLift/nulltest/nulltest.py`, 12 signals x 8 settings (Freq, Ratio, Response, Decay, High-pass, the Original
 Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on the created harmonics alone.
 
 - Per signal (created harmonics, median over the settings): white noise and quiet tones -49 to -59 dB; tones, sweeps
   and pink noise -40 to -49 dB; level steps -34 dB; bass notes -27 dB; kick-like transients -19 dB.
 - Over 120 random settings of every control with the hardest signals (bass notes, kicks, a loud tone, pink noise):
-  median -35.2 dB on the whole output, -29.2 dB on the harmonics (`nulltest/nullgrid_fwbassxlift.py`; 480 cases).
+  median -35.2 dB on the whole output, -29.2 dB on the harmonics (`plugins/FwBassXLift/nulltest/null_grid.py`; 480 cases).
 - Worst cases: loud material at extreme settings (Freq 256 with Ratio 4 and Decay -12, or Decay -9), where the
   reference's own harmonic feedback goes unstable.
 - How: the filters, the harmonic generator with its Decay feedback, the faders, monitors and clip were identified
@@ -187,7 +187,7 @@ Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on 
 
 ## Flatwater Bass Lift
 
-`nulltest/nulltest_fwbasslift.py`, 12 signals x 8 settings (Freq, Intensity, Gain, Original Bass In / Out): median
+`plugins/FwBassLift/nulltest/null_fwbasslift.py`, 12 signals x 8 settings (Freq, Intensity, Gain, Original Bass In / Out): median
 -36.8 dB on the whole output and -31.5 dB on the created harmonics alone.
 
 - Per signal (median over the settings): tones at or above Freq, sweeps, white noise -43 to -49 dB; bass notes, level

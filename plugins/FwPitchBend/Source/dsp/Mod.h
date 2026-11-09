@@ -5,7 +5,7 @@
 #include "Math.h"
 
 // Flatwater Pitch Bend's modulators, as measured on the reference (MEASUREMENTS.md, Flatwater Pitch Bend, "Phase 1, the
-// Mix and the modulators"; nulltest/measure_pitchbend_mods.py):
+// Mix and the modulators"; plugins/FwPitchBend/nulltest/measure_mods.py):
 // - M1 / M2: an LFO reads the first 256 values of its table as one cycle, each value held for its 256th of the cycle;
 //   a sequencer holds step k's value (value / 24) for one Rate period. The cycle's place is the host's song position
 //   over the synced length, or counted from the start of processing at a free rate in Hz, its period a whole number

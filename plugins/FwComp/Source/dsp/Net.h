@@ -1,6 +1,6 @@
 #pragma once
 // Learned correction of Flatwater Comp's gain (GRU, 64 hidden units), trained on renders of the reference by
-// nulltest/train_fwcomp.py and written by tools/export_fwcompnet.py from fwcompnet_det1.pt. Do not edit by hand.
+// plugins/FwComp/nulltest/train_net.py and written by plugins/FwComp/scripts/export_net.py from fwcompnet_det1.pt. Do not edit by hand.
 // Inputs per step: see fwcomp::GainNet in Engine.h. Output: the correction in dB, 9 tanh (o / 9).
 // PyTorch GRU layout: rows [reset; update; new].
 

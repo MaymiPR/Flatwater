@@ -1,7 +1,7 @@
 #pragma once
 // Flatwater Vocal Chain's learned Compress correction (per colour 2 GRUs of 32 hidden units, their corrections averaged),
-// trained on renders of the reference by nulltest/train_vocalchain_compress.py and written by
-// tools/export_vocalchainnet.py from build/vocalchainnet/c<colour><tag>.pt (the tags below). Do not edit.
+// trained on renders of the reference by plugins/FwVocalChain/nulltest/train_compress.py and written by
+// plugins/FwVocalChain/scripts/export_net.py from build/vocalchainnet/c<colour><tag>.pt (the tags below). Do not edit.
 // Inputs per 12 kHz step: see fwvocalchain::CompressNet in Engine.h, normalised by mean and scale. Output:
 // cmax tanh (out), the ln correction of the compressor's output. PyTorch GRU layout: rows [reset; update; new].
 

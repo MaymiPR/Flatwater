@@ -8,7 +8,7 @@ namespace fwvocalchain::dsp
 {
 namespace
 {
-// the reverb's responses for one rate (nulltest/pack_vocalchain_reverb.py): per colour a length, then LL, LR, RL, RR
+// the reverb's responses for one rate (plugins/FwVocalChain/nulltest/pack_reverb.py): per colour a length, then LL, LR, RL, RR
 // interleaved as 16-bit floats
 struct Packed { double fs; const char* data; int size; };
 
@@ -422,7 +422,7 @@ void Delays::process (const float* inL, const float* inR, float* outL, float* ou
 //==============================================================================
 namespace
 {
-// the measured voices (fitted on click trains through the reference at 48 kHz, nulltest/fit_vocalchain_doubler2.py), per
+// the measured voices (fitted on click trains through the reference at 48 kHz, plugins/FwVocalChain/nulltest/fit_doubler2.py), per
 // colour: the delay at the start (samples at 48 kHz), the speed's swing (a triangle starting at 0 and rising, in
 // natural-log units: Stereo 7 cents, Wide 18, Spreader 15), its rate (Hz), the delay's steady drift (samples per
 // sample), the LFO clock's lead over the aligned output (samples at 48 kHz) and the pitch shifter's window: when the

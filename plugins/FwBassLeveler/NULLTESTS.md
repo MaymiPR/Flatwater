@@ -39,7 +39,7 @@ the additive one by 0.2 dB, after which the two hold apart; the gate's form is t
 silence at Artifacts 0 and 50 to 0.1 dB), the long reference R's exact fall is not. The tables below predate this
 change.
 
-## The fixed cases (`nulltest/nulltest_fwbassleveler.py`)
+## The fixed cases (`plugins/FwBassLeveler/nulltest/nulltest.py`)
 
 | case | residual (dB) | gain error median (dB) | 90 % (dB) |
 |---|---|---|---|
@@ -62,7 +62,7 @@ change.
 
 Artifacts on the bass line: 0 / 30 / 50 -30.3; 68.2 -24.8; 100 -37.6 (Slow).
 
-## A corpus of real bass parts (`nulltest/br_corpus_eval.py`)
+## A corpus of real bass parts (`plugins/FwBassLeveler/nulltest/compare_corpus.py`)
 
 36 twelve-second parts from FL Studio's own bass samples (acoustic, 80s pick, Ibanez, slap, Temptated, a picked
 5-string, a pluck) and three synthetic voices (808 sub, filtered saw, slow swells): rhythms, accents, ghost notes,
@@ -84,7 +84,7 @@ rests, staccato, legato and ringing notes. 24 parts were used in the fit, 12 are
 The worst parts are -10 .. -17 dB. Nearly all of the remaining error is a note ridden by one side and not the
 other (then the two hold 1 .. 4 dB apart until the next note), not a different gain law.
 
-## Sample rates, components, stereo (`nulltest/validate_fwbassleveler.py`)
+## Sample rates, components, stereo (`plugins/FwBassLeveler/nulltest/check_vst3.py`)
 
 | case | residual (dB) |
 |---|---|

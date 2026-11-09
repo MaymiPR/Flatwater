@@ -8,11 +8,11 @@ itself program-dependent, after hidden design values and structural finds have b
 
 | Plug-in | Block | Network | Trainer | Exporter | Header |
 |---|---|---|---|---|---|
-| Flatwater Bass Lift | the gain of the created bass | GRU, 32 units | `nulltest/train_gain.py` | `tools/export_gainnet.py` | `plugins/FwBassLift/Source/dsp/GainNet.h` |
-| Flatwater BassX Lift | the harmonics compressor (Ratio, Response) | GRU, 48 units, trained end to end through the identified recursion | `nulltest/train_fwbassxlift.py` | `tools/export_fwbassxliftnet.py` | `plugins/FwBassXLift/Source/dsp/Net.h` |
-| Flatwater Comp | a gain correction over the plug-in's own states | GRU correction | `nulltest/train_fwcomp.py` | `tools/export_fwcompnet.py` | `plugins/FwComp/Source/dsp/Net.h` |
-| Flatwater Vocal Comp | the slow path of the level control | GRU, 48 units | `nulltest/train_fwvocalcomp.py` | `tools/export_fwvocalcompnet.py` | `plugins/FwVocalComp/Source/dsp/Net.h` |
-| Flatwater Vocal Chain | a gain correction of Compress, two nets per colour averaged | GRU, 32 units | `nulltest/train_vocalchain_compress.py` | `tools/export_vocalchainnet.py` | `plugins/FwVocalChain/Source/dsp/CompressNet.h` |
+| Flatwater Bass Lift | the gain of the created bass | GRU, 32 units | `plugins/FwBassLift/nulltest/train_net.py` | `plugins/FwBassLift/scripts/export_net.py` | `plugins/FwBassLift/Source/dsp/GainNet.h` |
+| Flatwater BassX Lift | the harmonics compressor (Ratio, Response) | GRU, 48 units, trained end to end through the identified recursion | `plugins/FwBassXLift/nulltest/train_net.py` | `plugins/FwBassXLift/scripts/export_net.py` | `plugins/FwBassXLift/Source/dsp/Net.h` |
+| Flatwater Comp | a gain correction over the plug-in's own states | GRU correction | `plugins/FwComp/nulltest/train_net.py` | `plugins/FwComp/scripts/export_net.py` | `plugins/FwComp/Source/dsp/Net.h` |
+| Flatwater Vocal Comp | the slow path of the level control | GRU, 48 units | `plugins/FwVocalComp/nulltest/train_net.py` | `plugins/FwVocalComp/scripts/export_net.py` | `plugins/FwVocalComp/Source/dsp/Net.h` |
+| Flatwater Vocal Chain | a gain correction of Compress, two nets per colour averaged | GRU, 32 units | `plugins/FwVocalChain/nulltest/train_compress.py` | `plugins/FwVocalChain/scripts/export_net.py` | `plugins/FwVocalChain/Source/dsp/CompressNet.h` |
 
 Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, results and cost.
 
@@ -29,7 +29,7 @@ Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, res
    for a network.
 4. **Render the dataset.** Thousands of short captures (2 to 4 s) of the reference with only that module on, across
    every setting and level: the material the plug-in is used on, plus very quiet input and plenty of steady tones and
-   level steps, since a network behaves only where it has seen data (`nulltest/render_trainset*.py`). Pieces above
+   level steps, since a network behaves only where it has seen data (`plugins/<Id>/nulltest/render_trainset*.py`). Pieces above
    +4 dBFS peak are left out. Keep a held-out set (every 7th piece, or a random 10 % after the fixed grid and preset
    cases) and a separate validation set that neither training nor checkpoint choice sees, at several input levels.
 5. **Ablate the features on a short run first.** Give the network the signal the reference listens to (Flatwater
@@ -41,7 +41,7 @@ Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, res
    Losses: the per-example residual in dB; corrections trained on the weak cases with a penalty on any case more
    than 0.5 dB worse (a mean over all cases drowns the weak ones); gradient clipping; steps with NaN skipped. When
    the structure is recursive, train end to end through it: the identified recursion and its exact adjoint in C as
-   an autograd function, the fixed filters as FFT convolutions (Flatwater BassX Lift: `nulltest/mbfast.c`).
+   an autograd function, the fixed filters as FFT convolutions (Flatwater BassX Lift: `plugins/FwBassXLift/nulltest/generator.c`).
 7. **Add the guards.** The block must not spoil what the identified model already nulls: a floor at the static law's
    ratio of the loudest level of the last second, and no correction while the target is flat for 20 ms (the
    correction fades out over 20 ms). Without them a network costs 10 to 60 dB on steady tones and level steps.

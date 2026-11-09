@@ -1,5 +1,5 @@
 {
- "source": "H-Comp Stereo 17.1.42.50 editor, OpenGL frames read back before SwapBuffers (tools/MeterCapture gl=1, 63 fps, design pixels), probes nulltest/make_vu_probe.py and make_vu_cal.py, 2026-10-23",
+ "source": "H-Comp Stereo 17.1.42.50 editor, OpenGL frames read back before SwapBuffers (tools/MeterCapture gl=1, 63 fps, design pixels), probes plugins/FwComp/nulltest/make_vu_probe.py and make_vu_cal.py, 2026-10-23",
  "strip": {
   "frames": 71,
   "angle_from_vertical_deg": [

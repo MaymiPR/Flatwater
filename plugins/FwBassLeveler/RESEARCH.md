@@ -10,7 +10,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | B1 | The public manual, [bass-rider.pdf](https://assets.wavescdn.com/pdf/plugins/bass-rider.pdf); the product page [waves.com/plugins/bass-rider](https://www.waves.com/plugins/bass-rider) |
 | B2 | The original plug-in observed in a host: its parameters (ranges, steps, defaults) and its 17 factory presets, each loaded into the original and read back |
-| B3 | The original's VST3 as a host sees it (`nulltest/probe_bassleveler.py`): Bass Rider Mono, Bass Rider Stereo, Bass Rider Live Mono, Bass Rider Live Stereo; no side-chain bus |
+| B3 | The original's VST3 as a host sees it (`plugins/FwBassLeveler/nulltest/probe_parameters.py`): Bass Rider Mono, Bass Rider Stereo, Bass Rider Live Mono, Bass Rider Live Stereo; no side-chain bus |
 | B4 | Frames of the real editor read back from its OpenGL drawing (`tools/MeterCapture gl=1`, 320 x 560, git-ignored `reference/fwbassleveler/`) |
 
 ## Documented behaviour (B1)

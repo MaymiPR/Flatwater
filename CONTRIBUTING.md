@@ -94,13 +94,13 @@ administrator rights.
 | `Source/common/` | code shared by the plug-ins: the toolbar, presets, meters, the UI kits, settings |
 | `tests/` | the unit tests, one file per plug-in; `tests/regress/` holds the render regression's cases and goldens |
 | `tools/` | the offline renderers, the snapshot tools, the hosts for the reference plug-ins (RefRender, MeterCapture), FocusCheck, and the scripts that export nets, tables and presets into headers |
-| `nulltest/` | the null-test and measurement harness of every plug-in (Python and C; needs the originals installed); [nulltest/README.md](nulltest/README.md) lists the scripts by role |
+| `nulltest/` | the null-test and measurement harness of every plug-in (Python and C; needs the originals installed); [scripts/nulltest/README.md](scripts/nulltest/README.md) lists the scripts by role |
 | `measurements/` | the measurement data behind the plug-ins' MEASUREMENTS.md (published) |
 | `scripts/` | `bump_version.py`, `release_notes.py`, `render_regress.py`, `make_site.py`, `check_repo.py`, `check.ps1`, `check.sh`, and `doc_index.py` (the root MEASUREMENTS.md and RESEARCH.md indexes) |
 | `packaging/` | the installers; `plugins.txt` lists the plug-ins they hold |
 | `docs/` | the build guide, RESULTS.md (every plug-in's null tests in one page), VALIDATION.md, IMPROVEMENTS.md, learned-blocks.md, `branding/` (banners, icon, social preview, `colours.json`), `images/` and `screenshots/` |
 | `.github/` | `workflows/` (Lint, CI, Build and release, Release checklist, Landing page), the issue forms, the pull request template, `RELEASE_CHECKLIST.md`, `dependabot.yml`, CODEOWNERS |
-| `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders; [nulltest/README.md](nulltest/README.md) lists the keys this suite adds |
+| `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders; [scripts/nulltest/README.md](scripts/nulltest/README.md) lists the keys this suite adds |
 
 Reference renders and anything taken from the original plug-ins stay out of the repository (`.gitignore`).
 
@@ -110,8 +110,8 @@ Reference renders and anything taken from the original plug-ins stay out of the 
 Windows, Python 3.12 or newer with the packages in `requirements.txt` (`requirements-train.txt` adds torch for the
 learned blocks), the original plug-ins installed and named in `local.yaml`, and the tools built. The entry points
 are `nulltest_<name>.py` (every case for one plug-in; `--out` writes the report) and `nulltest_<name>_presets.py`
-(the factory presets against the originals' own); Flatwater Pitch Bend's are `null_pitchbend_mods.py`,
-`null_pitchbend_presets.py` and `score_pitchbend_shifter.py`. They write `plugins/<Name>/NULLTESTS.md` and
+(the factory presets against the originals' own); Flatwater Pitch Bend's are `plugins/FwPitchBend/nulltest/null_mods.py`,
+`plugins/FwPitchBend/nulltest/null_presets.py` and `plugins/FwPitchBend/nulltest/score_shifter.py`. They write `plugins/<Name>/NULLTESTS.md` and
 `NULLTESTS-presets.md`, summarised in [docs/RESULTS.md](docs/RESULTS.md). None of this runs in CI, which has no
 originals.
 
@@ -127,9 +127,9 @@ plug-in raises the middle number, a fix the last. Tags are `vx.y.z`; `vx.y.z-rc.
 |---|---|
 | The plug-ins are `add_subdirectory()`d from `plugins/<Name>/CMakeLists.txt`, not `include()`d `plugin.cmake` files; their build files sit under `build/plugins/<Name>/`, and the workflows use those paths | the suite's layout predates the standard's |
 | Shared code is in `Source/common/`, the unit tests in the root `tests/`, the renderers and snapshot tools in the root `tools/` | the same |
-| One `nulltest/` folder at the root serves every plug-in (entry points `nulltest_<name>.py`), not `plugins/<Id>/nulltest/`. The release checklist's `nulltest.py --report` is each entry point's `--out`; its VST3-equals-renderer check is `validate_fwbassleveler.py`, `validate_fwvocalleveler.py`, `check_fwcomp_plugin.py`, `check_plugin.py` and `first_null_fwpitchbend.py` | the same |
+| One `nulltest/` folder at the root serves every plug-in (entry points `nulltest_<name>.py`), not `plugins/<Id>/nulltest/`. The release checklist's `nulltest.py --report` is each entry point's `--out`; its VST3-equals-renderer check is `plugins/FwBassLeveler/nulltest/check_vst3.py`, `plugins/FwVocalLeveler/nulltest/check_vst3.py`, `plugins/FwComp/nulltest/check_vst3.py`, `plugins/FwVocalComp/nulltest/check_vst3.py` and `plugins/FwPitchBend/nulltest/first_null.py` | the same |
 | No tools option: the renderers and snapshot tools are always built, the Windows hosts on Windows | the render regression and the snapshots need them on every build |
 | `measurements/` is published | the measurement data of this suite is public (approval recorded 2026-10-18) |
-| `local.yaml` carries keys beyond `local.example.yaml`: the reference's preset files and FL Studio's sample packs | the preset null tests and the corpora read them ([nulltest/README.md](nulltest/README.md)) |
+| `local.yaml` carries keys beyond `local.example.yaml`: the reference's preset files and FL Studio's sample packs | the preset null tests and the corpora read them ([scripts/nulltest/README.md](scripts/nulltest/README.md)) |
 | Root `MEASUREMENTS.md` and `RESEARCH.md` are indexes written by `scripts/doc_index.py`; `docs/` adds RESULTS.md, VALIDATION.md, IMPROVEMENTS.md and learned-blocks.md | nine plug-ins share one repository |
 | The plug-in images are in `docs/images/` (`fw<plug-in>.png`); `docs/screenshots/` holds `hero.png` | the plug-in pages link them there |

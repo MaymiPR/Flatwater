@@ -159,7 +159,7 @@ private:
     int running = 0;                                                  // the colour whose engine runs (0: none yet)
 };
 
-// The learned correction of Compress (nulltest/train_vocalchain_compress.py, MEASUREMENTS.md "Flatwater Vocal Chain: Compress, a
+// The learned correction of Compress (plugins/FwVocalChain/nulltest/train_compress.py, MEASUREMENTS.md "Flatwater Vocal Chain: Compress, a
 // learned correction"): per colour compressnet::members GRUs, one step per 1/12000 s (4 samples at 48 kHz; a phase
 // accumulator at other rates). Per step each reads, for the samples leaving the compressor, the detector level (most),
 // the compressor's reduction (mean) and the limiter's (most), the input's peak and power (dB), and the fader; the mean
@@ -231,7 +231,7 @@ private:
     int count = 0;
 };
 
-// Compress, as fitted (nulltest/fit_vocalchain_compress.py; comp.c is the same algorithm): an input gain into a
+// Compress, as fitted (plugins/FwVocalChain/nulltest/fit_compress.py; plugins/FwVocalChain/nulltest/comp.c is the same algorithm): an input gain into a
 // compressor (stereo-linked; a power or peak detector, the threshold, ratio and knee, attack and a two-stage release),
 // a static shaper (x^2, x |x|, x^3) before or after it, a look-ahead limiter holding the output under its ceiling, an
 // output gain, the learned correction (CompressNet), then the colour's own linear filter (exact per rate). Its
@@ -262,7 +262,7 @@ private:
     CompressNet net;
 };
 
-// The main de-esser, as fitted (nulltest/fit_vocalchain_deess.py; deess.c is the same algorithm): a zero-phase high band H
+// The main de-esser, as fitted (plugins/FwVocalChain/nulltest/fit_deess.py; plugins/FwVocalChain/nulltest/deess.c is the same algorithm): a zero-phase high band H
 // (its taps per rate) is turned down, x - (1 - g) H x; g from two stereo-linked detectors on the signal after the fixed
 // filter: a high-pass one against a threshold that rises with a low-pass one (thr = T + k low, in amplitude), the
 // reduction smoothed (attack, hold, release, a slow stage). The gain is computed lookAhead samples before the audio it

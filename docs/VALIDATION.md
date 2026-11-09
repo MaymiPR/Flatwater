@@ -25,7 +25,7 @@ The command behind each column:
 | ctest | `ctest --test-dir build -C Release --output-on-failure` |
 | pluginval 10 | pluginval 1.0.4 with `--strictness-level 10 --skip-gui-tests --timeout-ms 900000 --validate <Plug-in Name>.vst3`, as the release workflow runs it (on Windows through `Start-Process -Wait -PassThru` for its exit code) |
 | FocusCheck | `FocusCheck <path to .vst3> [x,y ...]` (`tools/FocusCheck.cpp`, Windows): the space bar reaches the host after clicks into the editor |
-| VST3 equals renderer | the built VST3 hosted by `tools/RefRender` (or pedalboard) against the plug-in's offline renderer: `nulltest/validate_fwbassleveler.py`, `nulltest/validate_fwvocalleveler.py`, `nulltest/check_fwcomp_plugin.py`, `nulltest/check_plugin.py` (Flatwater Vocal Comp), `nulltest/first_null_fwpitchbend.py` |
+| VST3 equals renderer | the built VST3 hosted by `tools/RefRender` (or pedalboard) against the plug-in's offline renderer: `plugins/FwBassLeveler/nulltest/check_vst3.py`, `plugins/FwVocalLeveler/nulltest/check_vst3.py`, `plugins/FwComp/nulltest/check_vst3.py`, `plugins/FwVocalComp/nulltest/check_vst3.py` (Flatwater Vocal Comp), `plugins/FwPitchBend/nulltest/first_null.py` |
 | Render regression cases | `python scripts/render_regress.py --build build` over `tests/regress/<PluginTarget>/jobs.txt` |
 | CPU | the offline renderer on 60 s of stereo at 48 kHz; percentages of one core x 60 s |
 
@@ -33,10 +33,10 @@ The command behind each column:
 
 | Plug-in | Check | Result |
 |---|---|---|
-| Flatwater Vocal Leveler | the C++ ride against the model (`nulltest/check_fwvocalleveler_port.py`, 25 cases) | identical (0.0000 dB) |
-| Flatwater Bass Leveler | the C++ ride against the fitted model (`nulltest/check_fwbassleveler_port.py`, 7 cases) | within 0.09 dB at 99 % |
+| Flatwater Vocal Leveler | the C++ ride against the model (`plugins/FwVocalLeveler/nulltest/check_port.py`, 25 cases) | identical (0.0000 dB) |
+| Flatwater Bass Leveler | the C++ ride against the fitted model (`plugins/FwBassLeveler/nulltest/check_port.py`, 7 cases) | within 0.09 dB at 99 % |
 | Flatwater Comp | the Analog stage, C++ against the fitted model | the difference is the added noise alone (-82.9 ... -109.3 dBFS) |
-| Flatwater Comp | the learned correction on 200 unseen cases (random settings and signals, `nulltest/train_fwcomp.py` TEST) | the weak cases (worse than -35 dB without it) -25.8 to -36.6 dB, all -48.3 to -52.6; 106 better, 15 worse by more than 1 dB (the worst -96.3 to -73.4) |
+| Flatwater Comp | the learned correction on 200 unseen cases (random settings and signals, `plugins/FwComp/nulltest/train_net.py` TEST) | the weak cases (worse than -35 dB without it) -25.8 to -36.6 dB, all -48.3 to -52.6; 106 better, 15 worse by more than 1 dB (the worst -96.3 to -73.4) |
 | Flatwater Comp | sample rates: the quick null test at 44.1 / 48 / 96 kHz (5 settings x 7 signals) | median -43.1 / -42.9 / -41.8 dB with the learned correction (-40.4 / -40.2 / -38.6 without); at 96 kHz the correction improves 14 cases by more than 1 dB and worsens none |
 | Flatwater Vocal Comp | the learned slow path, C++ against PyTorch on the null-test signals | -70 dB or lower |
 | Flatwater Vocal Comp | the learned slow path at 44.1 / 96 kHz (5 signals x 3 settings) | the same gains as at 48 kHz; steady tones unchanged |
@@ -44,7 +44,7 @@ The command behind each column:
 | Flatwater BassX Lift | null at 96 kHz against 48 kHz (24 cases) | within 1.8 dB |
 | Flatwater Bass Lift | the learned gain block, C++ against PyTorch on held-out renders | -74 ... -91 dB |
 | Flatwater Bass Lift | null at 44.1 / 96 kHz against 48 kHz (5 signals) | within 0.2 dB |
-| Flatwater Vocal Chain | the Compress nets, C++ against PyTorch (`check_vocalchain_compressnet.py`) | -107 ... -133 dB |
+| Flatwater Vocal Chain | the Compress nets, C++ against PyTorch (`plugins/FwVocalChain/nulltest/check_compress_net.py`) | -107 ... -133 dB |
 
 ## Editors against the originals
 

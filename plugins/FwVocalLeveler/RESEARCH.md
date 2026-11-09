@@ -10,7 +10,7 @@ The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | V1 | The public manual, [vocal-rider.pdf](https://assets.wavescdn.com/pdf/plugins/vocal-rider.pdf); the product page [waves.com/plugins/vocal-rider](https://www.waves.com/plugins/vocal-rider) |
 | V2 | The original plug-in observed in a host: its parameters (ranges, steps, defaults) and its 13 factory presets, each loaded into the original and read back |
-| V3 | The original's VST3 as a host sees it (`nulltest/probe_vocalleveler.py`, and `tools/RefRender`, which prints the input buses and enables a mono side-chain on mono components): Vocal Rider Mono, Vocal Rider Stereo, Vocal Rider Live Mono, Vocal Rider Live Stereo |
+| V3 | The original's VST3 as a host sees it (`plugins/FwVocalLeveler/nulltest/probe_parameters.py`, and `tools/RefRender`, which prints the input buses and enables a mono side-chain on mono components): Vocal Rider Mono, Vocal Rider Stereo, Vocal Rider Live Mono, Vocal Rider Live Stereo |
 | V4 | Frames of the real editor read back from its OpenGL drawing (`tools/MeterCapture gl=1 in=...`, 320 x 598, git-ignored `reference/fwvocalleveler/shots/`), with voice-like syllables (`reference/fwvocalleveler/syllables.f32`) |
 
 ## Documented behaviour (V1)
