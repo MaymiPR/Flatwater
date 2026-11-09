@@ -30,7 +30,7 @@ modulation directly.
 | Character / Cartoon | -0.0 | 0.6 c / 0 % | 2.0 | 1.7 | pass |
 | Character / Deeper Voice | +0.2 | 0.6 c / 0 % | 1.0 | 1.1 | pass |
 | Character / Higher Register | +0.0 | 1.2 c / 0 % | 1.6 | 3.0 | pass |
-| Character / Low Morning | +0.1 | 1.5 c / 0 % | 1.3 | 2.4 | pass |
+| Character / Groggy Voice | +0.1 | 1.5 c / 0 % | 1.3 | 2.4 | pass |
 | Character / Pushy | +0.1 | 1.2 c / 0 % | 1.2 | 4.3 | pass |
 | Character / Tiny Voice | -0.1 | 0.7 c / 0 % | 2.5 | 3.1 | pass |
 | Character / Younger | +0.4 | 0.7 c / 0 % | 1.5 | 4.8 | pass |
@@ -38,14 +38,14 @@ modulation directly.
 | Harmony / Fifth Above Blend | +0.1 | 0.5 c / 0 % | 1.0 | -1.0 | pass |
 | Harmony / Fourth Above | -0.0 | 0.7 c / 0 % | 1.7 | 0.8 | pass |
 | Harmony / Octave Below Blend | +0.0 | 1 c / 0 % | 1.0 | 0.5 | pass |
-| Double / Glitch Double (shape substituted: M1) | +0.1 | 15.2 c / 5 % | 2.2 | 0.3 | **miss** |
+| Double / Stutter Twin (shape substituted: M1) | +0.1 | 15.2 c / 5 % | 2.2 | 0.3 | **miss** |
 | &nbsp;&nbsp;with the reference's shape | +0.0 | 9.2 c / 1 % | 2.2 | -0.2 | pass |
 | Double / Loose Double | -0.1 | 3.4 c / 1 % | 0.8 | -5.7 | pass |
 | Double / Tape Double | +0.0 | 3.1 c / 1 % | 1.3 | -3.6 | pass |
 | Double / Thin Double | +0.8 | 0.8 c / 1 % | 2.7 | -1.2 | pass |
 | Double / Tracked Double High | -0.1 | 3.6 c / 1 % | 1.2 | -5.3 | pass |
 | Double / Tracked Double Low | +0.2 | 3.1 c / 1 % | 1.0 | -3.6 | pass |
-| Movement / Added Vibrato | +0.4 | 2.3 c / 1 % | 0.7 | 2.0 | pass |
+| Movement / Wavering Voice | +0.4 | 2.3 c / 1 % | 0.7 | 2.0 | pass |
 | Movement / Alarm | -0.5 | 8.9 c / 1 % | 1.5 | 2.7 | pass |
 | Movement / Breathing Formant | +0.1 | 0.7 c / 0 % | 1.0 | 0.7 | pass |
 | Movement / Deep Warble | -0.1 | n/a | 2.4 | 3.2 | pass |
@@ -66,7 +66,7 @@ modulation directly.
 | Robot / Arcade Steps (shape substituted: M2) | -0.6 | 35.4 c / 20 % | 3.3 | 3.0 | **miss** |
 | &nbsp;&nbsp;with the reference's shape | -0.5 | 10 c / 3 % | 3.1 | 3.6 | **miss** |
 | Robot / Glide Robot | +1.4 | 10.3 c / 0 % | 1.8 | 3.9 | pass |
-| Robot / Scratch | +0.4 | 8.9 c / 0 % | 1.0 | 3.1 | pass |
+| Robot / Vinyl Scrub | +0.4 | 8.9 c / 0 % | 1.0 | 3.1 | pass |
 | Robot / Stepping Robot (shape substituted: M2) | -1.1 | 3.6 c / 3 % | 3.9 | 3.0 | **miss** |
 | &nbsp;&nbsp;with the reference's shape | -0.8 | 4.3 c / 0 % | 2.2 | 3.3 | pass |
 | Sequence / Chopped Melody (shape substituted: M2) | +0.8 | 6.3 c / 1 % | 2.0 | 3.5 | pass |
@@ -85,7 +85,7 @@ modulation directly.
 | Character / Cartoon | +0.3 | 2.3 c / 0 % | 1.4 | 2.2 | pass |
 | Character / Deeper Voice | +0.7 | 2.4 c / 0 % | 0.8 | 1.4 | pass |
 | Character / Higher Register | +0.7 | 6.5 c / 1 % | 2.2 | 3.7 | pass |
-| Character / Low Morning | -1.1 | 2.8 c / 1 % | 1.1 | 2.6 | pass |
+| Character / Groggy Voice | -1.1 | 2.8 c / 1 % | 1.1 | 2.6 | pass |
 | Character / Pushy | -0.2 | 6.4 c / 0 % | 0.8 | 3.6 | pass |
 | Character / Tiny Voice | -0.2 | 5.8 c / 1 % | 1.8 | 2.7 | pass |
 | Character / Younger | +0.4 | 1.6 c / 0 % | 0.6 | 0.6 | pass |
@@ -93,14 +93,14 @@ modulation directly.
 | Harmony / Fifth Above Blend | -0.0 | 2.1 c / 3 % | 0.4 | -3.2 | pass |
 | Harmony / Fourth Above | +0.0 | n/a | 0.7 | 0.4 | pass |
 | Harmony / Octave Below Blend | -0.8 | 2 c / 0 % | 1.1 | -0.9 | pass |
-| Double / Glitch Double (shape substituted: M1) | +0.4 | 16.9 c / 8 % | 1.2 | 0.5 | **miss** |
+| Double / Stutter Twin (shape substituted: M1) | +0.4 | 16.9 c / 8 % | 1.2 | 0.5 | **miss** |
 | &nbsp;&nbsp;with the reference's shape | +0.2 | 15.3 c / 5 % | 0.7 | 0.4 | **miss** |
 | Double / Loose Double | +0.2 | 3.9 c / 1 % | 0.4 | -5.1 | pass |
 | Double / Tape Double | -0.4 | 4.1 c / 12 % | 1.2 | -3.8 | **miss** |
 | Double / Thin Double | -0.6 | 1.6 c / 3 % | 0.7 | -5.5 | pass |
 | Double / Tracked Double High | -0.1 | 2.4 c / 2 % | 0.6 | -5.3 | pass |
 | Double / Tracked Double Low | -0.3 | 3.5 c / 10 % | 0.9 | -4.3 | pass |
-| Movement / Added Vibrato | +0.0 | 8.1 c / 0 % | 1.0 | 3.8 | pass |
+| Movement / Wavering Voice | +0.0 | 8.1 c / 0 % | 1.0 | 3.8 | pass |
 | Movement / Alarm | -0.7 | 14.5 c / 6 % | 1.1 | 2.8 | pass |
 | Movement / Breathing Formant | +0.4 | 4.1 c / 0 % | 0.5 | 1.2 | pass |
 | Movement / Deep Warble | +0.4 | n/a | 2.0 | 3.2 | pass |
@@ -121,7 +121,7 @@ modulation directly.
 | Robot / Arcade Steps (shape substituted: M2) | -1.1 | 24 c / 9 % | 0.9 | 2.4 | **miss** |
 | &nbsp;&nbsp;with the reference's shape | -1.0 | 18.6 c / 4 % | 0.9 | 2.5 | **miss** |
 | Robot / Glide Robot | +1.1 | 24.5 c / 25 % | 1.2 | 3.5 | **miss** |
-| Robot / Scratch | +0.2 | 22.5 c / 23 % | 0.9 | 3.1 | **miss** |
+| Robot / Vinyl Scrub | +0.2 | 22.5 c / 23 % | 0.9 | 3.1 | **miss** |
 | Robot / Stepping Robot (shape substituted: M2) | -0.2 | 10.5 c / 3 % | 2.4 | 3.5 | pass |
 | &nbsp;&nbsp;with the reference's shape | -0.1 | 10.5 c / 6 % | 1.6 | 3.0 | pass |
 | Sequence / Chopped Melody (shape substituted: M2) | +0.3 | 12 c / 6 % | 1.8 | 2.7 | pass |

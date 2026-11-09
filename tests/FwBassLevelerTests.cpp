@@ -239,7 +239,7 @@ static void testPresets()
 {
     FwBassLevelerProcessor p;
     CHECK (p.getNumPrograms() == 18);
-    CHECK (p.getProgramName (1) == "Essentials: Full Reset");
+    CHECK (p.getProgramName (1) == "Essentials: Default");
     auto* target = p.apvts.getParameter (fwbassleveler::target);
     target->setValueNotifyingHost (target->convertTo0to1 (-24.0f));
     p.setCurrentProgram (16);                                         // "Bass Tamer": Max 0, Idle 0.98, Fast, Sensitivity 75

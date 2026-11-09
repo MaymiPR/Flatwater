@@ -98,7 +98,7 @@ static void testProcessor()
     CHECK_NEAR (q.apvts.getRawParameterValue (fwdelay::feedback)->load(), 137.0, 1.0e-3);
 }
 
-// the editor's Ping Pong and Dual behaviour, as measured on the reference: clicks and drags on the display (editor pixels)
+// the editor's Side to Side and Dual behaviour, as measured on the reference: clicks and drags on the display (editor pixels)
 static void testDisplayClicks()
 {
     FwDelayProcessor p;
@@ -203,14 +203,14 @@ static void testPresets()
     CHECK (wrong == 0);
     // a preset's values reach the DSP as stored (the reference's preset load), until the parameter is moved
     auto program = [&list] (const char* name) { for (int k = 0; k < (int) list.size(); ++k) if (juce::String (list[(size_t) k].name) == name) return k + 1; return 0; };
-    p.setCurrentProgram (program ("Ping Pong"));
+    p.setCurrentProgram (program ("Side to Side"));
     CHECK (std::abs (p.settings (48000.0).depth - 0.0069f) < 1.0e-6f);
     p.setCurrentProgram (program ("Broken Machine"));
     CHECK (std::abs (p.settings (48000.0).rateHz - 281.7f) < 1.0e-3f);
     CHECK (std::abs (p.settings (48000.0).lopassHz - 20139.0f) < 0.5f);   // stored 20 139: a filter, though shown Off
-    p.setCurrentProgram (program ("Full Reset"));
+    p.setCurrentProgram (program ("Default"));
     CHECK (p.settings (48000.0).lopassHz == 0.0f);                         // stored 20 100: Off
-    p.setCurrentProgram (program ("Ping Pong"));
+    p.setCurrentProgram (program ("Side to Side"));
     auto* d = p.apvts.getParameter (fwdelay::depth);
     d->setValueNotifyingHost (d->convertTo0to1 (0.69f) + 1.0e-4f);           // moved: the parameter at its resolution
     CHECK (std::abs (p.settings (48000.0).depth - 0.01f) < 1.0e-6f);
@@ -222,7 +222,7 @@ static void testPresets()
         q.setStateInformation (mb.getData(), (int) mb.getSize());
         CHECK (std::abs (q.settings (48000.0).rateHz - 281.7f) < 1.0e-3f);
     }
-    CHECK (juce::String (list.front().name) == "Full Reset");
+    CHECK (juce::String (list.front().name) == "Default");
 }
 
 // the DSP alone (FwDelayDsp.h) against the identified laws

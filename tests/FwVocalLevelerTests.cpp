@@ -211,7 +211,7 @@ static void testPresets()
 {
     FwVocalLevelerProcessor p;
     CHECK (p.getNumPrograms() == 14);
-    CHECK (p.getProgramName (1) == "Essentials: Full Reset");
+    CHECK (p.getProgramName (1) == "Essentials: Default");
     p.setCurrentProgram (12);                                         // "Ceiling Ride": Target -42, Range -12 .. 0, Fast, Idle 1
     CHECK (p.getProgramName (12) == "Essentials: Ceiling Ride");
     CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::target)->load(), -42.0, 0.05);
@@ -224,7 +224,7 @@ static void testPresets()
     CHECK_NEAR (p.idleDb(), -6.0, 0.01);
     p.setCurrentProgram (13);                                         // "Open Up": Range -12 .. +12, Idle 0
     CHECK_NEAR (p.idleDb(), -12.0, 1.0e-4);
-    p.setCurrentProgram (1);                                          // "Full Reset" also sets Automation Off
+    p.setCurrentProgram (1);                                          // "Default" also sets Automation Off
     CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::target)->load(), -21.0, 0.05);
     CHECK (p.automationMode() == fwvocalleveler::Off);
     CHECK_NEAR (p.idleDb(), 0.0, 0.01);

@@ -6,12 +6,12 @@ leaves it), output residual over the loud parts in dB (lower is better). Generat
 
 | preset | bass line | corpus part 30 (picked) | corpus part 25 (slap) |
 |---|---|---|---|
-| Full Reset | -29.8 | -22.6 | -26.7 |
+| Default | -29.8 | -22.6 | -26.7 |
 | Live PA Start | -23.2 | -23.9 | -27.8 |
-| Gentle Ride | -29.6 | -33.3 | -59.0 |
+| Soft Touch | -29.6 | -33.3 | -59.0 |
 | Fingerstyle Slow | -24.6 | -24.8 | -26.0 |
 | Fretless Slow | -14.0 | -25.3 | -26.4 |
-| Acoustic Bass Slow | -24.3 | -19.8 | -27.2 |
+| Unplugged Bass Ease | -24.3 | -19.8 | -27.2 |
 | Upright Bass | -35.8 | -25.1 | -11.1 |
 | Fast Fingers | -35.2 | -16.5 | -33.1 |
 | Wide Dynamics | -19.3 | -16.8 | -29.4 |
@@ -19,9 +19,9 @@ leaves it), output residual over the loud parts in dB (lower is better). Generat
 | Fast, Artifacts Ignored | -9.9 | -23.9 | -26.7 |
 | Picked Bass Fast | -23.1 | -16.5 | -26.1 |
 | Fast Eighths | -26.0 | -16.8 | -25.3 |
-| Fret Noise Ignored | -25.2 | -28.4 | -57.9 |
+| Squeak Proof | -25.2 | -28.4 | -57.9 |
 | Slap Through the Amp | -9.0 | -20.6 | -27.2 |
 | Bass Tamer | -34.8 | -78.0 | -61.1 |
-| Stage Ready | -22.3 | -16.9 | -33.1 |
+| Gig Night | -22.3 | -16.9 | -33.1 |
 
 Median -25.2 dB, worst -9.0 dB.
