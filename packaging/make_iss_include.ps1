@@ -1,6 +1,6 @@
 # Writes packaging/plugins.iss.inc (Inno Setup [Components], [Files], [Icons], [UninstallDelete]) for every plug-in in
 # packaging/plugins.txt.   Usage: pwsh packaging/make_iss_include.ps1 <build dir>
-# Artefacts are read from <build>/plugins/<Target>/<Target>_artefacts/Release (the plug-ins are add_subdirectory()d).
+# Artefacts are read from <build>/<Target>_artefacts/Release.
 param([string]$BuildDir = "build")
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $build = (Resolve-Path $BuildDir).Path
@@ -15,7 +15,7 @@ $i = @('[Icons]')
 $u = @('[UninstallDelete]')
 foreach ($pl in $plugins) {
     $id = $pl.Target.ToLower()
-    $a = Join-Path $build "plugins\$($pl.Target)\$($pl.Target)_artefacts\Release"
+    $a = Join-Path $build "$($pl.Target)_artefacts\Release"
     $c += "Name: ""vst3\$id""; Description: ""$($pl.Product)""; Types: full all custom"
     $c += "Name: ""clap\$id""; Description: ""$($pl.Product)""; Types: full all custom"
     $c += "Name: ""app\$id""; Description: ""$($pl.Product)""; Types: all"

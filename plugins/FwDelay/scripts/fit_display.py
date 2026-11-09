@@ -7,7 +7,7 @@ from hx to w - hx, vertical ones from vy to h/2 - vy and from h/2 + vy to h - vy
 px of height. The amber coverage of the reference (R - B of the pixels: the glass is grey) is matched by a supersampled
 rendering of the same polygons.
 
-    python -I tools/fit_hdelay_display.py [big note bar small pp dual | ppbox]
+    python -I plugins/FwDelay/scripts/fit_display.py [big note bar small pp dual | ppbox]
 """
 import sys
 import numpy as np

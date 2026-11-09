@@ -2,7 +2,7 @@
 (the connected non-panel blob around the GUIXML rectangle's centre, its outline fitted with a circle), and the printed
 ink around it. Numbers only; no pixels are kept.
 
-    python -I tools/measure_hdelay_ui.py [reference/hdelay/st_1_hover.png]
+    python -I plugins/FwDelay/scripts/measure_ui.py [reference/hdelay/st_1_hover.png]
 """
 import sys
 import numpy as np

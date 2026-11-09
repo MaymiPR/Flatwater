@@ -117,7 +117,7 @@ jobs:
             if (-not $line.Trim() -or $line.StartsWith('#')) { continue }
             $t, $p, $code, $mfr = $line.Split([char]0x7C)
             $stem = $t -replace '^The', ''
-            $snap = Get-ChildItem "build/plugins/$t/${stem}Snapshot_artefacts/Release/${stem}Snapshot.exe" -ErrorAction SilentlyContinue
+            $snap = Get-ChildItem "build/${stem}Snapshot_artefacts/Release/${stem}Snapshot.exe" -ErrorAction SilentlyContinue
             if ($snap) { & $snap.FullName "screenshots/$($t.ToLower()).png"; & $snap.FullName "screenshots/$($t.ToLower())@2x.png" --scale=2 }
           }
 

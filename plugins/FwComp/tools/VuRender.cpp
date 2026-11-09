@@ -1,4 +1,4 @@
-// Renders Flatwater Comp's VU dial alone (Source/common/FwHybridUI VuMeter, at its place in the Flatwater Comp editor) to a PNG, for the
+// Renders Flatwater Comp's VU dial alone (shared/ui/HybridUI VuMeter, at its place in the Flatwater Comp editor) to a PNG, for the
 // pixel comparison with the reference's filmed frames:   VuRender out.png gr|io <needle degrees> [scale]
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "shared/ui/HybridUI.h"

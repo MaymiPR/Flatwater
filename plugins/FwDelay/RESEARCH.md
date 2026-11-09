@@ -100,7 +100,7 @@ and display family. Its layout was measured on the screenshots (D4).
   LoPass under FILTERS.
 - The plug-in's name in large type at the lower left. Value texts are shown while a knob is dragged; Alt resets; text
   entry on the knobs and the displays. A 40 px drag up on Delay in MS moved it 375 to 415 ms.
-- New against Flatwater Comp's widget kit (`FwHybridUI`): the tap pad, the vertical bar meter with its scale, the Link
+- New against Flatwater Comp's widget kit (`shared/ui/HybridUI`): the tap pad, the vertical bar meter with its scale, the Link
   wheel, the delay display's layouts (note / BPM, ms, Ping Pong, Dual) and the stepped note scale on the Delay knob.
 
 ## Presets (D2)

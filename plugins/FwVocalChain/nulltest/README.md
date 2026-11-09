@@ -38,7 +38,7 @@ results are published in [NULLTESTS.md](../NULLTESTS.md).
 | `fit_fixed.py` | the chain's fixed filter per sample rate, an order-8 IIR |
 | `fit_deess.py` | the main de-esser |
 | `fit_compress.py` | Compress per colour and fader step |
-| `export_compress.py` | writes `plugins/FwVocalChain/FwVocalChainCompress.h` from the Compress fits |
+| `export_compress.py` | writes `plugins/FwVocalChain/Source/dsp/Compress.h` from the Compress fits |
 | `fit_doubler2.py` | the doubler's voices measured on click trains |
 | `fit_rates_lead.py` | the doubler's LFO lead correction at other rates |
 | `pack_reverb.py` | packs the reverb's measured impulse responses for the plug-in |

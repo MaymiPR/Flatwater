@@ -42,7 +42,7 @@ results are published in [NULLTESTS.md](../NULLTESTS.md).
 | `fit_detector.py` | Bass Rider: the note detector of the riding model by CMA-ES on probes and traces |
 | `fit_polish.py` | Bass Rider: per-setting values polished one at a time on a grid |
 | `fit_lock.py` | Bass Rider: the learned lock of the ride after a note's start |
-| `export_detector.py` | writes the fitted detector constants into `plugins/FwBassLeveler/FwBassLevelerRide.h` |
+| `export_detector.py` | writes the fitted detector constants into `plugins/FwBassLeveler/Source/dsp/Ride.h` |
 | `design_hilbert.py` | the quadrature allpass pair of Flatwater Bass Leveler's envelopes |
 
 ## Models
