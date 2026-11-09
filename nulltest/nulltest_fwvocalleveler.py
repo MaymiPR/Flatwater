@@ -1,4 +1,4 @@
-"""Null test: Flatwater Vocal Leveler (its own processor, run offline by build/.../FwVocalLevelerRender.exe) against the reference Vocal
+"""Null test: Flatwater Vocal Leveler (its own processor, run offline by build/.../VlRender.exe) against the reference Vocal
 Rider (rendered through pedalboard, a fresh instance per case). There is no latency on either side. Reports per case
 the output residual 20 log10 (rms (ours - reference) / rms (reference)) after the first 0.1 s, and the applied gain's
 error (ours vs the reference's, sample by sample where the input is loud enough). The corpus cases are held-out parts
@@ -18,7 +18,7 @@ import vocal_corpus as V
 from measure_vocalleveler import seg, with_pilot
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalLeveler', 'FwVocalLevelerRender_artefacts', 'Release', 'FwVocalLevelerRender.exe'))
+EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalLeveler', 'VlRender_artefacts', 'Release', 'VlRender.exe'))
 TMP = os.path.join(HERE, 'renders'); os.makedirs(TMP, exist_ok=True)
 COMPONENTS = {1: 'Vocal Rider Mono', 2: 'Vocal Rider Stereo'}
 LIVE = {1: 'Vocal Rider Live Mono', 2: 'Vocal Rider Live Stereo'}

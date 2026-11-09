@@ -40,7 +40,7 @@ behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (C2, C3), in preset-array order
 
-Flatwater Comp's parameters (IDs from `FwCompProcessor.h`), in the original's parameter order:
+Flatwater Comp's parameters (IDs from `plugins/FwComp/Source/PluginProcessor.h`), in the original's parameter order:
 
 | ID | Label | Range | Default | Control | Notes |
 |---|---|---|---|---|---|
@@ -93,7 +93,7 @@ The layout was measured on the screenshot (C4); the next section gives the measu
   61.3 +- 2.3, cap 44. The knob centres were measured on the captures (Threshold: (320.65, 333.35)). Cast shadows: the
   panel darkened by 0.35 to 0.42 under a disc offset (5 to 8, 16 to 25) px. `tools/fit_hybrid_knobs.py` measures the
   shading on the captures and reports it; Flatwater Comp's knobs are drawn in Flatwater's own dark look on these
-  measured sizes (`Source/common/FwHybridUI.cpp`), with no fitted data.
+  measured sizes (`shared/ui/HybridUI.cpp`), with no fitted data.
 - Scales: ticks every 14 degrees, small knobs r 33.8 ... 40 (1.7 px), Ratio / Mix r 56.2 ... 64.3, Threshold 19 ticks
   r 72.2 ... 80.4. Labels Arial Black 10.75 px stretched 1.2x; numbers Arial Bold 8.6 px; each placed at its measured
   ink centre. The Threshold legend (0, THRESHOLD, -48): Arial Black 12.6 px, one glyph per measured angle at r 85

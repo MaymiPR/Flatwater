@@ -1,5 +1,5 @@
 """Flatwater Bass Lift: joint time-domain fit of fwbasslift_model.generated7 over the fitting sets at Freq 40/80/160/256
-(fwbasslift_fitdata.py); writes build/multiF.json, the constants used in plugins/FwBassLift/FwBassLiftDsp.h."""
+(fwbasslift_fitdata.py); writes build/multiF.json, the constants used in plugins/FwBassLift/Source/dsp/Engine.h."""
 import sys, json, os; HERE=os.path.dirname(os.path.abspath(__file__)); ROOT=os.path.dirname(HERE); sys.path.insert(0, HERE)
 import numpy as np, fwbasslift_model as M
 from scipy.optimize import least_squares

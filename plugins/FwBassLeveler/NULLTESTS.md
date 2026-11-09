@@ -1,7 +1,7 @@
 # Flatwater Bass Leveler: null test against the reference
 
 Residuals of Flatwater Bass Leveler's output against the reference's, over the loud parts, in dB (lower is better). The plug-in
-runs through its own processor offline (`FwBassLevelerRender`; the built VST3 gives the same samples); the reference
+runs through its own processor offline (`BlRender`; the built VST3 gives the same samples); the reference
 through its VST3 at 48 kHz unless stated. How the model was found: [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Spill, the Artifacts gate, the weighting and the release depths

@@ -1,5 +1,5 @@
 """Writes the trained Flatwater Bass Lift gain network (build/gainnet/gainnet_h<H>.pt, from nulltest/train_gain.py) to
-plugins/FwBassLift/FwBassLiftGainNet.h as constant arrays. Run in the PyTorch environment.
+plugins/FwBassLift/Source/dsp/GainNet.h as constant arrays. Run in the PyTorch environment.
 
     python tools/export_gainnet.py <hidden>
 """
@@ -17,7 +17,7 @@ def arr(name, t):
     return "inline constexpr float %s[%d] = {\n    %s\n};\n" % (name, len(v), body)
 
 
-out = os.path.join(HERE, "..", "plugins", "FwBassLift", "FwBassLiftGainNet.h")
+out = os.path.join(HERE, "..", "plugins", "FwBassLift", "Source", "dsp", "GainNet.h")
 with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned gain control of the Flatwater Bass Lift generated path (GRU, %d hidden units), trained on renders of the\n"
             "// reference by nulltest/train_gain.py and written by tools/export_gainnet.py. Do not edit by hand.\n"

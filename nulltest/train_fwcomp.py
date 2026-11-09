@@ -55,7 +55,7 @@ FLAT_STEPS, FLAT_DB, FLAT_RAMP = 60, 0.05, 0.15
 
 def flat_guard(F):
     """0 while the target reduction stayed within FLAT_DB over the last 60 steps (20 ms): a steady tone, which the
-    analytical model nulls already; full from FLAT_DB + FLAT_RAMP (FwCompDsp.h GainNet uses the same rule)"""
+    analytical model nulls already; full from FLAT_DB + FLAT_RAMP (plugins/FwComp/Source/dsp/Engine.h GainNet uses the same rule)"""
     t = F[..., 1] * 24.0
     pad = torch.cat([t[:, :1].expand(-1, FLAT_STEPS - 1), t], 1)
     w = pad.unfold(1, FLAT_STEPS, 1)

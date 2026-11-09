@@ -16,7 +16,7 @@ case tables are in [NULLTESTS.md](NULLTESTS.md) and [NULLTESTS-presets.md](NULLT
 | Noise | the Noise setting does take in the state; it is off in every measurement but its own and in every null (two noise sources cannot null) |
 | Determinism | two renders of the same input null to -200 dB, the reverb, delays and doubler included, so every stage can be nulled |
 | Interactions | scored against the stages acting independently: the product of their responses for the linear stages, the sum of their contributions for the wet stages |
-| Nulls | `nulltest/nulltest_fwvocalchain.py`: our processor through `tools/FwVocalChainRender`, the reference through `cv_ref.py`; held-out vocal parts of the corpus (`nulltest/vocal_corpus.py`) at -16 dBFS peak for the linear stages (under the dynamics' thresholds) and at -6 dBFS peaks after 6 s of silence for the whole chain |
+| Nulls | `nulltest/nulltest_fwvocalchain.py`: our processor through `plugins/FwVocalChain/tools/ChRender`, the reference through `cv_ref.py`; held-out vocal parts of the corpus (`nulltest/vocal_corpus.py`) at -16 dBFS peak for the linear stages (under the dynamics' thresholds) and at -6 dBFS peaks after 6 s of silence for the whole chain |
 
 ## 1. Input: Sensitivity and Balance
 
@@ -179,7 +179,7 @@ de-esser's gain held). The procedure is [docs/learned-blocks.md](../../docs/lear
 | Network | inputs per 4 samples (12 kHz): the detector level, the compressor's and the limiter's reduction, the input's peak and power, and the fader position; hidden 32; the correction bounded to +-2 dB, each sample taking the last two finished steps' values (causal) |
 | Training | `prep_vocalchain_compress.py`, `train_vocalchain_compress.py`: supervised on the gain first, then on the null plus 3 x the amount any piece gets worse (each null floored at -50 dB); on the null alone Push learns nothing; net A is that recipe; net B the same with 48 examples at every step; net C floors the loss at -40, weighs the no-worse term 10 x and keeps the checkpoint with the best held-out mean plus 3 x its regressions (`SEL`); net D is net A's recipe (SUP=2000 FLOOR=-50 LAMBDA=3, 8000 steps) on Wall's added examples, checkpoint at step 7250 (held-out mean -30.1 dB) |
 | Shipped | two nets per colour, their corrections averaged: Push and Spank A + C, Wall B + D |
-| Export | `tools/export_vocalchainnet.py` to `plugins/FwVocalChain/FwVocalChainCompressNet.h`; `CompressNet` (`FwVocalChainDsp.h`) runs the nets per sample in the compressor's loop on the 12 kHz clock |
+| Export | `tools/export_vocalchainnet.py` to `plugins/FwVocalChain/Source/dsp/CompressNet.h`; `CompressNet` (`plugins/FwVocalChain/Source/dsp/Engine.h`) runs the nets per sample in the compressor's loop on the 12 kHz clock |
 | C++ equals PyTorch | `check_vocalchain_compressnet.py`, full float32, a held-out vocal at five fader positions per colour: -107 ... -133 dB (Wall -112 ... -133) |
 | Validation set | `render_trainset_vocalchain.py val`: parts 24 ... 31 from 8 s to 16 s, which neither training nor checkpoint choice saw, at peaks -12, -6 and 0 dBFS, 24 per step; each null floored at -40 dB |
 | Unseen vocals | parts 32 ... 35, Compress alone, the plug-in's model in Python, median and worst of 4 vocals at 0 dBFS and +6 ... +10: Push -24.3 ... -24.6 to -29.8 ... -29.9, Spank -22.0 ... -23.5 to -26.7 ... -27.8, Wall -22.1 ... -23.2 to -28.4 ... -29.3 (net A alone: -28.8 ... -29.7, -27.0 ... -28.0, -27.8 ... -29.3); net B's worst cases, Push -2 at -6 dBFS (+8.2 dB) and Spank -2 at -12 dBFS (+6.4), are +0.2 and +1.2 with the pairs; worse by more than 1 dB where it can be heard: Wall 0 at 0 dBFS, one vocal +1.5 (median -26.1 to -29.0), Spank -2 at -12 dBFS +1.2 (median -35.3 to -35.9); Push -10 ... -6 at -12 and -6 dBFS lose up to 6 dB from -60 ... -69 dB, inaudible |
@@ -281,12 +281,12 @@ The reference is the original named in Setup, run from a licensed install.
   vocal parts) at its fader positions, colours, tempos and sample rates.
 - Fitted or learned from the reference's output: the EQ curves and their tables, the compressor, the de-essers, the
   delays and the doubler identified from those renders; two small recurrent nets per Compress colour (our own
-  weights, `plugins/FwVocalChain/FwVocalChainCompressNet.h`) trained on captures of its output (Learned blocks).
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+  weights, `plugins/FwVocalChain/Source/dsp/CompressNet.h`) trained on captures of its output (Learned blocks).
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the
   preset files themselves are not copied.
-- Shipped on recorded approval: the reverb's measured impulse responses (`plugins/FwVocalChain/ir/*.bin`), after the
+- Shipped on recorded approval: the reverb's measured impulse responses (`plugins/FwVocalChain/resources/ir/*.bin`), after the
   model-first attempt (allowed in `.provenance`).
 - None of the original's code, artwork, preset files, fonts or other files ships with Flatwater Vocal Chain.

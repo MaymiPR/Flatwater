@@ -5,7 +5,7 @@
 # channel, as a smooth function of the angle: a constant, three harmonics, two lobes around the highlight direction and
 # the flute harmonic (the 10 lobes of the fluted rim). The fluted edge of the large knobs is fitted as a radius that
 # varies with the angle; the cast shadow as a darkening of the panel. Only these smooth fits are kept: no pixels of
-# the reference are stored. The pointer fin is drawn separately (see FwHybridUI.cpp).
+# the reference are stored. The pointer fin is drawn separately (see shared/ui/HybridUI.cpp).
 #
 #   python tools/fit_hybrid_knobs.py      (numpy, Pillow; run from the repository root)
 import math, os, re
@@ -254,7 +254,7 @@ def main():
              fit_kind('Large', large, A, 86.07, 218.47, 53.9, 44.0, True, 22, 39.0),
              fit_kind('Huge', huge, B, 320.65, 333.35, 73.0, 59.5, True, 22, 55.0)]
     kinds += hdelay_kinds()
-    # a report only: the knobs are drawn in code in Flatwater's look (FwHybridUI.cpp); the measured radii and centres
+    # a report only: the knobs are drawn in code in Flatwater's look (shared/ui/HybridUI.cpp); the measured radii and centres
     # printed here are what the editors use
     for k in kinds: print(k['name'], 'edge', np.round(k['edge'], 2), 'emin %.2f' % k['emin'], 'shadow', np.round(k['shadow'], 2))
 

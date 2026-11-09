@@ -1,4 +1,4 @@
-"""Writes plugins/FwVocalLeveler/FwVocalLevelerFit.h: the riding model's constants, the reference's hidden values
+"""Writes plugins/FwVocalLeveler/Source/dsp/Fit.h: the riding model's constants, the reference's hidden values
 (nulltest/vrmodel.py DEFAULTS), or with --fit the local fit (measurements/fwvocalleveler/riding_fit.json, written by
 nulltest/vr_fit.py).
 
@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(HERE, '..', 'nulltest'))
 import vrmodel as M
 
 FIT = os.path.join(HERE, '..', 'measurements', 'fwvocalleveler', 'riding_fit.json')
-OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalLeveler', 'FwVocalLevelerFit.h')
+OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalLeveler', 'Source', 'dsp', 'Fit.h')
 p = dict(M.DEFAULTS)
 src = "the reference's hidden values (nulltest/vrmodel.py DEFAULTS)"
 if '--fit' in sys.argv:

@@ -1,6 +1,6 @@
 """Flatwater Pitch Bend's 40 factory presets against the reference's own: the reference with its preset loaded into its
 state (the stored values, hidden ones included, and its two shape tables), Flatwater Pitch Bend with its factory preset
-(FwPitchBendRender preset=k), both stereo at 48 kHz and 120 bpm from song position 0, on a sung and a spoken take of
+(PbRender preset=k), both stereo at 48 kHz and 120 bpm from song position 0, on a sung and a spoken take of
 the vocal corpus. A shifter that is not a copy cannot null sample by sample, so each preset is compared by what the
 ear hears (after the first 0.1 s):
   level   the output's rms, ours minus the reference's (dB), target within 1.5
@@ -10,7 +10,7 @@ ear hears (after the first 0.1 s):
   tone    the long-term spectra (1/6 octave, 100 Hz .. 8 kHz, levels matched): the rms difference (dB), target 3
   null    the residual (dB), for the record
 A preset whose LFO is one of ours in place of a drawn one ("shape substituted") is run twice: as it ships, and with
-the reference's own table loaded into ours (FwPitchBendRender table=), which tells the shape apart from the rest.
+the reference's own table loaded into ours (PbRender table=), which tells the shape apart from the rest.
 Writes plugins/FwPitchBend/NULLTESTS-presets.md and measurements/fwpitchbend/presets_null.json.
 
     python -I -B null_pitchbend_presets.py [our preset name ...]
@@ -32,7 +32,7 @@ BPM = 120
 SKIP = FS // 10
 OUT_MD = os.path.join(HERE, '..', 'plugins', 'FwPitchBend', 'NULLTESTS-presets.md')
 OUT_JSON = os.path.join(HERE, '..', 'measurements', 'fwpitchbend', 'presets_null.json')
-HEADER = os.path.join(HERE, '..', 'plugins', 'FwPitchBend', 'FwPitchBendPresets.h')
+HEADER = os.path.join(HERE, '..', 'plugins', 'FwPitchBend', 'Source', 'Presets.h')
 TARGETS = dict(level=1.5, pitch=15.0, gross=0.10, tone=3.0)
 
 

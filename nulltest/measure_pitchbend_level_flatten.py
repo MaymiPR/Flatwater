@@ -1,6 +1,6 @@
 """Flatwater Pitch Bend, Phase 3: the shifter's voiced level where the level battery (measure_pitchbend_shifter.py level)
 did not reach: under Flatten (the output forced onto one note, Pitch on top) and at Pitch past +-12 semitones (reached
-through modulation). The reference against ours (tools/FwPitchBendShifterRender), output rms minus input rms from
+through modulation). The reference against ours (plugins/FwPitchBend/tools/PbShifterRender), output rms minus input rms from
 0.5 s on, Mix 100, the reference's Mono component.
 
     python -I -B measure_pitchbend_level_flatten.py [grid | ours | modpath]

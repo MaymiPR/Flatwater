@@ -1,6 +1,6 @@
 """Refreshes Flatwater Comp's side of an existing training set (render_trainset_fwcomp.py) after a change to its analytical
 model: each case keeps its input, settings and the reference's render (yH); Flatwater Comp's render (yW) and traced
-features are made again with the current FwCompRender (learned=0). Writes <dir>_v2 beside each folder; the reference
+features are made again with the current CoRender (learned=0). Writes <dir>_v2 beside each folder; the reference
 is not hosted again.
 
     python -I refresh_trainset_fwcomp.py data data2 data3 data4 test      -> build/fwcompnet/<dir>_v2/case_NNNN.npz

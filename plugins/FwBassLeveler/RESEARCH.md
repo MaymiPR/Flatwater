@@ -40,7 +40,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (B2, B3), in preset-array order
 
-Flatwater Bass Leveler's parameters (`FwBassLevelerProcessor.cpp`), in the order the original stores them in its
+Flatwater Bass Leveler's parameters (`plugins/FwBassLeveler/Source/PluginProcessor.cpp`), in the order the original stores them in its
 presets. The meters, the Rider fader, the Effective Range and the Idle value in dB are display only, not parameters.
 
 | ID | Label | Range, step | Default | Notes |

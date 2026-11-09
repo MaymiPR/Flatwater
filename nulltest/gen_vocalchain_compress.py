@@ -1,4 +1,4 @@
-"""Writes plugins/FwVocalChain/FwVocalChainCompress.h from Phase 4's Compress fits: per colour its linear filter per rate
+"""Writes plugins/FwVocalChain/Source/dsp/Compress.h from Phase 4's Compress fits: per colour its linear filter per rate
 (reference/fwvocalchain/meas/compress_linear.json, the reference's low-level response over the clear chain, fitted
 exactly) and the dynamics' parameters per fader step (compress_params.json from fit_vocalchain_compress.py; a step not
 fitted yet takes its nearest fitted neighbour's).
@@ -12,7 +12,7 @@ from scipy.signal import tf2sos
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MEAS = os.path.join(HERE, '..', 'reference', 'fwvocalchain', 'meas')
-OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'FwVocalChainCompress.h')
+OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'Source', 'dsp', 'Compress.h')
 RATES = (44100, 48000, 88200, 96000)
 NP = 41                                                            # (comp.c's parameters; older fits are padded with zeros)
 

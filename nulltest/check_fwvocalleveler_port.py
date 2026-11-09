@@ -1,5 +1,5 @@
-"""The C++ ride (Flatwater Vocal Leveler's processor, run by FwVocalLevelerRender) against the fitting model (vrmodel.c with the values in
-plugins/FwVocalLeveler/FwVocalLevelerFit.h, as tools/vr_export.py wrote them): the gains should agree to float precision.
+"""The C++ ride (Flatwater Vocal Leveler's processor, run by VlRender) against the fitting model (vrmodel.c with the values in
+plugins/FwVocalLeveler/Source/dsp/Fit.h, as tools/vr_export.py wrote them): the gains should agree to float precision.
 
     python -I check_fwvocalleveler_port.py
 """
@@ -11,8 +11,8 @@ import vr_eval as E
 import vrmodel as M
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalLeveler', 'FwVocalLevelerRender_artefacts', 'Release', 'FwVocalLevelerRender.exe'))
-FIT_H = os.path.join(HERE, '..', 'plugins', 'FwVocalLeveler', 'FwVocalLevelerFit.h')
+EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalLeveler', 'VlRender_artefacts', 'Release', 'VlRender.exe'))
+FIT_H = os.path.join(HERE, '..', 'plugins', 'FwVocalLeveler', 'Source', 'dsp', 'Fit.h')
 CPP = dict(c='c', bias='bias', followerAttackSlow='fatt_s', followerAttackFast='fatt_f', followerRelease='frel', followerHold='fhold',
            followerPower='fpow', vadAttack='vatt', vadRelease='vrel', vk='vk', rideAttackSlow='ratt_s',
            rideAttackFast='ratt_f', rideRelease='rrel', ridePower='rpow', parkTime='park', parkHoldSlow='phold_s',

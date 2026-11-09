@@ -1,6 +1,6 @@
 {
  "what": "voiced level under Flatten and at Pitch past +-12: output rms minus input rms (dB) from 0.5 s on, Mix 100; the reference against ours. shift_st: the reference output f0 over the input f0 (YIN medians). Pitch past +-12 on the reference: the Pitch control at base_st and the rest through M1 (a constant step sequence on Pitch); judged against the base at +-12 (the reference keys its level on the control, see modpath)",
- "renderer": "FwPitchBendShifterRender.exe",
+ "renderer": "PbShifterRender.exe",
  "rows": [
   {
    "material": "vowel u 110 Hz",

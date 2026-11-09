@@ -3,7 +3,7 @@
 de-esser) per colour and fader step, and the ceiling a gain correction could reach: the model's output scaled per
 block by its least-squares gain against the reference (2 ms and 10 ms blocks; an estimate, since a correction inside
 the plug-in acts before the filters and the de-esser). Positions between the steps (the frac_ set) take the plug-in's
-parameters there: linear between the two steps, or the nearer step where their structures differ (FwVocalChainDsp.cpp).
+parameters there: linear between the two steps, or the nearer step where their structures differ (plugins/FwVocalChain/Source/dsp/Engine.cpp).
 
     python -I baseline_vocalchain_compress.py          (writes reference/fwvocalchain/train/baseline.json)
 """

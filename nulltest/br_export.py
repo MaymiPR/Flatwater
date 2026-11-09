@@ -1,5 +1,5 @@
 """Writes the note detector's fitted constants (measurements/fwbassleveler/detector_fit.json, from br_fit.py) into
-plugins/FwBassLeveler/FwBassLevelerRide.h, so the plug-in rides as the fitted model does.
+plugins/FwBassLeveler/Source/dsp/Ride.h, so the plug-in rides as the fitted model does.
 
     python -I br_export.py
 """
@@ -7,7 +7,7 @@ import os, re, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIT = os.path.join(HERE, '..', 'measurements', 'fwbassleveler', 'detector_fit.json')
-HDR = os.path.join(HERE, '..', 'plugins', 'FwBassLeveler', 'FwBassLevelerRide.h')
+HDR = os.path.join(HERE, '..', 'plugins', 'FwBassLeveler', 'Source', 'dsp', 'Ride.h')
 
 d = json.load(open(FIT))
 g = d['globals']

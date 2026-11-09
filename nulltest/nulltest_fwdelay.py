@@ -1,4 +1,4 @@
-"""Null test: Flatwater Delay (offline renderer of the plug-in DSP, tools/FwDelayRender) against the reference H-Delay
+"""Null test: Flatwater Delay (offline renderer of the plug-in DSP, plugins/FwDelay/tools/DeRender) against the reference H-Delay
 (nulltest/hdelay.py), residual in dB. Settings by refdelay.py's short names; both get the same silent pre-roll (the
 reference starts at 375 ms and glides to the settings during it; its first block runs at the default Analog
 Mod2, whose noise enters the delay line: 3 s let it die away). Analog Off unless a case names a mode.
@@ -15,10 +15,10 @@ import refdelay as H
 import nulltest_fwcomp as NC
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get("FWDELAY_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwDelay", "Release", "FwDelayRender.exe"))
+EXE = os.environ.get("FWDELAY_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwDelay", "Release", "DeRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
-EXTRA = []                                               # more FwDelayRender arguments (fitting)
-_T = 1.0 - 3.0e-9                                        # the reference's triplets, a hair short (as FwDelayProcessor.cpp)
+EXTRA = []                                               # more DeRender arguments (fitting)
+_T = 1.0 - 3.0e-9                                        # the reference's triplets, a hair short (as plugins/FwDelay/Source/PluginProcessor.cpp)
 BEATS = [_T / 24, 1 / 16, 3 / 32, _T / 12, 1 / 8, 3 / 16, _T / 6, 1 / 4, 3 / 8, _T / 3, 1 / 2, 3 / 4, 2 * _T / 3, 1, 1.5, 4 * _T / 3, 2, 3, 4, 8]
 
 
@@ -26,7 +26,7 @@ EXACT = False                                            # values as a preset gi
 
 
 def rate_res(v):
-    """Rate at the reference's resolution: three significant digits, at least 0.01 (as FwDelayProcessor.cpp)"""
+    """Rate at the reference's resolution: three significant digits, at least 0.01 (as plugins/FwDelay/Source/PluginProcessor.cpp)"""
     if EXACT: return v
     step = 10.0 if v >= 1000 else 1.0 if v >= 100 else 0.1 if v >= 10 else 0.01
     return round(v / step) * step

@@ -1,7 +1,7 @@
 """Flatwater Vocal Chain's 43 factory presets against the reference's own: the reference set from its preset file (the
 faders, colours and Balance it stores, set as host parameters, the only way they take: its state reads the colours back
 as 0; Sensitivity and Output stay at 0, as the reference keeps them when a preset loads), Flatwater Vocal Chain loading
-its factory preset (FwVocalChainRender preset=k). Three held-out vocal parts at -6 dBFS peaks after 6 s of silence (the
+its factory preset (ChRender preset=k). Three held-out vocal parts at -6 dBFS peaks after 6 s of silence (the
 delays settled, the doubler started in step), 48 kHz; each preset also with the Pitch stage clear in both. Writes
 measurements/fwvocalchain/presets.json and plugins/FwVocalChain/NULLTESTS-presets.md.
 

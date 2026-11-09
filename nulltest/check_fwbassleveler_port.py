@@ -1,4 +1,4 @@
-"""The C++ ride (Flatwater Bass Leveler's processor, run by FwBassLevelerRender) against the fitting model (brmodel.c with the fit in
+"""The C++ ride (Flatwater Bass Leveler's processor, run by BlRender) against the fitting model (brmodel.c with the fit in
 measurements/fwbassleveler/detector_fit.json): the same material, the gain applied by each, sample by sample. They are the
 same model, so they should agree to rounding.
 

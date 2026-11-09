@@ -14,7 +14,7 @@ own hidden default or preset values; none is fitted. The data is in [measurement
 | Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `measure_vocalleveler.py` is named in the tables |
 | Corpus | `nulltest/vocal_corpus.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
 | Reference renders | `nulltest/vr_ref.py`: the probes and the 36 parts at ten settings each, 620 renders |
-| Model | `nulltest/vrmodel.c`, identical line for line to `plugins/FwVocalLeveler/FwVocalLevelerRide.h`; `nulltest/vr_fit.py report` scores it over the cached renders |
+| Model | `nulltest/vrmodel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `nulltest/vr_fit.py report` scores it over the cached renders |
 
 ## 1. The level read
 
@@ -99,9 +99,9 @@ The reference is the original named in Setup, run from a licensed install.
 - Measured: level steps, tones and held-out vocal parts through the reference's VST3 in a host, its riding read from
   its output.
 - Fitted or learned from the reference's output: the weighted level read, the vocal detector, the hold and the glide
-  to the Idle value, identified on those measurements (`plugins/FwVocalLeveler/FwVocalLevelerFit.h`); every constant
+  to the Idle value, identified on those measurements (`plugins/FwVocalLeveler/Source/dsp/Fit.h`); every constant
   is a hidden value of the reference confirmed by the measurements, none a fit.
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

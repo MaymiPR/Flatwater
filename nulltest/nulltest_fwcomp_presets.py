@@ -12,7 +12,7 @@ import nulltest_fwvocalcomp as NV
 import refhost as R
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PRESETS = os.path.join(HERE, '..', 'plugins', 'FwComp', 'FwCompPresets.h')
+PRESETS = os.path.join(HERE, '..', 'plugins', 'FwComp', 'Source', 'Presets.h')
 NOTES = ["1/64T", "1/64", "1/64D", "1/32T", "1/32", "1/32D", "1/16T", "1/16", "1/16D", "1/8T", "1/8", "1/8D", "1/4T", "1/4",
          "1/4D", "1/2T", "1/2", "1/2D", "1B", "2B"]
 BEATS = [1 / 24, 1 / 16, 3 / 32, 1 / 12, 1 / 8, 3 / 16, 1 / 6, 1 / 4, 3 / 8, 1 / 3, 1 / 2, 3 / 4, 2 / 3, 1, 1.5, 4 / 3, 2, 3, 4, 8]

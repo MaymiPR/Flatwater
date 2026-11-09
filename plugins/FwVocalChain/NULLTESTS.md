@@ -2,7 +2,7 @@
 
 Residuals of Flatwater Vocal Chain against the reference (its Stereo component), lower is better: the energy of the
 difference under the reference output's, in dB. Written by `nulltest/nulltest_fwvocalchain.py report` from
-`measurements/fwvocalchain/nulls.json`; our processor through `FwVocalChainRender`, the reference through
+`measurements/fwvocalchain/nulls.json`; our processor through `ChRender`, the reference through
 `nulltest/cv_ref.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the
 corpus (`nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).
 

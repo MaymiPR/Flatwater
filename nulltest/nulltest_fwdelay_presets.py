@@ -17,8 +17,8 @@ ROOT = os.path.join(HERE, '..')
 
 
 def presets():
-    """(group, name, {id: value}) from plugins/FwDelay/FwDelayPresets.h (the plug-in's own table)"""
-    src = open(os.path.join(ROOT, 'plugins', 'FwDelay', 'FwDelayPresets.h'), encoding='utf-8').read()
+    """(group, name, {id: value}) from plugins/FwDelay/Source/Presets.h (the plug-in's own table)"""
+    src = open(os.path.join(ROOT, 'plugins', 'FwDelay', 'Source', 'Presets.h'), encoding='utf-8').read()
     out = []
     for g, n, body in re.findall(r'\{ "([^"]+)", "([^"]+)", \{ (.*?) \} \},', src):
         out.append((g, n, {k: float(v) for k, v in re.findall(r'\{ "(\w+)", ([-0-9.e]+)f \}', body)}))
@@ -26,7 +26,7 @@ def presets():
 
 
 def delay_upper():
-    src = open(os.path.join(ROOT, 'plugins', 'FwDelay', 'FwDelayProcessor.cpp'), encoding='utf-8').read()
+    src = open(os.path.join(ROOT, 'plugins', 'FwDelay', 'Source', 'PluginProcessor.cpp'), encoding='utf-8').read()
     body = src[src.index('kDelayUpper[101] = {') + 20:]
     return [float(v) for v in body[:body.index('}')].replace('\n', ' ').split(',') if v.strip()]
 

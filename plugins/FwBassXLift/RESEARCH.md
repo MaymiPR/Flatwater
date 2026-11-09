@@ -43,7 +43,7 @@ measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (M2, M3), in preset-array order
 
-Flatwater BassX Lift's parameters (IDs from `FwBassXLiftProcessor.h`), in the original's parameter order:
+Flatwater BassX Lift's parameters (IDs from `plugins/FwBassXLift/Source/PluginProcessor.h`), in the original's parameter order:
 
 | ID | Label | Range | Default | Control | Notes |
 |---|---|---|---|---|---|
@@ -72,7 +72,7 @@ save, menu; no Skins button). The band graph (dB grid +6 ... -24, frequency mark
 upper left, with the Frequency slider under it; the Ratio, Response and Decay knobs (values under them) and the
 High-pass popup sit below; the Input, Original Bass and Harmonics faders (values under them), the two output meters
 (peak text above, clip light) and the Monitor buttons fill the right. The positions are measured on the screenshot
-(M4). The editor uses widgets beyond the suite's first widget kit (`Source/common/FwRenUI.h`): the band graph, vertical faders, rotary knobs,
+(M4). The editor uses widgets beyond the suite's first widget kit (`shared/ui/RenUI.h`): the band graph, vertical faders, rotary knobs,
 a popup selector, radio buttons, and a toolbar without Skins.
 
 ## Presets (M2)

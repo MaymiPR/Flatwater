@@ -1,7 +1,7 @@
 """Measures the original vocal chain editor (its skin, extracted into the git-ignored reference/fwvocalchain/skin/)
 and prints a report; it writes nothing into plugins/. The report gives the measured tokens the editor's layout uses
 (control and label positions, screw places, scale marks, the grille's hole pitch, the Balance knob's pointer angles)
-and how well compact models describe each part. FwVocalChainEditor.cpp draws every part itself, in Flatwater's theme,
+and how well compact models describe each part. plugins/FwVocalChain/Source/PluginEditor.cpp draws every part itself, in Flatwater's theme,
 from a few measured positions and sizes (the methods of tools/fit_vocalleveler_parts.py):
 
 - the panels (the 1x background, 738 x 474 with the toolbar's strip): a colour per row times a factor per column times

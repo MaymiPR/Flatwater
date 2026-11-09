@@ -13,7 +13,7 @@ import numpy as np
 import refhost as R
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get("FWVOCALCOMP_RENDER", os.path.join(HERE, "..", "build", "Release", "FwVocalCompRender.exe"))
+EXE = os.environ.get("FWVOCALCOMP_RENDER", os.path.join(HERE, "..", "build", "Release", "VcRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
 FS = 48000
 

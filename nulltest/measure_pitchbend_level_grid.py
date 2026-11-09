@@ -5,7 +5,7 @@ on the factory presets' two takes.
                                                          host parameters) over vowels and phrases; writes
                                                          measurements/fwpitchbend/shifter/levelgrid.json
     python -I -B measure_pitchbend_level_grid.py fit     the fit per setting (a straight line in the input's ln kurtosis)
-                                                         and the C++ tables FwPitchBendShifter.cpp carries (printed)
+                                                         and the C++ tables plugins/FwPitchBend/Source/dsp/Shifter.cpp carries (printed)
     python -I -B measure_pitchbend_level_grid.py takes   ours (FW_SHIFTER_RENDER, as score_pitchbend_shifter.py) against
                                                          the reference at fixed settings on the presets' sung and spoken
                                                          takes, mono: level, tone and the tone per band; writes the

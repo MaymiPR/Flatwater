@@ -1,6 +1,6 @@
 """Null test: Flatwater Bass Lift (offline renderer of the plug-in DSP) against the reference RBass render, residual in dB.
 
-    python -I nulltest_fwbasslift.py [--quick] [--out report.md] [key=value ...]     (keys go to FwBassLiftRender)
+    python -I nulltest_fwbasslift.py [--quick] [--out report.md] [key=value ...]     (keys go to BfRender)
 
 For every signal x setting both render the same stereo input at 48 kHz. The residual is
 20 log10( rms(ours - reference) / rms(reference) ) after the first 0.2 s, for the whole output and, separately, for
@@ -15,7 +15,7 @@ from scipy.signal import butter, sosfilt
 import refhost as R
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get("FWBASSLIFT_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwBassLift", "Release", "FwBassLiftRender.exe"))
+EXE = os.environ.get("FWBASSLIFT_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwBassLift", "Release", "BfRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
 FS = 48000
 

@@ -1,5 +1,5 @@
 """Writes the trained Flatwater Vocal Comp slow-path network (build/fwvocalcompnet/<name>.pt, from nulltest/train_fwvocalcomp.py with
-BASE=analytical) to plugins/FwVocalComp/FwVocalCompNet.h as constant arrays. Run in the PyTorch environment.
+BASE=analytical) to plugins/FwVocalComp/Source/dsp/Net.h as constant arrays. Run in the PyTorch environment.
 
     python tools/export_fwvocalcompnet.py build/fwvocalcompnet/fwvocalcompnet_h48r5_last.pt
 """
@@ -17,11 +17,11 @@ def arr(name, t):
     return "inline constexpr float %s[%d] = {\n    %s\n};\n" % (name, len(v), body)
 
 
-out = os.path.join(HERE, "..", "plugins", "FwVocalComp", "FwVocalCompNet.h")
+out = os.path.join(HERE, "..", "plugins", "FwVocalComp", "Source", "dsp", "Net.h")
 with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned correction of the Flatwater Vocal Comp slow path (GRU, %d hidden units), trained on renders of the reference by\n"
             "// nulltest/train_fwvocalcomp.py and written by tools/export_fwvocalcompnet.py from %s. Do not edit by hand.\n"
-            "// Inputs per 12 kHz step: see fwvocalcomp::SlowNet in FwVocalCompDsp.h. Output: ln correction of the slow ratio.\n"
+            "// Inputs per 12 kHz step: see fwvocalcomp::SlowNet in Engine.h. Output: ln correction of the slow ratio.\n"
             "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace fwvocalcomp::slownet\n{\n" % (H, os.path.basename(sys.argv[1])))
     f.write("inline constexpr int hidden = %d, inputs = %d;\n" % (H, I))
     f.write(arr("Wih", sd["gru.weight_ih_l0"]))

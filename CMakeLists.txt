@@ -5,7 +5,7 @@ project(Flatwater VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # The same floating-point results on every platform: GCC and Clang may fuse a multiply and an add (Apple's Clang does
-# by default on arm64), MSVC does not; Source/common/FwMath.h relies on unfused arithmetic.
+# by default on arm64), MSVC does not; shared/dsp/Math.h relies on unfused arithmetic.
 add_compile_options($<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-ffp-contract=off>)
 
 # Windows: static C++ runtime, so the plugins load on any PC without a redistributable.
@@ -39,22 +39,6 @@ if(FW_CLAP)
         GIT_SUBMODULES_RECURSE ON)
     FetchContent_MakeAvailable(clap_juce_extensions)
 endif()
-
-# Shared code (toolbar, look) used by every plugin.
-add_library(FwCommon STATIC
-    Source/common/FwToolbar.cpp
-    Source/common/FwRenUI.cpp
-    Source/common/FwFlatUI.cpp
-    Source/common/FwHybridUI.cpp)
-target_include_directories(FwCommon PUBLIC Source/common)
-set_target_properties(FwCommon PROPERTIES POSITION_INDEPENDENT_CODE ON)   # linked into shared plugins (Linux)
-target_compile_definitions(FwCommon PUBLIC
-    JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0)
-target_link_libraries(FwCommon PUBLIC
-    juce::juce_audio_processors
-    juce::juce_gui_basics
-    juce::juce_dsp
-    PRIVATE juce::juce_recommended_config_flags)
 
 # fw_add_plugin(<Target> <Product name> <4-char code> <clap id> [CATEGORIES <VST3 categories>] SOURCES ...)
 function(fw_add_plugin target product code clapid)
@@ -99,37 +83,28 @@ function(fw_add_plugin target product code clapid)
             "${CMAKE_BINARY_DIR}/plugins/${product}.vst3")
 endfunction()
 
+# fw_tool_output(<Target>): a plain executable (a renderer without JUCE) lands where JUCE puts its console apps,
+# build/<Target>_artefacts/<Config>, so every renderer is found the same way.
+function(fw_tool_output target)
+    set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${target}_artefacts/$<CONFIG>")
+endfunction()
+
 enable_testing()
 # ci_targets: what CI builds on every system (ci.yml). Each plug-in adds its VST3, its unit tests and its renderer,
 # and on Windows its snapshot tool, so the workflow builds one target and a new plug-in needs no workflow edit.
 add_custom_target(ci_targets)
-add_subdirectory(plugins/FwVocalComp)
-add_subdirectory(plugins/FwBassLift)
-add_subdirectory(plugins/FwBassXLift)
-add_subdirectory(plugins/FwComp)
-add_subdirectory(plugins/FwDelay)
-add_subdirectory(plugins/FwBassLeveler)
-add_subdirectory(plugins/FwVocalLeveler)
-add_subdirectory(plugins/FwVocalChain)
-add_subdirectory(plugins/FwPitchBend)
-
-# Offline renderer of the Flatwater Vocal Comp DSP (null test, tuning). No JUCE needed.
-add_executable(FwVocalCompRender tools/FwVocalCompRender.cpp)
-target_include_directories(FwVocalCompRender PRIVATE plugins/FwVocalComp)
-
-# Unit tests (DSP + processor):  cmake --build build --target FwVocalCompTests, then ctest --test-dir build -C Release
-juce_add_console_app(FwVocalCompTests PRODUCT_NAME "FwVocalCompTests")
-target_sources(FwVocalCompTests PRIVATE
-    tests/FwVocalCompTests.cpp
-    plugins/FwVocalComp/FwVocalCompProcessor.cpp
-    plugins/FwVocalComp/FwVocalCompEditor.cpp)
-target_include_directories(FwVocalCompTests PRIVATE plugins/FwVocalComp)
-target_compile_definitions(FwVocalCompTests PRIVATE
-    JucePlugin_Name="Flatwater Vocal Comp" JucePlugin_IsSynth=0 JucePlugin_WantsMidiInput=0
-    JucePlugin_ProducesMidiOutput=0 JucePlugin_IsMidiEffect=0 JucePlugin_VersionString="0.1.0")
-target_link_libraries(FwVocalCompTests PRIVATE FwCommon juce::juce_recommended_config_flags)
-add_test(NAME FwVocalCompTests COMMAND FwVocalCompTests)
-add_dependencies(ci_targets FwVocalCompTests FwVocalCompRender)
+# The plug-ins. Each is included (not added as a subdirectory), so its build output stays at
+# build/<Target>_artefacts. packaging/plugins.txt lists them for the installers and the release workflow.
+include(shared/shared.cmake)
+include(plugins/FwVocalComp/plugin.cmake)
+include(plugins/FwBassLift/plugin.cmake)
+include(plugins/FwBassXLift/plugin.cmake)
+include(plugins/FwComp/plugin.cmake)
+include(plugins/FwDelay/plugin.cmake)
+include(plugins/FwBassLeveler/plugin.cmake)
+include(plugins/FwVocalLeveler/plugin.cmake)
+include(plugins/FwVocalChain/plugin.cmake)
+include(plugins/FwPitchBend/plugin.cmake)
 
 # Windows-only check that the plugins leave the keyboard to the host (tools/FocusCheck.cpp)
 if(WIN32)
@@ -143,11 +118,6 @@ if(WIN32)
     target_sources(MeterCapture PRIVATE tools/MeterCapture.cpp)
     target_compile_definitions(MeterCapture PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
     target_link_libraries(MeterCapture PRIVATE juce::juce_audio_processors juce::juce_gui_basics juce::juce_recommended_config_flags)
-
-    # renders Flatwater Comp's VU dial alone at a given needle angle, for the comparison with the filmed reference (tools/VuRender.cpp)
-    juce_add_console_app(VuRender PRODUCT_NAME "VuRender")
-    target_sources(VuRender PRIVATE tools/VuRender.cpp)
-    target_link_libraries(VuRender PRIVATE FwCommon juce::juce_recommended_config_flags)
 
     # renders a reference offline with its side-chain bus fed and a host tempo (tools/RefRender.cpp)
     juce_add_console_app(RefRender PRODUCT_NAME "RefRender")
@@ -164,10 +134,10 @@ endif()
 
 # GCC 13 reads a reference into a juce::Span view in JUCE 9.0.5's own code (LookAndFeel_V2's alert window buttons) as
 # dangling: a false alarm (GCC 14 knows span-like views; GCC before 13 has no such warning). Silenced for JUCE's
-# module files only, in every directory whose targets compile them, so Flatwater's own code keeps the warning.
+# module files only (every target is defined in this directory: the plug-ins are included), so Flatwater's own code
+# keeps the warning.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
     file(GLOB fw_juce_module_sources ${juce_SOURCE_DIR}/modules/*/juce_*.cpp)
-    get_property(fw_subdirs DIRECTORY PROPERTY SUBDIRECTORIES)
-    set_source_files_properties(${fw_juce_module_sources} DIRECTORY ${CMAKE_SOURCE_DIR} ${fw_subdirs}
+    set_source_files_properties(${fw_juce_module_sources} DIRECTORY ${CMAKE_SOURCE_DIR}
         PROPERTIES COMPILE_OPTIONS -Wno-dangling-reference)
 endif()

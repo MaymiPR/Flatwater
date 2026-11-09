@@ -1,4 +1,4 @@
-"""Probe: an Analog mode's transfer function at a low level, the reference against FwDelayRender: a multitone of
+"""Probe: an Analog mode's transfer function at a low level, the reference against DeRender: a multitone of
 integer-Hz sines (random phases, each at the given level; Mix 0: the coloured dry signal), measured over whole
 seconds. Saves renders/hd_analog_tf<mode>.npz (f, H_ref, H_ours).
 

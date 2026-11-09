@@ -1,7 +1,7 @@
 """Probe: the delay's trace d(t) under modulation, from the phase of a steady sine through the wet path (Mix 100,
-Feedback 0), the reference against FwDelayRender.
+Feedback 0), the reference against DeRender.
 
-    python -I probe_hd_lfo_trace.py ms depth rate [extra FwDelayRender args]
+    python -I probe_hd_lfo_trace.py ms depth rate [extra DeRender args]
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

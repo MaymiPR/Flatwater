@@ -1,8 +1,8 @@
-# Flatwater Comp: the DSP (tools/FwCompRender: in out channels fs [key=value]: threshold ratio attack release punch mix output limiter analog block learned).
+# Flatwater Comp: the DSP (plugins/FwComp/tools/CoRender: in out channels fs [key=value]: threshold ratio attack release punch mix output limiter analog block learned).
 # Its threshold= collides with the regression's own, so it goes as arg:threshold=. Every case, the learned gain
-# correction included, renders the same bits on every platform (Source/common/FwMath.h, no fused multiply-add),
+# correction included, renders the same bits on every platform (shared/dsp/Math.h, no fused multiply-add),
 # so all run at the default -80 dB.
-@call FwCompRender {in} {out} 2 {fs} {args} block={block}
+@call CoRender {in} {out} 2 {fs} {args} block={block}
 default_mix     signal=mix   learned=0
 t20_r4_mix      signal=mix   arg:threshold=-20 ratio=4 attack=10 release=100 learned=0
 t30_punch_analog_burst signal=burst arg:threshold=-30 ratio=10 attack=1 release=50 punch=50 analog=2 learned=0

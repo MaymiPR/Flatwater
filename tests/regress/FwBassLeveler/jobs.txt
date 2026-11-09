@@ -1,5 +1,5 @@
-# Flatwater Bass Leveler: the plug-in processor (tools/FwBassLevelerRender: in out channels fs [parameter ID=real value]). 1 s.
-@call FwBassLevelerRender {in} {out} 2 {fs} {args} block={block}
+# Flatwater Bass Leveler: the plug-in processor (plugins/FwBassLeveler/tools/BlRender: in out channels fs [parameter ID=real value]). 1 s.
+@call BlRender {in} {out} 2 {fs} {args} block={block}
 default_mix     signal=mix   seconds=1
 target12_fast_burst signal=burst seconds=1 target=-12 response=1
 range_noise     signal=noise seconds=1 rangeMax=6 rangeMin=-6

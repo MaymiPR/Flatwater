@@ -1,6 +1,6 @@
 """Flatwater Vocal Leveler's factory presets against the reference's own (build/ref_presets_VocalRider.json, written by
 nulltest/read_ref_presets_vr.py): the reference with its preset array loaded into its state (refstate.apply_values,
-so it takes the values exactly, hidden ones included), Flatwater Vocal Leveler with its factory preset (FwVocalLevelerRender preset=k),
+so it takes the values exactly, hidden ones included), Flatwater Vocal Leveler with its factory preset (VlRender preset=k),
 both Mono, on three held-out vocal parts; the output residual after the first 0.1 s. Writes
 plugins/FwVocalLeveler/NULLTESTS-presets.md.
 

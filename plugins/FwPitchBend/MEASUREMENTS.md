@@ -218,7 +218,7 @@ Every pair: [NULLTESTS-presets.md](NULLTESTS-presets.md).
 
 The shifter decides on near-equal values (voicing, its marks, which period a grain reads), so a unit in the last place
 from a C library's exp, log or sin could move a grain on another system. Its transcendental functions and the
-modulators' come from `FwPitchBendMath.h` (on `Source/common/FwMath.h`, with sin and cos of its own), which give the
+modulators' come from `plugins/FwPitchBend/Source/dsp/Math.h` (on `shared/dsp/Math.h`, with sin and cos of its own), which give the
 same bits wherever doubles round to nearest. The knobs' exponential tapers (Rate, Warp, Smooth, AM's times, PT's
 Smooth) round their value to 1e-5, so a value set comes back as itself (in double precision a free rate set to 4 Hz
 otherwise comes back a hair over and runs a whole 8-sample tick short, which fails four modulator null cases). The
@@ -252,7 +252,7 @@ The reference is the original named in Setup, run from a licensed install.
 - Fitted from the reference's output: the constants of our own methods (a YIN detector, pitch-synchronous overlap-add,
   the modulators by their laws): the no-shift delay, β, the level per setting and per material, the gate, the
   modulators' timing and ranges.
-- Redrawn: the editor, drawn in code in Flatwater's own look (`Source/common/FwTheme.h`) on the original's measured
+- Redrawn: the editor, drawn in code in Flatwater's own look (`shared/ui/Theme.h`) on the original's measured
   layout (the positions and sizes of the controls, the knobs' angle ranges, the drag speeds); our own fluted caps, arcs,
   icons and lettering; no table of the original's pixels ships. The modulators' shape library is our own (shapes by
   their math and our own step patterns).

@@ -1,6 +1,6 @@
 """Renders for Flatwater Pitch Bend's null tests and measurements: the reference (Vocal Bender, a WaveShell sub-plugin,
 through tools/RefRender: a fresh instance per render, parameters by host name and display text or normalised value),
-our processor (FwPitchBendRender) and our built VST3 (RefRender again). Every function takes and returns (channels, n)
+our processor (PbRender) and our built VST3 (RefRender again). Every function takes and returns (channels, n)
 float32 at fs; none has latency. Nothing rendered here is committed (nulltest/renders is git-ignored).
 
     import pb_host as H
@@ -16,7 +16,7 @@ import local_config as L
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD = os.environ.get('FW_BUILD', os.path.join(HERE, '..', 'build'))
 REFRENDER = os.path.join(BUILD, 'RefRender_artefacts', 'Release', 'RefRender.exe')
-RENDER = os.path.join(BUILD, 'plugins', 'FwPitchBend', 'FwPitchBendRender_artefacts', 'Release', 'FwPitchBendRender.exe')
+RENDER = os.path.join(BUILD, 'plugins', 'FwPitchBend', 'PbRender_artefacts', 'Release', 'PbRender.exe')
 VST3 = os.path.join(BUILD, 'plugins', 'Flatwater Pitch Bend.vst3')
 WAVESHELL = L.get('ref_vst3')
 COMPONENTS = {2: 'Vocal Bender Stereo@185582434', 1: 'Vocal Bender Mono@184106338'}

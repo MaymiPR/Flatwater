@@ -14,7 +14,7 @@ import refhost as R
 import nulltest_fwbasslift as NW
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get("FWBASSXLIFT_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwBassXLift", "Release", "FwBassXLiftRender.exe"))
+EXE = os.environ.get("FWBASSXLIFT_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwBassXLift", "Release", "BxRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
 NINF = float("-inf")
 

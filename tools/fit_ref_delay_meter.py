@@ -76,7 +76,7 @@ def main():
     rows = ndimage.gaussian_filter1d(rows, 0.8, axis=2)
     rec = np.stack([rows[ch].T @ cols[ch] for ch in range(3)], axis=-1)
     print('window rms (kept %.0f %%) %.2f' % (100 * keep.mean(), np.sqrt(np.mean((rec[keep] - W[keep]) ** 2))))
-    # a report only: the editor draws the meter in code from the measured geometry (FwDelayEditor.cpp)
+    # a report only: the editor draws the meter in code from the measured geometry (plugins/FwDelay/Source/PluginEditor.cpp)
     print('frame %d bins x %d terms, window rank %d over %d x %d px' % (NBIN, NB, RANK, w, h))
 
 

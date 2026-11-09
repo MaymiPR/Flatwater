@@ -3,7 +3,7 @@ colour clear (complex, 1/12 octave, from campaign_vocalchain.py's single.json) a
 (low / high shelves, bells, second-order high-passes) prewarped at 48 kHz: each section's frequency fixed, its Q a smooth
 function of its gain, the gain per step, so the plug-in can interpolate the gains between steps (fitting each step on its
 own found different equivalent shapes at neighbouring steps, which do not interpolate). Writes
-plugins/FwVocalChain/FwVocalChainEq.h and prints each fit's worst error (dB) over 30 Hz .. 16 kHz.
+plugins/FwVocalChain/Source/dsp/Eq.h and prints each fit's worst error (dB) over 30 Hz .. 16 kHz.
 
     python -I fit_vocalchain_eq.py
 """
@@ -16,7 +16,7 @@ from scipy.optimize import least_squares
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from campaign_vocalchain import FREQS
-OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'FwVocalChainEq.h')
+OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'Source', 'dsp', 'Eq.h')
 FS = 48000.0
 BAND = (FREQS >= 25) & (FREQS <= 18000)
 # each colour's sections: (type, initial frequency, initial Q); 'hp' a second-order high-pass (no gain)

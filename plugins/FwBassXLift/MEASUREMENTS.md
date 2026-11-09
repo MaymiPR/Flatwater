@@ -75,7 +75,7 @@ The plug-in keeps every identified part exact and learns only the level control 
 | Dataset | about 13 900 training renders of the reference (tones, steps, AM, two-tones, noise, kicks, bass lines, pinned pairs, sweeps) over random Freq, Ratio, Response, Decay and High-pass, onset-heavy (kicks, steps, bass lines, a third of it at Ratio 1), with long fine-tunes at a lower learning rate |
 | Held-out result | the validation set at -39.1 dB; the generated part in the null test -42.7 dB (-35.9 before the onset-heavy material and fine-tunes, which also brought kicks and steps 3 to 5 dB closer) |
 | C++ against PyTorch | -71 to -117 dB on most examples, -43 dB on a kick |
-| Weights | `plugins/FwBassXLift/FwBassXLiftNet.h` |
+| Weights | `plugins/FwBassXLift/Source/dsp/Net.h` |
 
 It is a learned model of the reference's gain control, not an identification of its algorithm.
 
@@ -133,11 +133,11 @@ The Comp reference's knob law is in [plugins/FwComp/MEASUREMENTS.md](../FwComp/M
 
 | Quantity | Value |
 |---|---|
-| Wheel | every control takes it over its whole area (the faders take clicks on the thumb only), 1/72 of its range per notch as on the Comp reference, a stepped control one step per notch; Ctrl changes nothing; implemented in the shared rule (`Source/common/FwWheel.h`), the editors forwarding the wheel to the control under the mouse, with measured scale factors where a control's range is not the reference's (Flatwater BassX Lift Input 1.6, its range being 2/3 of the reference's scale; Freq 1.2 on Flatwater Bass Lift and Flatwater BassX Lift) |
+| Wheel | every control takes it over its whole area (the faders take clicks on the thumb only), 1/72 of its range per notch as on the Comp reference, a stepped control one step per notch; Ctrl changes nothing; implemented in the shared rule (`shared/ui/Wheel.h`), the editors forwarding the wheel to the control under the mouse, with measured scale factors where a control's range is not the reference's (Flatwater BassX Lift Input 1.6, its range being 2/3 of the reference's scale; Freq 1.2 on Flatwater Bass Lift and Flatwater BassX Lift) |
 | Faders and sliders | the thumb follows the mouse (the Bass Lift reference's Freq at 1.53 times its track: the whole range in 98 px); no slow / fast difference without Ctrl; Ctrl gives about 0.19 of that rate on mouse steps of 3 px and more and about 0.037 on steps up to 2 px (the Bass Lift reference's Freq 0.28 / 0.038, the BassX Lift reference's Freq 0.23 / 0.067); implemented as measured rates (`Fader` in FwRenUI, `WavesDrag` for the Flat kit) |
 | Knobs | as the Comp reference's: Ctrl a quarter of the rate, keeping the slow / fast split |
 | Result | the three plug-ins give the reference's values on all of these scripts within the display's last digit (Freq on the wheel 1 Hz apart: its steps are whole Hz) |
-| Ctrl pressed or released during a drag | on all four references the rate switches at once, both ways (the Comp reference's Threshold -30.0, the Vocal Comp reference -14.0, the BassX Lift reference's Ratio 1.41); a host that keeps the keyboard focus (as FL Studio does) sends the plug-in no key messages, and JUCE refreshes its modifier keys only from key messages and mouse buttons, so the controls read the key itself during a drag (`ctrlHeldNow` in `FwWheel.h`); reproduced in `MeterCapture hostwin=1` (the editor in a plain Win32 window that keeps the focus); Flatwater Comp, Flatwater Vocal Comp, Flatwater Bass Lift and Flatwater BassX Lift give the reference's values in both modes (Flatwater Comp -30.0, Flatwater Vocal Comp -14.3, Flatwater BassX Lift 1.41); scripts `nulltest/feel/midctrl_feel.sh`, modes `midctrl` / `ctrlup` (the drag starts plain, Ctrl goes down or up halfway, 10 px steps) |
+| Ctrl pressed or released during a drag | on all four references the rate switches at once, both ways (the Comp reference's Threshold -30.0, the Vocal Comp reference -14.0, the BassX Lift reference's Ratio 1.41); a host that keeps the keyboard focus (as FL Studio does) sends the plug-in no key messages, and JUCE refreshes its modifier keys only from key messages and mouse buttons, so the controls read the key itself during a drag (`ctrlHeldNow` in `shared/ui/Wheel.h`); reproduced in `MeterCapture hostwin=1` (the editor in a plain Win32 window that keeps the focus); Flatwater Comp, Flatwater Vocal Comp, Flatwater Bass Lift and Flatwater BassX Lift give the reference's values in both modes (Flatwater Comp -30.0, Flatwater Vocal Comp -14.3, Flatwater BassX Lift 1.41); scripts `nulltest/feel/midctrl_feel.sh`, modes `midctrl` / `ctrlup` (the drag starts plain, Ctrl goes down or up halfway, 10 px steps) |
 | The cursor during a fader drag | hidden while dragging, and put back where it was grabbed, moved as far as the thumb moved (the Vocal Comp reference's Gain: a 100 px drag ends on 235, a 60 px Ctrl drag on 223; the Bass Lift reference's Freq: 234 and 268); Flatwater Vocal Comp 238 and 223 (the 3 px from its Gain taper, -24.0 dB where the reference reads -23.4); Flatwater Bass Lift 233 and 268; MeterCapture prints where the cursor is after the release |
 
 ## CPU
@@ -153,9 +153,9 @@ The reference is the original MaxxBass, run from a licensed install.
 - Measured: renders of the reference's output (tones, steps, bass material) at its settings, through its VST3 in a
   host; films and drag scripts of its editor.
 - Fitted or learned from the reference's output: the band split, harmonic generator and filters identified from those
-  renders; a small recurrent net for the level control (our own weights, `plugins/FwBassXLift/FwBassXLiftNet.h`)
+  renders; a small recurrent net for the level control (our own weights, `plugins/FwBassXLift/Source/dsp/Net.h`)
   trained end to end through the identified structure on captures of its output.
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

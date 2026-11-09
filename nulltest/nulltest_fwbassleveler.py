@@ -1,4 +1,4 @@
-"""Null test: Flatwater Bass Leveler (its own processor, run offline by build/.../FwBassLevelerRender.exe) against the reference Bass
+"""Null test: Flatwater Bass Leveler (its own processor, run offline by build/.../BlRender.exe) against the reference Bass
 Rider (rendered through pedalboard) at 48 kHz, both lined up with the input (the reported latency removed), stereo, the
 same input on both channels unless the case says otherwise. Reports per case the output residual 20 log10 (rms (ours - reference) / rms (reference)) after the first
 0.1 s, and the applied gain's error (ours vs the reference's, sample by sample where the input is loud enough).
@@ -15,7 +15,7 @@ import measure_bassleveler as M
 import brcompare as C
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get('FWBASSLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwBassLeveler', 'FwBassLevelerRender_artefacts', 'Release', 'FwBassLevelerRender.exe'))
+EXE = os.environ.get('FWBASSLEVELER_RENDER', os.path.join(HERE, '..', 'build', 'plugins', 'FwBassLeveler', 'BlRender_artefacts', 'Release', 'BlRender.exe'))
 TMP = os.path.join(HERE, 'renders'); os.makedirs(TMP, exist_ok=True)
 FS = 48000
 KEYS = {'target': 'target', 'sensitivity': 'sensitivity', 'spill': 'spill', 'artifacts': 'artifacts', 'range_max': 'rangeMax',

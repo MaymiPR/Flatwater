@@ -1,6 +1,6 @@
 {
  "what": "the reference with its controls at c and the rest moved by M1 (a constant step sequence on Pitch and / or Formant, 0.24 st per unit of depth) against ours given the totals and the controls; level dB from 0.5 s, output f0, envelope shift st (vowels), noise correlation with the delayed input",
- "renderer": "FwPitchBendShifterRender.exe",
+ "renderer": "PbShifterRender.exe",
  "rows": [
   {
    "case": "P ctl 0, mod -24",
@@ -5948,7 +5948,7 @@
  },
  "before": {
   "ours_given": "the totals only",
-  "renderer": "FwPitchBendShifterRender.exe",
+  "renderer": "PbShifterRender.exe",
   "summary": {
    "level_cells": 331,
    "level_within_1db": 181,

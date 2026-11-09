@@ -12,7 +12,7 @@ and the residual or confidence of each. The data and plots are in [measurements/
 | Parameter order | Sync is set before Release: the reference does not keep a Release value set while it is synced to a note |
 | Gain readout | the detector reads the sample peak, so an alternating +-a signal (Nyquist) is a constant level to it, and with Analog Off the output is g[n] x[n]: the gain trace is y / x, exact at every sample; static curves, attack, release, Punch, Mix and the limiter are measured that way, and sine staircases check the static curves |
 | Identification scripts | `nulltest/ident_hc_detector.py`, `ident_hc_struct.py` (detector, smoothing, order of the stages), `ident_hc_release*.py`, `ident_hc_w0.py`, `ident_hc_real.py`, `ident_hc_rel3.py` to `ident_hc_rel8.py` (release), `ident_hc_analog.py`, `fit_hc_analog*.py` (Analog stage); the C models `hcfast*.c`; `cma_hc_release.py` (CMA-ES) |
-| Tables | `static_h.npz`, `makeup*.csv`, `release_law*.json`, `release_w0.json`, `analog_model.json`, `analog_noise.csv` in `measurements/fwcomp/`, exported to `plugins/FwComp/FwCompTables.h` by `tools/export_fwcomp_tables.py` |
+| Tables | `static_h.npz`, `makeup*.csv`, `release_law*.json`, `release_w0.json`, `analog_model.json`, `analog_noise.csv` in `measurements/fwcomp/`, exported to `plugins/FwComp/Source/dsp/Tables.h` by `tools/export_fwcomp_tables.py` |
 
 ## 1. Path and latency
 
@@ -55,7 +55,7 @@ The law, in the gain-reduction domain, with two states (`ident_hc_release2.py`, 
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`hcfast2.c hc_set_r_floor`, `FwCompTables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
+| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`hcfast2.c hc_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
 | Slow state S | charges toward out + 0.032 (R - out), out the reduction after the attack (the previous sample's), as a one-pole on the linear gain (142 ms; the reference's own hidden crest time is 149.6 ms); releases at Fs(S) / Release + As(S) dB/s with a release time of at least 16.8 ms; charges only when its source rises by more than rounding (src > S + 1e-9; any margin from 1e-12 to 1e-6 gives the same output), level or falling it releases | CMA-ES over all the tables (`cma_hc_release.py`, 250 generations) | objective -43.97 dB |
 | Start-up | the effective release time is pulled toward the Release time by exp(-t / 90 ms) after a reset | start-up probes and program material from 0.05 s | null test median -40.0 -> -41.9 dB when added; threshold -24 / ratio 10 / Release 300 -21.9 -> -31.5; the defaults lose about 3 dB in their first half second only |
 | Release time seen from outside | after sustained compression the 63 % point is 0.75 x Release (3 -> 3.0, 100 -> 76, 1000 -> 753, 3000 -> 2258 ms); the gain rises at a constant rate in dB and stops sharply at the threshold: the release acts on the detector's level, not on the gain | steps | measured |
@@ -85,7 +85,7 @@ Release 1000. Adding the presets took their null median from -30.4 to -31.3 dB.
 | Item | Value |
 |---|---|
 | Reason | one-parameter sweeps from Threshold -24, Ratio 4 (`nulltest/sweep_fwcomp.py`) without it: voice, drums, bass and noise all -22 to -26 dB; long attacks on bass -15 dB (15 ms) to -8 dB (30 to 60 ms); Release 300 on voice -17; and the steady low-tone dependence of section 4 |
-| Structure | a GRU with 64 units reads Flatwater Comp's own states every 16 samples (the held peak against the threshold, the target and release states R and S, the reduction after the attack and out, the settings; `FwCompRender trace=`) and corrects the compressor's gain in dB, held over the step (`plugins/FwComp/FwCompNet.h`, `GainNet` in `FwCompDsp.h`) |
+| Structure | a GRU with 64 units reads Flatwater Comp's own states every 16 samples (the held peak against the threshold, the target and release states R and S, the reduction after the attack and out, the settings; `CoRender trace=`) and corrects the compressor's gain in dB, held over the step (`plugins/FwComp/Source/dsp/Net.h`, `GainNet` in `plugins/FwComp/Source/dsp/Engine.h`) |
 | Guards | no correction without reduction, nor while the target stayed within 0.05 dB over 20 ms (a steady tone above about 750 Hz, which the analytical model nulls already; without this guard the correction cost 1 kHz tones 20 to 30 dB) |
 | Dataset | 4300 cases rendered through both (`render_trainset_fwcomp.py`; our side refreshed by `nulltest/refresh_trainset_fwcomp.py` after a model change, the reference's renders kept): random settings and signals, hot drums, bass, plucks and voice up to +3 dBFS, the null test's and the presets' settings on every signal at random levels, densely at the common settings; Mix 100, Output cancelling the makeup |
 | Training | PyTorch (`nulltest/train_fwcomp.py`), 800 epochs; the loss is the null itself for the weak cases (worse than -35 dB) plus a penalty on every case more than 0.5 dB worse than without the correction (or than -60 dB if it was better), the weak cases alone for the first 300 epochs |
@@ -121,7 +121,7 @@ Full tables: `results.json` `analog`.
 |---|---|---|---|
 | Sync | Release = note x 240000 / tempo (ms), with the same 0.75 factor; BPM uses the plug-in's own tempo (120 by default), Host follows the host's tempo (60 BPM: 1/16 gives 250 ms; 180 BPM: 83 ms) and falls back to 120 when the host gives none; long notes at slow tempos fall back to the next shorter straight or dotted note (2 bars -> 1 bar -> 1/2D -> 1/2 -> 1/4D) once they pass about 3.3 to 4 s | `tools/RefRender` with a host tempo; the points in `results.json` `sync_host` | measured; a fresh instance with Host sync: 17.86 ms for 1/64T at 140 BPM, -90 dB |
 | The reference after a synced preset | after running synced (BPM or Host) and switching Sync to ms, the reference keeps the synced release time internally while its Release parameter shows another value, and takes the shown value again only once Release itself changes (coming from Host, not even then in one test); Flatwater Comp always follows its parameters, so nulls after a synced preset reload the reference, and the preset null test uses a fresh reference per preset | presets | with one shared instance two presets read -8 to -10 dB that were really -31 to -37 |
-| Determinism | exp and log come from `Source/common/FwMath.h`, built from +, -, x, / and the exact frexp / ldexp / floor (within 1e-14 of the C library's; `FwCompTests`), and GCC and Clang do not fuse a multiply and an add (`-ffp-contract=off`): the DSP and the learned correction give the same bits on Windows, Linux and macOS; with the C library's functions the slow state's charge decision flipped on the last bit (MSVC, glibc and Apple's libm round differently) and the mix cases read -46 to -71 dB against the Windows goldens | the render regression's mix cases, with and without the correction | hash-identical on all three |
+| Determinism | exp and log come from `shared/dsp/Math.h`, built from +, -, x, / and the exact frexp / ldexp / floor (within 1e-14 of the C library's; `FwCompTests`), and GCC and Clang do not fuse a multiply and an add (`-ffp-contract=off`): the DSP and the learned correction give the same bits on Windows, Linux and macOS; with the C library's functions the slow state's charge decision flipped on the last bit (MSVC, glibc and Apple's libm round differently) and the mix cases read -46 to -71 dB against the Windows goldens | the render regression's mix cases, with and without the correction | hash-identical on all three |
 
 ## 10. The model against the reference
 
@@ -157,13 +157,13 @@ plug-in a playing transport. Probes: `nulltest/make_vu_probe.py` (tones, 5 / 50 
 `make_vu_cal.py` (a level staircase and sine / square pairs) and descending steps; for GR the probe carries a
 -54 dBFS 6170 Hz pilot whose gain through the compressor shows its gain during the silences too (`pilot_gain.py`).
 Angles: `vu_angles.py`; pivot: `pivot_fit.py`; fits: `fit_gr_needle.py`, `fit_io_needle.py`; the print:
-`measure_vu_face.py`. Summary: `measurements/fwcomp/needle.json`; the law in `plugins/FwComp/FwCompNeedle.h`.
+`measure_vu_face.py`. Summary: `measurements/fwcomp/needle.json`; the law in `plugins/FwComp/Source/ui/Needle.h`.
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Positions | 71 needle angles: position k = round(70 v), each at a whole number of degrees from vertical, -58, -57, -55 ... 57, 59 (the table in `FwCompNeedle.h`) | 11185 filmed frames, a line fit per position | within 0.15 degrees of the whole degree |
+| Positions | 71 needle angles: position k = round(70 v), each at a whole number of degrees from vertical, -58, -57, -55 ... 57, 59 (the table in `plugins/FwComp/Source/ui/Needle.h`) | 11185 filmed frames, a line fit per position | within 0.15 degrees of the whole degree |
 | Pivot | (323.42, 220.86) (pixel centres at +0.5), 2.7 px right of the scale's centre | the lines of 800 frames | within 0.1 px |
-| Needle | (124, 0, 0), 2 px across (equivalent width 2.0 to 2.4 px), from under the pivot's bump to its tip at 111.5 px; the rivet at 104.7 px: a red disc of radius 2.85 with a cream (248, 238, 158) centre of radius 1.15 | `needle_core_fit.py`, `rivet_cmp.py`; compared with our dial rendered by `tools/VuRender` (`compare_needle.py`) | measured |
+| Needle | (124, 0, 0), 2 px across (equivalent width 2.0 to 2.4 px), from under the pivot's bump to its tip at 111.5 px; the rivet at 104.7 px: a red disc of radius 2.85 with a cream (248, 238, 158) centre of radius 1.15 | `needle_core_fit.py`, `rivet_cmp.py`; compared with our dial rendered by `plugins/FwComp/tools/VuRender` (`compare_needle.py`) | measured |
 | Shadow | the needle's outline moved straight down whatever the angle, (-0.01, +4.70) px, a neutral darkening (x0.747 on R, G and B at its middle), Gaussian across (depth 0.266, sigma 0.94 px), from under the bump to 110.2 px; drawn as three strokes fitted to that profile | `needle_shadow_fit.py`, on 23 and 7 positions of the two faces | ours measured the same way: (-0.01, +4.70), 0.265, sigma 0.94, to 109.9 |
 | GR | v is the compressor's linear gain before makeup (steady tones: 31.75 + 117.17 g degrees); the deepest gain since the last frame shows at once (a 5 ms burst moves the needle to 38); the return is two one-poles in cascade on the linear gain, 28.9 and 142.6 ms; on the probe's drums (threshold -30, ratio 4) the reference's needle averages 11.5 dB and the law on our own gain 11.4 (voice 5.6 / 5.8) | `fit_gr_needle.py` with the pilot | steady tones within 1.5 degrees; 97 % of frames within one step of the pilot-gain prediction |
 | In / Out | v = (peak dBFS + 48) / 48, the peak over the frame's interval (a sine and a square of the same peak read alike; -48 dBFS and below rest on the stop); a rise shows at once and starts a hold that decays from that moment (amplitude, 0.327 s: 26.6 dB/s into silence), so a burst's needle falls from its onset, and at the end of a 300 ms burst it jumps down to where that fall has reached; the first drop after a rise shows the level at once (unless the hold is still higher: a long tone drops straight to its silence); every later drop decays toward the level with the same 0.327 s until the next rise | `fit_io_needle.py`; Out on the reference's own output | 97.5 % of frames within one step (probe, staircase, descending steps) |
@@ -201,9 +201,9 @@ The reference is the original H-Comp, run from a licensed install.
 - Measured: renders of the reference's output (tones, steps, drums, voice, bass) at its settings, the Analog stage's
   response at levels and frequencies, and films of its VU needle and limiter lamp.
 - Fitted or learned from the reference's output: the compressor's detector and release law, the Analog stage's
-  measured tables (`plugins/FwComp/FwCompTables.h`), the needle's motion law; a small learned gain correction (our own
-  weights, `plugins/FwComp/FwCompNet.h`) trained on captures of its output.
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+  measured tables (`plugins/FwComp/Source/dsp/Tables.h`), the needle's motion law; a small learned gain correction (our own
+  weights, `plugins/FwComp/Source/dsp/Net.h`) trained on captures of its output.
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

@@ -2,7 +2,7 @@
 (Steiglitz-McBride) to the reference's impulse response at 44.1 / 48 / 88.2 / 96 kHz (captured by cv_ref into the
 git-ignored reference/fwvocalchain/meas/clear_ir_<rate>.npy). Its two first-order all-passes sit at the same frequencies
 (about 1.95 and 6.4 kHz) at every rate, but a section near the top of the band does not, so the filter is kept per rate
-rather than as one analog prototype. Writes plugins/FwVocalChain/FwVocalChainFixed.h (second-order sections).
+rather than as one analog prototype. Writes plugins/FwVocalChain/Source/dsp/Fixed.h (second-order sections).
 
     python -I fit_vocalchain_fixed.py
 """
@@ -12,7 +12,7 @@ from scipy.signal import lfilter, tf2sos, sosfilt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RATES = (44100, 48000, 88200, 96000)
-OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'FwVocalChainFixed.h')
+OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'Source', 'dsp', 'Fixed.h')
 
 
 def stmcb(h, nb, na, it=60):

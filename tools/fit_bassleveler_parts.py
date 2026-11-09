@@ -1,6 +1,6 @@
 """Measures the reference Bass Rider's controls on its skin (extracted into the git-ignored reference/fwbassleveler/)
 and prints a report: per fader cap, switch, meter bar, thumb and panel the shading the models fit, from which the design
-tokens of FwBassLevelerEditor.cpp (a few grey levels per gradient, sizes and positions) were taken. Nothing is written
+tokens of plugins/FwBassLeveler/Source/PluginEditor.cpp (a few grey levels per gradient, sizes and positions) were taken. Nothing is written
 into the repository: the editor is drawn by Flatwater with its own shading (provenance, section 2).
 
     python -I tools/fit_bassleveler_parts.py
@@ -188,7 +188,7 @@ def main():
     pm = {n: dict(y0=y0, x0=x0, rows=rows_.mean(1), cols=cols_, h=len(rows_), w=len(cols_)) for n, y0, x0, rows_, cols_, _ in panels_out}['top']
     def panel_at(x, y):
         return pm['rows'][min(max(y - pm['y0'], 0), pm['h'] - 1)] * pm['cols'][min(max(x - pm['x0'], 0), pm['w'] - 1)]
-    def shadow_at(x, y):   # FwBassLevelerEditor.cpp knobShadowAt
+    def shadow_at(x, y):   # plugins/FwBassLeveler/Source/PluginEditor.cpp knobShadowAt
         f = 1.0
         for cx in (46.0, 200.0, 275.0):
             dx, dy = x - cx, y - 111.5; r = math.hypot(dx, dy)

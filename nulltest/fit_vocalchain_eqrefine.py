@@ -1,4 +1,4 @@
-"""Phase 4: a second pass over FwVocalChainEqTables.h for the positions fit_vocalchain_eqtables.py left above -85 dB (Bass
+"""Phase 4: a second pass over plugins/FwVocalChain/Source/dsp/EqTables.h for the positions fit_vocalchain_eqtables.py left above -85 dB (Bass
 Upper at fader 0 and up, some Bass Sub / Lower positions at 88.2 / 96 kHz). Their filters have zeros on or near the
 unit circle (Bass Upper's subsonic high-pass notches about 10 Hz) and poles clustered near DC, which Steiglitz-McBride's
 direct form cannot resolve. Here each is refined with its poles and zeros as the parameters (complex pairs as radius

@@ -1,5 +1,5 @@
-# Flatwater Vocal Chain: the plug-in processor (tools/FwVocalChainRender: in out channels fs [parameter ID=real value, colours 0 clear .. 3, noise=0, preset=index]). The Noise off: it is random.
-@call FwVocalChainRender {in} {out} 2 {fs} noise=0 {args} block={block}
+# Flatwater Vocal Chain: the plug-in processor (plugins/FwVocalChain/tools/ChRender: in out channels fs [parameter ID=real value, colours 0 clear .. 3, noise=0, preset=index]). The Noise off: it is random.
+@call ChRender {in} {out} 2 {fs} noise=0 {args} block={block}
 clear_mix          signal=mix   seconds=0.5 bassColor=0 trebleColor=0 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0
 defaults_mix       signal=mix   seconds=1
 bass_sub_p10_noise signal=noise seconds=0.5 bass=10 compressColor=0 reverbColor=0 delayColor=0 pitchColor=0

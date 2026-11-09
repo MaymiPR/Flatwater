@@ -43,7 +43,7 @@ Where the measurements contradict the manual (the Gain control, the gate knee): 
 
 ## Parameters (S2)
 
-Flatwater Vocal Comp's parameters (IDs from `FwVocalCompProcessor.h`):
+Flatwater Vocal Comp's parameters (IDs from `plugins/FwVocalComp/Source/PluginProcessor.h`):
 
 | ID | Label | Range | Step | Default | Notes |
 |---|---|---|---|---|---|

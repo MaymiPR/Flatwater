@@ -3794,7 +3794,7 @@
  },
  "takes": {
   "what": "ours against the reference at fixed settings (Mix 100, mono) on the presets' takes, after the first 0.1 s: level (ours minus the reference, dB), tone (as null_pitchbend_presets.py)",
-  "renderer": "FwPitchBendShifterRender.exe",
+  "renderer": "PbShifterRender.exe",
   "rows": [
    {
     "take": "sung",
@@ -4210,7 +4210,7 @@
    "mean_tone_db": 1.8
   },
   "before": {
-   "renderer": "FwPitchBendShifterRender.exe",
+   "renderer": "PbShifterRender.exe",
    "summary": {
     "mean_abs_level_db": 0.64,
     "mean_tone_db": 1.96

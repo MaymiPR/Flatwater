@@ -6,7 +6,7 @@ cv_ref at -26 dBFS with every other colour clear (git-ignored reference/fwvocalc
 the wet part, the output less the output with Reverb clear, per unit input, at fader 0). Each is cut where the decay of
 the four together has fallen 65 dB, faded over the last 30 ms, and stored as 16-bit floats.
 
-Writes plugins/FwVocalChain/ir/reverb_<rate>.bin: per colour 1..3: uint32 length, then length x 4 float16 (LL, LR, RL, RR
+Writes plugins/FwVocalChain/resources/ir/reverb_<rate>.bin: per colour 1..3: uint32 length, then length x 4 float16 (LL, LR, RL, RR
 interleaved per sample).
 
     python -I pack_vocalchain_reverb.py

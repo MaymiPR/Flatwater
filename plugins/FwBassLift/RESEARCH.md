@@ -37,7 +37,7 @@ repository. The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (B3)
 
-Flatwater Bass Lift's parameters (IDs from `FwBassLiftProcessor.h`), in the original's parameter order:
+Flatwater Bass Lift's parameters (IDs from `plugins/FwBassLift/Source/PluginProcessor.h`), in the original's parameter order:
 
 | ID | Label | Range | Default | Control | Automatable | Notes |
 |---|---|---|---|---|---|---|
@@ -73,7 +73,7 @@ shows one output meter.
 
 All 45 factory and artist presets of the reference (Full Reset excluded) are carried over as Flatwater Bass Lift
 factory presets by their setting values only (`nulltest/read_ref_presets.py` converts the reference's presets through
-the reference itself, `tools/make_presets.py` writes `plugins/FwBassLift/FwBassLiftPresets.h`). Every name is new: no
+the reference itself, `tools/make_presets.py` writes `plugins/FwBassLift/Source/Presets.h`). Every name is new: no
 artist names, no vendor product names, no other trademarks; the name says what the setting is for. The same is done
 for Flatwater Vocal Comp (21 presets; the reference's presets store its linear scales, checked against the two it
 converts itself).

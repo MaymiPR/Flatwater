@@ -1,4 +1,4 @@
-"""Pixel comparison of Flatwater Comp's VU needle (tools/VuRender) with H-Comp's filmed needle at the same strip positions
+"""Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/VuRender) with H-Comp's filmed needle at the same strip positions
 (needle_set_<face>.npz): both dials with the needle, the difference around the needle and its shadow only (the
 print's own differences cancel: each is measured against the same dial without its needle). Private helper.
 

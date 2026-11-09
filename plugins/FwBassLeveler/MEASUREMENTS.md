@@ -14,7 +14,7 @@ the method and the residual or confidence of each. The data is in [measurements/
 | Traces | `nulltest/br_traces.py`: the reference's gain on a bass line and on synthetic parts (ghost notes at a tenth of the level, random gaps) at several settings |
 | Corpus | `nulltest/bass_corpus.py`: 36 parts of 12 s from the DAW's own bass packs (acoustic, 80s pick, Ibanez, slap, Temptated, a picked 5-string, a pluck multisample; Ogg Vorbis in WAV decoded by `tools/OggDecode.cpp`, cached in the git-ignored `reference/`) and three synthetic voices (808 sub, filtered saw, slow swells); parts 0 to 23 identify the model, 24 to 35 are held out |
 | Corpus renders | `nulltest/br_corpus_ref.py`: the reference's gain on every part at 10 settings (default, Fast, Sensitivity 0 / 75 / 100, Fast with Sensitivity 25 / 100, Artifacts 15 / 85, Target -24); `nulltest/br_corpus_eval.py` compares (`--events` and per-note tables) |
-| Model | `nulltest/brmodel.c`, identical line for line to `plugins/FwBassLeveler/FwBassLevelerRide.h`; `nulltest/br_fit.py` (CMA-ES over probes, traces and the training corpus, corpus weight `CW`), `nulltest/br_polish.py` (each per-setting value on a grid in turn), `nulltest/br_export.py` (writes the constants into the C++) |
+| Model | `nulltest/brmodel.c`, identical line for line to `plugins/FwBassLeveler/Source/dsp/Ride.h`; `nulltest/br_fit.py` (CMA-ES over probes, traces and the training corpus, corpus weight `CW`), `nulltest/br_polish.py` (each per-setting value on a grid in turn), `nulltest/br_export.py` (writes the constants into the C++) |
 | Editor | `tools/MeterCapture gl=1`: the OpenGL frames read back, with `drag=...,hover` and `click` scripts and `in=` audio; `nulltest/read_br_film.py` reads the films |
 
 ## 1. The level read
@@ -150,7 +150,7 @@ None ships. A learned lock was tried (`nulltest/br_lock.py`; `brmodel.c` lock mo
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | C++ against the model | 0.08 dB at 99 % (also on a 42 Hz decay at Fast, a corpus part at Fast 25 and at Artifacts 100) | `nulltest/check_fwbassleveler_port.py` | |
-| The plug-in against the reference | the fixed cases, the corpus, the rates, the components and stereo | [NULLTESTS.md](NULLTESTS.md) (`nulltest/nulltest_fwbassleveler.py`, `nulltest/validate_fwbassleveler.py`, through `FwBassLevelerRender`) | |
+| The plug-in against the reference | the fixed cases, the corpus, the rates, the components and stereo | [NULLTESTS.md](NULLTESTS.md) (`nulltest/nulltest_fwbassleveler.py`, `nulltest/validate_fwbassleveler.py`, through `BlRender`) | |
 | Where the corpus error is | the level read is right (on 173 of 175 notes the reference's held value lies on the law's path over the attack); per 10 ms block, 66 to 77 % of the error energy is both sides holding more than 1 dB apart (typically 0.3 to 0.5 dB, 1 to 4 dB at the 90th percentile), and 81 to 99 % of that follows a different ride decision, not a different lock on the same ride; at Fast what remains is mostly re-rides the reference takes and the model does not (at onsets 49 %, inside notes 33 %) | `br_corpus_eval.py` | |
 | Synthetic part 6 | turns on one note at 2.38 s, 13 dB over a quiet passage, which the reference takes as a new note; the gate's form is the reference's, the long reference R's exact fall is not | the fixed cases | open |
 | Part 6 at Fast | -16 dB at every Sensitivity from one passage: a 77 Hz note fading after its release, where the pitch read wobbles over the 78 Hz band edge and the window switch reads as a rise (the reference holds) | the fixed cases | open |
@@ -160,7 +160,7 @@ None ships. A learned lock was tried (`nulltest/br_lock.py`; `brmodel.c` lock mo
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Presets | the reference's 17, with Flatwater names (`nulltest/read_ref_presets_br.py`, `tools/make_presets.py` -> `plugins/FwBassLeveler/FwBassLevelerPresets.h`); the 15 that store Target as a wildcard leave it where it is (`FactoryPreset::leave`) | each array loaded into the reference's own state and its parameters read back (Artifacts 77.1, 100, 85.3, 74.1, 60, 0 as converted) | exact positions |
+| Presets | the reference's 17, with Flatwater names (`nulltest/read_ref_presets_br.py`, `tools/make_presets.py` -> `plugins/FwBassLeveler/Source/Presets.h`); the 15 that store Target as a wildcard leave it where it is (`FactoryPreset::leave`) | each array loaded into the reference's own state and its parameters read back (Artifacts 77.1, 100, 85.3, 74.1, 60, 0 as converted) | exact positions |
 | Null | each preset on the bass line and held-out corpus parts 30 and 25 | `nulltest/nulltest_fwbassleveler_presets.py`, [NULLTESTS-presets.md](NULLTESTS-presets.md) | median -25.2 dB, worst -9.0; the Fast presets on the bass line are weakest (the drops onto lower notes at Fast, not modelled) |
 
 ## 10. The editor
@@ -193,7 +193,7 @@ The reference is the original Bass Rider, run from a licensed install.
 - Fitted or learned from the reference's output: the level read, the gain law, the note detector, the release,
   re-attack and Idle rules, identified on those measurements (`measurements/fwbassleveler/detector_fit.json`); no
   learned block ships.
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

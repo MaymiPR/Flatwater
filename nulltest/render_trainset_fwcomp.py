@@ -1,5 +1,5 @@
 """Training set for Flatwater Comp's learned gain correction (nulltest/train_fwcomp.py): random settings and signals rendered
-through the reference H-Comp and through Flatwater Comp's offline renderer, with Flatwater Comp's states traced (FwCompRender trace=).
+through the reference H-Comp and through Flatwater Comp's offline renderer, with Flatwater Comp's states traced (CoRender trace=).
 Mix 100, Output cancelling the makeup (so neither limiter nor clip acts), Analog Off. The null test's settings and the
 factory presets' settings are added on top of the random cases, so the training sees the cases that already null.
 
@@ -27,7 +27,7 @@ FEATURES = ['held peak - threshold', 'target', 'R', 'S', 'reduction after the at
             'ln attack', 'ln release', '1 / ratio', 'punch', 'threshold']
 
 
-def makeup_db(thr, ratio):                     # FwCompDsp.h makeupDb at Release 100 (the scale with release is < 4 %)
+def makeup_db(thr, ratio):                     # plugins/FwComp/Source/dsp/Engine.h makeupDb at Release 100 (the scale with release is < 4 %)
     inv = 1.0 / np.array(RAT); k = np.interp(1.0 / ratio, inv[::-1], np.array(SLOPE)[::-1])
     return k * max(0.0, -9.0 - thr)
 

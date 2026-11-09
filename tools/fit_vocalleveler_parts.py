@@ -1,6 +1,6 @@
 """Measures the reference Vocal Rider's editor on its skin (extracted into the git-ignored reference/fwvocalleveler/skin/)
 and prints a report: the panels' shading, the printed labels' places, the lines, the knobs' scales, the LEDs, lamps,
-fader caps, switch, Target glass, meter and Automation buttons, from which the design tokens of FwVocalLevelerEditor.cpp
+fader caps, switch, Target glass, meter and Automation buttons, from which the design tokens of plugins/FwVocalLeveler/Source/PluginEditor.cpp
 (positions, sizes, angles) were taken. Nothing is written into the repository: the editor is drawn by Flatwater with its
 own shading (provenance, section 2).
 

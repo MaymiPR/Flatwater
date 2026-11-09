@@ -89,7 +89,7 @@ harmonic product, the limiter, the clip) and learns only the level-to-gain block
 |---|---|
 | Structure | a GRU with 32 units; inputs abs(x), abs(b), abs(l), abs(u) (compressed with asinh) and ln(Freq/80); outputs ln g_pre and ln g_post, sample by sample; magnitudes only, so the gain is symmetric and Decay 0 leaves no even harmonics, as in the reference |
 | Target | the exact generated part of the reference |
-| Dataset | 900 reference renders (tones, steps, AM, two-tones, noise, kicks, bass lines, pinned pairs, sweeps; Freq 32 to 256; Decay 0 / 1), `nulltest/render_trainset.py`; trained with PyTorch (`nulltest/train_gain.py`), exported by `tools/export_gainnet.py` into `plugins/FwBassLift/FwBassLiftGainNet.h` |
+| Dataset | 900 reference renders (tones, steps, AM, two-tones, noise, kicks, bass lines, pinned pairs, sweeps; Freq 32 to 256; Decay 0 / 1), `nulltest/render_trainset.py`; trained with PyTorch (`nulltest/train_gain.py`), exported by `tools/export_gainnet.py` into `plugins/FwBassLift/Source/dsp/GainNet.h` |
 | Held-out result | 80 held-out renders: median -37.7 dB (the fitted analytical model -25.3 dB) |
 | Rates | the network runs on its own 48 kHz clock (the rate it was trained at) at any host rate: the null at 44.1 and 96 kHz is within 0.2 dB of 48 kHz |
 | C++ against PyTorch | -74 to -91 dB |
@@ -121,7 +121,7 @@ the plug-in, plays a test signal through it in real time, records its output, an
 second; `nulltest/meter_frames.py` turns the frames into bar heights (numbers in
 [measurements/fwbasslift/meters](../../measurements/fwbasslift/meters); the screenshots stay out of the repository).
 Signals: tone bursts and level steps at 25 / 50 / 300 / 1000 Hz, 5 / 20 / 100 ms bursts (`nulltest/meter_probe.py`),
-a bass line and kicks. The same law drives every Flatwater meter (`Source/common/FwMeter.h`).
+a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Meter.h`).
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
@@ -156,9 +156,9 @@ The reference is the original Renaissance Bass, run from a licensed install.
 - Measured: renders of the reference's output (tones, two-tone kernels, level steps, bass material) at its settings,
   through its VST3 in a host; films of its meters.
 - Fitted or learned from the reference's output: the filter and harmonic structure identified from those renders; a
-  small learned gain block (our own weights, `plugins/FwBassLift/FwBassLiftGainNet.h`) trained on captures of its
+  small learned gain block (our own weights, `plugins/FwBassLift/Source/dsp/GainNet.h`) trained on captures of its
   output; the meter law.
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

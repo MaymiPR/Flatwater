@@ -7,7 +7,7 @@ input, aligned (both report their latency); the null is the difference's energy 
                                                          measurements/fwvocalchain/nulls.json and NULLTESTS.md)
     python -I nulltest_fwvocalchain.py md                (NULLTESTS.md again from nulls.json and doubler.json)
 
-WVC_RENDER in the environment names another FwVocalChainRender (an older build, to compare).
+WVC_RENDER in the environment names another ChRender (an older build, to compare).
 """
 import os
 import sys
@@ -17,7 +17,7 @@ sys.path.insert(0, HERE)
 import cv_ref as C
 import vocal_corpus as V
 
-RENDER = os.environ.get('WVC_RENDER') or os.path.abspath(os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalChain', 'FwVocalChainRender_artefacts', 'Release', 'FwVocalChainRender.exe'))
+RENDER = os.environ.get('WVC_RENDER') or os.path.abspath(os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalChain', 'ChRender_artefacts', 'Release', 'ChRender.exe'))
 FS = 48000
 STAGES = ('bass', 'treble', 'compress', 'reverb', 'delay', 'pitch')
 CLEAR = {s + '_color': 0 for s in STAGES}
@@ -26,7 +26,7 @@ for s in STAGES: KEYS[s] = s; KEYS[s + '_color'] = s + 'Color'
 
 
 def render_ours(x, kw, fs=FS):
-    """our plug-in's processor (tools/FwVocalChainRender); the reference's defaults where kw says nothing (colours 1)"""
+    """our plug-in's processor (plugins/FwVocalChain/tools/ChRender); the reference's defaults where kw says nothing (colours 1)"""
     import subprocess, tempfile
     x = np.asarray(x, np.float32)
     if x.ndim == 1: x = np.stack([x, x])
@@ -158,7 +158,7 @@ def write_md(res):
     L = ['# Flatwater Vocal Chain: null tests', '',
          'Residuals of Flatwater Vocal Chain against the reference CLA Vocals (Stereo), lower is better: the energy of the',
          "difference under the reference output's, in dB. Written by `nulltest/nulltest_fwvocalchain.py report` from",
-         '`measurements/fwvocalchain/nulls.json` (%s); our processor through `FwVocalChainRender`, the reference through'
+         '`measurements/fwvocalchain/nulls.json` (%s); our processor through `ChRender`, the reference through'
          % datetime.date.today().isoformat(),
          "`nulltest/cv_ref.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the",
          'corpus (`nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).', '',

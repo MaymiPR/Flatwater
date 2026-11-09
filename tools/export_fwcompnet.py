@@ -1,5 +1,5 @@
 """Writes Flatwater Comp's trained gain correction (build/fwcompnet/<name>.pt, from nulltest/train_fwcomp.py) to
-plugins/FwComp/FwCompNet.h as constant arrays. Run in the PyTorch environment.
+plugins/FwComp/Source/dsp/Net.h as constant arrays. Run in the PyTorch environment.
 
     python tools/export_fwcompnet.py build/fwcompnet/fwcompnet_h48.pt
 """
@@ -17,11 +17,11 @@ def arr(name, t):
     return "inline constexpr float %s[%d] = {\n    %s\n};\n" % (name, len(v), body)
 
 
-out = os.path.join(HERE, "..", "plugins", "FwComp", "FwCompNet.h")
+out = os.path.join(HERE, "..", "plugins", "FwComp", "Source", "dsp", "Net.h")
 with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned correction of Flatwater Comp's gain (GRU, %d hidden units), trained on renders of the reference by\n"
             "// nulltest/train_fwcomp.py and written by tools/export_fwcompnet.py from %s. Do not edit by hand.\n"
-            "// Inputs per step: see fwcomp::GainNet in FwCompDsp.h. Output: the correction in dB, 9 tanh (o / 9).\n"
+            "// Inputs per step: see fwcomp::GainNet in Engine.h. Output: the correction in dB, 9 tanh (o / 9).\n"
             "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace fwcomp::gainnet\n{\n" % (H, os.path.basename(sys.argv[1])))
     f.write("inline constexpr int hidden = %d, inputs = %d;\n" % (H, I))
     f.write(arr("Wih", sd["gru.weight_ih_l0"]))

@@ -1,4 +1,4 @@
-/* Flatwater Vocal Leveler's riding model (Phase 4), driven by vrmodel.py; plugins/FwVocalLeveler/FwVocalLevelerRide.h is the same model.
+/* Flatwater Vocal Leveler's riding model (Phase 4), driven by vrmodel.py; plugins/FwVocalLeveler/Source/dsp/Ride.h is the same model.
    Per input sample (mono, or the stereo mid) it returns the gain in dB the reference applies (no latency).
    Stages (MEASUREMENTS.md "Flatwater Vocal Leveler: Phase 3 / Phase 4"):
      weighting  two shelves, each two identical first-order sections with half the gain (low 100 Hz -18 dB, high

@@ -1,4 +1,4 @@
-"""Writes plugins/FwComp/FwCompTables.h from the Flatwater Comp measurements: the static curve's constants (knee_model), the makeup
+"""Writes plugins/FwComp/Source/dsp/Tables.h from the Flatwater Comp measurements: the static curve's constants (knee_model), the makeup
 slopes per ratio (makeup.csv), the release law (release_law.json, fitted by nulltest/ident_hc_release2.py and
 ident_hc_real.py; the fourth form release_law4.json by ident_hc_rel4.py) and the Analog modes (analog_model.json from nulltest/fit_hc_analog2.py, analog_noise.csv).
 
@@ -71,7 +71,7 @@ def main():
          '// true: R never falls below the slow state; false: the memory only slows the release',
          'constexpr bool rFloorAtS = %s;' % ('true' if law.get('r_floor_at_s', 1) else 'false'),
          ''] + release4(lit, f) + analog(lit, f) + ['}']
-    out = os.path.join(ROOT, 'plugins', 'FwComp', 'FwCompTables.h')
+    out = os.path.join(ROOT, 'plugins', 'FwComp', 'Source', 'dsp', 'Tables.h')
     open(out, 'w', newline='\n').write('\n'.join(L) + '\n')
     print('wrote', out)
 

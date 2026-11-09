@@ -6919,5 +6919,5 @@
    "result": "PASS"
   }
  ],
- "renderer": "tools/FwPitchBendShifterRender (sha1 af57f28fbd30)"
+ "renderer": "plugins/FwPitchBend/tools/PbShifterRender (sha1 af57f28fbd30)"
 }

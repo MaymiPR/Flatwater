@@ -2,7 +2,7 @@
 
 Residuals of Flatwater Vocal Leveler's output against the reference's, after the first 0.1 s, in dB (lower is better),
 and the error of the applied gain where the input is loud enough to read it. The plug-in runs through its own
-processor offline (`FwVocalLevelerRender`); the reference plug-in through its VST3 (a fresh instance per case). The vocal parts are held-out parts of the corpus (`nulltest/vocal_corpus.py` 24 .. 35: FL Studio's own vocal
+processor offline (`VlRender`); the reference plug-in through its VST3 (a fresh instance per case). The vocal parts are held-out parts of the corpus (`nulltest/vocal_corpus.py` 24 .. 35: FL Studio's own vocal
 phrases strung into 20 s parts with wandering levels, gaps and room noise); they were not used to identify the model.
 How the model was found: [MEASUREMENTS.md](MEASUREMENTS.md).
 

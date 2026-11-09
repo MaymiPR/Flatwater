@@ -1,7 +1,7 @@
 """Flatwater Pitch Bend, Phase 3: what the reference's shifter keys on the controls' own values (the Pitch and Formant
 knobs) and what on the modulated totals. The reference with its controls at c and the rest moved by M1 as a constant
 step sequence (measure_pitchbend_level_flatten.mod_job's recipe, here on Pitch and on Formant), against ours
-(tools/FwPitchBendShifterRender pitch=<total> formant=<total> pitchctl=<c> formantctl=<c>).
+(plugins/FwPitchBend/tools/PbShifterRender pitch=<total> formant=<total> pitchctl=<c> formantctl=<c>).
 
     python -I -B measure_pitchbend_control.py [ref | all]
 

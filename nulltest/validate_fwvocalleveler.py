@@ -1,5 +1,5 @@
 """Phase 5 checks for Flatwater Vocal Leveler: (1) the built VST3 (hosted by tools/RefRender) against the offline renderer
-(FwVocalLevelerRender, the same processor), stereo, at 48 and 96 kHz; (2) CPU. Prints a table for docs/VALIDATION.md.
+(VlRender, the same processor), stereo, at 48 and 96 kHz; (2) CPU. Prints a table for docs/VALIDATION.md.
 (The reference against Flatwater Vocal Leveler at other rates, in Stereo and in Live: nulltest_fwvocalleveler.py.)
 
     python -I validate_fwvocalleveler.py

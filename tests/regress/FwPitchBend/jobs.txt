@@ -1,5 +1,5 @@
-# Flatwater Pitch Bend: the plug-in processor (tools/FwPitchBendRender: in out channels fs [parameter ID=real value, fine=1, slot=target:s:source:depth, preset=index, bpm=tempo]).
-@call FwPitchBendRender {in} {out} 2 {fs} {args} block={block}
+# Flatwater Pitch Bend: the plug-in processor (plugins/FwPitchBend/tools/PbRender: in out channels fs [parameter ID=real value, fine=1, slot=target:s:source:depth, preset=index, bpm=tempo]).
+@call PbRender {in} {out} 2 {fs} {args} block={block}
 pb_defaults_mix         signal=mix   seconds=0.5
 pb_pitch_p5_sine        signal=sine  seconds=1 pitch=5
 pb_pitch_m7_mix         signal=mix   seconds=1 pitch=-7

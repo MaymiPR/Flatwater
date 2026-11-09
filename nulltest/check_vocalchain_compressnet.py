@@ -1,4 +1,4 @@
-"""The plug-in's learned Compress correction against PyTorch's: FwVocalChainRender (every colour clear but Compress, the
+"""The plug-in's learned Compress correction against PyTorch's: ChRender (every colour clear but Compress, the
 Noise off) against train_vocalchain_compress.py's net run through the exact model (prep_vocalchain_compress.py), on a
 held-out vocal after a second of silence, per colour at a few fader positions. Optionally an older renderer (built
 without the net) against the model alone. PyTorch runs in full float32 (cuDNN's TF32 alone differs from the plug-in
@@ -6,7 +6,7 @@ by -65 .. -89 dB); the net's steps start where the plug-in's compressor starts, 
 later and the best kept (at 48 kHz the chain's delay before the compressor plus its look-ahead puts it 1 later).
 Runs in the PyTorch environment.
 
-    python check_vocalchain_compressnet.py [old FwVocalChainRender.exe]
+    python check_vocalchain_compressnet.py [old ChRender.exe]
 """
 import os
 import subprocess
@@ -22,7 +22,7 @@ import baseline_vocalchain_compress as Bl
 import train_vocalchain_compress as Tr
 
 FS = 48000
-RENDER = os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalChain', 'FwVocalChainRender_artefacts', 'Release', 'FwVocalChainRender.exe')
+RENDER = os.path.join(HERE, '..', 'build', 'plugins', 'FwVocalChain', 'ChRender_artefacts', 'Release', 'ChRender.exe')
 TAGS = os.environ.get('TAG', '_r2').split(',')       # one tag, or Push,Spank,Wall as exported (a+b: averaged)
 TAGS = dict(zip((1, 2, 3), [t.split('+') for t in (TAGS * 3 if len(TAGS) == 1 else TAGS)]))
 torch.backends.cudnn.allow_tf32 = False

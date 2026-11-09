@@ -97,9 +97,9 @@ of the reference's slow path, not an identification of it.
 | Network | a GRU of 48 units stepped every 1/12000 s (4 samples at 48 kHz, a phase accumulator at other rates); inputs per step: ln of the step's peak level, the smallest fast ratio and the last fitted slow ratio, ln M, running minima of the fast ratio over 1 to 20 ms, running maxima of the level over 10 to 300 ms; c applies to the following samples, moving linearly between the last two finished steps (causal) |
 | Guards | the floor is the static-law ratio at the loudest level of the last second, so a steady signal is never compressed below its fast ratio; while the fast ratio stays flat for 20 ms (a steady tone) the correction fades out over 20 ms; without them the network cost 10 to 60 dB on steady sines and level steps the fitted path already nulled |
 | Target | the reference's sample-wise gain, then the null residual itself |
-| Dataset | 3600 random 2 s renders of the reference's mono component (voice, speech-like noise, white and pink noise, tones 25 Hz to 10 kHz, steps, AM, sweeps, drums, mixes; peaks -60 ... 0 dBFS; Compression 0 ... -36 dB, gate off), the plug-in's internals dumped by `FwVocalCompRender dump=1` (`nulltest/render_trainset_fwvocalcomp.py`) |
+| Dataset | 3600 random 2 s renders of the reference's mono component (voice, speech-like noise, white and pink noise, tones 25 Hz to 10 kHz, steps, AM, sweeps, drums, mixes; peaks -60 ... 0 dBFS; Compression 0 ... -36 dB, gate off), the plug-in's internals dumped by `VcRender dump=1` (`nulltest/render_trainset_fwvocalcomp.py`) |
 | Training | `nulltest/train_fwvocalcomp.py`: supervised on the gain first, then fine-tuned on the null residual with the compression settings balanced; training on the residual alone does not move (the slow ratio gets no gradient while it is above the fast ratio) |
-| Export | `tools/export_fwvocalcompnet.py` to `plugins/FwVocalComp/FwVocalCompNet.h` |
+| Export | `tools/export_fwvocalcompnet.py` to `plugins/FwVocalComp/Source/dsp/Net.h` |
 | Result, settings grid (672 cases, 48 kHz) | worst -10.1 dB without the net, -22.8 dB with it; median -71.4 and -70.2 dB; 396 cases below -60 dB either way ([NULLTESTS-grid.md](NULLTESTS-grid.md)) |
 | Result, null-test set | worst -9.3 to -19.3 dB; 44 of 117 rows better by more than 1 dB, 4 worse ([NULLTESTS.md](NULLTESTS.md)) |
 | Per signal, Compression -24 / -36, without and with the net | white and pink noise -13 / -10 to -27 / -24 dB (the same at 44.1 to 192 kHz and in stereo); voice-like -31 / -21 to -40 / -30 dB; 100 Hz tone -30 / -24 to -48 / -51 dB; sweeps -36 / -29 to -49 / -48 dB |
@@ -151,9 +151,9 @@ The reference is the original named in Setup, run from a licensed install.
   rates, through its VST3 in a host.
 - Fitted or learned from the reference's output: the detector, the static gain law, the look-ahead and the gate
   identified from those renders (sections 2 to 4 and 7); the slow path fitted (section 5); a small recurrent net (our
-  own weights, `plugins/FwVocalComp/FwVocalCompNet.h`) trained on captures of its output for the slow part of the
+  own weights, `plugins/FwVocalComp/Source/dsp/Net.h`) trained on captures of its output for the slow part of the
   level control (section 6).
-- Redrawn: the editor, drawn in code in Flatwater's own dark look (`Source/common/FwTheme.h`) on the original's
+- Redrawn: the editor, drawn in code in Flatwater's own dark look (`shared/ui/Theme.h`) on the original's
   measured layout (the positions and sizes of the controls), with our own colours and shading; no table of the
   original's pixels ships.
 - Presets: the original's factory preset values under our own names and groups, the suite's standing rule; the

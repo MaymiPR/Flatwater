@@ -71,7 +71,7 @@ def fit(path):
 def main():
     up = fit('reference/hdelay/notes/x_3_hover.png')
     down = fit('reference/hdelay/notes/x_4_down.png')
-    # a report only: the editor draws the pad in code from the measured geometry (FwDelayEditor.cpp)
+    # a report only: the editor draws the pad in code from the measured geometry (plugins/FwDelay/Source/PluginEditor.cpp)
     print('released %s, pressed %s coefficients' % (up.shape, down.shape))
 
 

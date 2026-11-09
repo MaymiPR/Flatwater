@@ -2,7 +2,7 @@
 parameter's own resolution) is a low-order digital filter in the reference: its impulse response through the chain
 with every colour clear, fitted (Steiglitz-McBride with that chain's own response as the input) by a few second-order
 sections, matches to -100 dB and better. This captures every position at 44.1 / 48 / 88.2 / 96 kHz (parallel cv_ref
-workers), fits each, and writes plugins/FwVocalChain/FwVocalChainEqTables.h; positions it cannot fit to -80 dB are reported.
+workers), fits each, and writes plugins/FwVocalChain/Source/dsp/EqTables.h; positions it cannot fit to -80 dB are reported.
 
     python -I fit_vocalchain_eqtables.py [--workers=12]
 """
@@ -15,7 +15,7 @@ from scipy.signal import lfilter, tf2sos
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'FwVocalChainEqTables.h')
+OUT = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'Source', 'dsp', 'EqTables.h')
 RATES = (44100, 48000, 88200, 96000)
 STAGES = ('bass', 'treble')
 ORDERS = {('bass', 1): (8, 6), ('bass', 2): (8, 6), ('bass', 3): (12, 10, 8), ('treble', 1): (4, 6), ('treble', 2): (4, 6), ('treble', 3): (6, 4, 8)}

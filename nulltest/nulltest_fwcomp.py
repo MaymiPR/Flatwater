@@ -13,7 +13,7 @@ import refhost as R
 import nulltest_fwvocalcomp as NV
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EXE = os.environ.get("FWCOMP_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwComp", "Release", "FwCompRender.exe"))
+EXE = os.environ.get("FWCOMP_RENDER", os.path.join(HERE, "..", "build", "plugins", "FwComp", "Release", "CoRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
 
 # (threshold, ratio, attack, release, punch, mix, output, limiter)

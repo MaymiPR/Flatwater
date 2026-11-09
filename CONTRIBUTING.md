@@ -15,7 +15,7 @@ nobody's words are quoted in a file, a commit message, a tag or release notes.
 ## Build
 
 Requirements and the commands per platform are in the [build guide](docs/BUILDING.md). Every build also makes each
-plug-in's offline renderer (`<Name>Render`, for example `FwCompRender`) and editor snapshot tool (`<Name>Snapshot`);
+plug-in's offline renderer (`<Name>Render`, for example `CoRender`) and editor snapshot tool (`<Name>Snapshot`);
 on Windows it adds the hosts for the reference plug-ins (RefRender, MeterCapture, VuRender, OggDecode) and the
 keyboard check (FocusCheck). The plug-ins are added with `add_subdirectory`, so their files land in
 `build/plugins/<Name>/<Name>_artefacts/Release/`. The `ci_targets` target builds what CI builds: every plug-in's VST3,

@@ -1,5 +1,5 @@
 """Writes Flatwater Vocal Chain's learned Compress correction (build/vocalchainnet/c<colour><tag>.pt, from
-nulltest/train_vocalchain_compress.py) to plugins/FwVocalChain/FwVocalChainCompressNet.h as constant arrays: per colour one
+nulltest/train_vocalchain_compress.py) to plugins/FwVocalChain/Source/dsp/CompressNet.h as constant arrays: per colour one
 net, or several whose corrections the plug-in averages (the same number for every colour). Run in the PyTorch
 environment.
 
@@ -31,12 +31,12 @@ cks = {(c, m): torch.load(os.path.join(HERE, '..', 'build', 'vocalchainnet', 'c%
        for c in (1, 2, 3) for m in range(M)}
 H = cks[1, 0]['hidden']; I = cks[1, 0]['state']['gru.weight_ih_l0'].shape[1]
 assert all(ck['hidden'] == H for ck in cks.values())
-out = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'FwVocalChainCompressNet.h')
+out = os.path.join(HERE, '..', 'plugins', 'FwVocalChain', 'Source', 'dsp', 'CompressNet.h')
 with open(out, 'w', newline='\n') as f:
     f.write('#pragma once\n// Flatwater Vocal Chain\'s learned Compress correction (per colour %d GRU%s of %d hidden units, %s),\n'
             '// trained on renders of the reference by nulltest/train_vocalchain_compress.py and written by\n'
             '// tools/export_vocalchainnet.py from build/vocalchainnet/c<colour><tag>.pt (the tags below). Do not edit.\n'
-            '// Inputs per 12 kHz step: see fwvocalchain::CompressNet in FwVocalChainDsp.h, normalised by mean and scale. Output:\n'
+            '// Inputs per 12 kHz step: see fwvocalchain::CompressNet in Engine.h, normalised by mean and scale. Output:\n'
             '// cmax tanh (out), the ln correction of the compressor\'s output. PyTorch GRU layout: rows [reset; update; new].\n\n'
             'namespace fwvocalchain::compressnet\n{\n' % (M, 's' if M > 1 else '', H, 'their corrections averaged' if M > 1 else 'one net'))
     f.write('inline constexpr int hidden = %d, inputs = %d, members = %d;\n' % (H, I, M))

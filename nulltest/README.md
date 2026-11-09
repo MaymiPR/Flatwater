@@ -79,8 +79,8 @@ reference renders go to the git-ignored `renders/`, `build/` and `reference/` fo
 | `probe_deess.py` | the main de-esser's structure: the split, the detector, the gain law |
 | `probe_vocalchain_splice.py` | how the doubler's pitch shifter picks its step at a jump |
 | `rates_vocalchain_doubler.py` | the doubler at other sample rates, from click trains |
-| `probe_hd_analog_tf.py` | an H-Delay Analog mode's low-level transfer function against FwDelayRender |
-| `probe_hd_lfo_trace.py` | the delay trace under modulation from a steady sine's phase, against FwDelayRender |
+| `probe_hd_analog_tf.py` | an H-Delay Analog mode's low-level transfer function against DeRender |
+| `probe_hd_lfo_trace.py` | the delay trace under modulation from a steady sine's phase, against DeRender |
 | `probe_hd_mod.py` | modulation nulls over Rate, Delay and Depth |
 | `probe_recovery_mb.py` | MaxxBass level control: recovery in silence and the attack at an onset |
 | `br_traces.py` | Bass Rider's applied gain on musical material, beside the probes |
@@ -129,7 +129,7 @@ reference renders go to the git-ignored `renders/`, `build/` and `reference/` fo
 | `br_fit.py` | Bass Rider: the note detector of the riding model by CMA-ES on probes and traces |
 | `br_polish.py` | Bass Rider: per-setting values polished one at a time on a grid |
 | `br_lock.py` | Bass Rider: the learned lock of the ride after a note's start |
-| `br_export.py` | writes the fitted detector constants into `plugins/FwBassLeveler/FwBassLevelerRide.h` |
+| `br_export.py` | writes the fitted detector constants into `plugins/FwBassLeveler/Source/dsp/Ride.h` |
 | `design_hilbert.py` | the quadrature allpass pair of Flatwater Bass Leveler's envelopes |
 | `vr_fit.py` | Vocal Rider: the riding model's continuous constants by CMA-ES |
 | `fit_vocalchain_eq.py` | CLA Vocals: Bass and Treble per colour and fader step |
@@ -138,7 +138,7 @@ reference renders go to the git-ignored `renders/`, `build/` and `reference/` fo
 | `fit_vocalchain_fixed.py` | the chain's fixed filter per sample rate, an order-8 IIR |
 | `fit_vocalchain_deess.py` | the main de-esser |
 | `fit_vocalchain_compress.py` | Compress per colour and fader step |
-| `gen_vocalchain_compress.py` | writes `plugins/FwVocalChain/FwVocalChainCompress.h` from the Compress fits |
+| `gen_vocalchain_compress.py` | writes `plugins/FwVocalChain/Source/dsp/Compress.h` from the Compress fits |
 | `fit_vocalchain_doubler2.py` | the doubler's voices measured on click trains |
 | `rates_lead_fit.py` | the doubler's LFO lead correction at other rates |
 | `pack_vocalchain_reverb.py` | packs the reverb's measured impulse responses for the plug-in |

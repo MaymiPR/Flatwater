@@ -1,5 +1,5 @@
 /* Feature helpers for the Flatwater BassX Lift level-control training (loaded with ctypes by train_fwbassxlift.py; the same recursions
-   run in FwBassXLiftDsp.h): a peak follower with instant attack and one-pole release, and a one-pole power smoother. */
+   run in plugins/FwBassXLift/Source/dsp/Engine.h): a peak follower with instant attack and one-pole release, and a one-pole power smoother. */
 __declspec(dllexport) void mb_peak(const double* x, double* y, int n, double rel)
 {
     double e = 0.0;

@@ -46,7 +46,7 @@ The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 
 ## Parameters (V2)
 
-Flatwater Vocal Leveler's parameters (`FwVocalLevelerProcessor.cpp`). The meters, the Ride / Idle LEDs, the clip LED, the Effective Range and the Idle value in dB are display
+Flatwater Vocal Leveler's parameters (`plugins/FwVocalLeveler/Source/PluginProcessor.cpp`). The meters, the Ride / Idle LEDs, the clip LED, the Effective Range and the Idle value in dB are display
 only, not parameters. The original's presets do not store Spill.
 
 | ID | Label | Range, step | Default | Notes |

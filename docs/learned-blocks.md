@@ -8,11 +8,11 @@ itself program-dependent, after hidden design values and structural finds have b
 
 | Plug-in | Block | Network | Trainer | Exporter | Header |
 |---|---|---|---|---|---|
-| Flatwater Bass Lift | the gain of the created bass | GRU, 32 units | `nulltest/train_gain.py` | `tools/export_gainnet.py` | `plugins/FwBassLift/FwBassLiftGainNet.h` |
-| Flatwater BassX Lift | the harmonics compressor (Ratio, Response) | GRU, 48 units, trained end to end through the identified recursion | `nulltest/train_fwbassxlift.py` | `tools/export_fwbassxliftnet.py` | `plugins/FwBassXLift/FwBassXLiftNet.h` |
-| Flatwater Comp | a gain correction over the plug-in's own states | GRU correction | `nulltest/train_fwcomp.py` | `tools/export_fwcompnet.py` | `plugins/FwComp/FwCompNet.h` |
-| Flatwater Vocal Comp | the slow path of the level control | GRU, 48 units | `nulltest/train_fwvocalcomp.py` | `tools/export_fwvocalcompnet.py` | `plugins/FwVocalComp/FwVocalCompNet.h` |
-| Flatwater Vocal Chain | a gain correction of Compress, two nets per colour averaged | GRU, 32 units | `nulltest/train_vocalchain_compress.py` | `tools/export_vocalchainnet.py` | `plugins/FwVocalChain/FwVocalChainCompressNet.h` |
+| Flatwater Bass Lift | the gain of the created bass | GRU, 32 units | `nulltest/train_gain.py` | `tools/export_gainnet.py` | `plugins/FwBassLift/Source/dsp/GainNet.h` |
+| Flatwater BassX Lift | the harmonics compressor (Ratio, Response) | GRU, 48 units, trained end to end through the identified recursion | `nulltest/train_fwbassxlift.py` | `tools/export_fwbassxliftnet.py` | `plugins/FwBassXLift/Source/dsp/Net.h` |
+| Flatwater Comp | a gain correction over the plug-in's own states | GRU correction | `nulltest/train_fwcomp.py` | `tools/export_fwcompnet.py` | `plugins/FwComp/Source/dsp/Net.h` |
+| Flatwater Vocal Comp | the slow path of the level control | GRU, 48 units | `nulltest/train_fwvocalcomp.py` | `tools/export_fwvocalcompnet.py` | `plugins/FwVocalComp/Source/dsp/Net.h` |
+| Flatwater Vocal Chain | a gain correction of Compress, two nets per colour averaged | GRU, 32 units | `nulltest/train_vocalchain_compress.py` | `tools/export_vocalchainnet.py` | `plugins/FwVocalChain/Source/dsp/CompressNet.h` |
 
 Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, results and cost.
 
@@ -20,7 +20,7 @@ Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, res
 
 1. **Make the structure around the block exact.** Every identified stage before and after the block nulls on its
    own; the block's inputs and outputs are signals the model computes exactly. The offline renderer dumps them
-   (`FwVocalCompRender dump=1` writes the detector level, the fast ratio and the fitted slow ratio per sample).
+   (`VcRender dump=1` writes the detector level, the fast ratio and the fitted slow ratio per sample).
 2. **Extract the target exactly from the reference.** Where the stage is a pure gain, the reference's own gain sample
    by sample: output / delayed input / fixed gain. Where a module has an amount control, its fully wet equivalent.
    The target comes from the reference's output only, never from any of its files.

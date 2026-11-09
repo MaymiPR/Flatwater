@@ -1,5 +1,5 @@
-# Flatwater Bass Lift: the DSP (tools/FwBassLiftRender: in out channels fs Freq(Hz) Intensity(dB) Gain(dB) OriginalBass(0/1)).
-@call FwBassLiftRender {in} {out} 2 {fs} {args}
+# Flatwater Bass Lift: the DSP (plugins/FwBassLift/tools/BfRender: in out channels fs Freq(Hz) Intensity(dB) Gain(dB) OriginalBass(0/1)).
+@call BfRender {in} {out} 2 {fs} {args}
 f90_mix         signal=mix   90 -6 0 0
 f60_orig_mix    signal=mix   60 -3 -2 1
 f120_burst      signal=burst 120 -10 0 0

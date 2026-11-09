@@ -5,4 +5,4 @@
 vendor: Waves, Renaissance, MaxxBass, H-Comp, H-Delay, Bass Rider, Vocal Rider, CLA, Vocal Bender
 #
 # allow: <path glob>  <reason, with the approval recorded and its date>
-allow: plugins/FwVocalChain/ir/*.bin  measured reverb responses, after the model-first attempt (approval recorded, 2026-10-28)
+allow: plugins/FwVocalChain/resources/ir/*.bin  measured reverb responses, after the model-first attempt (approval recorded, 2026-10-28)

@@ -1,5 +1,5 @@
 """Flatwater Pitch Bend, Phase 3: the shifter's scorecard (measurements/fwpitchbend/shifter/SUMMARY.md, M1 .. M8) run on
-OUR shifter alone (tools/FwPitchBendShifterRender) next to the reference's numbers (the JSON files of
+OUR shifter alone (plugins/FwPitchBend/tools/PbShifterRender) next to the reference's numbers (the JSON files of
 measure_pitchbend_shifter.py in the same folder). The same signals and the same measures as that battery.
 
     python -I -B score_pitchbend_shifter.py [m1 m1b m2 m3 m4 m5 m6 m7 m8 blocks cpu | all]
@@ -18,7 +18,7 @@ import pb_host as H
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = M.OUT
 CACHE = os.path.join(H.TMP, 'pbshift_ours'); os.makedirs(CACHE, exist_ok=True)
-EXE = os.environ.get('FW_SHIFTER_RENDER', os.path.join(H.BUILD, 'plugins', 'FwPitchBend', 'Release', 'FwPitchBendShifterRender.exe'))
+EXE = os.environ.get('FW_SHIFTER_RENDER', os.path.join(H.BUILD, 'plugins', 'FwPitchBend', 'Release', 'PbShifterRender.exe'))
 FS = M.FS
 _EXE_HASH = None
 
@@ -505,7 +505,7 @@ def main():
         print_rows(ROWS[n0:])
         print('  (%s: %.0f s)' % (w, time.time() - t), flush=True)
     data['table'] = sorted(table.values(), key=lambda q: (['M1', 'M1b', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'blk', 'cpu'].index(q['metric']), q['what']))
-    data['renderer'] = 'tools/FwPitchBendShifterRender (sha1 %s)' % exe_hash()
+    data['renderer'] = 'plugins/FwPitchBend/tools/PbShifterRender (sha1 %s)' % exe_hash()
     with open(os.path.join(OUT, 'ours.json'), 'w') as f: json.dump(data, f, indent=1)
 
 
