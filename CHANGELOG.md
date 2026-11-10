@@ -13,6 +13,9 @@
   scripts are named by their purpose, helpers end in `_lib.py`, the iteration scripts whose output does not ship left
   the tree, the C helpers are built by `scripts/build_native.py`, and one `NULLTESTS.md` per plug-in (Settings,
   Presets, Grid) is written from `measurements/<Id>/nulltests.json` by `nulltest.py --report` with the same numbers.
+- **Source names:** the C++ namespaces are the plug-ins' two-letter abbreviations and `flatwater` for the shared
+  code; the shared controls are `shared/ui/Widgets`, a plug-in's own `Source/ui/Controls`; FwComp's VU dial renderer
+  is `CoVuRender`. No sound or saved state changes (the render regression is byte-identical).
 
 ## 1.0.0 (2026-11-04)
 
