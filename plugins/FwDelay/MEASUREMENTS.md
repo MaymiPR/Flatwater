@@ -126,7 +126,7 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 ## 12. The editor
 
 Measured with `tools/MeterCapture` screenshots, films and drag, click and wheel scripts on the reference editor
-(screenshots in the git-ignored `reference/hdelay/`, including `reference/hdelay/ppdual`). Every value is a
+(screenshots in the git-ignored `reference/fwdelay/`, including `reference/fwdelay/ppdual`). Every value is a
 measurement the redrawn editor uses, not a copied pixel.
 
 | Quantity | Value |

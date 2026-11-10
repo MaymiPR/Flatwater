@@ -33,7 +33,7 @@ def main():
     skip = fs // 2
     ok = True
     if not a.self:
-        print('reference: %s in %s' % (h.REF_NAME, h.R.WAVESHELL))
+        print('reference: %s in %s' % (h.REF_NAME, h.R.REF_SHELL))
         y = h.render_ref_host(x, fs)
         ok &= check('reference not silent (rms above -60 dB)', -nl.rms_db(y), 60.0)
         y = h.render_ref_host(x, fs, {'Bypass:': 1})

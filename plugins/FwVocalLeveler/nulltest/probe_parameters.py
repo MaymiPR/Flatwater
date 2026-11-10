@@ -21,7 +21,7 @@ def buzz(t, f0=180.0, n=20):
 
 
 def main():
-    names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
+    names = pb.VST3Plugin.get_plugin_names_for_file(R.REF_SHELL)
     vr = [n for n in names if "Vocal Rider" in n]
     print("the reference's components in the shell:", vr)
     for name in vr:
@@ -56,7 +56,7 @@ def main():
     for name in vr:
         uid = {"Vocal Rider Mono": -510562340, "Vocal Rider Stereo": -509086244,
                "Vocal Rider Live Mono": 989902242, "Vocal Rider Live Stereo": 991378338}[name]
-        out = subprocess.run([R.REFRENDER, R.WAVESHELL, "%s@%d" % (name, uid), os.path.join(d, "in.f32"),
+        out = subprocess.run([R.REFRENDER, R.REF_SHELL, "%s@%d" % (name, uid), os.path.join(d, "in.f32"),
                               os.path.join(d, "out.f32")], capture_output=True, text=True).stdout
         print(name, "\n" + "\n".join(l for l in out.splitlines() if "bus" in l))
     # the gain on steady buzzes (after 4 s), at the default settings

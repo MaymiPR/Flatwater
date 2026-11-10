@@ -15,7 +15,7 @@ import pedalboard as pb
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import local_config_lib as L
 
-WAVESHELL = L.get('ref_vst3')
+REF_SHELL = L.get('ref_vst3')
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 _cache = {}
 STATS = {"silent_retries": 0}
@@ -29,7 +29,7 @@ def fresh(name):
 
 def load(name):
     if name not in _cache:
-        _cache[name] = pb.load_plugin(WAVESHELL, plugin_name=name)
+        _cache[name] = pb.load_plugin(REF_SHELL, plugin_name=name)
     return _cache[name]
 
 
@@ -81,7 +81,7 @@ def render_ref(x, fs, name, sc=None, bpm=0.0, params=None, block=512, extra=(), 
     d = tempfile.mkdtemp(prefix="refr_")
     fin, fout, fsc = os.path.join(d, "in.f32"), os.path.join(d, "out.f32"), os.path.join(d, "sc.f32")
     x.T.astype(np.float32).tofile(fin)
-    cmd = [REFRENDER, vst3 or WAVESHELL, name, fin, fout, "fs=%d" % fs, "block=%d" % block]
+    cmd = [REFRENDER, vst3 or REF_SHELL, name, fin, fout, "fs=%d" % fs, "block=%d" % block]
     if sc is not None:
         sc = np.asarray(sc, np.float32)
         if sc.ndim == 1: sc = np.stack([sc, sc])
