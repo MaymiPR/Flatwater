@@ -2,13 +2,13 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include "shared/Presets.h"
-#include "shared/ui/Meter.h"
+#include "shared/ui/Widgets.h"
 #include "dsp/Engine.h"
 
-// Flatwater Vocal Chain: a one-fader-per-stage vocal chain modelled on CLA Vocals (RESEARCH.md, Flatwater Vocal Chain): Sensitivity, Bass,
+// Flatwater Vocal Chain: a one-fader-per-stage vocal chain modelled on the reference (RESEARCH.md, Flatwater Vocal Chain): Sensitivity, Bass,
 // Treble, Compress, Reverb, Delay and Pitch faders, each stage with a colour, Output and Balance. The audio is
 // dsp/Engine.h's chain (Phase 4 under way).
-namespace fwvocalchain
+namespace ch
 {
 inline constexpr const char* sensitivity = "sensitivity";
 inline constexpr const char* bass = "bass";
@@ -60,7 +60,7 @@ public:
     // the In/Out link (Flatwater's own): while it is on, Output is the mirror of Sensitivity (Output = -Sensitivity) in
     // the audio at every block, whatever the Output parameter holds; syncLink() sets the Output parameter to that
     // mirror (a timer does it too, so automation, presets, setups and undo cannot leave the two apart)
-    bool linked() const { return get (fwvocalchain::link) > 0.5f; }
+    bool linked() const { return get (ch::link) > 0.5f; }
     void syncLink();
 
     void prepareToPlay (double, int) override;
@@ -75,19 +75,19 @@ public:
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 5.0; }
-    int getNumPrograms() override { return 1 + (int) fwvocalchain::factoryPresets().size(); }
+    int getNumPrograms() override { return 1 + (int) ch::factoryPresets().size(); }
     int getCurrentProgram() override { return currentProgram; }
     void setCurrentProgram (int index) override
     {
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
-        static const fw::FactoryPreset defaults { "", "Default", {}, { fwvocalchain::sensitivity, fwvocalchain::output, fwvocalchain::link } };
-        fw::applyPreset (apvts, index == 0 ? defaults : fwvocalchain::factoryPresets()[(size_t) index - 1], apvts.getParameter (fwvocalchain::mode));
+        static const flatwater::FactoryPreset defaults { "", "Default", {}, { ch::sensitivity, ch::output, ch::link } };
+        flatwater::applyPreset (apvts, index == 0 ? defaults : ch::factoryPresets()[(size_t) index - 1], apvts.getParameter (ch::mode));
     }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
-        const auto& p = fwvocalchain::factoryPresets()[(size_t) index - 1];
+        const auto& p = ch::factoryPresets()[(size_t) index - 1];
         return juce::String (p.group) + ": " + p.name;
     }
     void changeProgramName (int, const juce::String&) override {}
@@ -99,18 +99,18 @@ public:
 
     // editor taps: the input and output peaks per channel (dB, the highest of the block) for the meters, and the
     // input's rms level after Sensitivity for the Sensitivity LED
-    fw::PeakTap inL, inR, outL, outR;
+    flatwater::PeakTap inL, inR, outL, outR;
     std::atomic<float> sensLevelDb { -100.0f };
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void setNoise (bool on) { chain.noiseOn = on; }                   // (the reference's state-only Noise; off for null tests)
-    int modeIndex() const { return juce::roundToInt (get (fwvocalchain::mode)); }
+    int modeIndex() const { return juce::roundToInt (get (ch::mode)); }
 
 private:
     void timerCallback() override { syncLink(); }
     juce::AudioProcessorValueTreeState::ParameterLayout layout();
     double sr = 48000.0;
-    fwvocalchain::dsp::Chain chain;
+    ch::dsp::Chain chain;
     juce::AudioBuffer<float> work;
     int currentProgram = 0;
 };

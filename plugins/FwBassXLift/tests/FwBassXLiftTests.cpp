@@ -26,7 +26,7 @@ struct Settings
     int highpass = 1, monitor = 0;
 };
 
-static void apply (fwbassxlift::Processor& p, const Settings& s)
+static void apply (bx::Processor& p, const Settings& s)
 {
     p.setInputDb (s.input); p.setFreq (s.freq); p.setDecayDb (s.decay); p.setResponseMs (s.response); p.setRatio (s.ratio);
     p.setOrigBassDb (s.orig); p.setHarmonicsDb (s.harm); p.setHighPass (s.highpass); p.setMonitor (s.monitor);
@@ -34,7 +34,7 @@ static void apply (fwbassxlift::Processor& p, const Settings& s)
 
 static std::vector<float> run (const std::vector<float>& x, Settings s, int block = 512, double fs = 48000.0, double fixedGain = -1.0)
 {
-    fwbassxlift::Processor p;
+    bx::Processor p;
     apply (p, s);
     p.fixedGain = fixedGain;
     p.prepare (fs, 1);
@@ -148,7 +148,7 @@ static void testBlocksAndChannels()
     Settings s; s.harm = 0; s.ratio = 2;
     CHECK (rmsDiffDb (run (x, s, 37), run (x, s, 512)) < -200.0);         // no block-size dependence
     // channels are processed on their own: a left-only input leaves the right output silent
-    fwbassxlift::Processor p; apply (p, s); p.prepare (48000.0, 2);
+    bx::Processor p; apply (p, s); p.prepare (48000.0, 2);
     std::vector<float> l (x), r (x.size(), 0.0f);
     float* ch[2] = { l.data(), r.data() };
     p.process (ch, 2, (int) x.size());
@@ -172,29 +172,29 @@ static void testProcessor()
     proc.processBlock (buf, midi);
     CHECK (std::isfinite (buf.getSample (0, 100)));
     // state round trip
-    auto* fp = proc.apvts.getParameter (fwbassxlift::freq);
+    auto* fp = proc.apvts.getParameter (bx::freq);
     fp->setValueNotifyingHost (fp->convertTo0to1 (120.0f));
     juce::MemoryBlock mb; proc.getStateInformation (mb);
     FwBassXLiftProcessor other; other.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (other.apvts.getRawParameterValue (fwbassxlift::freq)->load(), 120.0, 1e-3);
+    CHECK_NEAR (other.apvts.getRawParameterValue (bx::freq)->load(), 120.0, 1e-3);
     // factory presets: 22 (from the reference's set), they set their values and leave Input alone
     CHECK (proc.getNumPrograms() == 23);
-    auto* in = proc.apvts.getParameter (fwbassxlift::input);
+    auto* in = proc.apvts.getParameter (bx::input);
     in->setValueNotifyingHost (in->convertTo0to1 (-6.0f));
     proc.setCurrentProgram (2);                                       // "PA System"
     CHECK (proc.getProgramName (2) == "Essentials: PA System");
-    CHECK_NEAR (proc.apvts.getRawParameterValue (fwbassxlift::input)->load(), -6.0, 0.05);
-    CHECK_NEAR (proc.apvts.getRawParameterValue (fwbassxlift::ratio)->load(), 2.0, 0.01);
-    CHECK_NEAR (proc.apvts.getRawParameterValue (fwbassxlift::harmonics)->load(), -15.0, 0.05);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bx::input)->load(), -6.0, 0.05);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bx::ratio)->load(), 2.0, 0.01);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bx::harmonics)->load(), -15.0, 0.05);
     proc.setCurrentProgram (0);                                       // Default
-    CHECK_NEAR (proc.apvts.getRawParameterValue (fwbassxlift::input)->load(), -6.0, 0.05);
-    CHECK_NEAR (proc.apvts.getRawParameterValue (fwbassxlift::harmonics)->load(), -100.0, 0.05);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bx::input)->load(), -6.0, 0.05);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bx::harmonics)->load(), -100.0, 0.05);
 }
 
 static void testAgainstReference()
 {
     // the identified structure against the reference's own measurements (MEASUREMENTS.md "Flatwater BassX Lift model"), with the
-    // level control held at its cap: the generated part at rest (impulse responses of MaxxBass at 1e-4, FFT magnitude)
+    // level control held at its cap: the generated part at rest (impulse responses of the reference at 1e-4, FFT magnitude)
     struct Row { double freq; int hp; std::vector<std::pair<double, double>> mag; };
     const Row rows[] = {
         { 80, 1, { { 20, -12.52 }, { 40, 0.63 }, { 60, 6.2 }, { 80, 7.1 }, { 120, 1.41 }, { 240, -15.56 }, { 640, -41.07 } } },

@@ -6,7 +6,7 @@
 // Flatwater Vocal Leveler editor: the reference's measured layout on a 320 x 598 px design grid (the narrow toolbar
 // included), drawn by Flatwater in the suite's own look (shared/ui/Theme.h). The static art is rendered once per window scale
 // and layout (Studio / Live); the controls draw themselves.
-namespace fwvocalleveler::ui
+namespace vl::ui
 {
 // the reference's scale on the lower panel: +12 dB at y 231, 0 dB at 336, -12 dB at 441 (8.75 px per dB, measured)
 inline float scaleY (float db) { return 336.0f - 8.75f * db; }
@@ -74,8 +74,8 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (! disabledLook && marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (! disabledLook) fw::wavesWheel (*this, e, w, wheelAcc, false); }
-    fw::flat::WavesDrag feel { fw::flat::WavesDrag::Rotary };
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (! disabledLook) flatwater::fineWheel (*this, e, w, wheelAcc, false); }
+    flatwater::flat::FineDrag feel { flatwater::flat::FineDrag::Rotary };
     const bool small;
     bool blocked = false, disabledLook = false;
     Marks* marks = nullptr;
@@ -97,7 +97,7 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (kind != Rider && marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (kind != Rider) fw::wavesWheel (*this, e, w, wheelAcc, false); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (kind != Rider) flatwater::fineWheel (*this, e, w, wheelAcc, false); }
     juce::Rectangle<float> capBounds() const;                   // local: the cap's box (it sets the travel)
     juce::Rectangle<float> capCore() const;                     // local: its visible part
     const Kind kind;
@@ -121,7 +121,7 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fw::wavesWheel (*this, e, w, wheelAcc, false); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { flatwater::fineWheel (*this, e, w, wheelAcc, false); }
     LinearDrag feel;
     bool blocked = false;
     Marks* marks = nullptr;
@@ -177,7 +177,7 @@ public:
 };
 }
 
-class FwVocalLevelerEditor : public fw::ren::Editor
+class FwVocalLevelerEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwVocalLevelerEditor (FwVocalLevelerProcessor&);
@@ -200,23 +200,23 @@ private:
     void closeEntry (bool apply);
     std::unique_ptr<juce::TextEditor> entry;
     juce::Slider* entryFor = nullptr;
-    fw::flat::LassoOverlay& lasso;
+    flatwater::flat::LassoOverlay& lasso;
     juce::Point<float> lassoStart;
     bool lassoing = false;
 
     FwVocalLevelerProcessor& proc;
-    fwvocalleveler::ui::Marks marks;
-    fwvocalleveler::ui::Knob& vocal;
-    fwvocalleveler::ui::Knob& music;
-    fwvocalleveler::ui::Knob& spill;
-    fwvocalleveler::ui::Switch& attackSwitch;
-    fwvocalleveler::ui::TargetSlider& target;
-    fwvocalleveler::ui::Fader& rangeMax;
-    fwvocalleveler::ui::Fader& rangeMin;
-    fwvocalleveler::ui::Fader& output;
-    fwvocalleveler::ui::Fader& rider;
-    fwvocalleveler::ui::IdleColumn& idleColumn;
-    fwvocalleveler::ui::AutomationButtons& automation;
+    vl::ui::Marks marks;
+    vl::ui::Knob& vocal;
+    vl::ui::Knob& music;
+    vl::ui::Knob& spill;
+    vl::ui::Switch& attackSwitch;
+    vl::ui::TargetSlider& target;
+    vl::ui::Fader& rangeMax;
+    vl::ui::Fader& rangeMin;
+    vl::ui::Fader& output;
+    vl::ui::Fader& rider;
+    vl::ui::IdleColumn& idleColumn;
+    vl::ui::AutomationButtons& automation;
 
     juce::Image background;
     float backgroundScale = 0.0f;

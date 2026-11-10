@@ -1,34 +1,34 @@
 #include "PluginEditor.h"
 
 using namespace juce;
-using namespace fw::ren;
+using namespace flatwater::ren;
 
 namespace
 {
 // the created-harmonics window in the theme: cyan, its edge and lines brighter
-const Colour kHarm (fw::theme::cyan.withAlpha (0.35f)), kHarmLine (fw::theme::cyan);
+const Colour kHarm (flatwater::theme::cyan.withAlpha (0.35f)), kHarmLine (flatwater::theme::cyan);
 const Rectangle<int> kClip (302, 103, 23, 13), kHarmText (143, 287, 82, 25), kOrigText (39, 303, 33, 14);
 }
 
 FwBassLiftEditor::FwBassLiftEditor (FwBassLiftProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwbasslift::mode), "Flatwater Bass Lift", JucePlugin_VersionString, W, H), proc (p),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bf::mode), "Flatwater Bass Lift", JucePlugin_VersionString, W, H), proc (p),
       intensity (makeFader (Fader::Big)), gain (makeFader (Fader::Small, 5)), freq (makeFader (Fader::Horizontal)),
       origBass (makeSwitch())
 {
-    setFactoryPresets (fwbasslift::factoryPresets());
+    setFactoryPresets (bf::factoryPresets());
     intensity.negateTyped = false;                                   // -24 .. +24 dB
     freq.format = [] (double v) { return String (roundToInt (v)); };
     freq.negateTyped = false;
     freq.textArea = { 129, 6, 42, 16 };
-    // measured on RBass: Freq moves the whole range in 98 px of mouse (1.53 times its track), with Ctrl 0.28 of the
+    // measured on the reference: Freq moves the whole range in 98 px of mouse (1.53 times its track), with Ctrl 0.28 of the
     // track's rate on mouse steps over 2 px and 0.038 on smaller ones
     freq.plainScale = 1.53f; freq.ctrlFast = 0.283f; freq.ctrlSlow = 0.038f;
     freq.wheelScale = 1.25;                         // and its wheel 1.25 times the share of the range
     gain.trackTop = 20;
-    attach (intensity, fwbasslift::intensity, { 135, 99, 102, 207 }, 0.0);
-    attach (gain, fwbasslift::gain, { 292, 85, 42, 215 }, 0.0);
-    attach (freq, fwbasslift::freq, { 120, 334, 171, 41 }, 80.0);
-    attach (origBass, fwbasslift::origBass, { 41, 88, 33, 38 });
+    attach (intensity, bf::intensity, { 135, 99, 102, 207 }, 0.0);
+    attach (gain, bf::gain, { 292, 85, 42, 215 }, 0.0);
+    attach (freq, bf::freq, { 120, 334, 171, 41 }, 80.0);
+    attach (origBass, bf::origBass, { 41, 88, 33, 38 });
 }
 
 Rectangle<int> FwBassLiftEditor::vuRect (bool right) const { return { isMono() ? 311 : (right ? 315 : 307), 122, 5, 155 }; }
@@ -67,7 +67,7 @@ void FwBassLiftEditor::contentMouseDown (const MouseEvent& e)
 void FwBassLiftEditor::paintContent (Graphics& g)
 {
     paintPanel (g);
-    paintTitle (g, "Bass Lift", fw::theme::text);
+    paintTitle (g, "Bass Lift", flatwater::theme::text);
     paintHousing (g);
 
     // created-harmonics window: filled from the bottom, 0 dB at the top, 30 dB over the window
@@ -93,7 +93,7 @@ void FwBassLiftEditor::paintContent (Graphics& g)
     }
 
     // Freq track: a narrow well along the thumb's travel
-    fw::theme::drawWell (g, { 136.0f, 349.5f, 100.0f, 4.0f }, 2.0f);
+    flatwater::theme::drawWell (g, { 136.0f, 349.5f, 100.0f, 4.0f }, 2.0f);
 
     // clip light
     paintClipLight (g, kClip.toFloat(), clip);

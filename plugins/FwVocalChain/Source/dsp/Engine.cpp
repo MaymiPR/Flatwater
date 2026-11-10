@@ -4,7 +4,7 @@
 
 using namespace juce;
 
-namespace fwvocalchain::dsp
+namespace ch::dsp
 {
 namespace
 {
@@ -26,10 +26,10 @@ float half (uint16 h)
 
 Packed nearestPacked (double fs)
 {
-    const Packed all[] = { { 44100.0, FwVocalChainIR::reverb_44100_bin, FwVocalChainIR::reverb_44100_binSize },
-                           { 48000.0, FwVocalChainIR::reverb_48000_bin, FwVocalChainIR::reverb_48000_binSize },
-                           { 88200.0, FwVocalChainIR::reverb_88200_bin, FwVocalChainIR::reverb_88200_binSize },
-                           { 96000.0, FwVocalChainIR::reverb_96000_bin, FwVocalChainIR::reverb_96000_binSize } };
+    const Packed all[] = { { 44100.0, ch::ir::reverb_44100_bin, ch::ir::reverb_44100_binSize },
+                           { 48000.0, ch::ir::reverb_48000_bin, ch::ir::reverb_48000_binSize },
+                           { 88200.0, ch::ir::reverb_88200_bin, ch::ir::reverb_88200_binSize },
+                           { 96000.0, ch::ir::reverb_96000_bin, ch::ir::reverb_96000_binSize } };
     const Packed* best = &all[0];
     for (const auto& p : all) if (std::abs (std::log (p.fs / fs)) < std::abs (std::log (best->fs / fs))) best = &p;
     return *best;
@@ -367,7 +367,7 @@ void DeEsser::process (const float* detL, const float* detR, float* aL, float* a
 // the two taps' gains (calibrated on the reference's Slap: -16.1 dB at fader 0, the send's gain stage, SuperTap's tap
 // level and its pan law together) and their delay (one sample past the line's)
 static constexpr float kTap1 = 0.1566f, kTap2 = 0.1566f, kTap2Cross = 0.995f;
-// the level H-Delay's loop works at, against the send (made up after it): its gain recovery compresses loud echoes, and
+// the level the delay reference's loop works at, against the send (made up after it): its gain recovery compresses loud echoes, and
 // at this level ours does as the reference's (a held-out vocal at -6 dBFS peaks: the echoes' null -22 -> -36 dB, at
 // -20 dBFS -32 -> -35; 0.5 and 0.7 both worse)
 static constexpr float kLoopIn = 0.6f;
@@ -376,7 +376,7 @@ static constexpr int kTapDelay = 1;
 void Delays::prepare (double sampleRate, int block)
 {
     fs = sampleRate;
-    analog.modes = fwdelay::tables::analog;
+    analog.modes = de::tables::analog;
     analog.prepare (fs, 2);
     analog.setMode (4);
     line.prepare (fs);
@@ -393,11 +393,11 @@ void Delays::process (const float* inL, const float* inR, float* outL, float* ou
     work.copyFrom (0, 0, inL, n); work.copyFrom (1, 0, inR, n);
     float* const ch[2] = { work.getWritePointer (0), work.getWritePointer (1) };
     analog.process (ch, n);
-    work.applyGain (0, n, kLoopIn);                                     // (H-Delay's loop sees the send 4.4 dB lower)
+    work.applyGain (0, n, kLoopIn);                                     // (the reference delay's loop sees the send 4.4 dB lower)
     static constexpr double beats[4] = { 0.0, 0.25, 0.5, 1.0 };
     static constexpr float fb[4] = { 0.0f, 0.0f, 0.5f, 0.3f }, outDb[4] = { 0.0f, -12.0f, -9.0f, -9.0f };
     const double tempo = bpm > 0.0 ? bpm : 120.0;
-    fwdelay::dsp::Settings st;
+    de::dsp::Settings st;
     st.timeL = st.timeR = juce::jlimit (1.0, 3500.0, beats[running] * 60000.0 / tempo) * fs / 1000.0;
     st.feedback = fb[running];
     st.mix = 1.0f;
@@ -628,7 +628,7 @@ void Chain::prepare (double sampleRate, int maxBlock)
     reverb.prepare (fs, maxBlock, reverbDeesser.delay());
     delays.prepare (fs, maxBlock);
     {
-        // the echoes measured against the reference's (noise, every delay colour alike): our model of H-Delay leaves
+        // the echoes measured against the reference's (noise, every delay colour alike): our delay model leaves
         // them 0.15 dB low at 60 Hz, 0.13 high at 500 Hz and 0.3 high above 3 kHz; three sections take that out
         double c[5];
         rbj (eq::lowShelf, 132.45, 0.7071, 0.1561, fs, c); delayFix[0].set (c);

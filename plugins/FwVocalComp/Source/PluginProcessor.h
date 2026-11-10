@@ -1,12 +1,12 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
-#include "shared/ui/Meter.h"
+#include "shared/ui/Widgets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 
 // Parameters follow the reference plugin's parameter list (its ranges and defaults).
-namespace fwvocalcomp
+namespace vc
 {
 inline constexpr const char* comp = "comp";          // -36..0 dB, default 0
 inline constexpr const char* gate = "gate";          // -80..0 dB, default -80 (off)
@@ -32,21 +32,21 @@ public:
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
-    // programs for the host's preset list: 0 = Default, then the factory presets (fwvocalcomp::factoryPresets()).
+    // programs for the host's preset list: 0 = Default, then the factory presets (vc::factoryPresets()).
     // A change applies only when the number changes, so a host that sets program 0 at load keeps the restored state.
-    int getNumPrograms() override { return 1 + (int) fwvocalcomp::factoryPresets().size(); }
+    int getNumPrograms() override { return 1 + (int) vc::factoryPresets().size(); }
     int getCurrentProgram() override { return currentProgram; }
     void setCurrentProgram (int index) override
     {
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
-        static const fw::FactoryPreset defaults { "", "Default", {} };
-        fw::applyPreset (apvts, index == 0 ? defaults : fwvocalcomp::factoryPresets()[(size_t) index - 1], apvts.getParameter (fwvocalcomp::mode));
+        static const flatwater::FactoryPreset defaults { "", "Default", {} };
+        flatwater::applyPreset (apvts, index == 0 ? defaults : vc::factoryPresets()[(size_t) index - 1], apvts.getParameter (vc::mode));
     }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
-        const auto& p = fwvocalcomp::factoryPresets()[(size_t) index - 1];
+        const auto& p = vc::factoryPresets()[(size_t) index - 1];
         return juce::String (p.group) + ": " + p.name;
     }
     void changeProgramName (int, const juce::String&) override {}
@@ -58,14 +58,14 @@ public:
 
     // Meter values for the editor, the highest since it last read them (dB): input energy, depth of the total gain
     // reduction (>= 0), output peaks.
-    fw::PeakTap energyDb, attnDepth, outLDb, outRDb;
+    flatwater::PeakTap energyDb, attnDepth, outLDb, outRDb;
 
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     int currentProgram = 0;
     void configure();
 
-    fwvocalcomp::Processor procs[2];
+    vc::Processor procs[2];
     std::atomic<float>* pComp = nullptr; std::atomic<float>* pGate = nullptr; std::atomic<float>* pGain = nullptr; std::atomic<float>* pMode = nullptr;
     double sr = 48000.0;
     bool prepared = false, layoutDual = false;

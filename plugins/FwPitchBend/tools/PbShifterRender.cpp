@@ -56,7 +56,7 @@ int main (int argc, char** argv)
     while ((got = std::fread (tmp, sizeof (float), 4096, f)) > 0) in.insert (in.end(), tmp, tmp + got);
     std::fclose (f);
     const long long n = (long long) in.size() / ch;
-    fwpitchbend::Shifter s;
+    pb::Shifter s;
     s.prepare (fs, block, ch);
     std::vector<std::vector<float>> buf ((size_t) ch, std::vector<float> ((size_t) block));
     std::vector<float*> ptr ((size_t) ch);

@@ -3,7 +3,7 @@
 //   RefRender <plugin.vst3> "<sub-plugin name>[@uid]" <in.f32> <out.f32> [sc=<sc.f32>] [bpm=<tempo>] [fs=<rate>]
 //             [block=<samples>] [preroll=<seconds>] [name=text | name:=normalised ...] [at=<seconds>:name=text ...]
 // preroll: that much silence is rendered first (not written), the parameters set after its first block: some plug-ins
-// (H-Delay) show but do not process values set before their first block. at=: a parameter change at that time of the
+// (the delay reference) show but do not process values set before their first block. at=: a parameter change at that time of the
 // input (sample exact; the block is split there; before 0: in the pre-roll, at a block's start).
 // in.f32 / sc.f32: interleaved stereo float32 at fs; out.f32: the main output, interleaved stereo, the plug-in's latency
 // removed. Parameters are set by their display text (name=text, converted by the plug-in) or a normalised value

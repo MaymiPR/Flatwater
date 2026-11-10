@@ -4,11 +4,11 @@
 // see plugins/FwComp/nulltest/read_ref_presets.py); names are Flatwater's own. Presets leave Mix alone, as the reference does.
 #include "shared/Presets.h"
 
-namespace fwcomp
+namespace co
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "threshold", -18.0f }, { "ratio", 3.0f }, { "punch", 1.0f }, { "mix", 100.0f }, { "output", 0.0f }, { "attack", 7.0f }, { "release", 100.25f }, { "releaseNote", 5.0f }, { "sync", 2.0f }, { "bpm", 120.0f }, { "analog", 2.0f } } },
     { "Essentials", "Live Sound Start", { { "threshold", -18.0f }, { "ratio", 3.0f }, { "punch", 1.0f }, { "mix", 100.0f }, { "output", 0.0f }, { "attack", 7.0f }, { "release", 100.26f }, { "releaseNote", 5.0f }, { "sync", 2.0f }, { "bpm", 120.0f }, { "limiter", 1.0f }, { "analog", 0.0f } } },
     { "Essentials", "Kit Smack", { { "threshold", -29.1f }, { "ratio", 5.56f }, { "punch", 12.7f }, { "mix", 100.0f }, { "output", 0.0f }, { "attack", 13.65f }, { "release", 49.99f }, { "releaseNote", 2.0f }, { "sync", 2.0f }, { "bpm", 120.0f }, { "analog", 1.0f } } },

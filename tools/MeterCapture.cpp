@@ -26,7 +26,7 @@ struct Seg { double secs; double db; bool on; };
 static const Seg schedule[] = { { 1.0, 0, false }, { 2.0, -6, true }, { 3.0, 0, false }, { 2.0, -20, true }, { 3.0, 0, false },
                                 { 0.3, -6, true }, { 3.0, 0, false } };
 
-// a transport that plays from the first block on, at the feeder's position: Waves editors take their meter values
+// a transport that plays from the first block on, at the feeder's position: the references' editors take their meter values
 // from the processing only while the host's transport advances (with pedalboard's empty play head the needle stays put)
 class FeederPlayHead : public AudioPlayHead
 {
@@ -146,7 +146,7 @@ public:
     bool gl = false;     // GlCapture writes the frames; this only ends the run
 };
 
-// Reads a Waves editor's frames back from OpenGL: outside FL its frames never reach the window (it stays white, in
+// Reads a reference editor's frames back from OpenGL: outside FL its frames never reach the window (it stays white, in
 // this host and in pedalboard) although it renders, so the shell's import of gdi32!SwapBuffers is pointed at a hook
 // that reads the back buffer (crop, in editor pixels from the top left) just before the swap. out.raw: per frame two
 // doubles (the audio time processed so far and the wall time since the schedule started, s), then the crop's
@@ -219,7 +219,7 @@ namespace GlCapture
     }
     static BOOL WINAPI hookedSwap (HDC dc) { readBack(); return realSwap (dc); }
 
-    // points every loaded WaveShell module's SwapBuffers import at the hook
+    // points every loaded shell module's SwapBuffers import at the hook
     static int install()
     {
         HMODULE gl = LoadLibraryA ("opengl32.dll");
@@ -259,7 +259,7 @@ namespace GlCapture
     }
 }
 
-// grabs the component's screen area (also native child windows, e.g. a Waves editor) into a PNG
+// grabs the component's screen area (also native child windows, e.g. a reference's editor) into a PNG
 static void grabPng (Component& c, const File& f)
 {
     juce::Rectangle<int> r; double scale = 1.0;

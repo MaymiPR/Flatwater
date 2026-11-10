@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace fw
+namespace flatwater
 {
 // A factory preset: real-world values for some parameters; every other parameter (except the Mode switch) goes back
 // to its default, so a preset always gives the same sound.

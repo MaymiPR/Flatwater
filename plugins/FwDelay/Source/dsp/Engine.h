@@ -1,5 +1,5 @@
 #pragma once
-// Flatwater Delay's delay path, as identified on the reference (MEASUREMENTS.md "Flatwater Delay: H-Delay measurements"):
+// Flatwater Delay's delay path, as identified on the reference (MEASUREMENTS.md):
 //
 //   w = in + fb y[n-1]                 the loop (each pass adds one sample)
 //   v = g w,  g = min (1 / (1 + peak), 1 - r (1 - g[n-1]))     the gain stage: the peak of |w| over the lines (linked),
@@ -22,7 +22,7 @@
 #include <functional>
 #include <vector>
 
-namespace fwdelay::dsp
+namespace de::dsp
 {
 struct Settings
 {

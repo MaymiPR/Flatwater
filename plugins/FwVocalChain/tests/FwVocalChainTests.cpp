@@ -23,8 +23,8 @@ static void set (FwVocalChainProcessor& p, const char* id, float v)
 static void testParameters()
 {
     FwVocalChainProcessor p;
-    for (auto id : { fwvocalchain::sensitivity, fwvocalchain::bass, fwvocalchain::treble, fwvocalchain::compress, fwvocalchain::reverb,
-                     fwvocalchain::delay, fwvocalchain::pitch, fwvocalchain::output })
+    for (auto id : { ch::sensitivity, ch::bass, ch::treble, ch::compress, ch::reverb,
+                     ch::delay, ch::pitch, ch::output })
     {
         auto* q = dynamic_cast<juce::AudioParameterFloat*> (p.apvts.getParameter (id));
         CHECK (q != nullptr);
@@ -34,15 +34,15 @@ static void testParameters()
         CHECK_NEAR (q->range.interval, 0.1, 1e-6);
         CHECK_NEAR (q->get(), 0.0, 1e-6);
     }
-    CHECK_NEAR (p.apvts.getParameter (fwvocalchain::balance)->convertFrom0to1 (1.0f), 6.0, 1e-6);
-    for (const auto& st : fwvocalchain::stages())
+    CHECK_NEAR (p.apvts.getParameter (ch::balance)->convertFrom0to1 (1.0f), 6.0, 1e-6);
+    for (const auto& st : ch::stages())
     {
         auto* c = dynamic_cast<juce::AudioParameterChoice*> (p.apvts.getParameter (st.colour));
         CHECK (c != nullptr && c->getIndex() == 1 && c->choices.size() == 4);
     }
-    CHECK (p.apvts.getParameter (fwvocalchain::compressColor)->getCurrentValueAsText() == "Push");
-    CHECK (p.apvts.getParameter (fwvocalchain::reverbColor)->getText (0.0f, 64) == "Mute");
-    CHECK (p.apvts.getParameter (fwvocalchain::pitchColor)->getText (1.0f, 64) == "Spreader");
+    CHECK (p.apvts.getParameter (ch::compressColor)->getCurrentValueAsText() == "Push");
+    CHECK (p.apvts.getParameter (ch::reverbColor)->getText (0.0f, 64) == "Mute");
+    CHECK (p.apvts.getParameter (ch::pitchColor)->getText (1.0f, 64) == "Spreader");
 }
 
 // Stereo (2 in, 2 out) and Mono/Stereo (1 in, 2 out); the reference's latency (193 samples at 48 kHz, 385 at 96)
@@ -60,7 +60,7 @@ static void testBusesAndLatency()
     CHECK (p.getLatencySamples() == 193);
     p.prepareToPlay (96000.0, 512);
     CHECK (p.getLatencySamples() == 385);
-    CHECK (fwvocalchain::latencySamples (44100.0) == 193);
+    CHECK (ch::latencySamples (44100.0) == 193);
 }
 
 // the audio: nothing before the latency, then the reference's fixed filter (with every colour clear its impulse
@@ -69,9 +69,9 @@ static void testPath()
 {
     FwVocalChainProcessor p;
     p.setPlayConfigDetails (2, 2, 48000.0, 512);
-    for (const auto& st : fwvocalchain::stages()) set (p, st.colour, 0.0f);
-    set (p, fwvocalchain::sensitivity, 6.0f);
-    set (p, fwvocalchain::output, -6.0f);
+    for (const auto& st : ch::stages()) set (p, st.colour, 0.0f);
+    set (p, ch::sensitivity, 6.0f);
+    set (p, ch::output, -6.0f);
     p.prepareToPlay (48000.0, 512);
     juce::AudioBuffer<float> b (2, 512);
     juce::MidiBuffer m;
@@ -89,7 +89,7 @@ static double toneGain (double freq, double peakDb)
 {
     FwVocalChainProcessor p;
     p.setPlayConfigDetails (2, 2, 48000.0, 512);
-    for (const auto& st : fwvocalchain::stages()) set (p, st.colour, 0.0f);
+    for (const auto& st : ch::stages()) set (p, st.colour, 0.0f);
     p.prepareToPlay (48000.0, 512);
     juce::AudioBuffer<float> b (2, 512);
     juce::MidiBuffer m;
@@ -126,12 +126,12 @@ static void testEditor()
     auto img = ed->createComponentSnapshot (ed->getLocalBounds());
     CHECK (img.getWidth() == FwVocalChainEditor::W);
     // a colour selector's button steps the colour; a click on the selected name turns it off
-    std::vector<fwvocalchain::ui::ColourSelector*> cs;
+    std::vector<ch::ui::ColourSelector*> cs;
     std::function<void (juce::Component&)> find = [&] (juce::Component& c)
     {
         for (auto* k : c.getChildren())
         {
-            if (auto* s = dynamic_cast<fwvocalchain::ui::ColourSelector*> (k)) cs.push_back (s);
+            if (auto* s = dynamic_cast<ch::ui::ColourSelector*> (k)) cs.push_back (s);
             find (*k);
         }
     };
@@ -140,18 +140,18 @@ static void testEditor()
     if (cs.size() == 6)
     {
         cs[0]->setState ((cs[0]->state() + 1) % 4);
-        CHECK (p.apvts.getParameter (fwvocalchain::bassColor)->getCurrentValueAsText() == "Lower");
+        CHECK (p.apvts.getParameter (ch::bassColor)->getCurrentValueAsText() == "Lower");
         cs[0]->setState (0);
-        CHECK (p.apvts.getParameter (fwvocalchain::bassColor)->getCurrentValueAsText() == "Bypass");
+        CHECK (p.apvts.getParameter (ch::bassColor)->getCurrentValueAsText() == "Bypass");
     }
     // the selection (filmed on the reference): a fader is grabbed on its cap only (34 x 58, at 0 from 75.5 px down its
     // 215 px control); one control marked at a time; its value shows only while the mouse is on it
-    std::vector<fwvocalchain::ui::Fader*> fs;
+    std::vector<ch::ui::Fader*> fs;
     std::function<void (juce::Component&)> findF = [&] (juce::Component& c)
     {
         for (auto* k : c.getChildren())
         {
-            if (auto* f = dynamic_cast<fwvocalchain::ui::Fader*> (k)) fs.push_back (f);
+            if (auto* f = dynamic_cast<ch::ui::Fader*> (k)) fs.push_back (f);
             findF (*k);
         }
     };
@@ -173,7 +173,7 @@ static void testEditor()
         CHECK (mk.selected == nullptr);
         mk.hover = nullptr;
     }
-    set (p, fwvocalchain::mode, 1.0f);                                      // Mono/Stereo: no Balance
+    set (p, ch::mode, 1.0f);                                      // Mono/Stereo: no Balance
     img = ed->createComponentSnapshot (ed->getLocalBounds());
     CHECK (img.getHeight() == FwVocalChainEditor::H);
 }

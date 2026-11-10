@@ -5,7 +5,7 @@ set(PB_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(PB_SOURCES
     ${PB_DIR}/Source/PluginProcessor.cpp
     ${PB_DIR}/Source/PluginEditor.cpp
-    ${PB_DIR}/Source/ui/Widgets.cpp
+    ${PB_DIR}/Source/ui/Controls.cpp
     ${PB_DIR}/Source/dsp/Shifter.cpp)
 # the snapshot / test / render executables compile the plug-in sources outside the plug-in wrapper
 set(PB_APP_DEFS JucePlugin_Name="Flatwater Pitch Bend" JucePlugin_IsSynth=0 JucePlugin_WantsMidiInput=0

@@ -14,11 +14,11 @@ int main (int argc, char** argv)
     if (argc < 8) { std::fprintf (stderr, "usage: VcRender in.f32 out.f32 channels fs comp gate gain [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
-    fwvocalcomp::Processor::Params p;
+    vc::Processor::Params p;
     p.compDb = (float) std::atof (argv[5]);
     p.gateDb = (float) std::atof (argv[6]);
     p.gainDb = (float) std::atof (argv[7]);
-    fwvocalcomp::Tuning t;
+    vc::Tuning t;
     bool compensate = true, dump = false;
     for (int i = 8; i < argc; ++i)
     {
@@ -42,7 +42,7 @@ int main (int argc, char** argv)
     if (std::fread (inter.data(), sizeof (float), inter.size(), f) != inter.size()) return 1;
     std::fclose (f);
 
-    fwvocalcomp::Processor proc;
+    vc::Processor proc;
     proc.prepare (fs, ch, t);
     proc.setParams (p);
     std::vector<float> trace;

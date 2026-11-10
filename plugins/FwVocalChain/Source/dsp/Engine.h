@@ -21,7 +21,7 @@
 // the reference; here it goes after them, on the dry path only, so the wet stages' measured responses (which include
 // it) apply to the tap as they are. Phase 4, first pass: the de-esser and Compress pass the signal (their linear part
 // only); the delays and the doubler are silent.
-namespace fwvocalchain::dsp
+namespace ch::dsp
 {
 struct Params
 {
@@ -290,8 +290,8 @@ private:
     double ha = 0, hr = 0, lla = 0, llr = 0, ga = 0, gr = 0, sa = 0, sr = 0, offset = 0;
 };
 
-// the delays, as measured (MEASUREMENTS.md, Flatwater Vocal Chain: Phase 4): the send through H-Delay's Analog 4 and its line
-// (FwDelay's model of H-Delay, set from each colour's preset: Slap a 1/16 note, no feedback, -12 dB; Eight 1/8, 50 %,
+// the delays, as measured (MEASUREMENTS.md, Flatwater Vocal Chain: Phase 4): the send through the delay reference's Analog 4 and its line
+// (Flatwater Delay's model, set from each colour's preset: Slap a 1/16 note, no feedback, -12 dB; Eight 1/8, 50 %,
 // -9 dB; Quarter 1/4, 30 %, -9 dB; high-pass 150 Hz, low-pass 5 kHz; synced to the host's tempo), then SuperTap's two
 // taps, each turning the stereo image by 45 degrees: the first at once, L = g1 (L + R), R = g1 (R - L); the second 0.004
 // bar later, L = g2 (L - 0.995 R), R = g2 (0.995 L + R). The line keeps running while Delay is clear.
@@ -303,14 +303,14 @@ public:
 
 private:
     double fs = 48000.0;
-    fwcomp::Analog analog;
-    fwdelay::dsp::Delay line;
+    co::Analog analog;
+    de::dsp::Delay line;
     juce::AudioBuffer<float> work;
     std::vector<float> histL, histR;                                  // the line's output, for the second tap
     int hpos = 0, running = 1;
 };
 
-// the doubler (Pitch), as measured: Waves Doubler's two voices per colour, the left one on the left input, the right
+// the doubler (Pitch), as measured: the reference doubler's two voices per colour, the left one on the left input, the right
 // on the right. Stereo (MEASUREMENTS.md, the doubler's third pass): each voice a linearly interpolated read of the
 // send whose speed swings as a triangle (+-7 cents, 0.2 / 0.3 Hz, from the plug-in's start) with a small steady drift,
 // the delay one sample longer from the first whole-sample crossing after each turn down until the same after each turn

@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace fwcomp::needle
+namespace co::needle
 {
 inline int frame (double v) { return (int) std::lround (std::clamp (70.0 * v, 0.0, 70.0)); }
 inline float angle (int k)

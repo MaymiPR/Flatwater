@@ -16,9 +16,9 @@ int main (int argc, char** argv)
     if (argc < 5) { std::fprintf (stderr, "usage: CoRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
-    fwcomp::Compressor comp;
-    fwcomp::Compressor::Settings s;
-    fwcomp::Analog analog;
+    co::Compressor comp;
+    co::Compressor::Settings s;
+    co::Analog analog;
     int block = 512, analogMode = 0;
     std::string tracePath;
     std::vector<float> trace;

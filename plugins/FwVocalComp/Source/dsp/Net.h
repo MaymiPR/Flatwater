@@ -1,10 +1,10 @@
 #pragma once
 // Learned correction of the Flatwater Vocal Comp slow path (GRU, 48 hidden units), trained on renders of the reference by
 // plugins/FwVocalComp/nulltest/train_net.py and written by plugins/FwVocalComp/scripts/export_net.py from fwvocalcompnet_h48r7_last.pt. Do not edit by hand.
-// Inputs per 12 kHz step: see fwvocalcomp::SlowNet in Engine.h. Output: ln correction of the slow ratio.
+// Inputs per 12 kHz step: see vc::SlowNet in Engine.h. Output: ln correction of the slow ratio.
 // PyTorch GRU layout: rows [reset; update; new].
 
-namespace fwvocalcomp::slownet
+namespace vc::slownet
 {
 inline constexpr int hidden = 48, inputs = 13;
 inline constexpr float Wih[1872] = {

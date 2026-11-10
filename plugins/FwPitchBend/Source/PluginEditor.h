@@ -1,14 +1,14 @@
 #pragma once
 #include "PluginProcessor.h"
-#include "ui/Widgets.h"
+#include "ui/Controls.h"
 #include "shared/ui/RenUI.h"
-#include "shared/ui/MenuLook.h"
+#include "shared/ui/Widgets.h"
 
 // Flatwater Pitch Bend editor: the reference's measured layout (564 px wide; the shifter plate, the modulator tabs and,
 // below them, the modulators' panel; RESEARCH.md, "The editor") drawn in Flatwater's own look (shared/ui/Theme.h). A
 // modulator's tab dragged onto a control puts it in that control's first free slot; the slots' depths are dragged;
 // Link moves Pitch and Formant together.
-class FwPitchBendEditor : public fw::ren::Editor
+class FwPitchBendEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwPitchBendEditor (FwPitchBendProcessor&);
@@ -17,7 +17,7 @@ public:
     static constexpr int W = 564, HOpen = 465, HClosed = 289;     // with the modulators' panel open / closed
 
 private:
-    using ModKnob = fwpitchbend::ui::ModKnob;
+    using ModKnob = pb::ui::ModKnob;
     void paintContent (juce::Graphics&) override;
     void contentMouseDown (const juce::MouseEvent&) override;
     void contentMouseDrag (const juce::MouseEvent&) override;
@@ -35,8 +35,8 @@ private:
     juce::RangedAudioParameter& param (const char* id) { return *proc.apvts.getParameter (id); }
 
     FwPitchBendProcessor& proc;
-    fwpitchbend::ui::Ui ui;
-    fw::MenuLook menuLook;                                       // the lists (the Flatten note's), as the toolbar's
+    pb::ui::Ui ui;
+    flatwater::MenuLook menuLook;                                       // the lists (the Flatten note's), as the toolbar's
     std::vector<ModKnob*> knobs;
     std::vector<juce::Component*> panel[4];                      // what each tab's panel shows (M1, M2, AM, PT)
     std::vector<juce::Component*> modTools;                      // the M1 / M2 screen's tools
@@ -45,12 +45,12 @@ private:
     ModKnob* mix = nullptr;
     ModKnob* rateHz[2] {};
     ModKnob* rateSynced[2] {};
-    fwpitchbend::ui::Screen* screen = nullptr;
-    fwpitchbend::ui::Library* library = nullptr;
-    fwpitchbend::ui::Toggle* drawTool = nullptr;
-    fwpitchbend::ui::Toggle* browseTool = nullptr;
-    fwpitchbend::ui::Toggle* saveTool = nullptr;
-    fwpitchbend::ui::Toggle* deleteTool = nullptr;
+    pb::ui::Screen* screen = nullptr;
+    pb::ui::Library* library = nullptr;
+    pb::ui::Toggle* drawTool = nullptr;
+    pb::ui::Toggle* browseTool = nullptr;
+    pb::ui::Toggle* saveTool = nullptr;
+    pb::ui::Toggle* deleteTool = nullptr;
     class Overlay;
     Overlay* overlay = nullptr;
 

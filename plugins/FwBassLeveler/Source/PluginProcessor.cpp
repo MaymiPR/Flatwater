@@ -13,18 +13,18 @@ AudioProcessorValueTreeState::ParameterLayout FwBassLevelerProcessor::layout()
     };
     auto db1 = [] (float v) { return String (v, 1) + " dB"; };
     auto plain1 = [] (float v) { return String (v, 1); };
-    addF (fwbassleveler::target, "Target", { -42.0f, 0.0f, 0.1f }, -14.0f, db1);
-    addF (fwbassleveler::sensitivity, "Sensitivity", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwbassleveler::response, 1 }, "Response", StringArray { "Slow", "Fast" }, 0));
-    addF (fwbassleveler::spill, "Spill", { -50.0f, -3.0f, 0.1f }, -40.0f, db1);
-    addF (fwbassleveler::artifacts, "Artifacts", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
-    addF (fwbassleveler::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 12.0f, db1);
-    addF (fwbassleveler::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -12.0f, db1);
+    addF (bl::target, "Target", { -42.0f, 0.0f, 0.1f }, -14.0f, db1);
+    addF (bl::sensitivity, "Sensitivity", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bl::response, 1 }, "Response", StringArray { "Slow", "Fast" }, 0));
+    addF (bl::spill, "Spill", { -50.0f, -3.0f, 0.1f }, -40.0f, db1);
+    addF (bl::artifacts, "Artifacts", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
+    addF (bl::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 12.0f, db1);
+    addF (bl::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -12.0f, db1);
     // the Idle arrow is stored as its place in the range (as the reference's preset arrays); the host sees it in dB
     // over a fixed +-12 dB (as the reference's: its text stays 0.0 at 0.5 whatever the range)
-    addF (fwbassleveler::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (fwbassleveler::idleDb (v, -12.0f, 12.0f), 1); });
-    addF (fwbassleveler::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwbassleveler::mode, 1 }, "Mode", fwbassleveler::modeNames(), 0));
+    addF (bl::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (bl::idleDb (v, -12.0f, 12.0f), 1); });
+    addF (bl::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bl::mode, 1 }, "Mode", bl::modeNames(), 0));
     return l;
 }
 
@@ -33,7 +33,7 @@ FwBassLevelerProcessor::FwBassLevelerProcessor()
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
       apvts (*this, &undo, "FwBassLeveler", layout())
 {
-    setLatencySamples (roundToInt (fwbassleveler::latencyMs (0) * 0.001 * sr));
+    setLatencySamples (roundToInt (bl::latencyMs (0) * 0.001 * sr));
 }
 
 bool FwBassLevelerProcessor::isBusesLayoutSupported (const BusesLayout& l) const
@@ -52,13 +52,13 @@ void FwBassLevelerProcessor::prepareToPlay (double sampleRate, int)
 void FwBassLevelerProcessor::configure()
 {
     configuredMode = modeIndex();
-    delaySamples = roundToInt (fwbassleveler::latencyMs (configuredMode) * 0.001 * sr);
+    delaySamples = roundToInt (bl::latencyMs (configuredMode) * 0.001 * sr);
     line.assign ((size_t) jmax (1, getMainBusNumInputChannels()), std::vector<float> ((size_t) delaySamples + 1, 0.0f));
     writePos = 0;
     ride.prepare (sr);
     ride.preHold = delaySamples;
     smooth5 = std::exp (-1.0 / (0.005 * sr));
-    outGain = Decibels::decibelsToGain ((double) get (fwbassleveler::output));
+    outGain = Decibels::decibelsToGain ((double) get (bl::output));
     heldDb = 0.0;
     setLatencySamples (delaySamples);
 }
@@ -68,12 +68,12 @@ void FwBassLevelerProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     ScopedNoDenormals nd;
     if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
     const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size());
-    fwbassleveler::RideSettings st;
-    st.target = get (fwbassleveler::target); st.rangeMin = get (fwbassleveler::rangeMin); st.rangeMax = get (fwbassleveler::rangeMax);
-    st.idleDb = idleDb(); st.artifacts = get (fwbassleveler::artifacts); st.sensitivity = get (fwbassleveler::sensitivity);
-    st.fast = get (fwbassleveler::response) > 0.5f;
-    st.spill = get (fwbassleveler::spill); st.live = fwbassleveler::isLive (modeIndex());
-    const double outTo = Decibels::decibelsToGain ((double) get (fwbassleveler::output));
+    bl::RideSettings st;
+    st.target = get (bl::target); st.rangeMin = get (bl::rangeMin); st.rangeMax = get (bl::rangeMax);
+    st.idleDb = idleDb(); st.artifacts = get (bl::artifacts); st.sensitivity = get (bl::sensitivity);
+    st.fast = get (bl::response) > 0.5f;
+    st.spill = get (bl::spill); st.live = bl::isLive (modeIndex());
+    const double outTo = Decibels::decibelsToGain ((double) get (bl::output));
     const bool held = userRide.load();
     const double heldTo = (double) userRideDb.load();
     if (! held && wasHeld) { returning = true; wasHeld = false; }

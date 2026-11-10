@@ -30,7 +30,7 @@
 #include <vector>
 #include "GainNet.h"
 
-namespace fwbasslift
+namespace bf
 {
 inline constexpr double pi = 3.14159265358979323846;
 
@@ -280,4 +280,4 @@ private:
         designSecond (detLp2, false, f * t.cA, fs, t.QA);
     }
 };
-} // namespace fwbasslift
+} // namespace bf

@@ -1,4 +1,4 @@
-"""Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/VuRender) with the reference's filmed needle at the same strip positions
+"""Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/CoVuRender) with the reference's filmed needle at the same strip positions
 (needle_set_<face>.npz): both dials with the needle, the difference around the needle and its shadow only (the
 print's own differences cancel: each is measured against the same dial without its needle). Private helper.
 
@@ -9,7 +9,7 @@ import numpy as np
 from PIL import Image
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')
-VR = os.path.join(ROOT, 'build', 'VuRender_artefacts', 'Release', 'VuRender.exe')
+VR = os.path.join(ROOT, 'build', 'VuRender_artefacts', 'Release', 'CoVuRender.exe')
 TMP = os.path.join(ROOT, 'build', 'meters', 'vr_tmp.png')
 DEG = [-58, -57, -55, -53, -52, -50, -48, -47, -45, -43, -42, -40, -38, -37, -35, -33, -32, -30, -28, -27, -25, -23, -22, -20,
        -18, -17, -15, -13, -12, -10, -8, -7, -5, -3, -2, 1, 2, 4, 6, 7, 9, 11, 12, 14, 16, 17, 19, 21, 22, 24, 26, 27, 29, 31,

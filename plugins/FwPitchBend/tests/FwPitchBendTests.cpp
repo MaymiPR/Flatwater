@@ -25,7 +25,7 @@ static void testParameters()
     auto text = [&p] (const char* id, float v) { return p.apvts.getParameter (id)->getText (v, 32); };
     for (int m = 0; m < 2; ++m)
     {
-        const auto& d = fwpitchbend::mod[m];
+        const auto& d = pb::mod[m];
         CHECK_NEAR (norm (d.warp), 0.5, 1e-6);
         CHECK_NEAR (norm (d.level), 1.0, 1e-6);
         CHECK_NEAR (norm (d.rateSynced), 5.0 / 23.0, 1e-6);
@@ -38,20 +38,20 @@ static void testParameters()
         CHECK (text (d.smooth, 0.5f) == "31.6");
         CHECK (text (d.warp, 0.25f) == "0.10");
     }
-    CHECK_NEAR (norm (fwpitchbend::amAttack), 0.5, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::amRelease), 0.75, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::amLevel), 0.5, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::ptSmooth), 1.0 / 3.0, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::ptOffset), 0.5, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::pitch), 0.5, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::formant), 0.5, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::mix), 1.0, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::flattenNote), 12.0 / 23.0, 1e-6);
-    CHECK_NEAR (norm (fwpitchbend::flatten), 0.0, 1e-6);
-    CHECK (text (fwpitchbend::amAttack, 0.25f) == "1.0 ms");
-    CHECK (text (fwpitchbend::flattenNote, 0.0f) == "C2");
-    CHECK (text (fwpitchbend::flattenNote, 1.0f) == "B3");
-    CHECK (text (fwpitchbend::pitch, 0.0f) == "-12 semitones");
+    CHECK_NEAR (norm (pb::amAttack), 0.5, 1e-6);
+    CHECK_NEAR (norm (pb::amRelease), 0.75, 1e-6);
+    CHECK_NEAR (norm (pb::amLevel), 0.5, 1e-6);
+    CHECK_NEAR (norm (pb::ptSmooth), 1.0 / 3.0, 1e-6);
+    CHECK_NEAR (norm (pb::ptOffset), 0.5, 1e-6);
+    CHECK_NEAR (norm (pb::pitch), 0.5, 1e-6);
+    CHECK_NEAR (norm (pb::formant), 0.5, 1e-6);
+    CHECK_NEAR (norm (pb::mix), 1.0, 1e-6);
+    CHECK_NEAR (norm (pb::flattenNote), 12.0 / 23.0, 1e-6);
+    CHECK_NEAR (norm (pb::flatten), 0.0, 1e-6);
+    CHECK (text (pb::amAttack, 0.25f) == "1.0 ms");
+    CHECK (text (pb::flattenNote, 0.0f) == "C2");
+    CHECK (text (pb::flattenNote, 1.0f) == "B3");
+    CHECK (text (pb::pitch, 0.0f) == "-12 semitones");
     CHECK (p.getParameters().size() == 30);          // the reference's 29 (without its Bypass) and Mode
 }
 
@@ -76,7 +76,7 @@ static void testPassThrough()
     for (float mix : { 0.0f, 50.0f, 100.0f })
     {
         FwPitchBendProcessor p;
-        set (p, fwpitchbend::mix, mix);
+        set (p, pb::mix, mix);
         p.setPlayConfigDetails (2, 2, 48000.0, 256);
         p.prepareToPlay (48000.0, 256);
         juce::AudioBuffer<float> b (2, 256);
@@ -103,22 +103,22 @@ static void testPassThrough()
 static void testState()
 {
     FwPitchBendProcessor a, b;
-    set (a, fwpitchbend::pitch, -7.0f);
-    set (a, fwpitchbend::mix, 35.0f);
-    set (a, fwpitchbend::mod[1].rate, 4.0f);
+    set (a, pb::pitch, -7.0f);
+    set (a, pb::mix, 35.0f);
+    set (a, pb::mod[1].rate, 4.0f);
     juce::MemoryBlock m;
     a.getStateInformation (m);
     b.setStateInformation (m.getData(), (int) m.getSize());
-    CHECK_NEAR (b.get (fwpitchbend::pitch), -7.0, 1e-5);
-    CHECK_NEAR (b.get (fwpitchbend::mix), 35.0, 1e-4);
-    CHECK_NEAR (b.get (fwpitchbend::mod[1].rate), 4.0, 1e-4);
+    CHECK_NEAR (b.get (pb::pitch), -7.0, 1e-5);
+    CHECK_NEAR (b.get (pb::mix), 35.0, 1e-4);
+    CHECK_NEAR (b.get (pb::mod[1].rate), 4.0, 1e-4);
 }
 
 // the slots: a source takes the first free one at depth 0; a fifth is refused; depths are whole numbers within ±100;
 // they, Fine and the shape tables survive the state and undo
 static void testModel()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     FwPitchBendProcessor p;
     auto& st = p.apvts.state;
     for (int s = 0; s < numSources - 1; ++s) CHECK (assign (st, 0, M1 + s, &p.undo));
@@ -150,10 +150,10 @@ static void testModel()
     p.undo.undo();                                              // the last transaction: Fine back off
     CHECK (! p.fine());
     // whole semitones while Fine is off, cents while it is on
-    set (q, fwpitchbend::pitch, 3.456f);
-    CHECK_NEAR (q.shiftSemitones (fwpitchbend::pitch), 3.46, 1e-5);
+    set (q, pb::pitch, 3.456f);
+    CHECK_NEAR (q.shiftSemitones (pb::pitch), 3.46, 1e-5);
     q.apvts.state.setProperty (fineId, false, nullptr);
-    CHECK_NEAR (q.shiftSemitones (fwpitchbend::pitch), 3.0, 1e-6);
+    CHECK_NEAR (q.shiftSemitones (pb::pitch), 3.0, 1e-6);
     // our own shapes span -1 .. 1 and are not all the same
     for (int s = 0; s < shapeNames().size(); ++s)
     {
@@ -167,7 +167,7 @@ static void testModel()
 // FWPITCHBEND_SNAPSHOTS set to a folder, it also writes PNGs of a modulated state there (for the visual checks)
 static void testEditor()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     FwPitchBendProcessor p;
     {
         std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
@@ -183,8 +183,8 @@ static void testEditor()
     setSlot (st, 3, 0, { AM, 20.0f }, nullptr);
     p.modulated[0] = 6.0f;
     p.modulated[2] = 60.0f;
-    set (p, fwpitchbend::mod[0].type, 1.0f);
-    set (p, fwpitchbend::mod[0].steps, 8.0f);
+    set (p, pb::mod[0].type, 1.0f);
+    set (p, pb::mod[0].steps, 8.0f);
     auto t = getTable (st, 0);
     setSteps (t, patterns[3].steps);
     setTable (st, 0, t, nullptr);
@@ -238,7 +238,7 @@ void wheel (juce::Component& content, juce::Point<float> at, float dy)
 
 static void testBehaviour()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     FwPitchBendProcessor p;
     auto& st = p.apvts.state;
     std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
@@ -289,8 +289,8 @@ static void testBehaviour()
 
     // Link: both move by the same amount and stop when either reaches its end (Pitch 5 / Formant 0 up: 12 / 7);
     // Alt-click: both 0
-    set (p, fwpitchbend::pitch, 5.0f);
-    set (p, fwpitchbend::formant, 0.0f);
+    set (p, pb::pitch, 5.0f);
+    set (p, pb::formant, 0.0f);
     std::vector<juce::Point<float>> up;
     for (int i = 1; i <= 200; ++i) up.push_back ({ linkAt.x, linkAt.y - 5.0f * (float) i });
     {
@@ -300,20 +300,20 @@ static void testBehaviour()
         for (auto q : up) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, q), down));
         c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, up.back()), {}));
     }
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 12.0, 1e-4);
-    CHECK_NEAR (p.get (fwpitchbend::formant), 7.0, 1e-4);
+    CHECK_NEAR (p.get (pb::pitch), 12.0, 1e-4);
+    CHECK_NEAR (p.get (pb::formant), 7.0, 1e-4);
     mouse::drag (content, linkAt, {}, juce::ModifierKeys::altModifier);
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 0.0, 1e-4);
-    CHECK_NEAR (p.get (fwpitchbend::formant), 0.0, 1e-4);
+    CHECK_NEAR (p.get (pb::pitch), 0.0, 1e-4);
+    CHECK_NEAR (p.get (pb::formant), 0.0, 1e-4);
 
     // knobs: Alt-click the default; the wheel moves Pitch a whole semitone; a slow drag on Mix: 0.001 of the range per px
-    set (p, fwpitchbend::mix, 40.0f);
+    set (p, pb::mix, 40.0f);
     mouse::drag (content, mixAt, {}, juce::ModifierKeys::altModifier);
-    CHECK_NEAR (p.get (fwpitchbend::mix), 100.0, 1e-4);
-    set (p, fwpitchbend::pitch, 2.4f);
+    CHECK_NEAR (p.get (pb::mix), 100.0, 1e-4);
+    set (p, pb::pitch, 2.4f);
     mouse::wheel (content, pitchAt, 1.0f);
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 3.0, 1e-4);
-    set (p, fwpitchbend::mix, 50.0f);
+    CHECK_NEAR (p.get (pb::pitch), 3.0, 1e-4);
+    set (p, pb::mix, 50.0f);
     std::vector<juce::Point<float>> slow;
     for (int i = 1; i <= 40; ++i) slow.push_back ({ mixAt.x, mixAt.y - (float) i });
     {
@@ -323,7 +323,7 @@ static void testBehaviour()
         for (auto q : slow) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, q), down));
         c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, slow.back()), {}));
     }
-    CHECK_NEAR (p.get (fwpitchbend::mix), 54.0, 1e-3);
+    CHECK_NEAR (p.get (pb::mix), 54.0, 1e-3);
 
     // Pitch sticks on each semitone while Fine is off (a slow drag: 0.53e-3 of the range per px, so 20 px stays on 0,
     // 60 px reaches 1); with Fine on, a cent per px
@@ -335,42 +335,42 @@ static void testBehaviour()
         for (int i = 1; i <= px; ++i) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -i)), down));
         c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -px)), {}));
     };
-    set (p, fwpitchbend::pitch, 0.0f);
+    set (p, pb::pitch, 0.0f);
     slowDrag (pitchAt, 20);
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 0.0, 1e-6);
+    CHECK_NEAR (p.get (pb::pitch), 0.0, 1e-6);
     slowDrag (pitchAt, 60);
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 1.0, 1e-6);
-    p.apvts.state.setProperty (fwpitchbend::fineId, true, nullptr);
+    CHECK_NEAR (p.get (pb::pitch), 1.0, 1e-6);
+    p.apvts.state.setProperty (pb::fineId, true, nullptr);
     slowDrag (pitchAt, 20);
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 1.2, 1e-3);
+    CHECK_NEAR (p.get (pb::pitch), 1.2, 1e-3);
     mouse::wheel (content, pitchAt, 1.0f);                               // Fine: 32 cents per notch
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 1.52, 1e-3);
-    p.apvts.state.setProperty (fwpitchbend::fineId, false, nullptr);
-    set (p, fwpitchbend::pitch, 0.0f);
-    set (p, fwpitchbend::formant, 2.0f);
+    CHECK_NEAR (p.get (pb::pitch), 1.52, 1e-3);
+    p.apvts.state.setProperty (pb::fineId, false, nullptr);
+    set (p, pb::pitch, 0.0f);
+    set (p, pb::formant, 2.0f);
     slowDrag (linkAt, 60);                                               // Link: whole semitones, the offset kept
-    CHECK_NEAR (p.get (fwpitchbend::pitch), 1.0, 1e-6);
-    CHECK_NEAR (p.get (fwpitchbend::formant), 3.0, 1e-6);
-    set (p, fwpitchbend::formant, 0.0f);
+    CHECK_NEAR (p.get (pb::pitch), 1.0, 1e-6);
+    CHECK_NEAR (p.get (pb::formant), 3.0, 1e-6);
+    set (p, pb::formant, 0.0f);
 
     // Fine: a click turns it on (undoable)
     mouse::drag (content, { 278.0f, 200.0f }, {});
     CHECK (p.fine());
     // the Flatten lamp and note: a click on the lamp turns Flatten on; a drag up on the note, a semitone per 10 px
     mouse::drag (content, { 19.0f, 159.0f }, {});
-    CHECK (p.get (fwpitchbend::flatten) > 0.5f);
+    CHECK (p.get (pb::flatten) > 0.5f);
     mouse::drag (content, { 60.0f, 158.0f }, { { 60.0f, 148.0f }, { 60.0f, 138.0f } });
-    CHECK (juce::roundToInt (p.get (fwpitchbend::flattenNote)) == 14);
+    CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 14);
     mouse::drag (content, { 50.0f, 158.0f }, {});                      // a click on the box: the next key
-    CHECK (juce::roundToInt (p.get (fwpitchbend::flattenNote)) == 15);
+    CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 15);
     mouse::drag (content, { 50.0f, 158.0f }, {}, juce::ModifierKeys::altModifier);   // Alt-click: C3
-    CHECK (juce::roundToInt (p.get (fwpitchbend::flattenNote)) == 12);
+    CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 12);
 }
 
 // the factory presets: their host values, then their slots, Fine, shapes and steps; Default clears them
 static void testPresets()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     FwPitchBendProcessor p;
     CHECK (p.getNumPrograms() == 41);
     int robot = -1;
@@ -378,11 +378,11 @@ static void testPresets()
     CHECK (robot > 0);
     p.setCurrentProgram (robot);
     auto& st = p.apvts.state;
-    CHECK (p.get (fwpitchbend::flatten) > 0.5f);
+    CHECK (p.get (pb::flatten) > 0.5f);
     CHECK (getSlot (st, 0, 0).source == M1);
     CHECK_NEAR (getSlot (st, 0, 0).depth, 100.0, 1e-6);
     CHECK (getSlot (st, 1, 0).source == M2);
-    CHECK (p.get (fwpitchbend::mod[0].type) > 0.5f);                 // a sequence, its steps kept
+    CHECK (p.get (pb::mod[0].type) > 0.5f);                 // a sequence, its steps kept
     bool anyStep = false;
     for (int k = 0; k < maxSteps; ++k) anyStep = anyStep || stepValue (getTable (st, 0), k) != 0;
     CHECK (anyStep);
@@ -396,9 +396,9 @@ static void testPresets()
     p.setCurrentProgram (robot);
     {
         std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
-        std::function<fw::Toolbar* (juce::Component&)> find = [&] (juce::Component& c) -> fw::Toolbar*
+        std::function<flatwater::Toolbar* (juce::Component&)> find = [&] (juce::Component& c) -> flatwater::Toolbar*
         {
-            if (auto* t = dynamic_cast<fw::Toolbar*> (&c)) return t;
+            if (auto* t = dynamic_cast<flatwater::Toolbar*> (&c)) return t;
             for (auto* k : c.getChildren()) if (auto* t = find (*k)) return t;
             return nullptr;
         };
@@ -414,7 +414,7 @@ static void testPresets()
 // the modulators' laws as measured (MEASUREMENTS.md, Flatwater Pitch Bend, Phase 3)
 static void testModLaws()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     CHECK_NEAR (freeRate (3.7, 48000.0), 48000.0 / 12968.0, 1e-9);          // whole 8-sample ticks, rounded down
     CHECK_NEAR (freeRate (7.3, 48000.0), 48000.0 / 6568.0, 1e-9);
     CHECK_NEAR (freeRate (1.0, 48000.0), 1.0, 1e-12);
@@ -454,7 +454,7 @@ static void testModLaws()
 // once the grains have run they keep running at no shift, at the input's level (MEASUREMENTS.md, Phase 3)
 static void testShifterLatch()
 {
-    fwpitchbend::Shifter s;
+    pb::Shifter s;
     s.prepare (48000.0, 256, 1);
     std::vector<float> buf (256);
     float* ptr[1] { buf.data() };

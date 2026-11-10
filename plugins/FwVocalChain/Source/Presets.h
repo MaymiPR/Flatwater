@@ -4,11 +4,11 @@
 // the In/Out link stay where they are when a preset loads.
 #include "shared/Presets.h"
 
-namespace fwvocalchain
+namespace ch
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "bass", 0.0f }, { "bassColor", 1.0f }, { "treble", 0.0f }, { "trebleColor", 1.0f }, { "compress", 0.0f }, { "compressColor", 1.0f }, { "reverb", 0.0f }, { "reverbColor", 1.0f }, { "delay", 0.0f }, { "delayColor", 1.0f }, { "pitch", 0.0f }, { "pitchColor", 1.0f }, { "balance", 0.0f } }, { "sensitivity", "output", "ioLink" } },
     { "Essentials", "Lead Starter", { { "bass", -3.0f }, { "bassColor", 1.0f }, { "treble", 3.0f }, { "trebleColor", 2.0f }, { "compress", 3.0f }, { "compressColor", 2.0f }, { "reverb", -4.0f }, { "reverbColor", 1.0f }, { "delay", 2.0f }, { "delayColor", 1.0f }, { "pitch", -2.0f }, { "pitchColor", 1.0f }, { "balance", 0.0f } }, { "sensitivity", "output", "ioLink" } },
     { "Essentials", "Lead Starter Dry", { { "bass", -3.0f }, { "bassColor", 1.0f }, { "treble", 3.0f }, { "trebleColor", 2.0f }, { "compress", 3.0f }, { "compressColor", 2.0f }, { "reverb", -4.0f }, { "reverbColor", 0.0f }, { "delay", 2.0f }, { "delayColor", 0.0f }, { "pitch", -2.0f }, { "pitchColor", 0.0f }, { "balance", 0.0f } }, { "sensitivity", "output", "ioLink" } },

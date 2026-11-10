@@ -4,11 +4,11 @@
 // plugins/FwBassXLift/nulltest/read_ref_presets.py); names are Flatwater's own. Presets leave Input alone, as the reference does.
 #include "shared/Presets.h"
 
-namespace fwbassxlift
+namespace bx
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "freq", 80.0f }, { "decay", -15.0f }, { "response", 20.0f }, { "ratio", 1.0f }, { "highpass", 1.0f }, { "origBass", 0.0f }, { "harmonics", -100.0f }, { "monitor", 0.0f } } },
     { "Essentials", "PA System", { { "freq", 80.0f }, { "decay", -15.0f }, { "response", 20.0f }, { "ratio", 2.0f }, { "highpass", 1.0f }, { "origBass", 0.0f }, { "harmonics", -15.0f }, { "monitor", 0.0f } } },
     { "Essentials", "Deepest Reach", { { "freq", 80.0f }, { "decay", -15.0f }, { "response", 15.0f }, { "ratio", 1.5f }, { "highpass", 0.0f }, { "origBass", 0.0f }, { "harmonics", -10.0f }, { "monitor", 0.0f } } },

@@ -11,8 +11,8 @@ namespace
 NormalisableRange<float> expRange (float lo, float hi)
 {
     return { lo, hi,
-             [] (float a, float b, float v) { return (float) (std::round (a * fwpitchbend::pbmath::pow (b / a, v) * 1e5) / 1e5); },
-             [] (float a, float b, float x) { return (float) (fwpitchbend::pbmath::log (x / a) / fwpitchbend::pbmath::log (b / a)); } };
+             [] (float a, float b, float v) { return (float) (std::round (a * pb::pbmath::pow (b / a, v) * 1e5) / 1e5); },
+             [] (float a, float b, float x) { return (float) (pb::pbmath::log (x / a) / pb::pbmath::log (b / a)); } };
 }
 }
 
@@ -33,11 +33,11 @@ AudioProcessorValueTreeState::ParameterLayout FwPitchBendProcessor::layout()
     // in the reference's parameter order
     for (int m = 0; m < 2; ++m)
     {
-        const auto& d = fwpitchbend::mod[m];
+        const auto& d = pb::mod[m];
         const String p = "Mod" + String (m + 1) + " ";
         addF (d.warp, p + "Warp", expRange (0.01f, 100.0f), 1.0f, fix (2));
         addF (d.level, p + "Level", { 0.0f, 1.0f }, 1.0f, fix (2));
-        addC (d.rateSynced, p + "Rate Synced", fwpitchbend::syncedRates(), 5);
+        addC (d.rateSynced, p + "Rate Synced", pb::syncedRates(), 5);
         addF (d.rate, p + "Rate", expRange (0.06f, 30.0f), 0.5f, [] (float v) { return String (v, 3) + " Hz"; });
         addC (d.sync, p + "Sync On/Off", StringArray { "Note", "ms" }, 0);
         addF (d.phase, p + "Phase", { 0.0f, 1.0f }, 0.0f, fix (3));
@@ -45,19 +45,19 @@ AudioProcessorValueTreeState::ParameterLayout FwPitchBendProcessor::layout()
         addF (d.smooth, p + "Smooth", expRange (1.0f, 1000.0f), 1.5f, fix (1));
         addF (d.steps, p + "Steps", { 2.0f, 16.0f, 1.0f }, 16.0f, fix (0));
     }
-    addF (fwpitchbend::amAttack, "AM Attack", expRange (0.1f, 1000.0f), 10.0f, ms);
-    addF (fwpitchbend::amRelease, "AM Release", expRange (0.1f, 1000.0f), 100.0f, ms);
-    addF (fwpitchbend::amLevel, "AM Level", { 0.0f, 2.0f }, 1.0f, fix (2));
-    addF (fwpitchbend::ptSmooth, "PT Smooth", expRange (1.0f, 1000.0f), 10.0f, fix (1));
-    addF (fwpitchbend::ptOffset, "PT Offset", { -1.0f, 1.0f }, 0.0f, fix (2));
-    addF (fwpitchbend::ptLevel, "PT Level", { 0.0f, 2.0f }, 1.0f, fix (2));
+    addF (pb::amAttack, "AM Attack", expRange (0.1f, 1000.0f), 10.0f, ms);
+    addF (pb::amRelease, "AM Release", expRange (0.1f, 1000.0f), 100.0f, ms);
+    addF (pb::amLevel, "AM Level", { 0.0f, 2.0f }, 1.0f, fix (2));
+    addF (pb::ptSmooth, "PT Smooth", expRange (1.0f, 1000.0f), 10.0f, fix (1));
+    addF (pb::ptOffset, "PT Offset", { -1.0f, 1.0f }, 0.0f, fix (2));
+    addF (pb::ptLevel, "PT Level", { 0.0f, 2.0f }, 1.0f, fix (2));
     auto semis = [] (float v) { return String (roundToInt (v)) + " semitones"; };
-    addF (fwpitchbend::pitch, "Pitch", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (fwpitchbend::formant, "Formant", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (fwpitchbend::mix, "Mix", { 0.0f, 100.0f }, 100.0f, fix (1));
-    addC (fwpitchbend::flattenNote, "Flatten Note", fwpitchbend::noteNames(), 12);
-    addC (fwpitchbend::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
-    addC (fwpitchbend::mode, "Mode", fwpitchbend::modeNames(), 0);
+    addF (pb::pitch, "Pitch", { -12.0f, 12.0f }, 0.0f, semis);
+    addF (pb::formant, "Formant", { -12.0f, 12.0f }, 0.0f, semis);
+    addF (pb::mix, "Mix", { 0.0f, 100.0f }, 100.0f, fix (1));
+    addC (pb::flattenNote, "Flatten Note", pb::noteNames(), 12);
+    addC (pb::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
+    addC (pb::mode, "Mode", pb::modeNames(), 0);
     return l;
 }
 
@@ -67,10 +67,10 @@ FwPitchBendProcessor::FwPitchBendProcessor()
       apvts (*this, &undo, "FwPitchBend", layout())
 {
     ensureState();
-    for (int t = 0; t < fwpitchbend::numTargets; ++t)
+    for (int t = 0; t < pb::numTargets; ++t)
     {
-        targetParams[(size_t) t] = apvts.getParameter (fwpitchbend::targets[t].param);
-        modulated[(size_t) t] = get (fwpitchbend::targets[t].param);
+        targetParams[(size_t) t] = apvts.getParameter (pb::targets[t].param);
+        modulated[(size_t) t] = get (pb::targets[t].param);
         modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     }
     apvts.state.addListener (this);
@@ -79,7 +79,7 @@ FwPitchBendProcessor::FwPitchBendProcessor()
 
 void FwPitchBendProcessor::ensureState()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     auto& st = apvts.state;
     child (st, modsTag);
     auto shapes = child (st, shapesTag);
@@ -92,7 +92,7 @@ void FwPitchBendProcessor::ensureState()
 
 void FwPitchBendProcessor::refreshModel()
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     Model m;
     auto& st = apvts.state;
     for (int t = 0; t < numTargets; ++t)
@@ -104,25 +104,25 @@ void FwPitchBendProcessor::refreshModel()
     shared = m;
 }
 
-// a factory preset: its host parameters (fw::applyPreset), then the rest (applyPresetExtras, when its values land in
+// a factory preset: its host parameters (flatwater::applyPreset), then the rest (applyPresetExtras, when its values land in
 // the state); index 0 the defaults
 void FwPitchBendProcessor::setCurrentProgram (int index)
 {
     if (index < 0 || index >= getNumPrograms()) return;
     currentProgram = index;
-    static const fw::FactoryPreset defaults { "", "Default", {} };
-    fw::applyPreset (apvts, index == 0 ? defaults : fwpitchbend::factoryPresets()[(size_t) index - 1], apvts.getParameter (fwpitchbend::mode));
+    static const flatwater::FactoryPreset defaults { "", "Default", {} };
+    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::mode));
 }
 
 void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
 {
-    if (child.hasType (fw::presetExactTag)) applyPresetExtras (child);
+    if (child.hasType (flatwater::presetExactTag)) applyPresetExtras (child);
     refreshModel();
 }
 
 void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     auto& st = apvts.state;
     st.setProperty (fineId, (bool) exact.getProperty ("fine", false), nullptr);
     for (int t = 0; t < numTargets; ++t)
@@ -145,7 +145,7 @@ void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
 // added on the normalised value; Pitch to +-24 semitones
 double FwPitchBendProcessor::modulatedValue (int t) const
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     const auto* p = targetParams[(size_t) t];
     const double s = modSum[(size_t) t];
     auto scaled = [&] (double a, double q) { const auto r = p->getNormalisableRange();
@@ -179,14 +179,14 @@ void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
     am.prepare (sr);
     pt.reset();
     processed = 0;
-    for (int t = 0; t < fwpitchbend::numTargets; ++t) modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    for (int t = 0; t < pb::numTargets; ++t) modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     modSum.fill (0.0);
     lastValue.fill (0.0);
 }
 
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
-    using namespace fwpitchbend;
+    using namespace pb;
     ScopedNoDenormals nd;
     const int n = buffer.getNumSamples(), ch = jmin (buffer.getNumChannels(), getTotalNumInputChannels());
     if (n == 0 || ch == 0) return;
@@ -260,7 +260,7 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     {
     for (int m = 0; m < 2; ++m)
     {
-        const auto& d = fwpitchbend::mod[m];
+        const auto& d = pb::mod[m];
         const int t0 = 3 + 4 * m;                                  // its Rate, Warp, Phase, Level in targets[]
         auto& c = src[m];
         c.seq = get (d.type) > 0.5f;
@@ -307,7 +307,7 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     // PT holds its pitch where the voice's pitch is unclear (the detector's aperiodicity over 0.15): on speech the
     // reference's holds through such stretches, where an octave error would otherwise come through
     const float ptHz = shifter.aperiodicity() <= 0.15f ? shifter.detectedHz() : 0.0f;
-    const double ptV = (pt.next (ptHz, modulatedValue (14), n, sr) + get (fwpitchbend::ptOffset)) * modulatedValue (15);
+    const double ptV = (pt.next (ptHz, modulatedValue (14), n, sr) + get (pb::ptOffset)) * modulatedValue (15);
     // Mix's slots per sample; every other control's at the block's end
     double mixSum = 0.0;
     const float mixBase = base[2];
@@ -366,7 +366,7 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
 
     applySlots (value);
     // the wet path, then Mix (per sample, with its modulation)
-    const float flattenHz = get (fwpitchbend::flatten) > 0.5f ? 130.8128f * (float) fwpitchbend::pbmath::exp2 (std::round (get (fwpitchbend::flattenNote)) / 12.0) : 0.0f;
+    const float flattenHz = get (pb::flatten) > 0.5f ? 130.8128f * (float) pb::pbmath::exp2 (std::round (get (pb::flattenNote)) / 12.0) : 0.0f;
     // the modulated totals set the pitch and the formant, followed in steps of 16 samples (measured: a stepped Pitch
     // lands about 2 ms after the step wherever it falls in the host's block, at blocks of 64 and 512); the knobs' own
     // values (rounded as they act) set the envelope's share of Pitch, which level table applies and whether noise is

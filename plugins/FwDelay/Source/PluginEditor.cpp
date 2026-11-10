@@ -1,11 +1,10 @@
 #include "PluginEditor.h"
-#include "shared/ui/Logo.h"
-#include "shared/ui/Wheel.h"
+#include "shared/ui/Widgets.h"
 #include "shared/ui/Theme.h"
 
 using namespace juce;
-using namespace fw::hybrid;
-namespace th = fw::theme;
+using namespace flatwater::hybrid;
+namespace theme = flatwater::theme;
 
 namespace
 {
@@ -17,13 +16,13 @@ const Rectangle<int> kDisplay (290, 64, 145, 78);         // the window 292 .. 4
 const Rectangle<float> kMeterFrame (598.0f, 67.0f, 50.0f, 198.0f);      // the housing 600 .. 646 x 69 .. 262 and around it
 const Point<float> kClipLamp (621.3f, 48.6f);
 const Rectangle<float> kTapPad (24.0f, 59.0f, 93.0f, 95.0f);
-const Colour kSeg (th::cyan);                               // the display's segments
+const Colour kSeg (theme::cyan);                               // the display's segments
 
 float rad (float deg) { return deg * MathConstants<float>::pi / 180.0f; }
 
 // the knobs' drag law (measured on the reference's display and Link wheel, as on its knobs): 0.001 of the range per px
 // on mouse steps up to 2 px, 0.002 from 3 px, a quarter of either with Ctrl
-float dragRate (float stepPx) { return (std::abs (stepPx) <= 2.0f ? 0.001f : 0.002f) * (fw::ctrlHeldNow() ? 0.25f : 1.0f); }
+float dragRate (float stepPx) { return (std::abs (stepPx) <= 2.0f ? 0.001f : 0.002f) * (flatwater::ctrlHeldNow() ? 0.25f : 1.0f); }
 float wheelNotches (const MouseWheelDetails& w)
 {
     return (std::abs (w.deltaX) > std::abs (w.deltaY) ? -w.deltaX : w.deltaY) * (w.isReversed ? -1.0f : 1.0f) / (60.0f / 256.0f);
@@ -44,7 +43,7 @@ void drawStartBox (Graphics& g, bool right, bool selected)
     {
         Path ring;
         ring.addRoundedRectangle (390.22f, 94.0f, 23.6f, 29.0f, 2.8f);
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.strokePath (ring, PathStrokeType (1.0f), shear);
     }
     Path box;
@@ -62,14 +61,14 @@ void drawStartBox (Graphics& g, bool right, bool selected)
         for (int i = 0; i < n; ++i) { ink.startNewSubPath (st[i][0], st[i][1]); ink.lineTo (st[i][2], st[i][3]); }
     };
     if (right) add (strokesR, 6); else add (strokesL, 3);
-    g.setColour (th::well);
+    g.setColour (theme::well);
     g.strokePath (ink, PathStrokeType (1.5f, PathStrokeType::mitered, PathStrokeType::square));
 }
 }
 
 FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwdelay::mode), "Flatwater Delay", JucePlugin_VersionString, W, H,
-              fw::Toolbar::Style::Hybrid, { "Stereo", "Mono", "M>S" }),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (de::mode), "Flatwater Delay", JucePlugin_VersionString, W, H,
+              flatwater::Toolbar::Style::Hybrid, { "Stereo", "Mono", "M>S" }),
       proc (p),
       delay (make<Knob> (Knob::Grand, 39.0f, 321.0f)), delayNote (make<Knob> (Knob::Grand, 39.0f, 321.0f)),
       delayR (make<Knob> (Knob::Grand, 39.0f, 321.0f)), delayNoteR (make<Knob> (Knob::Grand, 39.0f, 321.0f)),
@@ -84,8 +83,8 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     setAuxLook (std::make_unique<HybridLook>());
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (fwdelay::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (fwdelay::mix) });        // presets leave Mix alone, as the reference
+    setFactoryPresets (de::factoryPresets());
+    setKeepOnPresetLoad ({ p.apvts.getParameter (de::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, std::function<String (double)> fmt)
     {
@@ -99,13 +98,13 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
         k.valueArea = box - b.getPosition();
         k.format = std::move (fmt); k.selection = &selection;
         attachSlider (k, id, b, reset);
-        if (k.format) fw::flat::applyFormat (k, k.format, false);
+        if (k.format) flatwater::flat::applyFormat (k, k.format, false);
     };
-    auto noteText = [] (double v) { return fwdelay::noteNames()[jlimit (0, 19, roundToInt (v))]; };
-    place (delay, fwdelay::delay, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
-    place (delayR, fwdelay::delayR, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
-    place (delayNote, fwdelay::delayNote, { 130, 27, 152, 154 }, kDelay, 11.0, {});
-    place (delayNoteR, fwdelay::delayNoteR, { 130, 27, 152, 154 }, kDelay, 11.0, {});
+    auto noteText = [] (double v) { return de::noteNames()[jlimit (0, 19, roundToInt (v))]; };
+    place (delay, de::delay, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
+    place (delayR, de::delayR, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
+    place (delayNote, de::delayNote, { 130, 27, 152, 154 }, kDelay, 11.0, {});
+    place (delayNoteR, de::delayNoteR, { 130, 27, 152, 154 }, kDelay, 11.0, {});
     for (auto* k : { &delayNote, &delayNoteR })
     {
         k->textFromValueFunction = noteText;
@@ -113,14 +112,14 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
         const float px[4] = { 30.0f, 20.0f, 120.0f, 200.0f / 3.0f };     // as Flatwater Comp's note knob (to be measured)
         std::copy (px, px + 4, k->feel.stepPx);
     }
-    place (feedback, fwdelay::feedback, { 442, 27, 152, 154 }, kFeedback, 60.0, [] (double v) { return String (roundToInt (v)); });
-    place (depth, fwdelay::depth, { 134, 175, 96, 106 }, kDepth, 0.0, [] (double v) { return String (roundToInt (v)); });
-    place (rate, fwdelay::rate, { 239, 175, 96, 106 }, kRate, 0.1, [] (double v) { return fwdelay::rateText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (hipass, fwdelay::hipass, { 360, 175, 96, 106 }, kHiPass, 19.0, [] (double v) { return fwdelay::freqText ((float) v, true); });
-    place (lopass, fwdelay::lopass, { 495, 175, 96, 106 }, kLoPass, 20138.77, [] (double v) { return fwdelay::freqText ((float) v, false); });
-    place (mix, fwdelay::mix, { 663, 26, 73, 76 }, kMix, 100.0, [] (double v) { return String (roundToInt (v)); });
-    place (output, fwdelay::output, { 663, 106, 73, 76 }, kOutput, 0.0, [] (double v) { return String (v, 1); });
-    place (analog, fwdelay::analog, { 663, 191, 73, 76 }, kAnalog, 2.0, {});
+    place (feedback, de::feedback, { 442, 27, 152, 154 }, kFeedback, 60.0, [] (double v) { return String (roundToInt (v)); });
+    place (depth, de::depth, { 134, 175, 96, 106 }, kDepth, 0.0, [] (double v) { return String (roundToInt (v)); });
+    place (rate, de::rate, { 239, 175, 96, 106 }, kRate, 0.1, [] (double v) { return de::rateText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
+    place (hipass, de::hipass, { 360, 175, 96, 106 }, kHiPass, 19.0, [] (double v) { return de::freqText ((float) v, true); });
+    place (lopass, de::lopass, { 495, 175, 96, 106 }, kLoPass, 20138.77, [] (double v) { return de::freqText ((float) v, false); });
+    place (mix, de::mix, { 663, 26, 73, 76 }, kMix, 100.0, [] (double v) { return String (roundToInt (v)); });
+    place (output, de::output, { 663, 106, 73, 76 }, kOutput, 0.0, [] (double v) { return String (v, 1); });
+    place (analog, de::analog, { 663, 191, 73, 76 }, kAnalog, 2.0, {});
     analog.steps = 5;
     for (auto& px : analog.feel.stepPx) px = 50.0f;           // as Flatwater Comp's Analog (to be measured)
 
@@ -132,16 +131,16 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     // the shadow 9 px under it)
     const String slash (CharPointer_UTF8 ("\xc3\x98")), slashSmall (CharPointer_UTF8 ("\xc3\xb8"));     // "Ø", "ø"
     auto around = [] (Rectangle<int> frame) { return frame.withTrimmedLeft (-4).withTrimmedTop (-4).withTrimmedRight (-4).withTrimmedBottom (-9); };
-    stereoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (fwdelay::phaseL), slash + "L", 20.0f },
-                                                                 { par (fwdelay::pingPong), "PING PONG", 59.0f },
-                                                                 { par (fwdelay::dual), "DUAL", 34.0f },
-                                                                 { par (fwdelay::phaseR), slash + "R", 20.0f } }, um, ButtonLook::delay);
+    stereoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::phaseL), slash + "L", 20.0f },
+                                                                 { par (de::pingPong), "PING PONG", 59.0f },
+                                                                 { par (de::dual), "DUAL", 34.0f },
+                                                                 { par (de::phaseR), slash + "R", 20.0f } }, um, ButtonLook::delay);
     addToContent (*stereoRow, around ({ 290, 38, 143, 22 }));
-    monoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (fwdelay::phaseL), slashSmall, 20.0f } }, um, ButtonLook::delay);
+    monoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::phaseL), slashSmall, 20.0f } }, um, ButtonLook::delay);
     addToContent (*monoRow, around ({ 290, 38, 24, 22 }));
-    syncGroup = &make<ButtonGroup> (*par (fwdelay::sync), um, StringArray { "BPM", "HOST", "MS" }, false, false, ButtonLook::delay);
+    syncGroup = &make<ButtonGroup> (*par (de::sync), um, StringArray { "BPM", "HOST", "MS" }, false, false, ButtonLook::delay);
     addToContent (*syncGroup, around ({ 292, 146, 141, 21 }));
-    lofiButton = &make<ButtonGroup> (*par (fwdelay::lofi), um, StringArray { "LoFi" }, false, true, ButtonLook::delay);
+    lofiButton = &make<ButtonGroup> (*par (de::lofi), um, StringArray { "LoFi" }, false, true, ButtonLook::delay);
     addToContent (*lofiButton, around ({ 35, 188, 70, 22 }));
     // one control is selected at a time (the reference): a knob (its ring), a button group or a button (an amber line),
     // the tap pad
@@ -170,7 +169,7 @@ void FwDelayEditor::setValue (const char* id, float v)
 
 double FwDelayEditor::tempo() const
 {
-    if (roundToInt (value (fwdelay::sync)) == 0) return value (fwdelay::bpm);
+    if (roundToInt (value (de::sync)) == 0) return value (de::bpm);
     const double h = proc.hostBpm.load();
     return h > 0.0 ? h : 120.0;
 }
@@ -178,14 +177,14 @@ double FwDelayEditor::tempo() const
 // the Delay knob shows ms or note values (Sync), and in Dual the side chosen on the display
 void FwDelayEditor::updateDelayKnobs()
 {
-    const int s = roundToInt (value (fwdelay::sync)), m = modeIndex();
-    const bool dualOn = value (fwdelay::dual) > 0.5f;
-    const bool dual = dualOn && m != 1, ping = value (fwdelay::pingPong) > 0.5f && m != 1;
+    const int s = roundToInt (value (de::sync)), m = modeIndex();
+    const bool dualOn = value (de::dual) > 0.5f;
+    const bool dual = dualOn && m != 1, ping = value (de::pingPong) > 0.5f && m != 1;
     // as the reference: the right side starts from the left's time when Dual is switched on
     if (lastDualOn == 0 && dualOn)
     {
-        setValue (fwdelay::delayR, value (fwdelay::delay));
-        setValue (fwdelay::delayNoteR, value (fwdelay::delayNote));
+        setValue (de::delayR, value (de::delay));
+        setValue (de::delayNoteR, value (de::delayNote));
     }
     lastDualOn = (int) dualOn;
     // the right side's knob while Dual's layout shows (Ping Pong's takes over the display and shows the left)
@@ -196,13 +195,13 @@ void FwDelayEditor::updateDelayKnobs()
         const double t = tempo();
         if (s == 2)
         {
-            setValue (fwdelay::delay, (float) (fwdelay::noteBeats (roundToInt (value (fwdelay::delayNote))) * 60000.0 / t));
-            setValue (fwdelay::delayR, (float) (fwdelay::noteBeats (roundToInt (value (fwdelay::delayNoteR))) * 60000.0 / t));
+            setValue (de::delay, (float) (de::noteBeats (roundToInt (value (de::delayNote))) * 60000.0 / t));
+            setValue (de::delayR, (float) (de::noteBeats (roundToInt (value (de::delayNoteR))) * 60000.0 / t));
         }
         else if (lastSync == 2)
         {
-            setValue (fwdelay::delayNote, (float) fwdelay::nearestNote (value (fwdelay::delay), t));
-            setValue (fwdelay::delayNoteR, (float) fwdelay::nearestNote (value (fwdelay::delayR), t));
+            setValue (de::delayNote, (float) de::nearestNote (value (de::delay), t));
+            setValue (de::delayNoteR, (float) de::nearestNote (value (de::delayR), t));
         }
     }
     if (s == lastSync && m == lastMode && (int) dual == lastDual && (int) ping == lastPing && right == lastRight) return;
@@ -235,11 +234,11 @@ void FwDelayEditor::tick()
     updateDelayKnobs();
     // as the reference: a note value whose time at the tempo passes 3500 ms is not taken (2 bars at 120 BPM: it stops at
     // 1 bar); the longest one that fits instead
-    for (auto* id : { fwdelay::delayNote, fwdelay::delayNoteR })
+    for (auto* id : { de::delayNote, de::delayNoteR })
     {
         int n = roundToInt (value (id));
         const int n0 = n;
-        while (n > 0 && fwdelay::noteBeats (n) * 60000.0 / tempo() > 3500.0) --n;
+        while (n > 0 && de::noteBeats (n) * 60000.0 / tempo() > 3500.0) --n;
         if (n != n0) setValue (id, (float) n);
     }
     if (selection.primary != nullptr && (lastPrimary != selection.primary))      // a knob was clicked: the others go
@@ -285,7 +284,7 @@ void FwDelayEditor::RMark::paint (Graphics& g)
     r.lineTo (243.2f, 175.0f); r.lineTo (244.35f, 177.5f); r.lineTo (241.9f, 177.5f);
     r.closeSubPath();
     r.setUsingNonZeroWinding (true);
-    g.setColour (th::panel);
+    g.setColour (theme::panel);
     g.fillPath (r);
 }
 
@@ -296,9 +295,9 @@ void FwDelayEditor::Display::paint (Graphics& g)
     // dark with a faint sheen from the upper left and a few fine streaks falling to the right
     g.addTransform (AffineTransform::translation ((float) -kDisplay.getX(), (float) -kDisplay.getY()));
     const Rectangle<float> win (292.0f, 66.0f, 139.0f, 74.0f);
-    g.setColour (th::line.brighter (0.3f));
+    g.setColour (theme::line.brighter (0.3f));
     g.drawRoundedRectangle (win.translated (0.0f, 1.0f).reduced (0.5f), 5.0f, 1.0f);
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillRoundedRectangle (win, 5.0f);
     const Rectangle<float> pane (294.0f, 68.0f, 135.0f, 70.0f);
     {
@@ -306,9 +305,9 @@ void FwDelayEditor::Display::paint (Graphics& g)
         Path clip;
         clip.addRoundedRectangle (pane, 3.0f);
         g.reduceClipRegion (clip);
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.fillRect (pane);
-        ColourGradient sheen (th::raised.withAlpha (0.9f), 330.0f, 66.0f, th::raised.withAlpha (0.0f), 330.0f + 60.0f, 66.0f + 60.0f, true);
+        ColourGradient sheen (theme::raised.withAlpha (0.9f), 330.0f, 66.0f, theme::raised.withAlpha (0.0f), 330.0f + 60.0f, 66.0f + 60.0f, true);
         g.setGradientFill (sheen);
         g.fillRect (pane);
         Random rnd (4321);
@@ -318,7 +317,7 @@ void FwDelayEditor::Display::paint (Graphics& g)
             g.setColour (Colours::white.withAlpha (0.012f + 0.02f * rnd.nextFloat()));
             g.drawLine (x, y, x + 40.0f, y + 12.0f, 0.8f + rnd.nextFloat());
         }
-        g.setColour (th::line.withAlpha (0.8f));
+        g.setColour (theme::line.withAlpha (0.8f));
         g.drawRoundedRectangle (pane.reduced (0.5f), 3.0f, 1.0f);
         g.restoreState();
     }
@@ -336,9 +335,9 @@ void FwDelayEditor::Display::paint (Graphics& g)
         dualNote { 6.8f, 11.2f, 1.3f, 0.8f, 0.8f, 0.21f, 8.5f },
         dualBar { 5.59f, 8.72f, 1.23f, 0.51f, 0.5f, 0.17f, 6.48f };
     g.setColour (kSeg);
-    const int s = roundToInt (ed.value (fwdelay::sync)), m = ed.modeIndex();
-    const bool ping = ed.value (fwdelay::pingPong) > 0.5f && m != 1, dual = ed.value (fwdelay::dual) > 0.5f && m != 1 && ! ping;
-    const String tempoText = String (roundToInt (s == 0 ? (double) ed.value (fwdelay::bpm) : ed.tempo()));
+    const int s = roundToInt (ed.value (de::sync)), m = ed.modeIndex();
+    const bool ping = ed.value (de::pingPong) > 0.5f && m != 1, dual = ed.value (de::dual) > 0.5f && m != 1 && ! ping;
+    const String tempoText = String (roundToInt (s == 0 ? (double) ed.value (de::bpm) : ed.tempo()));
     // digits right-aligned in a field whose first cell starts at x (the reference's 3-digit tempo, 4-digit time)
     auto field = [&] (const SegFont& f, float x, float y, const String& t, int cells)
     {
@@ -348,7 +347,7 @@ void FwDelayEditor::Display::paint (Graphics& g)
     // (positions measured on each of the reference's notes: its figures are not evenly spaced)
     auto note = [&] (int n, float dx)
     {
-        const String t = fwdelay::noteNames()[jlimit (0, 19, n)];
+        const String t = de::noteNames()[jlimit (0, 19, n)];
         if (t.endsWith ("B"))
         {
             drawSegmentText (g, SegFont { 10.92f, 17.02f, 1.89f, 1.28f, 0.88f, 0.20f, 12.0f }, 298.67f + dx, 96.13f, t.substring (0, 1));
@@ -378,7 +377,7 @@ void FwDelayEditor::Display::paint (Graphics& g)
     // Dual's smaller notes, at a side's offset (measured on 1/8D and 1 bar)
     auto smallNote = [&] (int n, float dx)
     {
-        const String t = fwdelay::noteNames()[jlimit (0, 19, n)];
+        const String t = de::noteNames()[jlimit (0, 19, n)];
         if (t.endsWith ("B"))
         {
             drawSegmentText (g, dualNote, 307.65f + dx, 95.8f, t.substring (0, 1));
@@ -399,14 +398,14 @@ void FwDelayEditor::Display::paint (Graphics& g)
     {
         // the left half of Dual's layout (the time, or the note and the tempo) and
         // the start side's box
-        if (s == 2) drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (fwdelay::delay)));
+        if (s == 2) drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::delay)));
         else
         {
-            smallNote (roundToInt (ed.value (fwdelay::delayNote)), 0.0f);
+            smallNote (roundToInt (ed.value (de::delayNote)), 0.0f);
             field (dualTempo, 338.85f, 95.95f, tempoText, 3);
             drawSegmentText (g, dualLabel, 359.93f, 118.25f, "BPM");
         }
-        drawStartBox (g, ed.value (fwdelay::pingPongStart) > 0.5f, boxSelected);
+        drawStartBox (g, ed.value (de::pingPongStart) > 0.5f, boxSelected);
         return;
     }
     if (dual)
@@ -415,15 +414,15 @@ void FwDelayEditor::Display::paint (Graphics& g)
         drawSegmentText (g, side, 405.71f, 76.75f, "R");
         if (s == 2)
         {
-            drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (fwdelay::delay)));
-            drawSegmentText (g, dualMs, 369.39f, 101.92f, msText (ed.value (fwdelay::delayR)));
+            drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::delay)));
+            drawSegmentText (g, dualMs, 369.39f, 101.92f, msText (ed.value (de::delayR)));
             g.setColour (kSeg.withAlpha (0.37f));                                      // the divider between them
             g.fillRect (Rectangle<float> (360.0f, 80.0f, 2.0f, 50.0f));
         }
         else
         {
-            smallNote (roundToInt (ed.value (fwdelay::delayNote)), 0.0f);
-            smallNote (roundToInt (ed.value (fwdelay::delayNoteR)), 94.0f);
+            smallNote (roundToInt (ed.value (de::delayNote)), 0.0f);
+            smallNote (roundToInt (ed.value (de::delayNoteR)), 94.0f);
             field (dualTempo, 338.85f, 95.95f, tempoText, 3);
             drawSegmentText (g, dualLabel, 359.93f, 118.25f, "BPM");
         }
@@ -431,10 +430,10 @@ void FwDelayEditor::Display::paint (Graphics& g)
     }
     if (s == 2)
     {
-        drawSegmentText (g, big, 327.16f, 92.15f, msText (ed.value (fwdelay::delay)));
+        drawSegmentText (g, big, 327.16f, 92.15f, msText (ed.value (de::delay)));
         return;
     }
-    note (roundToInt (ed.value (fwdelay::delayNote)), 0.0f);
+    note (roundToInt (ed.value (de::delayNote)), 0.0f);
     field (big, 366.71f, 93.4f, tempoText, 3);
     drawSegmentText (g, label, 398.65f, 119.76f, "BPM");
 }
@@ -446,7 +445,7 @@ void FwDelayEditor::Display::mouseDown (const MouseEvent& e)
     if (h.box)
     {
         // the start side flips at each click, and the box is the selected control
-        ed.setValue (fwdelay::pingPongStart, ed.value (fwdelay::pingPongStart) > 0.5f ? 0.0f : 1.0f);
+        ed.setValue (de::pingPongStart, ed.value (de::pingPongStart) > 0.5f ? 0.0f : 1.0f);
         selectBox (true);
         return;
     }
@@ -468,8 +467,8 @@ void FwDelayEditor::Display::mouseDown (const MouseEvent& e)
 // control rectangles (its layout; the first listed takes a point two share), checked with clicks and drags on it
 FwDelayEditor::Display::Hit FwDelayEditor::Display::hit (Point<float> p) const
 {
-    const int s = roundToInt (ed.value (fwdelay::sync)), m = ed.modeIndex();
-    const bool ping = ed.value (fwdelay::pingPong) > 0.5f && m != 1, dual = ed.value (fwdelay::dual) > 0.5f && m != 1 && ! ping;
+    const int s = roundToInt (ed.value (de::sync)), m = ed.modeIndex();
+    const bool ping = ed.value (de::pingPong) > 0.5f && m != 1, dual = ed.value (de::dual) > 0.5f && m != 1 && ! ping;
     auto par = [this] (const char* id) { return ed.proc.apvts.getParameter (id); };
     auto in = [p] (float x, float y, float w, float h) { return Rectangle<float> (x, y, w, h).contains (p); };
     Hit h;
@@ -479,18 +478,18 @@ FwDelayEditor::Display::Hit FwDelayEditor::Display::hit (Point<float> p) const
         // the left time or note, the right one (Dual), the tempo between them (BPM)
         if (s == 2)
         {
-            if (in (293.0f, 100.0f, 66.0f, 22.0f)) { h.param = par (fwdelay::delay); h.side = 0; }
-            else if (dual && in (321.0f, 78.0f, 104.0f, 55.0f)) { h.param = par (fwdelay::delayR); h.side = 1; }
+            if (in (293.0f, 100.0f, 66.0f, 22.0f)) { h.param = par (de::delay); h.side = 0; }
+            else if (dual && in (321.0f, 78.0f, 104.0f, 55.0f)) { h.param = par (de::delayR); h.side = 1; }
         }
-        else if (in (298.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (fwdelay::delayNote); h.side = 0; h.note = true; }
-        else if (dual && in (392.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (fwdelay::delayNoteR); h.side = 1; h.note = true; }
-        else if (s == 0 && in (338.0f, 94.0f, 42.0f, 21.0f)) h.param = par (fwdelay::bpm);
+        else if (in (298.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::delayNote); h.side = 0; h.note = true; }
+        else if (dual && in (392.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::delayNoteR); h.side = 1; h.note = true; }
+        else if (s == 0 && in (338.0f, 94.0f, 42.0f, 21.0f)) h.param = par (de::bpm);
         if (! dual) h.side = -1;
         return h;
     }
-    if (s == 2) { if (in (294.0f, 62.0f, 137.0f, 74.0f)) h.param = par (fwdelay::delay); }
-    else if (in (300.0f, 80.0f, 45.0f, 49.0f)) { h.param = par (fwdelay::delayNote); h.note = true; }
-    else if (s == 0 && in (292.0f, 57.0f, 137.0f, 74.0f)) h.param = par (fwdelay::bpm);
+    if (s == 2) { if (in (294.0f, 62.0f, 137.0f, 74.0f)) h.param = par (de::delay); }
+    else if (in (300.0f, 80.0f, 45.0f, 49.0f)) { h.param = par (de::delayNote); h.note = true; }
+    else if (s == 0 && in (292.0f, 57.0f, 137.0f, 74.0f)) h.param = par (de::bpm);
     return h;
 }
 
@@ -503,7 +502,7 @@ void FwDelayEditor::Display::mouseDrag (const MouseEvent& e)
     {
         // a note value steps as on the Delay knob: 30 px per value on slow mouse steps (up to 2 px), 20 on quicker ones;
         // with Ctrl 120 and 66.7 (measured: 40 px moved the note one value, on the display as on the knob)
-        const bool slow = std::abs (dy) <= 2.0f, fine = fw::ctrlHeldNow();
+        const bool slow = std::abs (dy) <= 2.0f, fine = flatwater::ctrlHeldNow();
         stepAcc -= dy / (fine ? (slow ? 120.0f : 200.0f / 3.0f) : (slow ? 30.0f : 20.0f));
         const int steps = (int) stepAcc;
         if (steps == 0) return;
@@ -553,22 +552,22 @@ void FwDelayEditor::TapPad::paint (Graphics& g)
         g.setColour (Colours::black.withAlpha (0.12f));
         g.fillRoundedRectangle (pad.translated (0.24f, 0.6f * (float) k).expanded (0.4f * (float) k), 6.0f + 0.4f * (float) k);
     }
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, pad.getY(), th::raised.darker (0.3f), 0.0f, pad.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, pad.getY(), theme::raised.darker (0.3f), 0.0f, pad.getBottom(), false));
     g.fillRoundedRectangle (pad, 6.0f);
-    g.setColour (th::line.brighter (0.2f));
+    g.setColour (theme::line.brighter (0.2f));
     g.drawRoundedRectangle (pad.reduced (0.5f), 6.0f, 1.0f);
     // the face: a step down into a groove round it, then the face itself
-    th::drawWell (g, face.expanded (2.5f), 6.5f);
-    if (pressed) g.setGradientFill (ColourGradient (th::raised.darker (0.4f), 0.0f, face.getY(), th::raised, 0.0f, face.getBottom(), false));
-    else g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.1f), 0.0f, face.getY(), th::raised, 0.0f, face.getBottom(), false));
+    theme::drawWell (g, face.expanded (2.5f), 6.5f);
+    if (pressed) g.setGradientFill (ColourGradient (theme::raised.darker (0.4f), 0.0f, face.getY(), theme::raised, 0.0f, face.getBottom(), false));
+    else g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.1f), 0.0f, face.getY(), theme::raised, 0.0f, face.getBottom(), false));
     g.fillRoundedRectangle (pressed ? face.translated (0.0f, 1.0f) : face, 5.0f);
-    g.setColour (pressed ? th::cyan : th::line.brighter (0.35f));
+    g.setColour (pressed ? theme::cyan : theme::line.brighter (0.35f));
     g.drawRoundedRectangle ((pressed ? face.translated (0.0f, 1.0f) : face).reduced (0.5f), 5.0f, 1.0f);
-    fw::drawMark (g, Rectangle<float> (53.0f, 93.0f, 33.5f, 26.5f).translated (0.0f, pressed ? 1.0f : 0.0f), false, false,
-                  pressed ? th::cyan.withAlpha (0.7f) : th::textFaint, 1.4f);
+    flatwater::drawMark (g, Rectangle<float> (53.0f, 93.0f, 33.5f, 26.5f).translated (0.0f, pressed ? 1.0f : 0.0f), false, false,
+                  pressed ? theme::cyan.withAlpha (0.7f) : theme::textFaint, 1.4f);
     if (selected)
     {
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawRoundedRectangle (Rectangle<float> (22.5f, 57.5f, 97.0f, 99.0f), 7.0f, 1.0f);
     }
 }
@@ -582,11 +581,11 @@ void FwDelayEditor::TapPad::mouseDown (const MouseEvent&)
     const double ms = now - lastTap;
     lastTap = now;
     if (ms < 1.0 || ms > 3500.0) return;                  // the first tap, or too long ago
-    const int s = roundToInt (ed.value (fwdelay::sync));
+    const int s = roundToInt (ed.value (de::sync));
     const bool right = ed.rightSide;
-    if (s == 2) ed.setValue (right ? fwdelay::delayR : fwdelay::delay, (float) ms);
-    else if (s == 1) ed.setValue (right ? fwdelay::delayNoteR : fwdelay::delayNote, (float) fwdelay::nearestNote (ms, ed.tempo()));
-    else ed.setValue (fwdelay::bpm, jlimit (30.0f, 300.0f, (float) (60000.0 / ms)));
+    if (s == 2) ed.setValue (right ? de::delayR : de::delay, (float) ms);
+    else if (s == 1) ed.setValue (right ? de::delayNoteR : de::delayNote, (float) de::nearestNote (ms, ed.tempo()));
+    else ed.setValue (de::bpm, jlimit (30.0f, 300.0f, (float) (60000.0 / ms)));
 }
 
 //==============================================================================
@@ -596,7 +595,7 @@ void FwDelayEditor::LinkWheel::paint (Graphics& g)
     // roots) about (473.2, 218.3) with a soft shadow down and right; an arrowed arc above, its top at y 195. The cap's
     // amber index turns with the wheel.
     const auto c = centre + Point<float> (0.05f, -1.0f), wc = centre + Point<float> (-0.55f, -1.9f);
-    g.setColour (th::textFaint);
+    g.setColour (theme::textFaint);
     g.drawEllipse (c.x - 19.2f, c.y - 19.2f, 38.4f, 38.4f, 1.3f);
     Path arc;
     arc.addCentredArc (c.x, c.y + 10.0f, 34.0f, 34.0f, 0.0f, rad (-24.0f), rad (24.0f), true);
@@ -630,16 +629,16 @@ void FwDelayEditor::LinkWheel::paint (Graphics& g)
         }
     }
     gear.closeSubPath();
-    g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.15f), wc.x - 8.0f, wc.y - 12.0f, th::raised.darker (0.3f), wc.x + 8.0f, wc.y + 12.0f, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.15f), wc.x - 8.0f, wc.y - 12.0f, theme::raised.darker (0.3f), wc.x + 8.0f, wc.y + 12.0f, false));
     g.fillPath (gear);
-    g.setColour (th::line.brighter (0.3f));
+    g.setColour (theme::line.brighter (0.3f));
     g.strokePath (gear, PathStrokeType (0.8f));
-    g.setGradientFill (ColourGradient (th::raisedTop, wc.x, wc.y - 9.5f, th::raised, wc.x, wc.y + 9.5f, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, wc.x, wc.y - 9.5f, theme::raised, wc.x, wc.y + 9.5f, false));
     g.fillEllipse (wc.x - 9.5f, wc.y - 9.5f, 19.0f, 19.0f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawEllipse (wc.x - 9.5f, wc.y - 9.5f, 19.0f, 19.0f, 0.8f);
     const Point<float> d (std::sin (turn), -std::cos (turn));
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawLine (Line<float> (wc + d * 3.0f, wc + d * 8.0f), 2.0f);
 }
 
@@ -647,7 +646,7 @@ void FwDelayEditor::LinkWheel::mouseDown (const MouseEvent& e)
 {
     lastY = e.position.y;
     e.source.enableUnboundedMouseMovement (true, false);
-    for (auto* id : { fwdelay::hipass, fwdelay::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
+    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
 }
 
 void FwDelayEditor::LinkWheel::mouseDrag (const MouseEvent& e)
@@ -660,21 +659,21 @@ void FwDelayEditor::LinkWheel::mouseDrag (const MouseEvent& e)
 void FwDelayEditor::LinkWheel::mouseUp (const MouseEvent& e)
 {
     e.source.enableUnboundedMouseMovement (false);
-    for (auto* id : { fwdelay::hipass, fwdelay::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
+    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
 }
 
 void FwDelayEditor::LinkWheel::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& w)
 {
-    for (auto* id : { fwdelay::hipass, fwdelay::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
+    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
     move (wheelNotches (w) / 72.0f);
-    for (auto* id : { fwdelay::hipass, fwdelay::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
+    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
 }
 
 // both filters by the same amount of their (equal) ranges, as far as the one nearer its end can go
 void FwDelayEditor::LinkWheel::move (float d)
 {
-    auto* hp = ed.proc.apvts.getParameter (fwdelay::hipass);
-    auto* lp = ed.proc.apvts.getParameter (fwdelay::lopass);
+    auto* hp = ed.proc.apvts.getParameter (de::hipass);
+    auto* lp = ed.proc.apvts.getParameter (de::lopass);
     const float a = hp->getValue(), b = lp->getValue();
     d = jlimit (-jmin (a, b), 1.0f - jmax (a, b), d);
     if (juce::exactlyEqual (d, 0.0f)) return;
@@ -698,11 +697,11 @@ void FwDelayEditor::Meter::paint (Graphics& g)
     // the scale: ticks 7 px long from both sides of the window, the numbers between them at their measured centres
     g.addTransform (AffineTransform::translation (-kMeterFrame.getX(), -kMeterFrame.getY()));
     const Rectangle<float> frame (600.0f, 69.0f, 46.0f, 193.0f), window (607.0f, 76.0f, 32.0f, 178.0f);
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, frame.getY(), th::raised.darker (0.25f), 0.0f, frame.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, frame.getY(), theme::raised.darker (0.25f), 0.0f, frame.getBottom(), false));
     g.fillRoundedRectangle (frame, 4.0f);
-    g.setColour (th::line.brighter (0.2f));
+    g.setColour (theme::line.brighter (0.2f));
     g.drawRoundedRectangle (frame.reduced (0.5f), 4.0f, 1.0f);
-    th::drawWell (g, window, 2.5f);
+    theme::drawWell (g, window, 2.5f);
     struct Mark { float db; const char* t; float cx, cy; };
     static const Mark marks[] = { { 0, "0", 622.5f, 83.5f }, { -3, "3", 623.0f, 107.5f }, { -6, "6", 622.5f, 129.5f },
                                   { -12, "12", 623.0f, 162.5f }, { -24, "24", 623.0f, 200.5f },
@@ -710,10 +709,10 @@ void FwDelayEditor::Meter::paint (Graphics& g)
     for (auto m : marks)
     {
         const float y = meterY (m.db);
-        g.setColour (th::textFaint);
+        g.setColour (theme::textFaint);
         g.fillRect (Rectangle<float> (608.0f, y - 1.0f, 6.0f, 2.0f));
         g.fillRect (Rectangle<float> (632.0f, y - 1.0f, 6.0f, 2.0f));
-        g.setColour (m.db > -30.0f ? th::text : th::textDim);
+        g.setColour (m.db > -30.0f ? theme::text : theme::textDim);
         printText (g, m.t, { m.cx, m.cy }, 11.5f, 1.0f, true);
     }
     // an amber pointer per channel pointing inward (measured at rest: 608 .. 618 x 239 .. 246, its point 1 px below the
@@ -726,7 +725,7 @@ void FwDelayEditor::Meter::paint (Graphics& g)
         p.addTriangle (xb, y - 3.6f, xt, y - 0.1f, xb, y + 3.6f);
         g.setColour (Colours::black.withAlpha (0.5f));
         g.fillPath (p, AffineTransform::translation (0.4f, 1.4f));
-        g.setGradientFill (ColourGradient (th::amberLight, 0.0f, y - 3.6f, th::amber.darker (0.3f), 0.0f, y + 3.6f, false));
+        g.setGradientFill (ColourGradient (theme::amberLight, 0.0f, y - 3.6f, theme::amber.darker (0.3f), 0.0f, y + 3.6f, false));
         g.fillPath (p);
     };
     tri (l, true);
@@ -737,7 +736,7 @@ void FwDelayEditor::Meter::paint (Graphics& g)
 void FwDelayEditor::paintContent (Graphics& g)
 {
     drawPanel (g, { 0, 19, W, H - 19 });
-    th::drawCard (g, { 3.0f, 22.0f, (float) W - 6.0f, (float) H - 25.0f });
+    theme::drawCard (g, { 3.0f, 22.0f, (float) W - 6.0f, (float) H - 25.0f });
 
     // the scales round the knobs (measured: 21 ticks of 14.1 degrees; the radii of each size)
     const float s0 = refToJuce (39.0f), s1 = refToJuce (321.0f);
@@ -754,9 +753,9 @@ void FwDelayEditor::paintContent (Graphics& g)
     ticks (kAnalog, 5, 23.9f, 31.3f, 1.7f);
 
     // the labels and numbers, each centred at its measured place; the section headings in amber
-    auto label = [&] (const char* t, float x, float y, float em, float hs) { g.setColour (th::textDim); printText (g, t, { x, y }, em, hs, true); };
-    auto heading = [&] (const char* t, float x, float y, float em, float hs) { g.setColour (th::amber); printText (g, t, { x, y }, em, hs, true); };
-    auto num = [&] (const char* t, float x, float y, float em = 9.4f) { g.setColour (th::textFaint.brighter (0.35f)); printText (g, t, { x, y }, em, 1.0f, false); };
+    auto label = [&] (const char* t, float x, float y, float em, float hs) { g.setColour (theme::textDim); printText (g, t, { x, y }, em, hs, true); };
+    auto heading = [&] (const char* t, float x, float y, float em, float hs) { g.setColour (theme::amber); printText (g, t, { x, y }, em, hs, true); };
+    auto num = [&] (const char* t, float x, float y, float em = 9.4f) { g.setColour (theme::textFaint.brighter (0.35f)); printText (g, t, { x, y }, em, 1.0f, false); };
     label ("TAP", 68.5f, 164.0f, 11.5f, 1.05f);
     label ("DELAY", 207.5f, 174.5f, 10.75f, 1.1f); label ("FEEDBACK", 516.0f, 174.5f, 10.75f, 1.1f);
     label ("DEPTH", 181.0f, 265.0f, 9.75f, 1.05f); label ("RATE", 286.0f, 265.0f, 9.75f, 1.05f);
@@ -764,7 +763,7 @@ void FwDelayEditor::paintContent (Graphics& g)
     label ("LINK", 474.5f, 247.0f, 7.2f, 1.1f);
     heading ("MODULATION", 231.0f, 279.0f, 10.75f, 1.1f); heading ("FILTERS", 477.0f, 279.5f, 10.75f, 1.1f);
     label ("DRY/WET", 700.5f, 97.0f, 8.6f, 1.1f); label ("OUTPUT", 700.5f, 177.0f, 8.6f, 1.1f); label ("ANALOG", 700.5f, 265.0f, 8.6f, 1.1f);
-    if (roundToInt (value (fwdelay::sync)) == 2) { num ("1", 147.5f, 162.5f); num ("3500", 258.0f, 162.5f); }
+    if (roundToInt (value (de::sync)) == 2) { num ("1", 147.5f, 162.5f); num ("3500", 258.0f, 162.5f); }
     else { num ("1/64T", 149.0f, 162.5f); num ("2Bar", 259.0f, 163.0f); }
     num ("0", 469.5f, 162.5f); num ("200", 568.5f, 162.5f);
     num ("0", 155.5f, 254.0f); num ("100", 212.0f, 254.0f);
@@ -786,10 +785,10 @@ void FwDelayEditor::paintContent (Graphics& g)
             p.startNewSubPath (t1, 279.8f); p.lineTo (x1, 279.8f); p.lineTo (x1, 274.0f);
             g.strokePath (p, PathStrokeType (1.4f));
         };
-        g.setColour (th::amber.withAlpha (0.55f));
+        g.setColour (theme::amber.withAlpha (0.55f));
         bracket (163.5f, 298.5f, 175.0f, 287.0f);
         bracket (427.5f, 525.5f, 442.0f, 511.0f);
-        g.setColour (th::textFaint);
+        g.setColour (theme::textFaint);
         g.drawLine (441.0f, 221.0f, 452.5f, 221.0f, 1.3f);
         g.drawLine (490.5f, 221.0f, 509.0f, 221.0f, 1.3f);
     }
@@ -804,19 +803,19 @@ void FwDelayEditor::paintContent (Graphics& g)
             const float r = 12.3f + 0.5f * (float) k;
             g.fillEllipse (c.x - r, c.y + 0.8f * (float) k - r, 2.0f * r, 2.0f * r);
         }
-        g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.2f), c.x, c.y - 12.3f, th::raised.darker (0.3f), c.x, c.y + 12.3f, false));
+        g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.2f), c.x, c.y - 12.3f, theme::raised.darker (0.3f), c.x, c.y + 12.3f, false));
         g.fillEllipse (c.x - 12.3f, c.y - 12.3f, 24.6f, 24.6f);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawEllipse (c.x - 12.3f, c.y - 12.3f, 24.6f, 24.6f, 0.8f);
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.fillEllipse (c.x - 9.0f, c.y - 9.0f, 18.0f, 18.0f);
         if (clipLevel > 0.0)
         {
-            g.setColour (th::red.withAlpha (0.3f));
+            g.setColour (theme::red.withAlpha (0.3f));
             g.fillEllipse (c.x - 10.5f, c.y - 10.5f, 21.0f, 21.0f);
-            g.setGradientFill (ColourGradient (th::red.brighter (0.4f), c.x, c.y - 1.0f, th::red.darker (0.4f), c.x, c.y + 7.8f, true));
+            g.setGradientFill (ColourGradient (theme::red.brighter (0.4f), c.x, c.y - 1.0f, theme::red.darker (0.4f), c.x, c.y + 7.8f, true));
         }
-        else g.setGradientFill (ColourGradient (th::raised, c.x, c.y + 2.6f, th::well, c.x, c.y + 10.0f, true));
+        else g.setGradientFill (ColourGradient (theme::raised, c.x, c.y + 2.6f, theme::well, c.x, c.y + 10.0f, true));
         g.fillEllipse (c.x - 7.8f, c.y - 7.8f, 15.6f, 15.6f);
         g.setColour (Colours::white.withAlpha (0.3f));
         g.fillEllipse (c.x - 5.2f, c.y - 5.0f, 2.6f, 2.0f);

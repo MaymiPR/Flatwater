@@ -8,7 +8,7 @@
 // the modulation slots (four per modulatable control, a source and a depth), Fine, the two modulators' shape tables
 // (256 values for an LFO cycle, then 16 sequencer steps as value / 24), and the editor's own state (the panel open or
 // closed, its tab). They live in the processor's state tree, so they are saved, compared (A / B) and undone with it.
-namespace fwpitchbend
+namespace pb
 {
 // what a slot can hold
 enum Source { None = 0, M1, M2, AM, PT, numSources };

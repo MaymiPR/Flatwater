@@ -4,11 +4,11 @@
 // own. All but the first two leave Target where it is, as the reference's do.
 #include "shared/Presets.h"
 
-namespace fwbassleveler
+namespace bl
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "target", -14.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 50.0f }, { "spill", -40.0f } } },
     { "Essentials", "Live PA Start", { { "output", 0.0f }, { "rangeMin", -12.0f }, { "rangeMax", 12.0f }, { "target", -14.0f }, { "sensitivity", 50.0f }, { "response", 1.0f }, { "idle", 0.5f }, { "artifacts", 68.2f }, { "spill", -30.0f } } },
     { "Essentials", "Soft Touch", { { "output", 0.0f }, { "rangeMin", -3.0f }, { "rangeMax", 3.0f }, { "sensitivity", 50.0f }, { "response", 0.0f }, { "idle", 0.5f }, { "artifacts", 0.0f }, { "spill", -40.0f } }, { "target" } },

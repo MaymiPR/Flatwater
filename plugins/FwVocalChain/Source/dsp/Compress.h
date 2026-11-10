@@ -6,7 +6,7 @@
 // the static correction at -45 .. +6 dB, the stages' order, the feedback detector, the limiter's input gain,
 // the detector's high-pass).
 // Do not edit.
-namespace fwvocalchain::comptables
+namespace ch::comptables
 {
 inline constexpr int nParams = 41;
 struct Linear { double fs; double sos[4][5]; };

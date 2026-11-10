@@ -1,11 +1,11 @@
 #include "PluginEditor.h"
 #include "shared/ui/Theme.h"
-#include "shared/ui/Logo.h"
+#include "shared/ui/Widgets.h"
 
 using namespace juce;
-namespace th = fw::theme;
+namespace theme = flatwater::theme;
 
-namespace fwvocalchain::ui
+namespace ch::ui
 {
 namespace
 {
@@ -35,14 +35,14 @@ void drawScrew (Graphics& g, Point<float> c, float r)
 {
     g.setColour (Colours::black.withAlpha (0.4f));
     g.fillEllipse (Rectangle<float> (2.0f * r + 1.0f, 2.0f * r + 1.0f).withCentre (c.translated (0.0f, 1.0f)));
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, c.y - r, th::raised, 0.0f, c.y + r, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, c.y - r, theme::raised, 0.0f, c.y + r, false));
     g.fillEllipse (Rectangle<float> (2.0f * r, 2.0f * r).withCentre (c));
-    g.setColour (th::well);
+    g.setColour (theme::well);
     g.drawEllipse (Rectangle<float> (2.0f * r, 2.0f * r).withCentre (c), 1.2f);
     Path slot;
     slot.addRectangle (-r * 0.6f, -0.6f, r * 1.2f, 1.2f);
     slot.applyTransform (AffineTransform::rotation (0.6f).translated (c));
-    g.setColour (th::well.withAlpha (0.9f));
+    g.setColour (theme::well.withAlpha (0.9f));
     g.fillPath (slot);
 }
 
@@ -51,23 +51,23 @@ void drawScrew (Graphics& g, Point<float> c, float r)
 void drawPushButton (Graphics& g, float sx, bool on)
 {
     const Rectangle<float> face (sx + 11.0f, 167.0f, 32.0f, 20.0f);
-    th::drawWell (g, face.expanded (3.0f), 4.0f);
+    theme::drawWell (g, face.expanded (3.0f), 4.0f);
     if (on)
     {
-        g.setColour (th::amber.withAlpha (0.22f));
+        g.setColour (theme::amber.withAlpha (0.22f));
         g.fillRoundedRectangle (face.expanded (2.0f), 3.0f);
-        g.setGradientFill (ColourGradient (th::amberLight, 0.0f, face.getY(), th::amber.darker (0.15f), 0.0f, face.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::amberLight, 0.0f, face.getY(), theme::amber.darker (0.15f), 0.0f, face.getBottom(), false));
     }
     else
-        g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, face.getY(), th::raised, 0.0f, face.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, face.getY(), theme::raised, 0.0f, face.getBottom(), false));
     g.fillRoundedRectangle (face, 2.5f);
-    g.setColour (on ? th::amber.darker (0.5f) : th::line);
+    g.setColour (on ? theme::amber.darker (0.5f) : theme::line);
     g.drawRoundedRectangle (face.reduced (0.5f), 2.5f, 1.0f);
     const auto c = face.getCentre();
     Path arrow;
     arrow.addTriangle (c.x - 4.0f, c.y - 0.5f, c.x + 4.0f, c.y - 0.5f, c.x, c.y - 5.0f);
     arrow.addRectangle (c.x - 1.0f, c.y - 0.5f, 2.0f, 5.5f);
-    g.setColour (on ? th::bg.withAlpha (0.85f) : th::textFaint);
+    g.setColour (on ? theme::bg.withAlpha (0.85f) : theme::textFaint);
     g.fillPath (arrow);
 }
 
@@ -107,9 +107,9 @@ void drawNamePlate (Graphics& g)
         g.setColour (Colours::black.withAlpha (0.45f));
         g.fillPath (all, AffineTransform::translation (o));
     }
-    g.setGradientFill (ColourGradient (th::text, 0.0f, top, th::textDim, 0.0f, base, false));
+    g.setGradientFill (ColourGradient (theme::text, 0.0f, top, theme::textDim, 0.0f, base, false));
     g.fillPath (name);
-    g.setGradientFill (ColourGradient (th::amberLight, 0.0f, 91.0f, th::amber.darker (0.2f), 0.0f, 94.0f, false));
+    g.setGradientFill (ColourGradient (theme::amberLight, 0.0f, 91.0f, theme::amber.darker (0.2f), 0.0f, 94.0f, false));
     g.fillPath (bars);
 }
 
@@ -117,25 +117,25 @@ void drawNamePlate (Graphics& g)
 // the meters' wells, the faders' slots and scales, the labels, the screws, the name plate and the mark
 void paintStatic (Graphics& g, bool stereo)
 {
-    g.fillAll (th::bg);
+    g.fillAll (theme::bg);
 
     // the side cheeks (the original's rails), x 0 .. 22 and 716 .. 738
     for (bool left : { true, false })
     {
         const Rectangle<float> r (left ? 2.0f : 718.0f, 21.0f, 18.0f, 451.0f);
-        g.setGradientFill (ColourGradient (th::raised, left ? r.getX() : r.getRight(), 0.0f, th::panel, left ? r.getRight() : r.getX(), 0.0f, false));
+        g.setGradientFill (ColourGradient (theme::raised, left ? r.getX() : r.getRight(), 0.0f, theme::panel, left ? r.getRight() : r.getX(), 0.0f, false));
         g.fillRoundedRectangle (r, 5.0f);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawRoundedRectangle (r.reduced (0.5f), 5.0f, 1.0f);
     }
 
     // the header (the original's plate, y 19 .. 107): a card lit from above, with fine scratches (our own seeded pattern)
     const Rectangle<float> header (24.0f, 22.0f, 690.0f, 83.0f);
-    th::drawCard (g, header);
+    theme::drawCard (g, header);
     {
         Graphics::ScopedSaveState ss (g);
         g.reduceClipRegion (header.reduced (1.0f).toNearestInt());
-        g.setGradientFill (ColourGradient (th::raisedTop.withAlpha (0.55f), 0.0f, header.getY(), th::raisedTop.withAlpha (0.0f), 0.0f, header.getY() + 46.0f, false));
+        g.setGradientFill (ColourGradient (theme::raisedTop.withAlpha (0.55f), 0.0f, header.getY(), theme::raisedTop.withAlpha (0.0f), 0.0f, header.getY() + 46.0f, false));
         g.fillRect (header);
         Random rnd (20261101);
         for (int i = 0; i < 260; ++i)
@@ -143,7 +143,7 @@ void paintStatic (Graphics& g, bool stereo)
             const float x = header.getX() + rnd.nextFloat() * header.getWidth(), y = header.getY() + rnd.nextFloat() * header.getHeight();
             const float ang = degreesToRadians ((rnd.nextBool() ? 62.0f : 118.0f) + (rnd.nextFloat() - 0.5f) * 30.0f);
             const float len = 3.0f + rnd.nextFloat() * 16.0f;
-            g.setColour (th::textFaint.withAlpha (0.04f + 0.07f * rnd.nextFloat()));
+            g.setColour (theme::textFaint.withAlpha (0.04f + 0.07f * rnd.nextFloat()));
             g.drawLine (x, y, x + len * std::cos (ang), y + len * std::sin (ang), 0.6f);
         }
     }
@@ -155,17 +155,17 @@ void paintStatic (Graphics& g, bool stereo)
         const Rectangle<float> mark (654.0f, 28.0f, 38.0f, 27.0f);
         Graphics::ScopedSaveState ss (g);
         g.reduceClipRegion (mark.toNearestInt());
-        fw::drawMark (g, mark, false, false);
+        flatwater::drawMark (g, mark, false, false);
     }
-    g.setColour (th::textDim);
-    g.setFont (th::font (10.0f, true).withExtraKerningFactor (0.18f));
+    g.setColour (theme::textDim);
+    g.setFont (theme::font (10.0f, true).withExtraKerningFactor (0.18f));
     g.drawText ("FLATWATER", Rectangle<float> (560.0f, 35.0f, 88.0f, 13.0f), Justification::centredRight);
 
     // three columns: the input (x 22 .. 164), the stages (164 .. 577), the output (577 .. 716)
-    th::drawCard (g, { 24.0f, 109.0f, 138.0f, 361.0f });
-    th::drawCard (g, { 166.0f, 109.0f, 409.0f, 361.0f });
-    th::drawCard (g, { 579.0f, 109.0f, 135.0f, 361.0f });
-    g.setColour (th::line);
+    theme::drawCard (g, { 24.0f, 109.0f, 138.0f, 361.0f });
+    theme::drawCard (g, { 166.0f, 109.0f, 409.0f, 361.0f });
+    theme::drawCard (g, { 579.0f, 109.0f, 135.0f, 361.0f });
+    g.setColour (theme::line);
     g.fillRect (32.0f, 181.0f, 122.0f, 1.0f);
     g.fillRect (587.0f, 181.0f, 119.0f, 1.0f);
 
@@ -173,7 +173,7 @@ void paintStatic (Graphics& g, bool stereo)
     // row offset by half a hole (measured)
     {
         const Rectangle<float> plate (28.0f, 113.0f, 130.0f, 63.0f);
-        g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, plate.getY(), th::raised, 0.0f, plate.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, plate.getY(), theme::raised, 0.0f, plate.getBottom(), false));
         g.fillRoundedRectangle (plate, 3.0f);
         Graphics::ScopedSaveState ss (g);
         g.reduceClipRegion (plate.reduced (1.0f).toNearestInt());
@@ -181,23 +181,23 @@ void paintStatic (Graphics& g, bool stereo)
             for (int col = -1; col < 13; ++col)
             {
                 const Point<float> c ((row % 2 == 0 ? 35.65f : 30.15f) + 11.0f * (float) col, 120.41f + 9.53f * (float) row);
-                g.setColour (th::line.withAlpha (0.7f));
+                g.setColour (theme::line.withAlpha (0.7f));
                 g.fillEllipse (Rectangle<float> (8.0f, 8.0f).withCentre (c.translated (0.0f, 0.7f)));
-                g.setColour (th::well);
+                g.setColour (theme::well);
                 g.fillEllipse (Rectangle<float> (7.6f, 7.6f).withCentre (c));
             }
     }
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawRoundedRectangle (Rectangle<float> (28.0f, 113.0f, 130.0f, 63.0f).reduced (0.5f), 3.0f, 1.0f);
 
     // the stages' window (x 172 .. 568, y 113 .. 157): a dark well, fine scan lines, a divider between the stages
     {
         const Rectangle<float> window (172.0f, 113.0f, 396.0f, 44.0f);
-        th::drawWell (g, window, 4.0f);
-        g.setColour (th::panel.withAlpha (0.55f));
+        theme::drawWell (g, window, 4.0f);
+        g.setColour (theme::panel.withAlpha (0.55f));
         for (float y = window.getY() + 2.0f; y < window.getBottom() - 1.0f; y += 2.0f)
             g.fillRect (window.getX() + 2.0f, y, window.getWidth() - 4.0f, 1.0f);
-        g.setColour (th::line.withAlpha (0.8f));
+        g.setColour (theme::line.withAlpha (0.8f));
         for (int i = 0; i < 5; ++i)
         {
             const float x = 0.5f * ((float) selectorX[i] + 55.0f + (float) selectorX[i + 1]);
@@ -210,24 +210,24 @@ void paintStatic (Graphics& g, bool stereo)
         const Rectangle<float> b (614.0f, 121.0f, 64.0f, 46.0f);
         Graphics::ScopedSaveState ss (g);
         g.reduceClipRegion (b.expanded (1.0f, 2.0f).toNearestInt());
-        fw::drawMark (g, b.translated (0.0f, 1.0f), false, false, th::raisedTop, 1.4f);
-        fw::drawMark (g, b, false, false, th::well, 1.4f);
+        flatwater::drawMark (g, b.translated (0.0f, 1.0f), false, false, theme::raisedTop, 1.4f);
+        flatwater::drawMark (g, b, false, false, theme::well, 1.4f);
     }
 
     // the meters' wells (x 101 / 591, y 186, 48 x 238) and their scales between the bars (0 .. 24 dB, measured)
     for (float x : { 101.0f, 591.0f })
     {
-        th::drawWell (g, { x, 186.0f, 48.0f, 238.0f }, 5.0f);
+        theme::drawWell (g, { x, 186.0f, 48.0f, 238.0f }, 5.0f);
         struct Num { const char* t; float cy; };
-        g.setColour (th::textDim);
-        g.setFont (th::font (8.5f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (8.5f, true));
         for (auto n : { Num { "0", 229.5f }, Num { "6", 271.5f }, Num { "12", 308.0f }, Num { "18", 343.5f }, Num { "24", 379.5f } })
             g.drawText (n.t, Rectangle<float> (x + 17.0f, n.cy - 5.0f, 14.0f, 10.0f), Justification::centred);
     }
     if (stereo)                                                     // the Balance knob's L and R
     {
-        g.setColour (th::textDim);
-        g.setFont (th::font (8.5f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (8.5f, true));
         g.drawText ("L", Rectangle<float> (102.0f, 409.0f, 9.0f, 10.0f), Justification::centred);
         g.drawText ("R", Rectangle<float> (138.0f, 409.0f, 9.0f, 10.0f), Justification::centred);
     }
@@ -236,9 +236,9 @@ void paintStatic (Graphics& g, bool stereo)
     for (size_t i = 0; i < 8; ++i)
     {
         const float x = (float) faderX[i], cx = x + 17.0f, top = (i == 0 || i == 7) ? 216.0f : 196.0f;
-        g.setColour (th::well.withAlpha (0.45f));
+        g.setColour (theme::well.withAlpha (0.45f));
         g.fillRoundedRectangle (x + 5.0f, top, 24.0f, 430.0f - top, 7.0f);
-        th::drawWell (g, { cx - 3.0f, 216.0f, 6.0f, 196.0f }, 3.0f);
+        theme::drawWell (g, { cx - 3.0f, 216.0f, 6.0f, 196.0f }, 3.0f);
     }
     // the scales (measured): +10, 0 and -10 printed with a dash beside each fader they belong to (left of Input Sens,
     // right of Output, both sides of the gaps between the stages), a faint tick at every step in between
@@ -251,14 +251,14 @@ void paintStatic (Graphics& g, bool stereo)
                 const float y = scaleY ((float) v);
                 const bool major = v % 10 == 0, mid = v % 5 == 0;
                 const float len = major ? 7.0f : mid ? 5.0f : 3.0f;
-                g.setColour (major ? th::textDim.withAlpha (0.8f) : th::textFaint.withAlpha (mid ? 0.9f : 0.6f));
+                g.setColour (major ? theme::textDim.withAlpha (0.8f) : theme::textFaint.withAlpha (mid ? 0.9f : 0.6f));
                 g.fillRect (towardRight ? x1 - len : x0, std::round (y) - 0.5f, len, 1.0f);
             }
         };
         auto number = [&] (Rectangle<float> box, float v, Justification j)
         {
-            g.setColour (th::textDim);
-            g.setFont (th::font (9.0f, true));
+            g.setColour (theme::textDim);
+            g.setFont (theme::font (9.0f, true));
             g.drawText (v > 0.0f ? "+10" : v < 0.0f ? "-10" : "0", box.withY (std::round (scaleY (v)) - 6.0f).withHeight (12.0f), j);
         };
         ticks (42.0f, 49.0f, true);                                  // Input Sens
@@ -281,12 +281,12 @@ void paintStatic (Graphics& g, bool stereo)
     // the labels under the faders (centred where the original's are) and the link's
     {
         struct Lab { const char* t; float cx; };
-        g.setColour (th::textDim);
-        g.setFont (th::font (10.0f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (10.0f, true));
         for (auto l : { Lab { "INPUT SENS", 92.5f }, Lab { "BASS", 202.0f }, Lab { "TREBLE", 268.5f }, Lab { "COMPRESS", 337.0f },
                         Lab { "REVERB", 404.0f }, Lab { "DELAY", 469.5f }, Lab { "PITCH", 535.5f }, Lab { "OUTPUT", 646.5f } })
             g.drawText (l.t, Rectangle<float> (l.cx - 40.0f, 430.0f, 80.0f, 13.0f), Justification::centred);
-        g.setFont (th::font (8.5f, true));
+        g.setFont (theme::font (8.5f, true));
         g.drawText ("LINK", Rectangle<float> (690.0f, 195.0f, 24.0f, 12.0f), Justification::centredLeft);
     }
 
@@ -307,20 +307,20 @@ void paintStatic (Graphics& g, bool stereo)
 // a value under the marked control: a raised box in an amber frame
 void hoverBox (Graphics& g, Rectangle<float> r, const String& text)
 {
-    g.setColour (th::raised);
+    g.setColour (theme::raised);
     g.fillRect (r);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawRect (r, 1.0f);
-    g.setColour (th::text);
-    g.setFont (th::font (10.0f));
+    g.setColour (theme::text);
+    g.setFont (theme::font (10.0f));
     g.drawText (text, r, Justification::centred);
 }
 
 // an LED in its pocket (28 x 25): a dark bezel, the lamp in it
 void drawLed (Graphics& g, bool on, Colour colour)
 {
-    th::drawWell (g, { 0.0f, 0.0f, 28.0f, 25.0f }, 5.0f);
-    th::drawLamp (g, { 7.0f, 6.0f, 14.0f, 13.0f }, on, colour);
+    theme::drawWell (g, { 0.0f, 0.0f, 28.0f, 25.0f }, 5.0f);
+    theme::drawLamp (g, { 7.0f, 6.0f, 14.0f, 13.0f }, on, colour);
 }
 }
 
@@ -347,11 +347,11 @@ void Fader::paint (Graphics& g)
     const float zero = scaleY (0.0f) - 210.0f, at = y + 29.0f;
     if (std::abs (at - zero) > 0.5f)
     {
-        g.setColour (th::cyan.withAlpha (0.85f));
+        g.setColour (theme::cyan.withAlpha (0.85f));
         g.fillRect (Rectangle<float>::leftTopRightBottom (16.0f, jmin (zero, at), 18.0f, jmax (zero, at)));
     }
     // the cap (34 x 58): the theme's, its amber index across the middle (Input Sens' with fewer grips)
-    th::drawCap (g, Rectangle<float> (1.0f, y + 1.0f, 32.0f, 56.0f), sens ? 3 : 4);
+    theme::drawCap (g, Rectangle<float> (1.0f, y + 1.0f, 32.0f, 56.0f), sens ? 3 : 4);
     if (marks.selected == this)                                     // the marked cap's frame
     {
         g.setColour (activeColour);
@@ -379,7 +379,7 @@ void Fader::mouseDrag (const MouseEvent& e)
     if (! dragging) return;
     const auto d = e.position - last;
     last = e.position;
-    const float k = fw::ctrlHeldNow() ? (std::abs (d.y) <= 2.0f ? 0.037f : 0.19f) : 1.0f;
+    const float k = flatwater::ctrlHeldNow() ? (std::abs (d.y) <= 2.0f ? 0.037f : 0.19f) : 1.0f;
     virt += d * k;
     const double perUnit = kTravel / (getMaximum() - getMinimum());
     setValue (jlimit (getMinimum(), getMaximum(), start + (double) (origin.y - virt.y) / perUnit), sendNotificationSync);
@@ -389,7 +389,7 @@ void Fader::mouseDrag (const MouseEvent& e)
 void Fader::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& w)
 {
     const double from = getValue();
-    fw::wavesWheel (*this, e, w, wheelAcc, false);
+    flatwater::fineWheel (*this, e, w, wheelAcc, false);
     if (onUserMove && ! juce::exactlyEqual (getValue(), from)) onUserMove (from, getValue());
 }
 
@@ -439,11 +439,11 @@ void ColourSelector::paint (Graphics& g)
 {
     const int st = state();
     // the flavours in the window, the third at the top (rows 12 px apart from y 2); the selected one in cyan
-    g.setFont (th::font (9.0f, true));
+    g.setFont (theme::font (9.0f, true));
     for (int row = 0; row < 3; ++row)
     {
         const int k = 3 - row;
-        g.setColour (st == k ? th::cyan : th::textFaint);
+        g.setColour (st == k ? theme::cyan : theme::textFaint);
         g.drawFittedText (String (stage.names[k]).toUpperCase(), Rectangle<int> (1, row * 12, 53, 11), Justification::centred, 1, 0.8f);
     }
     if (marks.selected == this)                                     // the marked button's ring, round its bezel
@@ -491,18 +491,18 @@ void Meter::paint (Graphics& g)
     auto bar = [&] (float x, float db, bool clipped)
     {
         const Rectangle<float> r (x, 10.0f, 9.0f, 155.0f);
-        th::drawWell (g, r, 1.5f);
+        theme::drawWell (g, r, 1.5f);
         const auto inner = r.reduced (1.5f);
         const float top = 10.0f + lit (db);
-        const auto grad = th::meterGradient (inner, true);
+        const auto grad = theme::meterGradient (inner, true);
         for (float yb = inner.getBottom(); yb > inner.getY() + 0.5f; yb -= 4.0f)
         {
             const auto seg = Rectangle<float>::leftTopRightBottom (inner.getX(), jmax (inner.getY(), yb - 3.0f), inner.getRight(), yb);
             const bool on = seg.getCentreY() >= top;
-            g.setColour (on ? grad.getColourAtPosition ((inner.getBottom() - seg.getCentreY()) / inner.getHeight()) : th::line.withAlpha (0.35f));
+            g.setColour (on ? grad.getColourAtPosition ((inner.getBottom() - seg.getCentreY()) / inner.getHeight()) : theme::line.withAlpha (0.35f));
             g.fillRect (seg);
         }
-        th::drawLamp (g, { x, 0.0f, 9.0f, 5.0f }, clipped, th::red);
+        theme::drawLamp (g, { x, 0.0f, 9.0f, 5.0f }, clipped, theme::red);
     };
     // (Mono/Stereo: the one input shown on both bars, the scale between them left clear)
     for (int c = 0; c < 2; ++c)
@@ -513,7 +513,7 @@ void Meter::paint (Graphics& g)
 void LinkButton::paintButton (Graphics& g, bool, bool)
 {
     // the Sensitivity LED's body: dark while unlinked, lit amber while linked
-    drawLed (g, getToggleState(), th::amber);
+    drawLed (g, getToggleState(), theme::amber);
 }
 
 //==============================================================================
@@ -533,7 +533,7 @@ void SensLed::paint (Graphics& g)
 {
     // its 24 steps: off, then cyan, amber and red as the level rises, brighter within each colour
     const float t = (float) frame / 23.0f;
-    const Colour c = t < 0.55f ? th::cyan : t < 0.8f ? th::amber : th::red;
+    const Colour c = t < 0.55f ? theme::cyan : t < 0.8f ? theme::amber : theme::red;
     drawLed (g, frame > 0, c.withAlpha (0.55f + 0.45f * t));
 }
 
@@ -563,7 +563,7 @@ void BalanceKnob::paint (Graphics& g)
     // the theme's knob round (15, 14): the cyan arc from the centre (0 dB) to the value, the amber pointer
     const float from = degreesToRadians (kBalanceFrom), to = degreesToRadians (kBalanceTo);
     const float angle = from + (to - from) * (float) valueToProportionOfLength (getValue());
-    th::drawKnob (g, { 15.0f, 14.0f }, 8.0f, angle, from, to, 0.0f);
+    theme::drawKnob (g, { 15.0f, 14.0f }, 8.0f, angle, from, to, 0.0f);
     if (marks.selected == this)                                     // the marked knob's ring, at its rim
     {
         g.setColour (activeColour);
@@ -573,26 +573,26 @@ void BalanceKnob::paint (Graphics& g)
 }
 
 //==============================================================================
-using namespace fwvocalchain::ui;
+using namespace ch::ui;
 
 FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwvocalchain::mode), "Flatwater Vocal Chain", JucePlugin_VersionString, W, H,
-              fw::Toolbar::Style::Classic, fwvocalchain::modeNames()),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (ch::mode), "Flatwater Vocal Chain", JucePlugin_VersionString, W, H,
+              flatwater::Toolbar::Style::Classic, ch::modeNames()),
       proc (p),
       inMeter (make<Meter> (marks)), outMeter (make<Meter> (marks)), led (make<SensLed> (marks)), balance (make<BalanceKnob> (marks)),
       linkButton (make<LinkButton> (marks))
 {
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (fwvocalchain::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (fwvocalchain::sensitivity), p.apvts.getParameter (fwvocalchain::output),   // (IgnoreOnPresetLoad)
-                           p.apvts.getParameter (fwvocalchain::link) });
+    setFactoryPresets (ch::factoryPresets());
+    setKeepOnPresetLoad ({ p.apvts.getParameter (ch::sensitivity), p.apvts.getParameter (ch::output),   // (IgnoreOnPresetLoad)
+                           p.apvts.getParameter (ch::link) });
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { showEntry (sl); };
 
     // the faders: the control rectangles (34 x 209 from y 210), the cap's shadow reaching 9 px right of them
-    const std::array<std::pair<const char*, int>, 8> fd { { { fwvocalchain::sensitivity, 49 }, { fwvocalchain::bass, 186 }, { fwvocalchain::treble, 253 },
-        { fwvocalchain::compress, 319 }, { fwvocalchain::reverb, 386 }, { fwvocalchain::delay, 452 }, { fwvocalchain::pitch, 519 }, { fwvocalchain::output, 655 } } };
+    const std::array<std::pair<const char*, int>, 8> fd { { { ch::sensitivity, 49 }, { ch::bass, 186 }, { ch::treble, 253 },
+        { ch::compress, 319 }, { ch::reverb, 386 }, { ch::delay, 452 }, { ch::pitch, 519 }, { ch::output, 655 } } };
     for (size_t i = 0; i < fd.size(); ++i)
     {
         auto& f = make<Fader> (i == 0, marks);
@@ -602,8 +602,8 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
     // the colour selectors (55 x 81 from y 117, over the six channel faders)
     for (size_t i = 0; i < 6; ++i)
     {
-        const auto& st = fwvocalchain::stages()[i];
-        auto& c = make<fwvocalchain::ui::ColourSelector> (*p.apvts.getParameter (st.colour), st, marks);
+        const auto& st = ch::stages()[i];
+        auto& c = make<ch::ui::ColourSelector> (*p.apvts.getParameter (st.colour), st, marks);
         addToContent (c, { selectorX[i], 117, 55, 81 });
         auto* att = new ParameterAttachment (*p.apvts.getParameter (st.colour), [this, &c] (float) { c.repaint(); content().repaint(); }, &p.undo);
         keepAttachment (std::unique_ptr<ParameterAttachment> (att));
@@ -612,8 +612,8 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
     addToContent (inMeter, { 109, 227, 31, 175 });
     addToContent (outMeter, { 599, 227, 31, 175 });
     addToContent (led, { 52, 189, 28, 25 });
-    attachSlider (balance, fwvocalchain::balance, { 109, 395, 30, 30 }, 0.0);
-    attach (linkButton, fwvocalchain::link, { 658, 189, 28, 25 });         // (where the input's LED sits, mirrored)
+    attachSlider (balance, ch::balance, { 109, 395, 30, 30 }, 0.0);
+    attach (linkButton, ch::link, { 658, 189, 28, 25 });         // (where the input's LED sits, mirrored)
     linkButton.setTooltip ("Link Input Sens and Output: Output mirrors Input Sens (+3 in, -3 out)");
     linkButton.onClick = [this] { proc.syncLink(); };                   // (on: Output jumps to the mirror at once)
     linkFaders (*faders.front(), *faders.back());
@@ -625,12 +625,12 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
 
 // the In/Out link: while it is on, Output is the mirror of Input Sens (the processor holds it there); the user's moves
 // of either fader set the other to its mirror at once, so the two move together in the same gesture
-void FwVocalChainEditor::linkFaders (fwvocalchain::ui::Fader& mine, fwvocalchain::ui::Fader& other)
+void FwVocalChainEditor::linkFaders (ch::ui::Fader& mine, ch::ui::Fader& other)
 {
     mine.onUserMove = [this, &other] (double, double to)
     {
         if (! proc.linked()) return;
-        auto* param = proc.apvts.getParameter (&other == faders.back() ? fwvocalchain::output : fwvocalchain::sensitivity);
+        auto* param = proc.apvts.getParameter (&other == faders.back() ? ch::output : ch::sensitivity);
         param->beginChangeGesture();
         param->setValueNotifyingHost (param->convertTo0to1 ((float) -to));
         param->endChangeGesture();
@@ -645,7 +645,7 @@ FwVocalChainEditor::~FwVocalChainEditor()
 
 void FwVocalChainEditor::layoutForMode()
 {
-    const bool mono = fwvocalchain::isMonoIn (proc.modeIndex());
+    const bool mono = ch::isMonoIn (proc.modeIndex());
     if ((int) mono == laidOut) return;
     laidOut = (int) mono;
     balance.setVisible (! mono);
@@ -664,7 +664,7 @@ Rectangle<int> FwVocalChainEditor::valueBox (const Slider* sl) const
 
 void FwVocalChainEditor::paintContent (Graphics& g)
 {
-    const bool stereo = ! fwvocalchain::isMonoIn (proc.modeIndex());
+    const bool stereo = ! ch::isMonoIn (proc.modeIndex());
     const float s = physicalScale (g);
     if (background.isNull() || std::abs (s - backgroundScale) > 1.0e-3f || backgroundMode != (int) stereo)
     {
@@ -709,14 +709,14 @@ void FwVocalChainEditor::showEntry (Slider* sl)
     entryFor = sl;
     auto& e = *entry;
     e.setJustification (Justification::centred);
-    e.setFont (th::font (10.0f));
-    e.setColour (TextEditor::backgroundColourId, th::well);
-    e.setColour (TextEditor::textColourId, th::text);
-    e.setColour (TextEditor::highlightColourId, th::cyan.withAlpha (0.35f));
-    e.setColour (TextEditor::highlightedTextColourId, th::text);
-    e.setColour (CaretComponent::caretColourId, th::amber);
-    e.setColour (TextEditor::outlineColourId, th::amber);
-    e.setColour (TextEditor::focusedOutlineColourId, th::amber);
+    e.setFont (theme::font (10.0f));
+    e.setColour (TextEditor::backgroundColourId, theme::well);
+    e.setColour (TextEditor::textColourId, theme::text);
+    e.setColour (TextEditor::highlightColourId, theme::cyan.withAlpha (0.35f));
+    e.setColour (TextEditor::highlightedTextColourId, theme::text);
+    e.setColour (CaretComponent::caretColourId, theme::amber);
+    e.setColour (TextEditor::outlineColourId, theme::amber);
+    e.setColour (TextEditor::focusedOutlineColourId, theme::amber);
     e.setText (String (sl->getValue(), 1), false);
     e.selectAll();
     addToContent (e, valueBox (sl));
@@ -730,7 +730,7 @@ void FwVocalChainEditor::showEntry (Slider* sl)
                 const double v = t.getDoubleValue();
                 if (v >= sl->getMinimum() && v <= sl->getMaximum())       // (out of range: ignored)
                 {
-                    if (auto* f = dynamic_cast<fwvocalchain::ui::Fader*> (sl)) f->userSet (v);
+                    if (auto* f = dynamic_cast<ch::ui::Fader*> (sl)) f->userSet (v);
                     else sl->setValue (v, sendNotificationSync);
                 }
             }

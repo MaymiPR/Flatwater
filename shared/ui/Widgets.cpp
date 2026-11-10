@@ -1,34 +1,32 @@
-#include "shared/ui/Toolbar.h"
-#include "shared/ui/Logo.h"
-#include "shared/ui/Settings.h"
+#include "shared/ui/Widgets.h"
 #include "shared/ui/Theme.h"
 
-namespace fw
+namespace flatwater
 {
 namespace
 {
-namespace th = fw::theme;
-juce::Font tbFont (float h = 11.0f, bool bold = false) { return th::font (h, bold); }
+namespace theme = flatwater::theme;
+juce::Font tbFont (float h = 11.0f, bool bold = false) { return theme::font (h, bold); }
 const float kScales[] = { 0.75f, 1.0f, 1.25f, 1.5f, 2.0f };
 
 // the bar's pieces in Flatwater's look (shared/ui/Theme.h): raised buttons with a 1 px border, the preset name in a well, a
 // cyan border on the button under the mouse; lettering and icons light grey, white-ish when hot, faint when idle
-juce::Colour ink (bool hot, bool enabled = true) { return ! enabled ? th::textFaint : hot ? th::text : th::textDim; }
+juce::Colour ink (bool hot, bool enabled = true) { return ! enabled ? theme::textFaint : hot ? theme::text : theme::textDim; }
 
 void button (juce::Graphics& g, juce::Rectangle<float> r, bool hot, float radius)
 {
-    g.setGradientFill (juce::ColourGradient (hot ? th::raisedTop.brighter (0.15f) : th::raisedTop, 0.0f, r.getY(),
-                                             hot ? th::raised.brighter (0.1f) : th::raised, 0.0f, r.getBottom(), false));
+    g.setGradientFill (juce::ColourGradient (hot ? theme::raisedTop.brighter (0.15f) : theme::raisedTop, 0.0f, r.getY(),
+                                             hot ? theme::raised.brighter (0.1f) : theme::raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, radius);
-    g.setColour (hot ? th::cyan.withAlpha (0.8f) : th::line);
+    g.setColour (hot ? theme::cyan.withAlpha (0.8f) : theme::line);
     g.drawRoundedRectangle (r.reduced (0.5f), radius, 1.0f);
 }
 
 void well (juce::Graphics& g, juce::Rectangle<float> r, bool hot, float radius)
 {
-    g.setColour (th::well);
+    g.setColour (theme::well);
     g.fillRoundedRectangle (r, radius);
-    g.setColour (hot ? th::cyan.withAlpha (0.8f) : th::line);
+    g.setColour (hot ? theme::cyan.withAlpha (0.8f) : theme::line);
     g.drawRoundedRectangle (r.reduced (0.5f), radius, 1.0f);
 }
 
@@ -72,7 +70,7 @@ juce::Rectangle<int> Toolbar::rect (Item i) const
             case Menu:   return { 776, 10, 24, 17 };
             default:     return {};
         }
-    if (hybridLayout())            // measured on the reference (H-Comp): boxes on y 2 ... 16; a wider editor (H-Delay,
+    if (hybridLayout())            // measured on the reference (Flatwater Comp's): boxes on y 2 ... 16; a wider editor (Flatwater Delay's reference,
     {                              // 749) widens the preset box and moves the rest right
         const int x = getWidth() - hybridWidth;
         switch (i)
@@ -91,7 +89,7 @@ juce::Rectangle<int> Toolbar::rect (Item i) const
             default:     return {};
         }
     }
-    if (getWidth() < width)        // a narrow editor (Bass Rider, 320): its toolbar has no Skins box; the Mode
+    if (getWidth() < width)        // a narrow editor (Flatwater Bass Leveler's reference, 320): its toolbar has no Skins box; the Mode
         switch (i)                 // drop-down takes its place, the arrow / copy / setup / save boxes narrowed for it
         {
             case About:  return { 6, 2, 16, 15 };
@@ -421,7 +419,7 @@ void diskIcon (juce::Graphics& g, juce::Point<float> c, juce::Colour col)
     p.lineTo (d.getRight(), d.getBottom()); p.lineTo (d.getX(), d.getBottom()); p.closeSubPath();
     g.setColour (col);
     g.fillPath (p);
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillRect (d.getX() + 2.2f, d.getY(), 4.2f, 3.0f);
     g.fillRect (d.getX() + 1.8f, d.getY() + 5.2f, 5.4f, 2.6f);
 }
@@ -438,8 +436,8 @@ void menuIcon (juce::Graphics& g, juce::Point<float> c, juce::Colour col, float 
 void Toolbar::paintFlat (juce::Graphics& g)
 {
     // the single-row bar: the same pieces as the other bars, as pills on the editor's background
-    g.fillAll (th::bg);
-    g.setColour (th::line);
+    g.fillAll (theme::bg);
+    g.setColour (theme::line);
     g.fillRect (0, getHeight() - 1, getWidth(), 1);
     auto label = [&] (juce::Rectangle<int> r, const juce::String& t, bool hot, float size = 12.0f)
     {
@@ -467,9 +465,9 @@ void Toolbar::paintFlat (juce::Graphics& g)
             {
                 well (g, rf, hot, rf.getHeight() * 0.5f);
                 label (r.withTrimmedLeft (8).withTrimmedRight (22), juce::String (active == 0 ? "A: " : "B: ") + presetName + (isModified() ? "*" : ""), true);
-                g.setColour (th::line);
+                g.setColour (theme::line);
                 g.fillRect (r.getRight() - 18, r.getY() + 4, 1, r.getHeight() - 8);
-                downArrow (g, { (float) r.getRight() - 9.5f, c.y }, hot ? th::cyan : th::textDim);
+                downArrow (g, { (float) r.getRight() - 9.5f, c.y }, hot ? theme::cyan : theme::textDim);
                 break;
             }
             case Mode:
@@ -477,7 +475,7 @@ void Toolbar::paintFlat (juce::Graphics& g)
                 button (g, rf, hot, rf.getHeight() * 0.5f);
                 const auto name = modeParam != nullptr ? modes[(int) modeParam->convertFrom0to1 (modeParam->getValue())] : juce::String();
                 label (r.withTrimmedRight (12), name, hot);
-                downArrow (g, { (float) r.getRight() - 13.0f, c.y }, hot ? th::cyan : th::textDim);
+                downArrow (g, { (float) r.getRight() - 13.0f, c.y }, hot ? theme::cyan : theme::textDim);
                 break;
             }
             case Prev: case Next:
@@ -505,7 +503,7 @@ void Toolbar::paint (juce::Graphics& g)
 {
     if (style == Style::Flat) { paintFlat (g); return; }
     const bool hybrid = hybridLayout();
-    if (hybrid) g.fillAll (th::bg);
+    if (hybrid) g.fillAll (theme::bg);
     auto label = [&] (juce::Rectangle<int> r, const juce::String& t, bool hot, float size = 11.0f)
     {
         g.setColour (ink (hot));
@@ -528,8 +526,8 @@ void Toolbar::paint (juce::Graphics& g)
                     // the suite's badge: a raised block with the mark and the suite's name
                     button (g, rf, hot, 2.0f);
                     drawMark (g, juce::Rectangle<float> (rf.getX() + 4.0f, rf.getY() + 1.5f, 15.0f, 12.0f), hot, false);
-                    g.setColour (hot ? th::text : th::textDim);
-                    g.setFont (th::font (10.0f, true).withExtraKerningFactor (0.12f));
+                    g.setColour (hot ? theme::text : theme::textDim);
+                    g.setFont (theme::font (10.0f, true).withExtraKerningFactor (0.12f));
                     g.drawText ("FLATWATER", r.withTrimmedLeft (23).withTrimmedRight (2), juce::Justification::centredLeft);
                 }
                 else drawMark (g, rf, hot, false);
@@ -537,14 +535,14 @@ void Toolbar::paint (juce::Graphics& g)
             case Skins:
                 button (g, rf, hot, 2.0f);
                 label (r.withTrimmedRight (10), "Skins", hot);
-                downArrow (g, { rf.getRight() - 8.0f, c.y }, hot ? th::cyan : th::textDim);
+                downArrow (g, { rf.getRight() - 8.0f, c.y }, hot ? theme::cyan : theme::textDim);
                 break;
             case Mode:
             {
                 button (g, rf, hot, 2.0f);
                 const auto name = modeParam != nullptr ? modes[(int) modeParam->convertFrom0to1 (modeParam->getValue())] : juce::String();
                 label (r.withTrimmedRight (10), name, hot, 10.5f);
-                downArrow (g, { rf.getRight() - 7.0f, c.y }, hot ? th::cyan : th::textDim);
+                downArrow (g, { rf.getRight() - 7.0f, c.y }, hot ? theme::cyan : theme::textDim);
                 break;
             }
             case Undo: button (g, rf, hot && undo.canUndo(), 2.0f); curvedArrow (g, c, false, ink (hot, undo.canUndo())); break;
@@ -566,14 +564,14 @@ void Toolbar::paint (juce::Graphics& g)
                 break;
             case Preset:
                 well (g, rf, hot, 2.0f);
-                g.setColour (th::text);
+                g.setColour (theme::text);
                 g.setFont (tbFont (11.0f));
                 g.drawText (juce::String (active == 0 ? "A: " : "B: ") + presetName + (isModified() ? "*" : ""),
                             r.withTrimmedRight (16), juce::Justification::centred);
                 // the menu's arrow at the right end
-                g.setColour (th::line);
+                g.setColour (theme::line);
                 g.fillRect (r.getRight() - 16, r.getY() + 2, 1, r.getHeight() - 4);
-                downArrow (g, { rf.getRight() - 8.0f, c.y }, hot ? th::cyan : th::textDim);
+                downArrow (g, { rf.getRight() - 8.0f, c.y }, hot ? theme::cyan : theme::textDim);
                 break;
             default: break;
         }

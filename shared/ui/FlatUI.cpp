@@ -1,9 +1,9 @@
 #include "shared/ui/FlatUI.h"
 using namespace juce;
 
-namespace fw::flat
+namespace flatwater::flat
 {
-namespace th = fw::theme;
+namespace theme = flatwater::theme;
 
 Font font (float h, bool bold) { return Font (FontOptions ("Arial", h, bold ? Font::bold : Font::plain)); }
 
@@ -123,7 +123,7 @@ bool Selection::contains (const Component* c) const
 void LassoOverlay::paint (Graphics& g)
 {
     if (rect.isEmpty()) return;
-    g.setColour (th::text.withAlpha (0.9f));                        // 1 px, light
+    g.setColour (theme::text.withAlpha (0.9f));                        // 1 px, light
     g.drawRect (rect.translated (-getX(), -getY()), 1);
 }
 
@@ -143,7 +143,7 @@ void drawSelectRing (Graphics& g, Point<float> c, float radius, Colour colour)
 }
 
 //==============================================================================
-bool WavesDrag::down (Slider& s, const MouseEvent& e, Rectangle<int>, Selection* sel)
+bool FineDrag::down (Slider& s, const MouseEvent& e, Rectangle<int>, Selection* sel)
 {
     if (e.mods.isPopupMenu()) return false;
     if (resetOnAlt (s, e)) return true;
@@ -157,7 +157,7 @@ bool WavesDrag::down (Slider& s, const MouseEvent& e, Rectangle<int>, Selection*
     return true;
 }
 
-void WavesDrag::drag (Slider& s, const MouseEvent& e, Selection* sel)
+void FineDrag::drag (Slider& s, const MouseEvent& e, Selection* sel)
 {
     const double before = s.valueToProportionOfLength (s.getValue());
     const auto d = e.position - last;
@@ -189,7 +189,7 @@ void WavesDrag::drag (Slider& s, const MouseEvent& e, Selection* sel)
         sel->gangMove (&s, (float) step * referenceScale);
 }
 
-bool WavesDrag::up (Slider& s, const MouseEvent& e, Point<float> restoreAt, Selection* sel)
+bool FineDrag::up (Slider& s, const MouseEvent& e, Point<float> restoreAt, Selection* sel)
 {
     if (! active) return false;
     active = false;
@@ -241,12 +241,12 @@ static void drawThumb (Graphics& g, Rectangle<float> r, Colour index)
 {
     g.setColour (Colours::black.withAlpha (0.4f));
     g.fillRoundedRectangle (r.translated (0.0f, 2.0f), 2.5f);
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, r.getY(), th::raised, 0.0f, r.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, 2.5f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawRoundedRectangle (r.reduced (0.5f), 2.5f, 1.0f);
     const float cy = r.getCentreY();
-    g.setColour (th::line.brighter (0.3f));
+    g.setColour (theme::line.brighter (0.3f));
     for (float dy : { -9.0f, -6.0f, 6.0f, 9.0f })
         g.fillRect (r.getX() + 4.0f, std::round (cy + dy) - 0.5f, r.getWidth() - 8.0f, 1.0f);
     g.setColour (index);
@@ -256,7 +256,7 @@ static void drawThumb (Graphics& g, Rectangle<float> r, Colour index)
 void VFader::paint (Graphics& g)
 {
     const float cx = (float) getWidth() * 0.5f;
-    th::drawWell (g, { cx - 2.0f, (float) travelTop - 2.0f, 4.0f, (float) (travelBottom - travelTop) + 4.0f }, 2.0f);
+    theme::drawWell (g, { cx - 2.0f, (float) travelTop - 2.0f, 4.0f, (float) (travelBottom - travelTop) + 4.0f }, 2.0f);
     const float pos = (float) getPositionOfValue (getValue());
     const Rectangle<float> thumb (cx - 8.5f, pos - 14.0f, 17.0f, 28.0f);
     const bool marked = selection != nullptr && selection->contains (this);
@@ -285,7 +285,7 @@ Knob::Knob (String l) : label (std::move (l))
     setUpFeel (*this, 500);
     setScrollWheelEnabled (true);
     setRotaryParameters (MathConstants<float>::pi * 1.25f, MathConstants<float>::pi * 2.75f, true);
-    // Ctrl: a quarter of the rate, keeping the slow / fast difference (measured on MaxxBass, as H-Comp's)
+    // Ctrl: a quarter of the rate, keeping the slow / fast difference (measured on Flatwater BassX Lift's reference, as on Flatwater Comp's)
     feel.ctrlFactor = 0.25f;
     feel.ctrlScalesSpeed = true;
 }
@@ -306,18 +306,18 @@ void Knob::mouseUp (const MouseEvent& e)
 void Knob::paint (Graphics& g)
 {
     const auto c = centre;
-    g.setColour (th::textFaint);
+    g.setColour (theme::textFaint);
     g.fillEllipse (c.x - 1.3f, 9.5f, 2.6f, 2.6f);                                 // centre-position dot
     const auto rp = getRotaryParameters();
     const float frac = (float) valueToProportionOfLength (getValue());
     const float a0 = rp.startAngleRadians, a = a0 + frac * (rp.endAngleRadians - rp.startAngleRadians);
-    th::drawKnob (g, c, radius - 3.5f, a, a0, rp.endAngleRadians, a0);           // its arc on the ring (radius)
+    theme::drawKnob (g, c, radius - 3.5f, a, a0, rp.endAngleRadians, a0);           // its arc on the ring (radius)
     if (selection != nullptr && selection->contains (this)) drawSelectRing (g, c, radius + 4.0f, selection->is (this) ? kSelect : kMember);
 
     g.setColour (kLabel);
     g.setFont (font (12.0f));
     g.drawText (label, Rectangle<int> (0, 51, getWidth(), 16), Justification::centred);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.fillRect (2.0f, 67.0f, (float) getWidth() - 4.0f, 1.0f);
 }
 
@@ -329,7 +329,7 @@ HSlider::HSlider()
     setSliderSnapsToMousePosition (false);
     setUpFeel (*this, 264);
     setScrollWheelEnabled (true);
-    feel.linCtrlFast = 0.234f; feel.linCtrlSlow = 0.067f;   // measured on MaxxBass's Freq (finer than its faders)
+    feel.linCtrlFast = 0.234f; feel.linCtrlSlow = 0.067f;   // measured on the reference's Freq (finer than its faders)
 }
 
 void HSlider::mouseDown (const MouseEvent& e)
@@ -350,15 +350,15 @@ void HSlider::paint (Graphics& g)
     for (float t : tickPositions)
         g.fillRect (std::round (x0 + t * (x1 - x0)), y - 13.0f, 1.0f, 8.0f);
     const float pos = (float) getPositionOfValue (getValue());
-    th::drawWell (g, { x0, y - 2.5f, x1 - x0, 5.0f }, 2.5f);
-    g.setColour (th::cyan);
+    theme::drawWell (g, { x0, y - 2.5f, x1 - x0, 5.0f }, 2.5f);
+    g.setColour (theme::cyan);
     g.fillRoundedRectangle (x0 + 1.0f, y - 1.0f, jmax (0.0f, pos - x0 - 1.0f), 2.0f, 1.0f);
     const auto knob = Rectangle<float> (10.0f, 10.0f).withCentre ({ pos, y });
     g.setColour (Colours::black.withAlpha (0.4f));
     g.fillEllipse (knob.translated (0.0f, 1.0f));
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, knob.getY(), th::raised, 0.0f, knob.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, knob.getY(), theme::raised, 0.0f, knob.getBottom(), false));
     g.fillEllipse (knob);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawEllipse (knob.reduced (0.7f), 1.5f);
     if (selection != nullptr && selection->is (this)) drawSelectRing (g, { pos, y }, 6.2f);
     if ((isMouseOverOrDragging() || isMouseButtonDown()) && format && ! textArea.isEmpty())
@@ -381,9 +381,9 @@ void drawSlopeIcon (Graphics& g, Rectangle<float> r, int slope)
     else if (slope == 1) { p.startNewSubPath (x + 0.5f, bottom); p.quadraticTo (x + w * 0.2f, top + h * 0.12f, x + w * 0.44f, top); }
     else                 { p.startNewSubPath (x + w * 0.12f, bottom); p.lineTo (x + w * 0.28f, top); }
     p.lineTo (x + w - 0.5f, top);
-    g.setColour (th::cyan.withAlpha (0.18f));                                     // a soft glow
+    g.setColour (theme::cyan.withAlpha (0.18f));                                     // a soft glow
     g.strokePath (p, PathStrokeType (4.0f, PathStrokeType::mitered, PathStrokeType::rounded));
-    g.setColour (th::cyan);
+    g.setColour (theme::cyan);
     g.strokePath (p, PathStrokeType (1.7f, PathStrokeType::mitered, PathStrokeType::butt));
 }
 
@@ -413,17 +413,17 @@ void SlopeBox::paint (Graphics& g)
         g.setColour (selection->is (this) ? kSelect : kMember);
         g.drawRoundedRectangle (o, o.getHeight() * 0.5f, 1.5f);
     }
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, r.getY(), th::raised, 0.0f, r.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, r.getHeight() * 0.5f);
-    g.setColour (th::line.brighter (0.2f));
+    g.setColour (theme::line.brighter (0.2f));
     g.drawRoundedRectangle (r, r.getHeight() * 0.5f, 1.0f);
     drawSlopeIcon (g, { 11.0f, 10.0f, 16.0f, 9.0f }, jmax (0, getSelectedItemIndex()));
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.fillRect (r.getRight() - 20.0f, r.getY() + 4.0f, 1.0f, r.getHeight() - 8.0f);
     Path tri;
     const float ax = r.getRight() - 10.5f, ay = r.getCentreY();
     tri.addTriangle (ax - 3.0f, ay - 2.0f, ax + 3.0f, ay - 2.0f, ax, ay + 2.5f);
-    g.setColour (th::textDim);
+    g.setColour (theme::textDim);
     g.fillPath (tri);
 }
 
@@ -446,19 +446,19 @@ void RadioColumn::paint (Graphics& g)
         {
             g.setColour (acc.withAlpha (0.18f));                                    // a soft glow
             g.fillRoundedRectangle (r.expanded (1.5f), 5.5f);
-            g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, r.getY(), th::raised, 0.0f, r.getBottom(), false));
+            g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
             g.fillRoundedRectangle (r, 4.0f);
             g.setColour (acc.withAlpha (0.85f));
             g.drawRoundedRectangle (r, 4.0f, 1.2f);
         }
         else
         {
-            g.setColour (th::well);
+            g.setColour (theme::well);
             g.fillRoundedRectangle (r, 4.0f);
-            g.setColour (th::line);
+            g.setColour (theme::line);
             g.drawRoundedRectangle (r.reduced (0.5f), 4.0f, 1.0f);
         }
-        g.setColour (on ? acc : th::textFaint);
+        g.setColour (on ? acc : theme::textFaint);
         g.setFont (font (11.0f));
         g.drawText (labels[i], r, Justification::centred);
     }
@@ -520,16 +520,16 @@ Label* FlatLook::createSliderTextBox (Slider& s)
     l->setJustificationType (Justification::centred);
     l->setInterceptsMouseClicks (false, true);                    // the entry box itself takes clicks while typing
     // the entry box: a well, light text, a 1 px frame in the line colour, the selection in cyan
-    l->setColour (Label::backgroundWhenEditingColourId, th::well);
-    l->setColour (Label::textWhenEditingColourId, th::text);
+    l->setColour (Label::backgroundWhenEditingColourId, theme::well);
+    l->setColour (Label::textWhenEditingColourId, theme::text);
     l->setColour (Label::outlineWhenEditingColourId, Colours::transparentBlack);
-    l->setColour (TextEditor::backgroundColourId, th::well);
-    l->setColour (TextEditor::textColourId, th::text);
-    l->setColour (TextEditor::highlightColourId, th::cyan.withAlpha (0.4f));
-    l->setColour (TextEditor::highlightedTextColourId, th::text);
-    l->setColour (TextEditor::outlineColourId, th::cyan.withAlpha (0.7f));
-    l->setColour (TextEditor::focusedOutlineColourId, th::cyan.withAlpha (0.7f));
-    l->setColour (CaretComponent::caretColourId, th::cyan);
+    l->setColour (TextEditor::backgroundColourId, theme::well);
+    l->setColour (TextEditor::textColourId, theme::text);
+    l->setColour (TextEditor::highlightColourId, theme::cyan.withAlpha (0.4f));
+    l->setColour (TextEditor::highlightedTextColourId, theme::text);
+    l->setColour (TextEditor::outlineColourId, theme::cyan.withAlpha (0.7f));
+    l->setColour (TextEditor::focusedOutlineColourId, theme::cyan.withAlpha (0.7f));
+    l->setColour (CaretComponent::caretColourId, theme::cyan);
     if (dynamic_cast<HSlider*> (&s) != nullptr) l->setColour (Label::textColourId, Colours::transparentBlack);   // hidden until typing
     l->addListener (&valueEditStyle());
     return l;
@@ -561,22 +561,22 @@ void FlatLook::drawTextEditorOutline (Graphics& g, int w, int h, TextEditor& ed)
 
 void FlatLook::drawPopupMenuBackground (Graphics& g, int w, int h)
 {
-    g.fillAll (th::panel);
-    g.setColour (th::line);
+    g.fillAll (theme::panel);
+    g.setColour (theme::line);
     g.drawRect (0, 0, w, h, 1);
 }
 
 void FlatLook::drawPopupMenuItem (Graphics& g, const Rectangle<int>& area, bool isSeparator, bool isActive, bool isHighlighted,
                                   bool isTicked, bool, const String& text, const String&, const Drawable*, const Colour*)
 {
-    if (isSeparator) { g.setColour (th::line); g.fillRect (area.reduced (6, 0).withHeight (1).withY (area.getCentreY())); return; }
-    if (isHighlighted && isActive) { g.setColour (th::raised); g.fillRect (area); }
+    if (isSeparator) { g.setColour (theme::line); g.fillRect (area.reduced (6, 0).withHeight (1).withY (area.getCentreY())); return; }
+    if (isHighlighted && isActive) { g.setColour (theme::raised); g.fillRect (area); }
     if (isTicked)
     {
         Path tick;
         const float cx = (float) area.getX() + 12.0f, cy = (float) area.getCentreY();
         tick.startNewSubPath (cx - 4.0f, cy); tick.lineTo (cx - 1.0f, cy + 3.0f); tick.lineTo (cx + 4.0f, cy - 3.5f);
-        g.setColour (th::cyan);
+        g.setColour (theme::cyan);
         g.strokePath (tick, PathStrokeType (1.6f, PathStrokeType::curved, PathStrokeType::rounded));
     }
     auto textArea = area.withTrimmedLeft (24);
@@ -587,7 +587,7 @@ void FlatLook::drawPopupMenuItem (Graphics& g, const Rectangle<int>& area, bool 
                        v <= 6 ? 0 : v <= 12 ? 1 : 2);
         textArea = textArea.withTrimmedLeft (20);
     }
-    g.setColour (! isActive ? th::textFaint : isHighlighted ? th::text : th::textDim);
+    g.setColour (! isActive ? theme::textFaint : isHighlighted ? theme::text : theme::textDim);
     g.setFont (font (13.0f));
     g.drawText (text, textArea, Justification::centredLeft);
 }
@@ -602,14 +602,14 @@ void drawMeterBarTo (Graphics& g, Rectangle<float> t, float topY)
 {
     g.setColour (kTrack);
     g.fillRoundedRectangle (t, t.getWidth() * 0.5f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawRoundedRectangle (t.expanded (0.5f), t.getWidth() * 0.5f + 0.5f, 1.0f);
     topY = jlimit (t.getY(), t.getBottom(), topY);
     if (topY >= t.getBottom()) return;
     const auto bar = t.withTop (topY);
-    g.setColour (th::cyan.withAlpha (0.12f));                                    // a soft glow
+    g.setColour (theme::cyan.withAlpha (0.12f));                                    // a soft glow
     g.fillRoundedRectangle (bar.expanded (1.5f), (t.getWidth() + 3.0f) * 0.5f);
-    g.setGradientFill (th::meterGradient (t, true));                            // cyan at the foot, amber at full scale
+    g.setGradientFill (theme::meterGradient (t, true));                            // cyan at the foot, amber at full scale
     g.fillRoundedRectangle (bar, t.getWidth() * 0.5f);
 }
 

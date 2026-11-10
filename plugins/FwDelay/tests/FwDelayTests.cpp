@@ -16,14 +16,14 @@ static int failures = 0, checks = 0;
 static void testDelayTaper()
 {
     const float ref[] = { 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 636, 815, 1024, 1265, 1540, 1852, 2201, 2591, 3023, 3500 };
-    for (int i = 0; i <= 20; ++i) CHECK_NEAR (fwdelay::delayFromNorm ((float) i / 20.0f), ref[i], 0.5);
+    for (int i = 0; i <= 20; ++i) CHECK_NEAR (de::delayFromNorm ((float) i / 20.0f), ref[i], 0.5);
     for (float ms : { 1.0f, 7.0f, 375.0f, 501.0f, 502.0f, 777.0f, 1999.0f, 3499.0f, 3500.0f })
-        CHECK_NEAR (fwdelay::delayFromNorm (fwdelay::delayToNorm (ms)), ms, 1.0e-3);
+        CHECK_NEAR (de::delayFromNorm (de::delayToNorm (ms)), ms, 1.0e-3);
     float last = 0.0f;
     bool rising = true;
     for (int i = 0; i <= 1000; ++i)
     {
-        const float v = fwdelay::delayFromNorm ((float) i / 1000.0f);
+        const float v = de::delayFromNorm ((float) i / 1000.0f);
         rising = rising && v > last;
         last = v;
     }
@@ -32,29 +32,29 @@ static void testDelayTaper()
 
 static void testNotes()
 {
-    CHECK_NEAR (fwdelay::noteBeats (11) * 60000.0 / 120.0, 375.0, 1.0e-9);         // 1/8D at 120 BPM: the default 375 ms
-    CHECK_NEAR (fwdelay::noteBeats (19) * 60000.0 / 120.0, 4000.0, 1.0e-9);        // 2 bars
-    CHECK (fwdelay::nearestNote (375.0, 120.0) == 11);
-    CHECK (fwdelay::nearestNote (500.0, 120.0) == 13);                                  // a quarter
-    CHECK (fwdelay::nearestNote (0.5, 120.0) == 0);
-    CHECK (fwdelay::noteNames().size() == 20);
+    CHECK_NEAR (de::noteBeats (11) * 60000.0 / 120.0, 375.0, 1.0e-9);         // 1/8D at 120 BPM: the default 375 ms
+    CHECK_NEAR (de::noteBeats (19) * 60000.0 / 120.0, 4000.0, 1.0e-9);        // 2 bars
+    CHECK (de::nearestNote (375.0, 120.0) == 11);
+    CHECK (de::nearestNote (500.0, 120.0) == 13);                                  // a quarter
+    CHECK (de::nearestNote (0.5, 120.0) == 0);
+    CHECK (de::noteNames().size() == 20);
 }
 
 // the parameters' texts as the reference shows them
 static void testTexts()
 {
-    CHECK (fwdelay::freqText (19.0f, true) == "Off");
-    CHECK (fwdelay::freqText (154.0f, true) == "154Hz");
-    CHECK (fwdelay::freqText (2490.0f, false) == "2.49kHz");
-    CHECK (fwdelay::freqText (20138.77f, false) == "Off");
-    CHECK (fwdelay::rateText (0.1f) == "0.10 Hz");
-    CHECK (fwdelay::rateText (24.5f) == "24.5 Hz");
-    CHECK (fwdelay::rateText (6000.0f) == "6.00k Hz");
+    CHECK (de::freqText (19.0f, true) == "Off");
+    CHECK (de::freqText (154.0f, true) == "154Hz");
+    CHECK (de::freqText (2490.0f, false) == "2.49kHz");
+    CHECK (de::freqText (20138.77f, false) == "Off");
+    CHECK (de::rateText (0.1f) == "0.10 Hz");
+    CHECK (de::rateText (24.5f) == "24.5 Hz");
+    CHECK (de::rateText (6000.0f) == "6.00k Hz");
     // the DSP takes Rate as shown: three significant digits, at least 0.01 (measured)
-    CHECK (std::abs (fwdelay::atResolution (fwdelay::rate, 3074.0f) - 3070.0f) < 1e-3f);
-    CHECK (std::abs (fwdelay::atResolution (fwdelay::rate, 281.7f) - 282.0f) < 1e-4f);
-    CHECK (std::abs (fwdelay::atResolution (fwdelay::rate, 47.84f) - 47.8f) < 1e-4f);
-    CHECK (std::abs (fwdelay::atResolution (fwdelay::rate, 0.537f) - 0.54f) < 1e-5f);
+    CHECK (std::abs (de::atResolution (de::rate, 3074.0f) - 3070.0f) < 1e-3f);
+    CHECK (std::abs (de::atResolution (de::rate, 281.7f) - 282.0f) < 1e-4f);
+    CHECK (std::abs (de::atResolution (de::rate, 47.84f) - 47.8f) < 1e-4f);
+    CHECK (std::abs (de::atResolution (de::rate, 0.537f) - 0.54f) < 1e-5f);
 }
 
 // defaults as a fresh reference instance; an impulse through the processor comes back after 1/8D at 120 BPM
@@ -62,18 +62,18 @@ static void testProcessor()
 {
     FwDelayProcessor p;
     auto v = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
-    CHECK_NEAR (v (fwdelay::delay), 375.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::delayNote), 11.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::sync), 1.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::feedback), 60.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::mix), 100.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::analog), 2.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::hipass), 19.0, 1.0e-3);
-    CHECK_NEAR (v (fwdelay::lopass), 20138.77, 0.05);
+    CHECK_NEAR (v (de::delay), 375.0, 1.0e-3);
+    CHECK_NEAR (v (de::delayNote), 11.0, 1.0e-3);
+    CHECK_NEAR (v (de::sync), 1.0, 1.0e-3);
+    CHECK_NEAR (v (de::feedback), 60.0, 1.0e-3);
+    CHECK_NEAR (v (de::mix), 100.0, 1.0e-3);
+    CHECK_NEAR (v (de::analog), 2.0, 1.0e-3);
+    CHECK_NEAR (v (de::hipass), 19.0, 1.0e-3);
+    CHECK_NEAR (v (de::lopass), 20138.77, 0.05);
     CHECK (p.getLatencySamples() == 0);
     auto set = [&p] (const char* id, float x) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (x)); };
-    set (fwdelay::analog, 0.0f);
-    set (fwdelay::feedback, 0.0f);
+    set (de::analog, 0.0f);
+    set (de::feedback, 0.0f);
     p.setPlayConfigDetails (2, 2, 48000.0, 512);
     p.prepareToPlay (48000.0, 512);
     std::vector<float> out[2];
@@ -90,12 +90,12 @@ static void testProcessor()
     CHECK_NEAR (out[0][100 + 18000] / 0.001, 0.997395, 2.0e-5);              // the kernel's centre (measured 0.997395)
     CHECK_NEAR (out[1][100 + 18000 + 1] / 0.001, 0.031919, 2.0e-5);          // and the tap after it (0.031919)
     // the state round trip
-    p.apvts.getParameter (fwdelay::feedback)->setValueNotifyingHost (p.apvts.getParameter (fwdelay::feedback)->convertTo0to1 (137.0f));
+    p.apvts.getParameter (de::feedback)->setValueNotifyingHost (p.apvts.getParameter (de::feedback)->convertTo0to1 (137.0f));
     juce::MemoryBlock st;
     p.getStateInformation (st);
     FwDelayProcessor q;
     q.setStateInformation (st.getData(), (int) st.getSize());
-    CHECK_NEAR (q.apvts.getRawParameterValue (fwdelay::feedback)->load(), 137.0, 1.0e-3);
+    CHECK_NEAR (q.apvts.getRawParameterValue (de::feedback)->load(), 137.0, 1.0e-3);
 }
 
 // the editor's Side to Side and Dual behaviour, as measured on the reference: clicks and drags on the display (editor pixels)
@@ -127,44 +127,44 @@ static void testDisplayClicks()
     auto knobValue = [&] { auto* s = dynamic_cast<juce::Slider*> (ed->getComponentAt (204, 101)); return s != nullptr ? s->getValue() : -1.0; };
 
     // Ping Pong: the start box flips the start side at each click
-    set (fwdelay::pingPong, 1.0f); tick();
+    set (de::pingPong, 1.0f); tick();
     press (403.0f, 108.0f, 0);
-    CHECK (get (fwdelay::pingPongStart) > 0.5f);
+    CHECK (get (de::pingPongStart) > 0.5f);
     press (403.0f, 108.0f, 0);
-    CHECK (get (fwdelay::pingPongStart) < 0.5f);
+    CHECK (get (de::pingPongStart) < 0.5f);
     // a note on the display steps with a vertical drag (40 px: one value), in Ping Pong's layout as in the plain one
     press (315.0f, 112.0f, 40);
-    CHECK_NEAR (get (fwdelay::delayNote), 12.0, 1.0e-3);
-    set (fwdelay::pingPong, 0.0f); tick();
+    CHECK_NEAR (get (de::delayNote), 12.0, 1.0e-3);
+    set (de::pingPong, 0.0f); tick();
     press (320.0f, 105.0f, 40);
-    CHECK_NEAR (get (fwdelay::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (get (de::delayNote), 13.0, 1.0e-3);
     // Dual: switched on, the right side starts from the left's time; a click on the right note puts the Delay knob on
     // the right side
-    set (fwdelay::dual, 1.0f); tick();
-    CHECK_NEAR (get (fwdelay::delayNoteR), 13.0, 1.0e-3);
-    set (fwdelay::delayNoteR, 15.0f); tick();
+    set (de::dual, 1.0f); tick();
+    CHECK_NEAR (get (de::delayNoteR), 13.0, 1.0e-3);
+    set (de::delayNoteR, 15.0f); tick();
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
     press (409.0f, 112.0f, 0);
     CHECK_NEAR (knobValue(), 15.0, 1.0e-3);
     // Ping Pong's layout shows the left side; the right side comes back when Ping Pong goes off
-    set (fwdelay::pingPong, 1.0f); tick();
+    set (de::pingPong, 1.0f); tick();
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
-    set (fwdelay::pingPong, 0.0f); tick();
+    set (de::pingPong, 0.0f); tick();
     CHECK_NEAR (knobValue(), 15.0, 1.0e-3);
     press (315.0f, 112.0f, 0);
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
     // in MS a drag on the right time sets the right side's time
-    set (fwdelay::sync, 2.0f); tick();
-    const float r0 = get (fwdelay::delayR);
+    set (de::sync, 2.0f); tick();
+    const float r0 = get (de::delayR);
     press (395.0f, 110.0f, 20);
-    CHECK (get (fwdelay::delayR) > r0 + 5.0f);
-    CHECK_NEAR (knobValue(), get (fwdelay::delayR), 1.0e-3);
+    CHECK (get (de::delayR) > r0 + 5.0f);
+    CHECK_NEAR (knobValue(), get (de::delayR), 1.0e-3);
 }
 
 // the factory presets: the reference's 88, each name once, every value inside its parameter's range
 static void testPresets()
 {
-    const auto& list = fwdelay::factoryPresets();
+    const auto& list = de::factoryPresets();
     CHECK (list.size() == 88);
     FwDelayProcessor p;
     juce::StringArray names;
@@ -191,7 +191,7 @@ static void testPresets()
         p.setCurrentProgram (k + 1);
         for (const auto& v : pr.values)
         {
-            if (juce::String (v.id) == fwdelay::mix) continue;
+            if (juce::String (v.id) == de::mix) continue;
             const float got = p.apvts.getRawParameterValue (v.id)->load();
             if (std::abs (got - v.value) > 1.0e-3f * std::max (1.0f, std::abs (v.value)))
             {
@@ -211,7 +211,7 @@ static void testPresets()
     p.setCurrentProgram (program ("Default"));
     CHECK (p.settings (48000.0).lopassHz == 0.0f);                         // stored 20 100: Off
     p.setCurrentProgram (program ("Side to Side"));
-    auto* d = p.apvts.getParameter (fwdelay::depth);
+    auto* d = p.apvts.getParameter (de::depth);
     d->setValueNotifyingHost (d->convertTo0to1 (0.69f) + 1.0e-4f);           // moved: the parameter at its resolution
     CHECK (std::abs (p.settings (48000.0).depth - 0.01f) < 1.0e-6f);
     {   // the preset's values survive a session's save and reload
@@ -228,7 +228,7 @@ static void testPresets()
 // the DSP alone (dsp/Engine.h) against the identified laws
 static void testDsp()
 {
-    using namespace fwdelay::dsp;
+    using namespace de::dsp;
     const double fs = 48000.0;
     auto run = [fs] (Settings s, std::vector<float> l, std::vector<float> r, int ch = 2)
     {

@@ -9,7 +9,7 @@
 #include <functional>
 #include <limits>
 
-namespace fw::math
+namespace flatwater::math
 {
 // a == b, meant exactly: through std::equal_to, so -Wfloat-equal stays quiet (juce::exactlyEqual where JUCE is in)
 template <typename T> constexpr bool exactlyEqual (T a, T b) { return std::equal_to<T>{} (a, b); }

@@ -11,7 +11,7 @@ set(CH_APP_DEFS JucePlugin_Name="Flatwater Vocal Chain" JucePlugin_IsSynth=0 Juc
     JucePlugin_ProducesMidiOutput=0 JucePlugin_IsMidiEffect=0 JucePlugin_VersionString="${PROJECT_VERSION}")
 
 # the reverb's measured responses per rate (plugins/FwVocalChain/scripts/pack_reverb.py)
-juce_add_binary_data(FwVocalChainIR HEADER_NAME FwVocalChainIR.h NAMESPACE FwVocalChainIR SOURCES
+juce_add_binary_data(FwVocalChainIR HEADER_NAME FwVocalChainIR.h NAMESPACE ch::ir SOURCES
     ${CH_DIR}/resources/ir/reverb_44100.bin ${CH_DIR}/resources/ir/reverb_48000.bin
     ${CH_DIR}/resources/ir/reverb_88200.bin ${CH_DIR}/resources/ir/reverb_96000.bin)
 set_target_properties(FwVocalChainIR PROPERTIES POSITION_INDEPENDENT_CODE ON)

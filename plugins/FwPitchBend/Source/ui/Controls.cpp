@@ -1,18 +1,18 @@
-#include "Widgets.h"
+#include "Controls.h"
 #include "shared/ui/Theme.h"
 
 using namespace juce;
-namespace th = fw::theme;
+namespace theme = flatwater::theme;
 
-namespace fwpitchbend::ui
+namespace pb::ui
 {
 Colour sourceColour (int source)
 {
     switch (source)
     {
-        case M1: case M2: return th::cyan;
-        case AM: case PT: return th::amberLight;
-        default:          return th::textFaint;
+        case M1: case M2: return theme::cyan;
+        case AM: case PT: return theme::amberLight;
+        default:          return theme::textFaint;
     }
 }
 
@@ -93,21 +93,21 @@ void ModKnob::paint (Graphics& g)
 
     if (kind == Small)
     {
-        g.setColour (th::textDim);
-        g.setFont (th::font (9.5f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (9.5f, true));
         g.drawText (label, getLocalBounds().removeFromTop (11), Justification::centred);
     }
 
     // the scale: the track and the value's arc
     const float arcWidth = kind == Big ? 3.2f : kind == Medium ? 2.8f : 2.2f;
-    arc (g, c, P.valueArc, a0, a1, arcWidth, th::line);
-    arc (g, c, P.valueArc, from, a, arcWidth, th::cyan);
+    arc (g, c, P.valueArc, a0, a1, arcWidth, theme::line);
+    arc (g, c, P.valueArc, from, a, arcWidth, theme::cyan);
     if (kind == Big)                                             // tick dots round the scale
         for (int i = 0; i <= 24; ++i)
         {
             const float ta = a0 + (a1 - a0) * (float) i / 24.0f;
             const Point<float> d (std::sin (ta), -std::cos (ta));
-            g.setColour (i % 6 == 0 ? th::textDim : th::textFaint);
+            g.setColour (i % 6 == 0 ? theme::textDim : theme::textFaint);
             g.fillEllipse (Rectangle<float> (i % 6 == 0 ? 2.6f : 1.8f, i % 6 == 0 ? 2.6f : 1.8f).withCentre (c + d * P.ticks));
         }
 
@@ -130,46 +130,46 @@ void ModKnob::paint (Graphics& g)
             g.setColour (Colours::black.withAlpha (0.14f));
             g.fillEllipse (disc.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k));
         }
-        g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, disc.getY(), th::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
         g.setColour (Colours::black);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
-        g.setGradientFill (ColourGradient (th::rim, 0.0f, disc.getY(), th::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
+        g.setGradientFill (ColourGradient (theme::rim, 0.0f, disc.getY(), theme::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
         g.drawEllipse (disc.reduced (1.5f), 1.0f);
-        g.setColour (th::line.withAlpha (0.55f));
+        g.setColour (theme::line.withAlpha (0.55f));
         for (float r = P.cap + 4.0f; r < P.body - 2.0f; r += 3.0f)
             g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c), 0.6f);
         const auto cap = fluted (c, P.cap, P.cap * 0.07f, 10, a - a0);
         g.setColour (Colours::black.withAlpha (0.45f));
         g.fillPath (cap, AffineTransform::translation (0.0f, 2.5f));
-        g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, th::raised, 0.0f, c.y + P.cap, false));
+        g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, theme::raised, 0.0f, c.y + P.cap, false));
         g.fillPath (cap);
-        g.setColour (th::line.brighter (0.25f));
+        g.setColour (theme::line.brighter (0.25f));
         g.strokePath (cap, PathStrokeType (1.0f));
         // the pointer: an amber triangle on the cap's edge
         const Point<float> d (std::sin (a), -std::cos (a)), n (d.y, -d.x);
         Path tri;
         tri.addTriangle (c + d * (P.cap - 1.0f), c + d * (P.cap - 11.0f) + n * 5.0f, c + d * (P.cap - 11.0f) - n * 5.0f);
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.fillPath (tri);
     }
     else
     {
         g.setColour (Colours::black.withAlpha (0.35f));
         g.fillEllipse (disc.translated (0.0f, 1.5f));
-        g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, disc.getY(), th::raised, 0.0f, disc.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised, 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
         g.setColour (Colours::black);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
-        g.setGradientFill (ColourGradient (th::rim, 0.0f, disc.getY(), th::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
+        g.setGradientFill (ColourGradient (theme::rim, 0.0f, disc.getY(), theme::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
         g.drawEllipse (disc.reduced (1.5f), 1.0f);
         const Point<float> d (std::sin (a), -std::cos (a));
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawLine (Line<float> (c + d * (P.body * 0.25f), c + d * (P.body - 2.5f)), 2.2f);
     }
     if (framed)
     {
-        const auto glow = ui.dropTarget == this ? th::amber : th::cyan;
+        const auto glow = ui.dropTarget == this ? theme::amber : theme::cyan;
         for (int k = 3; k >= 1; --k)
         {
             g.setColour (glow.withAlpha (0.10f));
@@ -182,7 +182,7 @@ void ModKnob::paint (Graphics& g)
     }
     else if (ui.selected == this)
     {
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawEllipse (disc.expanded (2.5f), 1.5f);
     }
 
@@ -196,7 +196,7 @@ void ModKnob::paint (Graphics& g)
             const float v = ui.proc.modulated[(size_t) target].load();
             const float da = angleOf (valueToProportionOfLength (jlimit (getMinimum(), getMaximum(), (double) v)));
             const Point<float> d (std::sin (da), -std::cos (da));
-            g.setColour (th::text.withAlpha (0.85f));
+            g.setColour (theme::text.withAlpha (0.85f));
             const float dot = kind == Big ? 5.5f : kind == Medium ? 4.5f : 3.6f;
             g.fillEllipse (Rectangle<float> (dot, dot).withCentre (c + d * P.dot));
         }
@@ -272,15 +272,15 @@ void SlotPad::paint (Graphics& g)
     if (sl.source == None)
     {
         if (ui.dragging == None) return;                            // empty slots show while an assignment is dragged
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawRoundedRectangle (r, 3.0f, 1.0f);
         return;
     }
-    th::drawWell (g, r, 3.0f);
-    g.setColour (ui.selected == this ? th::amber : sourceColour (sl.source).withAlpha (0.6f));
+    theme::drawWell (g, r, 3.0f);
+    g.setColour (ui.selected == this ? theme::amber : sourceColour (sl.source).withAlpha (0.6f));
     g.drawRoundedRectangle (r, 3.0f, 1.0f);
     g.setColour (sourceColour (sl.source));
-    g.setFont (th::font (big ? 12.5f : (getHeight() < 15 ? 7.5f : 9.5f), true));
+    g.setFont (theme::font (big ? 12.5f : (getHeight() < 15 ? 7.5f : 9.5f), true));
     g.drawText (sourceName (sl.source), getLocalBounds(), Justification::centred);
 }
 
@@ -356,11 +356,11 @@ void Screen::timerCallback()
 
 void Screen::paint (Graphics& g)
 {
-    th::drawWell (g, getLocalBounds().toFloat(), 3.0f);
+    theme::drawWell (g, getLocalBounds().toFloat(), 3.0f);
     const auto r = plot();
-    const auto col = tab < 2 ? th::cyan : th::amberLight;
+    const auto col = tab < 2 ? theme::cyan : theme::amberLight;
     auto yOf = [&r] (float v) { return r.getCentreY() - v * (r.getHeight() * 0.5f - 2.0f); };   // v -1 .. 1
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawHorizontalLine (roundToInt (r.getCentreY()), r.getX(), r.getRight());
 
     if (tab < 2)
@@ -377,14 +377,14 @@ void Screen::paint (Graphics& g)
                 auto bar = Rectangle<float>::leftTopRightBottom (x + 1.5f, jmin (yOf (v), r.getCentreY()), x + w - 1.5f, jmax (yOf (v), r.getCentreY()));
                 g.setColour (col.withAlpha (i == playing ? 0.75f : 0.45f));
                 g.fillRect (bar.withHeight (jmax (1.5f, bar.getHeight())));
-                g.setColour (th::line);
+                g.setColour (theme::line);
                 if (i > 0) g.drawVerticalLine (roundToInt (x), r.getY(), r.getBottom());
             }
             if (editStep >= 0 && editStep < n)                      // the step's value above it while it is dragged
             {
                 const float x = r.getX() + w * (float) editStep;
-                g.setColour (th::text);
-                g.setFont (th::font (10.0f, true));
+                g.setColour (theme::text);
+                g.setFont (theme::font (10.0f, true));
                 g.drawText (String (stepValue (t, editStep)), Rectangle<float> (x - 6.0f, r.getY(), w + 12.0f, 12.0f), Justification::centred);
             }
         }
@@ -404,11 +404,11 @@ void Screen::paint (Graphics& g)
             g.fillPath (fill);
             g.setColour (col);
             g.strokePath (curve, PathStrokeType (1.6f));
-            g.setColour (th::text.withAlpha (0.8f));                // the play-head
+            g.setColour (theme::text.withAlpha (0.8f));                // the play-head
             g.drawVerticalLine (roundToInt (r.getX() + r.getWidth() * ui.proc.cycle[tab].load()), r.getY(), r.getBottom());
             if (drawMode)
             {
-                g.setColour (th::amber);
+                g.setColour (theme::amber);
                 g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (0.5f), 3.0f, 1.0f);
             }
         }
@@ -536,7 +536,7 @@ Rectangle<float> Library::tileRect (int i) const
 
 void Library::paint (Graphics& g)
 {
-    th::drawWell (g, getLocalBounds().toFloat(), 3.0f);
+    theme::drawWell (g, getLocalBounds().toFloat(), 3.0f);
     Graphics::ScopedSaveState ss (g);
     g.reduceClipRegion (getLocalBounds().reduced (1));
     for (int i = 0; i < (int) tiles.size(); ++i)
@@ -544,8 +544,8 @@ void Library::paint (Graphics& g)
         const auto r = tileRect (i);
         if (r.getBottom() < 0.0f || r.getY() > (float) getHeight()) continue;
         const bool user = tiles[(size_t) i].file != File();
-        th::drawCard (g, r, 3.0f);
-        const auto col = user ? th::amberLight : th::cyan;
+        theme::drawCard (g, r, 3.0f);
+        const auto col = user ? theme::amberLight : theme::cyan;
         const auto plotArea = r.reduced (3.0f).withTrimmedBottom (10.0f);
         Path p;
         const auto& t = tiles[(size_t) i].table;
@@ -558,8 +558,8 @@ void Library::paint (Graphics& g)
         }
         g.setColour (col);
         g.strokePath (p, PathStrokeType (1.2f));
-        g.setColour (deleteMode && user ? th::red : th::textDim);
-        g.setFont (th::font (8.0f));
+        g.setColour (deleteMode && user ? theme::red : theme::textDim);
+        g.setFont (theme::font (8.0f));
         g.drawText (tiles[(size_t) i].name, r.withTop (r.getBottom() - 11.0f), Justification::centred, true);
     }
 }
@@ -626,18 +626,18 @@ void Toggle::paint (Graphics& g)
         {
             const auto h = r.withWidth (r.getWidth() * 0.5f).translated (r.getWidth() * 0.5f * (float) i, 0.0f).reduced (1.0f);
             const bool lit = (i == 1) == on;
-            if (lit) { g.setColour (th::raisedTop); g.fillRoundedRectangle (h, 3.0f); }
-            g.setColour (lit ? th::text : th::textFaint);
-            g.setFont (th::font (9.0f, true));
+            if (lit) { g.setColour (theme::raisedTop); g.fillRoundedRectangle (h, 3.0f); }
+            g.setColour (lit ? theme::text : theme::textFaint);
+            g.setFont (theme::font (9.0f, true));
             g.drawText (halves[i], h, Justification::centred);
         }
-        if (ui.selected == this) { g.setColour (th::amber); g.drawRoundedRectangle (r.reduced (0.5f), 3.0f, 1.0f); }
+        if (ui.selected == this) { g.setColour (theme::amber); g.drawRoundedRectangle (r.reduced (0.5f), 3.0f, 1.0f); }
         return;
     }
     if (look == Look::Icon)
     {
         const auto b = r.reduced (4.0f);
-        g.setColour (on ? th::amber : th::textDim);
+        g.setColour (on ? theme::amber : theme::textDim);
         Path p;
         if (icon == "draw")            // a pencil
         {
@@ -679,16 +679,16 @@ void Toggle::paint (Graphics& g)
             g.fillRect (b.getX() + 6.0f, b.getY() + 1.0f, 1.4f, b.getHeight() - 4.0f);
             g.fillRect (b.getX() + 6.0f, b.getY() + 1.0f, 5.0f, 1.6f);
         }
-        if (ui.selected == this) { g.setColour (th::amber); g.drawRoundedRectangle (r.reduced (0.5f), 3.0f, 1.0f); }
+        if (ui.selected == this) { g.setColour (theme::amber); g.drawRoundedRectangle (r.reduced (0.5f), 3.0f, 1.0f); }
         return;
     }
     // a lamp with its label (Fine: below it; Flatten: the lamp on the left)
     const auto lamp = lampLeft ? Rectangle<float> (12.0f, 12.0f).withCentre ({ r.getX() + 9.0f, r.getCentreY() })
                                : Rectangle<float> (12.0f, 12.0f).withCentre ({ r.getCentreX(), r.getY() + 10.0f });
-    th::drawLamp (g, lamp, on, th::amber);
-    if (ui.selected == this) { g.setColour (th::amber); g.drawEllipse (lamp.expanded (3.0f), 1.0f); }
-    g.setColour (th::textDim);
-    g.setFont (th::font (12.0f, true));
+    theme::drawLamp (g, lamp, on, theme::amber);
+    if (ui.selected == this) { g.setColour (theme::amber); g.drawEllipse (lamp.expanded (3.0f), 1.0f); }
+    g.setColour (theme::textDim);
+    g.setFont (theme::font (12.0f, true));
     if (! lampLeft) g.drawText (label, r.withTop (lamp.getBottom() + 4.0f).withHeight (15.0f), Justification::centred);
 }
 

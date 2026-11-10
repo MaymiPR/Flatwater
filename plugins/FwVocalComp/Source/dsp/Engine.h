@@ -24,7 +24,7 @@
 #include <vector>
 #include "Net.h"
 
-namespace fwvocalcomp
+namespace vc
 {
 struct Tuning
 {

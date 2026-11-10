@@ -3,10 +3,10 @@
 #include "shared/ui/RenUI.h"
 #include "shared/ui/FlatUI.h"
 
-// Flatwater Bass Leveler editor: Bass Rider's layout on a 320 x 560 px design grid (the narrow Renaissance toolbar included),
+// Flatwater Bass Leveler editor: the reference's layout on a 320 x 560 px design grid (the narrow two-row toolbar included),
 // drawn by Flatwater from measured positions, sizes and colours (RESEARCH.md, Flatwater Bass Leveler) with our own shading.
 // The static art is rendered once per window scale; the controls draw themselves.
-namespace fwbassleveler::ui
+namespace bl::ui
 {
 // the reference's scale on the lower panel: +12 dB at y 222, 0 dB at 327, -12 dB at 432 (8.75 px per dB, measured)
 inline float scaleY (float db) { return 327.0f - 8.75f * db; }
@@ -77,8 +77,8 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fw::wavesWheel (*this, e, w, wheelAcc, false); }
-    fw::flat::WavesDrag feel { fw::flat::WavesDrag::Rotary };
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { flatwater::fineWheel (*this, e, w, wheelAcc, false); }
+    flatwater::flat::FineDrag feel { flatwater::flat::FineDrag::Rotary };
     bool blocked = false;                                       // a group member's drag (moves nothing)
     Marks* marks = nullptr;
     double wheelAcc = 0.0;
@@ -99,7 +99,7 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (kind != Rider && marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (kind != Rider) fw::wavesWheel (*this, e, w, wheelAcc, false); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { if (kind != Rider) flatwater::fineWheel (*this, e, w, wheelAcc, false); }
     juce::Rectangle<float> capBounds() const;                   // local
     const Kind kind;
     LinearDrag feel;
@@ -123,7 +123,7 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override { if (marks != nullptr && marks->enter) marks->enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fw::wavesWheel (*this, e, w, wheelAcc, false); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { flatwater::fineWheel (*this, e, w, wheelAcc, false); }
     LinearDrag feel;
     bool blocked = false;                                       // a group member's drag (moves nothing)
     Marks* marks = nullptr;
@@ -168,7 +168,7 @@ public:
 };
 }
 
-class FwBassLevelerEditor : public fw::ren::Editor
+class FwBassLevelerEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwBassLevelerEditor (FwBassLevelerProcessor&);
@@ -192,22 +192,22 @@ private:
     std::unique_ptr<juce::TextEditor> entry;
     juce::Slider* entryFor = nullptr;
     // the lasso
-    fw::flat::LassoOverlay& lasso;
+    flatwater::flat::LassoOverlay& lasso;
     juce::Point<float> lassoStart;
     bool lassoing = false;
 
     FwBassLevelerProcessor& proc;
-    fwbassleveler::ui::Marks marks;
-    fwbassleveler::ui::Knob& sensitivity;
-    fwbassleveler::ui::Knob& spill;
-    fwbassleveler::ui::Knob& artifacts;
-    fwbassleveler::ui::Switch& responseSwitch;
-    fwbassleveler::ui::TargetSlider& target;
-    fwbassleveler::ui::Fader& rangeMax;
-    fwbassleveler::ui::Fader& rangeMin;
-    fwbassleveler::ui::Fader& output;
-    fwbassleveler::ui::Fader& rider;
-    fwbassleveler::ui::IdleColumn& idleColumn;
+    bl::ui::Marks marks;
+    bl::ui::Knob& sensitivity;
+    bl::ui::Knob& spill;
+    bl::ui::Knob& artifacts;
+    bl::ui::Switch& responseSwitch;
+    bl::ui::TargetSlider& target;
+    bl::ui::Fader& rangeMax;
+    bl::ui::Fader& rangeMin;
+    bl::ui::Fader& output;
+    bl::ui::Fader& rider;
+    bl::ui::IdleColumn& idleColumn;
 
     juce::Image background;
     float backgroundScale = 0.0f;

@@ -18,7 +18,7 @@
 //   normalised value, clipped to the control's range (Pitch's to twice its range, +-24 semitones); the controls that
 //   scale (the Rates, Warps, AM's and PT's) are multiplied by ((a + s) / (a - s))^p of the slots' sum s (oddsScale).
 // The modulators run per sample; a control other than Mix takes their value once per host block.
-namespace fwpitchbend
+namespace pb
 {
 // the synced lengths in beats, in the host parameter's order (32 bars ... 1/64 triplet)
 inline double syncedBeats (int index)

@@ -3,8 +3,8 @@
 #include "shared/ui/RenUI.h"
 
 // Flatwater Vocal Comp editor. Designed on a 371 x 357 px grid (Flatwater's look); the window can be resized
-// at that aspect ratio and everything scales with it (see fw::ren::Editor).
-class FwVocalCompEditor : public fw::ren::Editor
+// at that aspect ratio and everything scales with it (see flatwater::ren::Editor).
+class FwVocalCompEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwVocalCompEditor (FwVocalCompProcessor&);
@@ -19,11 +19,11 @@ private:
     juce::Rectangle<int> vuTextRect (bool right) const;
 
     FwVocalCompProcessor& proc;
-    fw::ren::Fader& comp;
-    fw::ren::Fader& gate;
-    fw::ren::Fader& gain;
+    flatwater::ren::Fader& comp;
+    flatwater::ren::Fader& gate;
+    flatwater::ren::Fader& gain;
 
-    fw::MeterBallistics energyBar { 0.341, 0.094 }, outLBar, outRBar;   // Energy: two stages, as measured
+    flatwater::MeterBallistics energyBar { 0.341, 0.094 }, outLBar, outRBar;   // Energy: two stages, as measured
     double lastTick = 0.0;
     float energy = -80.0f, attn = 0.0f, outL = -80.0f, outR = -80.0f;
     float energyHold = -80.0f, attnHold = 0.0f, outLHold = -80.0f, outRHold = -80.0f;

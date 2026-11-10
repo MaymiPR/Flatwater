@@ -8,7 +8,7 @@
 #include <functional>
 #include "shared/ui/FlatUI.h"
 
-namespace fw::hybrid
+namespace flatwater::hybrid
 {
 juce::Font font (float h, bool bold = true);
 
@@ -52,8 +52,8 @@ public:
     const Kind kind;
     juce::Point<float> centre;                        // local
     int steps = 0;                                    // > 0: a stepped knob (Analog)
-    fw::flat::WavesDrag feel { fw::flat::WavesDrag::Rotary };
-    fw::flat::Selection* selection = nullptr;
+    flatwater::flat::FineDrag feel { flatwater::flat::FineDrag::Rotary };
+    flatwater::flat::Selection* selection = nullptr;
     std::function<juce::String (double)> format;
     std::function<void (Knob*, bool)> onHover;
     double wheelAcc = 0.0;                            // notches not yet turned into steps (stepped knobs)
@@ -152,7 +152,7 @@ void drawNamePlate (juce::Graphics&, juce::Rectangle<float> area, const juce::St
 void drawScrew (juce::Graphics&, juce::Point<float> centre, float radius, bool slot = false);
 
 // the value entry (double-click) sits on each knob's value slot; the text box is invisible otherwise
-class HybridLook : public fw::flat::FlatLook
+class HybridLook : public flatwater::flat::FlatLook
 {
 public:
     juce::Slider::SliderLayout getSliderLayout (juce::Slider&) override;
