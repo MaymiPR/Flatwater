@@ -1,0 +1,11 @@
+Target	-36.2 dB
+Sensitivity	75.5
+Response	Slow
+Spill	-3.4 dB
+Artifacts	60.9
+Range Max	-5.8 dB
+Range Min	7.4 dB
+Idle	-1.0
+Output	-10.0 dB
+Mode	Live Stereo
+Bypass	Off

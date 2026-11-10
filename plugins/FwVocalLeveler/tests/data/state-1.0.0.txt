@@ -1,0 +1,12 @@
+Target	-36.2 dB
+Vocal Sensitivity	6.1 dB
+Music Sensitivity	-3.1 dB
+Range Max	11.8 dB
+Idle	2.4
+Range Min	-6.8 dB
+Rider Fader	8.3 dB
+Output	-0.9 dB
+Attack	Slow
+Spill	-22.8 dB
+Mode	Mono
+Bypass	Off

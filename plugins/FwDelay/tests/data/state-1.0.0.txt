@@ -1,0 +1,22 @@
+Sync	BPM
+BPM	234 BPM
+Delay	374 ms
+Delay Note	2B
+Mix	61
+Feedback	45
+Phase L	-
+Phase R	+
+Ping Pong	Stereo
+Output	7.2 dB
+LoPass	173Hz
+HiPass	12.8kHz
+Depth	55 %
+Rate	0.66 Hz
+LoFi	LoFi
+Analog	2
+Ping Pong Start	Left
+Delay R	996 ms
+Delay Note R	1/32D
+Dual	On
+Mode	Mono
+Bypass	Off

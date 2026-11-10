@@ -1,0 +1,11 @@
+Input	-34.5 dB
+Frequency	154 Hz
+Decay	-18.4 dB
+Response	29.8 ms
+Ratio	2.33:1
+Monitor	Audio
+High Pass	24 dB/oct
+Original Bass	-6.3 dB
+Harmonics	-36.6 dB
+Mode	Mono
+Bypass	Off

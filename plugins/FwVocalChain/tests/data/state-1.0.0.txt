@@ -1,0 +1,18 @@
+Sensitivity	-7.3
+Bass	5.1
+Bass Color	Sub
+Treble	9.8
+Treble Color	Top
+Compress	-5.5
+Compress Color	Wall
+Reverb	-0.7
+Reverb Color	Mute
+Delay	4.0
+Delay Color	Slap
+Pitch	8.7
+Pitch Color	Wide
+Output	-6.6
+Balance	3.5
+Mode	Stereo
+Link In/Out	Off
+Bypass	Off

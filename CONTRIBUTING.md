@@ -14,12 +14,15 @@ nobody's words are quoted in a file, a commit message, a tag or release notes.
 
 ## Build
 
-Requirements and the commands per platform are in the [build guide](docs/BUILDING.md). Every build also makes each
-plug-in's offline renderer (`<Ab>Render`, for example `CoRender`) and editor snapshot tool (`<Id>Snapshot`);
-on Windows it adds the hosts for the reference plug-ins (RefRender, MeterCapture, CoVuRender, OggDecode) and the
-keyboard check (FocusCheck). The plug-ins are included from `plugins/<Id>/plugin.cmake`, so every target lands in
-`build/<Target>_artefacts/Release/`; a copy of every VST3 also lands in `build/plugins/`. The `ci_targets` target
-builds what CI builds: every plug-in's VST3, unit tests and renderer, and on Windows its snapshot tool.
+Requirements and the commands per platform are in the [build guide](docs/BUILDING.md). Every build makes each
+plug-in's VST3, Standalone (and CLAP, AU), its unit tests and its host test (`<Id>HostTest`). With the tools option
+(`FLATWATER_TOOLS`, on) it also makes each plug-in's offline renderer (`<Ab>Render`, for example `CoRender`) and
+editor snapshot tool (`<Id>Snapshot`), ParamDump and RefRender, and on Windows RefCapture, MeterCapture, CoVuRender,
+OggDecode and the keyboard check (FocusCheck). The plug-ins are included from `plugins/<Id>/plugin.cmake`, so every
+target lands in `build/<Target>_artefacts/Release/`; with `FLATWATER_DEV_COPY` (on) a copy of every VST3 also lands
+in `build/plugins/<Product name>.vst3`, the folder a DAW's plug-in junction points at. `FLATWATER_CLAP` (on) builds
+the CLAP plug-ins. The `ci_targets` target builds what CI builds: every plug-in's VST3, unit tests, host test and
+renderer, and on Windows its snapshot tool.
 
 | Plug-in | Renderer |
 |---|---|
@@ -38,6 +41,7 @@ builds what CI builds: every plug-in's VST3, unit tests and renderer, and on Win
 | Test | What it does | Command |
 |---|---|---|
 | `<Id>Tests` (one per plug-in) | the plug-in's parameters (ranges, defaults, texts), its DSP laws against the reference's measured values, latency, presets, state and editor; [docs/validation.md](docs/validation.md) lists what each covers | `ctest --test-dir build -C Release --output-on-failure` |
+| `<Id>HostTest` (one per plug-in) | the built VST3 hosted as a DAW hosts it: the parameter list, save and reload, the editor, a sample-rate change, offline rendering, and every saved state of a release in `plugins/<Id>/tests/data/` (`state-1.0.0.bin` with the texts each parameter showed) loading with the same texts | `ctest --test-dir build -C Release --output-on-failure` |
 | Render regression | the cases in `tests/regress/<Id>/jobs.txt` (every plug-in has cases) through that plug-in's offline renderer against the committed goldens; our output does not change unless intended (`--update` after an intended DSP change, committed with it) | `python scripts/render_regress.py --build build` |
 | Null tests | the same signals through the original and through ours; the residual in dB | [Null tests](#null-tests) |
 | Repository checks | absolute paths, old names, attribution forms, document style, whitespace | `python scripts/check_repo.py` |
@@ -102,16 +106,16 @@ administrator rights.
 
 | Path | What it holds |
 |---|---|
-| `plugins/<Id>/` | one plug-in: `plugin.cmake`; `Source/` (`PluginProcessor`, `PluginEditor`, `Presets.h`, `dsp/` with `Engine` and the other DSP and generated headers, `ui/`); `tests/<Id>Tests.cpp`; `tools/<Ab>Render.cpp`; `scripts/` (its Python: exports, fits, preset tables, UI measurements); `nulltest/` (its null tests, measurements and fits, with a README); `resources/` where it has binary resources (FwVocalChain's measured responses); and its documents: README (the page users read), RESEARCH (what the original documents), MEASUREMENTS (what was measured and identified), NULLTESTS.md and `NULLTESTS-<topic>.md` (the null reports) |
-| `shared/` | code shared by the plug-ins (`shared.cmake` builds it as FwCommon): `ui/` (the toolbar, the UI kits, the theme, meters, settings), `dsp/Math.h` (the unfused math), `Presets.h` |
+| `plugins/<Id>/` | one plug-in: `plugin.cmake`; `Source/` (`Params.h`, `PluginProcessor`, `PluginEditor`, `Presets.h/.cpp` with the generated `PresetTable.h`, `dsp/` with `Engine` and the other DSP and generated headers, `ui/` with the plug-in's own `Controls`); `tests/<Id>Tests.cpp` and `tests/data/` (the saved-state fixtures); `tools/<Ab>Render.cpp`; `scripts/` (its Python: exports, fits, preset tables, UI measurements); `nulltest/` (its null tests, measurements and fits, with a README); `resources/` where it has binary resources (FwVocalChain's measured responses); and its documents: README (the page users read), RESEARCH (what the original documents), MEASUREMENTS (what was measured and identified), NULLTESTS.md and `NULLTESTS-<topic>.md` (the null reports) |
+| `shared/` | code shared by the plug-ins (`shared.cmake` builds it as the static library FlatwaterShared): `ui/` (`Widgets` with the toolbar, meters, wheel, menu look, mark and settings; the editor styles FlatUI, HybridUI and RenUI; `Theme.h`; `HostFocus`, the host's keys after a click), `dsp/Math.h` (the unfused math), `Presets.h` |
 | `tests/regress/` | the render regression's cases and goldens, per plug-in |
-| `tools/` | the C++ hosts for the reference plug-ins (RefRender, MeterCapture, OggDecode), FocusCheck, and `Snapshot.cpp`, the editor snapshot every plug-in but FwVocalComp builds |
+| `tools/` | the C++ hosts for the reference plug-ins (RefRender, ParamDump, RefCapture, MeterCapture, OggDecode), FocusCheck, `HostTest.cpp` (every plug-in's host test) and `Snapshot.cpp`, the editor snapshot every plug-in but FwVocalComp builds |
 | `scripts/` | `bump_version.py`, `release_notes.py`, `render_regress.py`, `make_site.py`, `check_repo.py`, `check.ps1`, `check.sh`, `doc_index.py` (the root MEASUREMENTS.md and RESEARCH.md indexes), `make_presets.py` (the preset tables of eight plug-ins), `nulltest/` (the modules every plug-in's null tests import: `local.yaml`, the reference hosts, the corpora, the meter readers; [scripts/nulltest/README.md](scripts/nulltest/README.md)) and `feel/` (the control-feel scripts) |
 | `measurements/<Id>/` | the measurement data behind each plug-in's MEASUREMENTS.md (published) |
 | `packaging/` | the installers; `plugins.txt` lists the plug-ins they hold |
 | `docs/` | [docs/README.md](docs/README.md) indexes it: the build guide, results.md (every plug-in's null tests in one page), validation.md, improvements.md, learned-blocks.md, `branding/` (banners, icon, social preview, `colours.json`) and `screenshots/` |
 | `.github/` | `workflows/` (Lint, CI, Build and release, Release checklist, Landing page), the issue forms, the pull request template, `RELEASE_CHECKLIST.md`, `dependabot.yml`, CODEOWNERS |
-| `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders; [scripts/nulltest/README.md](scripts/nulltest/README.md) lists the keys this suite adds |
+| `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders, and in its `# Suite keys:` block the keys this suite's scripts add ([scripts/nulltest/README.md](scripts/nulltest/README.md)) |
 
 Reference renders and anything taken from the original plug-ins stay out of the repository (`.gitignore`).
 
@@ -132,17 +136,27 @@ One version for the suite (`project(... VERSION ...)` in `CMakeLists.txt`). The 
 plug-in raises the middle number, a fix the last. Tags are `vx.y.z`; `vx.y.z-rc.N` publishes a pre-release.
 `scripts/bump_version.py` writes every version.
 
+## Frozen identity
+
+What released users' projects, presets and installs depend on (STANDARDS.md); none of it changes, whatever else is
+renamed. The values that differ from what the naming rules would give today:
+
+| Item | Value | Set in |
+|---|---|---|
+| Manufacturer code | `Fltw` | `CMakeLists.txt` (`flatwater_add_plugin`), `packaging/plugins.txt` |
+| Plug-in codes | `Fbe1` FwBassLeveler, `Fbs1` FwBassLift, `Fbx1` FwBassXLift, `Fcp1` FwComp, `Fdl1` FwDelay, `Fpb1` FwPitchBend, `Fch1` FwVocalChain, `Fvc1` FwVocalComp, `Fve1` FwVocalLeveler (a digit, not the lower-case letters of the rule) | each `plugin.cmake`, `packaging/plugins.txt` |
+| Bundle IDs | `com.flatwater.<Id>` with the plug-in id's case (`com.flatwater.FwComp`) | `CMakeLists.txt` (`flatwater_add_plugin`) |
+| CLAP IDs | `com.flatwater.<name>` without the `Fw` prefix (`com.flatwater.comp`, `com.flatwater.bassleveler`) | each `plugin.cmake` |
+| Parameter IDs | as released in 1.0.0 | each `Source/Params.h` |
+| Company name | `Flatwater` | `CMakeLists.txt` |
+| Installer AppId | `{FD12655C-898E-4BCF-9B39-16B5540D1933}` (the test installer `{398E4AB3-D38D-4221-8D28-A241FC7F460D}`) | `packaging/Flatwater.iss` |
+| Install folders | `VST3\Flatwater`, `CLAP\Flatwater` and `Flatwater` for the apps on Windows; the macOS subfolder `Flatwater` | `packaging/Flatwater.iss`, `packaging/make_iss_include.ps1`, `release.yml` (`SUBFOLDER`) |
+
 ## Deviations from the standard
 
 | Deviation | Reason |
 |---|---|
-| The shared code is a static library, FwCommon (`shared/shared.cmake`), which every plug-in, test, snapshot and renderer with JUCE links, not `SUITE_UI_SOURCES` compiled into each target | it is built once for nine plug-ins |
-| One `tools/Snapshot.cpp` serves the snapshot tool of every plug-in but FwVocalComp, which has its own (`plugins/FwVocalComp/tools/Snapshot.cpp`) | the same program renders any editor |
-| `Source/` has no `Params.h`, `Presets.cpp` or `dsp/Tuning.h`: the parameter ids are in `PluginProcessor.h`, the presets are generated headers, and FwBassLift and FwVocalComp keep their `Tuning` struct in `dsp/Engine.h` | the plug-ins predate the starter's files; moving the declarations is no layout change |
+| `dsp/Tuning.h` exists in FwBassLift and FwVocalComp only, the plug-ins whose renderers override constants by name; the other plug-ins keep their constants beside the DSP that uses them, and FwPitchBend has no `dsp/Engine` (its processor joins the modulators, `dsp/Mod.h`, and the shifter, `dsp/Shifter`) | moving every constant or the processor's own DSP is a DSP change, which a layout change does not make |
 | The renderers of FwBassLift, FwBassXLift, FwComp, FwDelay and FwVocalComp, and `PbShifterRender`, are plain executables of the DSP alone, without JUCE and without a `RenderDev` copy; they land in `build/<Target>_artefacts/Release/` like the others | they need no plug-in wrapper |
-| No tools option: the renderers and snapshot tools are always built, the Windows hosts on Windows | the render regression and the snapshots need them on every build |
-| Every VST3 is also copied to `build/plugins/<Product name>.vst3` after it builds | a plug-in folder of the host on the development machine points there |
 | FwVocalComp, FwComp and FwBassLift keep their main null script as `null_<id>.py` beside a `nulltest.py` that runs it | another plug-in's scripts import it, and two modules named `nulltest` cannot share one process |
-| `measurements/` is published | the measurement data of this suite is public (approval recorded 2026-10-18) |
-| `local.yaml` carries keys beyond `local.example.yaml`: the reference's preset files and FL Studio's sample packs | the preset null tests and the corpora read them ([scripts/nulltest/README.md](scripts/nulltest/README.md)) |
 | Root `MEASUREMENTS.md` and `RESEARCH.md` are indexes written by `scripts/doc_index.py`; `docs/` adds results.md, validation.md, improvements.md and learned-blocks.md | nine plug-ins share one repository |

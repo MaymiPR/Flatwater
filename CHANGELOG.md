@@ -16,6 +16,13 @@
 - **Source names:** the C++ namespaces are the plug-ins' two-letter abbreviations and `flatwater` for the shared
   code; the shared controls are `shared/ui/Widgets`, a plug-in's own `Source/ui/Controls`; FwComp's VU dial renderer
   is `CoVuRender`. No sound or saved state changes (the render regression is byte-identical).
+- **Sources and build:** each plug-in has `Params.h`, `Presets.h/.cpp` over the generated `PresetTable.h`, and its
+  top DSP class in `dsp/Engine.h`; the shared code is the static library `FlatwaterShared`; the build options are
+  `FLATWATER_CLAP`, `FLATWATER_TOOLS` and `FLATWATER_DEV_COPY`; ParamDump and RefCapture join the reference hosts.
+- **Host test:** every plug-in's `<Id>HostTest` (under ctest) hosts the built VST3 as a DAW does and loads a project
+  state saved by 1.0.0 with the same parameter texts.
+- **Host keys:** every editor hands the host's keys back after a click (`shared/ui/HostFocus`), so the space bar
+  and the host's shortcuts keep working in FL Studio after a knob is touched.
 
 ## 1.0.0 (2026-11-04)
 

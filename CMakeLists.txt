@@ -18,15 +18,20 @@ FetchContent_Declare(JUCE
     GIT_TAG 9.0.5
     GIT_SHALLOW ON)
 FetchContent_MakeAvailable(JUCE)
+# JUCE's helper-tool bootstrap sets the environment variable CMAKE_GENERATOR_PLATFORM inside this CMake process for
+# its nested configure. When `cmake --build` re-runs the configure itself (after a CMake file changed), the variable
+# stays in that process and reaches MSBuild and every CMake call MSBuild makes, which print "Environment variable
+# CMAKE_GENERATOR_PLATFORM will be ignored" as a build warning. Cleared once JUCE is set up.
+unset(ENV{CMAKE_GENERATOR_PLATFORM})
 # A tag can be moved: build only from the commit it pointed to when chosen
 # (unless FETCHCONTENT_SOURCE_DIR_JUCE points at a JUCE of your own).
-set(FW_JUCE_COMMIT d60b7a78030661574a615b586d9325ba7a7fa7dd)
+set(FLATWATER_JUCE_COMMIT d60b7a78030661574a615b586d9325ba7a7fa7dd)
 if(NOT FETCHCONTENT_SOURCE_DIR_JUCE)
     find_package(Git REQUIRED)
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse HEAD WORKING_DIRECTORY ${juce_SOURCE_DIR}
         OUTPUT_VARIABLE juce_commit OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if(NOT juce_commit STREQUAL FW_JUCE_COMMIT)
-        message(FATAL_ERROR "JUCE 9.0.5 is at ${juce_commit}, expected ${FW_JUCE_COMMIT}")
+    if(NOT juce_commit STREQUAL FLATWATER_JUCE_COMMIT)
+        message(FATAL_ERROR "JUCE 9.0.5 is at ${juce_commit}, expected ${FLATWATER_JUCE_COMMIT}")
     endif()
 endif()
 # JUCE's VST3 editor ignores the keys a host offers it (FL Studio's Ctrl+Z then never reaches the plug-in): patch it
@@ -38,8 +43,8 @@ if(NOT juce_patch_result EQUAL 0)
 endif()
 
 # CLAP through clap-juce-extensions (MIT; brings the CLAP SDK).
-option(FW_CLAP "Build CLAP plugins" ON)
-if(FW_CLAP)
+option(FLATWATER_CLAP "Build CLAP plugins" ON)
+if(FLATWATER_CLAP)
     FetchContent_Declare(clap_juce_extensions
         GIT_REPOSITORY https://github.com/free-audio/clap-juce-extensions.git
         GIT_TAG 7adee3a1bd4684d4caa5601100e364abccff4b4d
@@ -47,8 +52,15 @@ if(FW_CLAP)
     FetchContent_MakeAvailable(clap_juce_extensions)
 endif()
 
-# fw_add_plugin(<Target> <Product name> <4-char code> <clap id> [CATEGORIES <VST3 categories>] SOURCES ...)
-function(fw_add_plugin target product code clapid)
+# Measurement tools (hosts for the reference plug-ins, our offline renderers, snapshots); not shipped. CI builds
+# with them on: the render regression and the screenshots need the renderers and the snapshot tools.
+option(FLATWATER_TOOLS "Build the measurement tools" ON)
+# A copy of every VST3 at build/plugins/<Product name>.vst3 after each build, the folder a DAW's plug-in junction
+# points at in every suite.
+option(FLATWATER_DEV_COPY "Copy each VST3 to build/plugins after a build" ON)
+
+# flatwater_add_plugin(<Target> <Product name> <4-char code> <clap id> [CATEGORIES <VST3 categories>] SOURCES ...)
+function(flatwater_add_plugin target product code clapid)
     cmake_parse_arguments(P "" "" "SOURCES;CATEGORIES" ${ARGN})
     if(NOT P_CATEGORIES)
         set(P_CATEGORIES Fx Dynamics)
@@ -72,28 +84,48 @@ function(fw_add_plugin target product code clapid)
         VST3_CATEGORIES ${P_CATEGORIES}
         AU_MAIN_TYPE kAudioUnitType_Effect)
     target_sources(${target} PRIVATE ${P_SOURCES})
-    target_link_libraries(${target} PRIVATE FwCommon juce::juce_audio_utils juce::juce_recommended_warning_flags)   # audio_utils: the Standalone wrapper
+    target_link_libraries(${target} PRIVATE FlatwaterShared juce::juce_audio_utils juce::juce_recommended_warning_flags)   # audio_utils: the Standalone wrapper
     # (GCC: the VST3 SDK inside JUCE writes four-character codes as character constants)
     foreach(t ${target} ${target}_VST3)
         target_compile_options(${t} PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-multichar>)
     endforeach()
-    if(FW_CLAP)
+    if(FLATWATER_CLAP)
         clap_juce_extensions_plugin(TARGET ${target}
             CLAP_ID "${clapid}" CLAP_FEATURES audio-effect)
         # (Xcode: the CLAP bundle's Info.plist identifier, also as the build setting)
         set_target_properties(${target}_CLAP PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "${clapid}")
     endif()
-    # Rebuilds land in build/plugins (an FL Studio VST3 scan folder points here).
-    add_custom_command(TARGET ${target}_VST3 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "$<TARGET_FILE_DIR:${target}_VST3>/../.."
-            "${CMAKE_BINARY_DIR}/plugins/${product}.vst3")
+    if(FLATWATER_DEV_COPY)
+        # Every rebuild also lands at build/plugins/<Product name>.vst3, the one folder a DAW's plug-in junction points at.
+        add_custom_command(TARGET ${target}_VST3 POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "$<TARGET_FILE_DIR:${target}_VST3>/../.."
+                "${CMAKE_BINARY_DIR}/plugins/${product}.vst3")
+    endif()
 endfunction()
 
-# fw_tool_output(<Target>): a plain executable (a renderer without JUCE) lands where JUCE puts its console apps,
+# flatwater_tool_output(<Target>): a plain executable (a renderer without JUCE) lands where JUCE puts its console apps,
 # build/<Target>_artefacts/<Config>, so every renderer is found the same way.
-function(fw_tool_output target)
+function(flatwater_tool_output target)
     set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${target}_artefacts/$<CONFIG>")
+endfunction()
+
+# flatwater_add_host_test(<Target>): <Target>HostTest, the suite's tools/HostTest.cpp, hosts the built VST3 as a DAW
+# does and loads every saved state of an earlier release in plugins/<Target>/tests/data (state-<x.y.z>.bin with its
+# .txt, written at each release that changes a parameter or its reading:
+# <Target>HostTest <vst3> --save-state plugins/<Target>/tests/data/state-<x.y.z>.bin).
+function(flatwater_add_host_test target)
+    juce_add_console_app(${target}HostTest PRODUCT_NAME "${target}HostTest")
+    target_sources(${target}HostTest PRIVATE ${CMAKE_SOURCE_DIR}/tools/HostTest.cpp)
+    target_compile_definitions(${target}HostTest PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_MODAL_LOOPS_PERMITTED=1
+        JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0)
+    target_link_libraries(${target}HostTest PRIVATE juce::juce_audio_processors juce::juce_gui_basics
+        juce::juce_recommended_config_flags)
+    add_dependencies(${target}HostTest ${target}_VST3)          # the test loads the VST3 bundle
+    file(GLOB states CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/plugins/${target}/tests/data/state-*.bin)
+    add_test(NAME ${target}HostTest
+        COMMAND ${target}HostTest $<GENEX_EVAL:$<TARGET_PROPERTY:${target}_VST3,JUCE_PLUGIN_ARTEFACT_FILE>> ${states})
+    add_dependencies(ci_targets ${target}HostTest)
 endfunction()
 
 enable_testing()
@@ -113,8 +145,16 @@ include(plugins/FwVocalLeveler/plugin.cmake)
 include(plugins/FwVocalChain/plugin.cmake)
 include(plugins/FwPitchBend/plugin.cmake)
 
+if(FLATWATER_TOOLS)
+    # Everything a host sees without audio: buses, latency, programs, every parameter's text across its range.
+    juce_add_console_app(ParamDump PRODUCT_NAME "ParamDump")
+    target_sources(ParamDump PRIVATE tools/ParamDump.cpp)
+    target_compile_definitions(ParamDump PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+    target_link_libraries(ParamDump PRIVATE juce::juce_audio_processors juce::juce_gui_basics juce::juce_recommended_config_flags)
+endif()
+
 # Windows-only check that the plugins leave the keyboard to the host (tools/FocusCheck.cpp)
-if(WIN32)
+if(WIN32 AND FLATWATER_TOOLS)
     juce_add_console_app(FocusCheck PRODUCT_NAME "FocusCheck")
     target_sources(FocusCheck PRIVATE tools/FocusCheck.cpp)
     target_compile_definitions(FocusCheck PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_MODAL_LOOPS_PERMITTED=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
@@ -131,6 +171,12 @@ if(WIN32)
     target_sources(RefRender PRIVATE tools/RefRender.cpp)
     target_compile_definitions(RefRender PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
     target_link_libraries(RefRender PRIVATE juce::juce_audio_processors juce::juce_gui_basics juce::juce_recommended_config_flags)
+
+    # films / screenshots a plug-in's editor while audio plays (tools/RefCapture.cpp)
+    juce_add_gui_app(RefCapture PRODUCT_NAME "RefCapture")
+    target_sources(RefCapture PRIVATE tools/RefCapture.cpp)
+    target_compile_definitions(RefCapture PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+    target_link_libraries(RefCapture PRIVATE juce::juce_audio_processors juce::juce_gui_basics juce::juce_recommended_config_flags)
 
     # decodes Ogg Vorbis to raw float32, for test material from Ogg-coded samples (tools/OggDecode.cpp)
     juce_add_console_app(OggDecode PRODUCT_NAME "OggDecode")

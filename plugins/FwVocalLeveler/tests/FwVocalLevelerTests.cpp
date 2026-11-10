@@ -10,7 +10,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "dsp/Ride.h"
+#include "dsp/Engine.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
