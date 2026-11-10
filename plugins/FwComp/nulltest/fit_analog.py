@@ -1,54 +1,80 @@
-"""Flatwater Comp Phase 4: fit the Analog stage, y = x + H2( g( H1(x) ) ) (a Wiener-Hammerstein offset added to the signal),
-on the datasets of probe_analog.py collect.
+"""Flatwater Comp Phase 4: the Analog stage, general form: y = L(x) + H2( g( H1(x) ) ), on the datasets of probe_analog.py.
 
-    python -I fit_analog.py <mode> [nfev]       writes build/hc_analog<mode>_fit.json
+    python -I fit_analog.py <mode> [nfev]       writes build/hc_analog<mode>_fit2.json
+    ANALOG_PREFIX=hd: the reference's datasets (plugins/FwDelay/nulltest/measure_analog.py), build/hd_analog<mode>_fit2.json, starting from the reference's
+    fit of the same mode; "export" then writes measurements/FwDelay/analog_model.json
 
-H1, H2: cascades of first-order sections (1 + s/wz) / (1 + s/wp) (bilinear); g(u) = -w u / (1 + |u|^p)^(1/p).
+L: gain times first-order sections; H1, H2: first-order sections (1 + s/wz) / (1 + s/wp) (bilinear); g a table over u
+(piecewise linear, knots on a log-like scale, both signs: odd and even parts free).
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-from scipy import signal, optimize
+from scipy import optimize
+import fit_analog_offset as F
 
-FS = 48000
-BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
-N1, N2 = 3, 2
-
-
-def section(fz, fp):
-    wz, wp = 2 * np.pi * fz, 2 * np.pi * fp
-    # prewarped bilinear of (1 + s/wz) / (1 + s/wp)
-    k = 2 * FS
-    b = np.array([1 + k / wz, 1 - k / wz]); a = np.array([1 + k / wp, 1 - k / wp])
-    return b / a[0], a / a[0]
+BUILD = F.BUILD
+PREFIX = os.environ.get('ANALOG_PREFIX', 'hc')
+NL, N1, N2 = 2, 3, 2
+POS = np.array([1e-4, 2e-4, 4e-4, 7e-4, 1e-3, 1.5e-3, 2.2e-3, 3.3e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2, 0.4, 0.7, 1.2])
+KN = np.concatenate([-POS[::-1], [0.0], POS])
 
 
-def cascade(x, logf):
-    for i in range(0, len(logf), 2):
-        b, a = section(np.exp(logf[i]), np.exp(logf[i + 1]))
-        x = signal.lfilter(b, a, x)
-    return x
+BP_MODES = tuple(int(m) for m in os.environ.get('ANALOG_BP', '3').split(','))   # H1 starts with a band-pass biquad (f0, Q): the
+# broad dip of mode 3 (mode 2 fits as well without); the reference's mode 1 is such a dip too, low (ANALOG_BP=1,3)
+MODE = 0
+
+
+def bandpass(x, lf0, lq):
+    from scipy import signal
+    w0 = 2 * np.pi * np.exp(lf0); Q = np.exp(lq)
+    b, a = signal.bilinear([1 / (Q * w0), 0.0], [1 / w0 ** 2, 1 / (Q * w0), 1.0], FS_)
+    return signal.lfilter(b, a, x)
+
+
+FS_ = 48000
+
+
+def split(q):
+    i = 0
+    lL = q[i:i + 2 * NL]; i += 2 * NL
+    l1 = q[i:i + 2 * N1]; i += 2 * N1
+    l2 = q[i:i + 2 * N2]; i += 2 * N2
+    gain = q[i]; i += 1
+    tab = q[i:i + len(KN)]; i += len(KN)
+    bp = q[i:i + 2]
+    return lL, l1, l2, gain, tab, bp
+
+
+def gfun(u, tab):
+    # linear beyond the table ends (the last slope)
+    y = np.interp(u, KN, tab)
+    sl_hi = (tab[-1] - tab[-2]) / (KN[-1] - KN[-2]); sl_lo = (tab[1] - tab[0]) / (KN[1] - KN[0])
+    y = np.where(u > KN[-1], tab[-1] + sl_hi * (u - KN[-1]), y)
+    return np.where(u < KN[0], tab[0] + sl_lo * (u - KN[0]), y)
 
 
 def model(q, x):
-    l1, l2 = q[:2 * N1], q[2 * N1:2 * N1 + 2 * N2]
-    lw, ls, lp, gl = q[2 * N1 + 2 * N2:2 * N1 + 2 * N2 + 4]
-    u = cascade(x, l1) / np.exp(ls)
-    p = np.exp(lp)
-    g = -np.exp(lw) * u / (1 + np.abs(u) ** p) ** (1 / p)
-    return x * (1 + gl) + cascade(g, l2)
+    lL, l1, l2, gain, tab, bp = split(q)
+    u = F.cascade(bandpass(x, *bp) if len(bp) == 2 else x, l1)
+    return (1 + gain) * F.cascade(x, lL) + F.cascade(gfun(u, tab - np.interp(0.0, KN, tab)), l2)
 
 
-def q0():
-    # H1: a lead around 30-100 Hz and a lag above ~1.5 kHz; H2 flat
-    l1 = np.log([30.0, 300.0, 1e5, 1500.0, 1e5, 1e5])
-    l2 = np.log([1e5, 1e5, 1e5, 1e5])
-    return np.concatenate([l1, l2, [np.log(0.001), np.log(0.0007), np.log(2.0), 0.0]])
-
-
-def load(mode):
-    cs = list(np.load(os.path.join(BUILD, '%s_analog%d.npz' % (os.environ.get('ANALOG_PREFIX', 'hc'), mode)), allow_pickle=True)['cases'])
-    return [c for c in cs if np.abs(c['x']).max() < 0.75]
+def q_init(mode):
+    p = os.path.join(BUILD, 'hc_analog4_fit.json')
+    q4 = np.array(json.load(open(p))['q'])
+    l1 = q4[:6]; l2 = q4[6:10]; w, s, pp = np.exp(q4[10:13])
+    u = KN / s
+    tab = -w * u / (1 + np.abs(u) ** pp) ** (1 / pp) if mode == 4 else np.zeros(len(KN))
+    lL = np.log([1e5, 1e5, 1e5, 1e5])
+    if mode in BP_MODES:
+        # the dip: about 0.43 of the signal subtracted around 2 kHz at low levels, saturating near 0.05 (mode 3);
+        # a tenth of that for mode 2
+        k, sat = (0.43, 0.05) if mode == 3 else (0.09, 0.01)
+        tab = -k * KN / np.sqrt(1 + (k * KN / sat) ** 2)
+        l1 = np.log([1e5, 1e5, 1e5, 1e5, 1e5, 1e5]); l2 = np.log([1e5, 1e5, 1e5, 1e5])
+        return np.concatenate([lL, l1, l2, [0.0], tab, [np.log(2000.0), np.log(0.5)]])
+    return np.concatenate([lL, l1, l2, [q4[13] if mode == 4 else 0.0], tab])
 
 
 def residuals(q, cs, seg=slice(12000, 36000)):
@@ -56,8 +82,7 @@ def residuals(q, cs, seg=slice(12000, 36000)):
     for c in cs:
         x = c['x'].astype(np.float64); y = c['y'].astype(np.float64)
         m = model(q, x)
-        d = y - x
-        r.append((y[seg] - m[seg]) / (np.std(d[seg]) + 1e-4))
+        r.append((y[seg] - m[seg]) / (np.std((y - x)[seg]) + 1e-4))
     return np.concatenate(r)
 
 
@@ -67,19 +92,42 @@ def report(q, cs):
         x = c['x'].astype(np.float64); y = c['y'].astype(np.float64); s = slice(12000, None)
         m = model(q, x)
         rows.append((20 * np.log10(np.std(y[s] - m[s]) / np.std(y[s])), 20 * np.log10(np.std(y[s] - x[s]) / np.std(y[s])), c['name']))
-    for r in sorted(rows): print('  null %6.1f dB (vs no model %6.1f): %s' % r)
+    rows.sort()
+    for r in rows[::4] + rows[-6:]: print('  null %6.1f dB (vs no model %6.1f): %s' % r)
     print('median null %.1f dB' % np.median([r[0] for r in rows]))
 
 
-if __name__ == '__main__':
+def main():
     mode = int(sys.argv[1]); nfev = int(sys.argv[2]) if len(sys.argv) > 2 else 60
-    cs = load(mode)
-    out = os.path.join(BUILD, 'hc_analog%d_fit.json' % mode)
-    q = np.array(json.load(open(out))['q']) if os.path.exists(out) else q0()
+    cs = F.load(mode)
+    out = os.path.join(BUILD, '%s_analog%d_fit2.json' % (PREFIX, mode))
+    start = os.path.join(BUILD, 'hc_analog%d_fit2.json' % mode)
+    q = np.array(json.load(open(out if os.path.exists(out) else start))['q']) if os.path.exists(out) or os.path.exists(start) else q_init(mode)
     r = residuals(q, cs); print('start %.4f' % np.sqrt(np.mean(r ** 2)), flush=True)
     s = optimize.least_squares(residuals, q, args=(cs,), diff_step=1e-4, max_nfev=nfev, loss='soft_l1', f_scale=0.3)
     q = s.x; r = residuals(q, cs); print('fit %.4f' % np.sqrt(np.mean(r ** 2)))
-    json.dump({'q': list(map(float, q)), 'N1': N1, 'N2': N2}, open(out, 'w'))
-    print('H1 f', np.round(np.exp(q[:2 * N1]), 1), 'H2 f', np.round(np.exp(q[2 * N1:2 * N1 + 2 * N2]), 1),
-          'w %.6f s %.6f p %.3f gain %.5f' % (np.exp(q[-4]), np.exp(q[-3]), np.exp(q[-2]), q[-1]))
+    json.dump({'q': list(map(float, q)), 'NL': NL, 'N1': N1, 'N2': N2, 'knots': KN.tolist()}, open(out, 'w'))
+    lL, l1, l2, gain, tab, bp = split(q)
+    if len(bp): print('band-pass f0 %.1f Q %.3f' % tuple(np.exp(bp)))
+    print('L f', np.round(np.exp(lL), 1), 'H1 f', np.round(np.exp(l1), 1), 'H2 f', np.round(np.exp(l2), 1), 'gain %.5f' % gain)
+    print('g', np.round(tab * 1e3, 4))
     report(q, cs)
+
+
+def export():
+    """measurements/FwComp/analog_model.json from the fits (a mode not fitted yet: its starting point)."""
+    modes = {}
+    for m in (1, 2, 3, 4):
+        p = os.path.join(BUILD, '%s_analog%d_fit2.json' % (PREFIX, m))
+        if PREFIX == 'hd' and m == 4 and not os.path.exists(p): p = os.path.join(BUILD, 'hc_analog4_fit2.json')   # (the reference's)
+        modes[str(m)] = json.load(open(p))['q'] if os.path.exists(p) else list(map(float, q_init(m)))
+        print('mode', m, 'fitted' if os.path.exists(p) else 'NOT fitted (start values)')
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwDelay' if PREFIX == 'hd' else 'FwComp', 'analog_model.json')
+    json.dump({'NL': NL, 'N1': N1, 'N2': N2, 'knots': KN.tolist(), 'modes': modes, 'bandpass_modes': list(BP_MODES),
+               'model': 'y = (1 + gain) L(x) + H2(g(H1(x))) + noise; q = [L (log fz, log fp) x NL, H1 x N1, H2 x N2, gain, g on knots, (log f0, log Q of a band-pass before H1, bandpass_modes only)]'},
+              open(out, 'w'), indent=1)
+    print('wrote', out)
+
+
+if __name__ == '__main__':
+    export() if sys.argv[1] == 'export' else main()

@@ -10,8 +10,8 @@ Results: measurements/FwPitchBend/mods/<experiment>.json
 import sys, os, json, math
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-import vb as H
-import editor_state as S
+import pb_ref as H
+import editor_state_lib as S
 
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwPitchBend', 'mods')

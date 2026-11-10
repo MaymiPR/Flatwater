@@ -2,7 +2,7 @@
 the detector-pinning set (pin.json), the Decay-0 tone set across frequency (raw_decay0.json) and level sweeps."""
 import sys, json, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import numpy as np, model as M
+import numpy as np, model_lib as M
 from scipy.optimize import least_squares
 FS = 48000; F = 80.0
 D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift")

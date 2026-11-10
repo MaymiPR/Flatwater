@@ -39,7 +39,7 @@ and -36.0 dB on its default Stereo colour; the Bass, Treble and Reverb stages al
 the chain with the doubler clear reaches -32.1 and -35.5 dB. The 43 factory presets, which carry the original's values
 under Flatwater names, have a median of -30.1 dB. The doubler's Wide and Spreader colours are pitch shifters that pick
 their splice points from the signal, so they do not null sample for sample; their level, spectrum and delay range
-match the original's. Every case: [NULLTESTS.md](NULLTESTS.md) and [NULLTESTS-presets.md](NULLTESTS-presets.md).
+match the original's. Every case: [NULLTESTS.md](NULLTESTS.md) and [the presets null test](NULLTESTS.md#presets).
 
 ## How it was made
 

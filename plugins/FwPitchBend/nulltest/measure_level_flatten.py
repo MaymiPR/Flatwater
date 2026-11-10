@@ -22,12 +22,12 @@ import sys, os, json, hashlib, math
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import measure_shifter as M
-import score_shifter as O
-import vb as H
+import check_shifter as O
+import pb_ref as H
 
 FS = M.FS
 OUT = os.path.join(M.OUT, 'level_flatten.json')
-# the preset array's places for the M1 step sequence and the Pitch target's first slot (editor_state.py)
+# the preset array's places for the M1 step sequence and the Pitch target's first slot (editor_state_lib.py)
 M_TYPE, M_STEPS, PITCH_SLOT0 = 420, 416, 1457
 NOTES = {0: 'C2', 5: 'F2', 12: 'C3', 18: 'F#3', 23: 'B3'}
 
@@ -53,7 +53,7 @@ SETTINGS = ([(k, 0, None) for k in (0, 5, 12, 18, 23)] + [(0, p, None) for p in 
 
 
 def mod_job(x, base_st, mod_st, flatten=None):
-    """the reference with Pitch at base_st (cents through the state) and mod_st more through M1 (a constant step
+    """The reference with Pitch at base_st (cents through the state) and mod_st more through M1 (a constant step
     sequence on the Pitch target's slot 0)"""
     s = {M.SEMITONES: 0, M.PITCH: 100.0 * base_st, M.FORMANT: 0.0, M.MIX: 100.0, M_TYPE: 1, M_STEPS: 4,
          PITCH_SLOT0: mod_st / 0.24, PITCH_SLOT0 + 1: 1}
@@ -79,7 +79,7 @@ def render_ref(jobs):
     from concurrent.futures import ThreadPoolExecutor
     todo = [j for j in jobs if not os.path.exists(os.path.join(M.CACHE, j['key'] + '.npy'))]
     if todo:
-        import editor_state as S
+        import editor_state_lib as S
         for j in [j for j in todo if j['state']]:
             j['statefile'] = S.state_file(j['state'], 'pbs_' + j['key'], H.COMPONENTS[1].split('@')[0], check=False, shapes=j.get('shapes'))
         print('rendering %d of %d (reference)' % (len(todo), len(jobs)), flush=True)
@@ -163,7 +163,7 @@ def main_grid(cmd):
 
 
 def main_modpath():
-    """the reference: Pitch through modulation against the same Pitch set directly; level, f0 and (vowels) the
+    """The reference: Pitch through modulation against the same Pitch set directly; level, f0 and (vowels) the
     envelope shift (harmonic amplitudes against the resonators, measure_shifter.env_shift_fit)"""
     mats = {'vowel a 150 Hz': (M.vowel(3, 150)[0], 'a'), 'vowel i 300 Hz': (M.vowel(3, 300, formants=M.VOWELS['i'])[0], 'i'),
             'noise': (M.noise(3), None)}

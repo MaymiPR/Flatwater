@@ -14,4 +14,4 @@ for c in "$@"; do
     D="$D drag=$x,$y,3,0,wheel drag=$x,$y,-3,0,wheel drag=$x,$y,3,0,wheelctrl drag=$x,$y,-3,0,wheelctrl"
 done
 timeout 900 "$MC" "$vst" "$name" x.raw design=$design $EXTRA $D > feel_$tag.log 2>&1
-py -3.15 -I "$NT"/parse_drags_any.py feel_$tag.log > feel_$tag.txt
+py -3.15 -I "$NT"/read_drags_any.py feel_$tag.log > feel_$tag.txt

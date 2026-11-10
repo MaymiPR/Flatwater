@@ -10,5 +10,5 @@ for mode in "plain:50" "plain:5" "ctrl:50" "ctrl:5"; do
     for c in "${ctl[@]}"; do IFS=, read x y dx dy <<< "$c"; D="$D drag=$x,$y,$dx,$dy,$mm,$st"; done
     timeout 300 "$MC" "$vst" "$name" x.raw design=$design $D > ff_$tag.log 2>&1
     echo "-- $m, steps $st" >> ffeel_$tag.txt
-    py -3.15 -I "$NT"/parse_drags_any.py ff_$tag.log >> ffeel_$tag.txt
+    py -3.15 -I "$NT"/read_drags_any.py ff_$tag.log >> ffeel_$tag.txt
 done

@@ -1,17 +1,18 @@
-"""Null test of Flatwater Comp's factory presets against the reference H-Comp with the same settings (the reference's own
+"""Null test of Flatwater Comp's factory presets against the reference with the same settings (the reference's own
 presets): each preset on program-like signals, with Analog Off (the compressor alone) and with the preset's Analog
 mode (modes 1-3 add random noise that no null can remove).
 
-    python -I null_presets.py [--out plugins/FwComp/NULLTESTS-presets.md]
+    python -I null_presets.py [--save]
 """
 import sys, os, re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwVocalComp', 'nulltest'))   # plugins/FwVocalComp/nulltest/
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import null_fwcomp as N
-import null_fwvocalcomp as NV
+import co_ref as N
+import vc_ref as NV
 import refhost as R
+import co_ref as CO
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PRESETS = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwComp', 'Source', 'Presets.h')
@@ -40,7 +41,7 @@ def presets():
 
 
 def main():
-    out_md = sys.argv[sys.argv.index('--out') + 1] if '--out' in sys.argv else None
+    save = '--save' in sys.argv
     S = N.signals(48000)
     rows = []
     for group, name, v in presets():
@@ -54,7 +55,7 @@ def main():
             for sig in SIGNALS:
                 x = np.stack([S[sig], S[sig]]).astype(np.float32)
                 a = N.ours(x, 48000, v['threshold'], v['ratio'], v['attack'], rel, v['punch'], v['mix'], v['output'], lim, analog)
-                b = R.render_hc(x, 48000, threshold=v['threshold'], ratio=v['ratio'], attack=v['attack'], release=v['release'],
+                b = CO.render_ref(x, 48000, threshold=v['threshold'], ratio=v['ratio'], attack=v['attack'], release=v['release'],
                                 punch=v['punch'], mix=v['mix'], output=v['output'], limiter=lim, analog=analog or 'Off',
                                 sync=['BPM', 'Host', 'ms'][sync], releasebpm=NOTES[note])
                 res[(analog, sig)] = NV.residual_db(a[0], b[0], int(0.5 * 48000))
@@ -63,8 +64,9 @@ def main():
                                                 ' '.join('%6.1f' % res[(int(v['analog']), s_)] for s_ in SIGNALS)), flush=True)
     off = np.array([[r[3][(0, s_)] for s_ in SIGNALS] for r in rows])
     print('median with Analog Off: %.1f dB; per signal %s' % (np.median(off), ' '.join('%.1f' % m for m in np.median(off, 0))))
-    if out_md:
-        with open(out_md, 'w', encoding='utf-8') as f:
+    if save:
+        import report_lib as RL
+        with RL.Part('FwComp', 'presets', 'Presets') as f:
             f.write('# Flatwater Comp factory presets: null test\n\nEach preset against the reference H-Comp with the same settings (48 kHz, residual after 0.5 s, '
                     'dB re the reference output). "Analog Off" shows the compressor alone; the second set uses the preset\'s Analog mode '
                     '(modes 1-3 add random noise, which no null can remove). Produced by `plugins/FwComp/nulltest/null_presets.py`.\n\n')

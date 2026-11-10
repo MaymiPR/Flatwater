@@ -1,4 +1,4 @@
-"""Fits the reference H-Delay's output meter housing (reference/hdelay/st_1_hover.png, git-ignored) as a shading model
+"""Fits the reference's output meter housing (reference/fwdelay/st_1_hover.png, git-ignored) as a shading model
 (a measurement): the frame (black outline to the window) as colour against the depth in from the outline, per side; the
 window as a sum of three column profiles times row profiles (a rank-3 fit), the printed scale and the triangles masked
 out by an iterative robust fit. It prints a report (the fit's error) and writes nothing: the editor draws the meter in
@@ -6,10 +6,13 @@ code from the measured geometry.
 
     python -I plugins/FwDelay/scripts/fit_meter_housing.py
 """
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+import local_config_lib as LC
 import numpy as np
 from PIL import Image
 
-SHOT = 'reference/hdelay/st_1_hover.png'
+SHOT = LC.local_file('reference/fwdelay/st_1_hover.png')
 OX0, OY0, OX1, OY1 = 600.0, 69.0, 646.0, 262.0         # the outline's outer edge (measured: black at x 600, 645, y 69, 261)
 WX0, WY0, WX1, WY1 = 607.0, 76.0, 639.0, 254.0         # the window (inside the frame's dark inner line)
 STEP, NBIN, NB, RANK = 1.0, 8, 8, 3

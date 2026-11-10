@@ -1,4 +1,4 @@
-"""Flatwater Comp Phase 4: refine H-Comp's gain path on the clean spike / burst cases (fit_struct.py, output -18 dB so the
+"""Flatwater Comp Phase 4: refine the reference's gain path on the clean spike / burst cases (fit_struct.py, output -18 dB so the
 output limiter never acts).
 
 Structure (found by fit_struct.py): h = max |x| over 64 look-ahead samples; gt = static gain(h); g1 = one-pole on
@@ -15,7 +15,7 @@ import measure_reference as M
 from fit_struct import cases
 
 FS = 48000
-from model import static_gain_db
+from model_lib import static_gain_db
 
 
 def g1_of(a, att_ms, rel_samples, H=64, lead=0, thr=-30.0, rat=50.0):

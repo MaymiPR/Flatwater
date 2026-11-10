@@ -2,6 +2,8 @@
 
 Flatwater BassX Lift against MaxxBass, case by case (written by `plugins/FwBassXLift/nulltest/nulltest.py`; the JSON beside this file holds the same rows).
 
+## Settings
+
 | Freq | Ratio | Response | Decay | High-pass | Original Bass | Harmonics | Signal | Total residual (dB) | Generated part (dB) |
 |---|---|---|---|---|---|---|---|---|---|
 | 80 | 1.00 | 20 | -15 | 12 | +0 | +0 | sine 30 Hz -20 dBFS | -49.3 | -33.5 |
@@ -102,3 +104,33 @@ Flatwater BassX Lift against MaxxBass, case by case (written by `plugins/FwBassX
 | 120 | 2.50 | 25 | -18 | 24 | -inf | +0 | kick-like | -19.8 | -20.1 |
 
 Median total -48.5 dB (worst 1.0); median generated part -42.7 dB (worst 3.1); 96 cases.
+
+## Grid
+
+Random settings over every control (seeded, `plugins/FwBassXLift/nulltest/null_grid.py`), four signals each; the data
+is `measurements/FwBassXLift/nulltests-grid.json`.
+
+480 cases: whole output median -35.2 dB (90 % -23.7, worst -4.6); generated part median -29.2 dB (90 % -19.0, worst -1.3).
+
+| band | cases | generated part median (dB) | 90 % (dB) |
+|---|---|---|---|
+| Freq (Hz) 32 to 50 | 104 | -30.5 | -22.5 |
+| Freq (Hz) 50 to 80 | 100 | -28.5 | -20.0 |
+| Freq (Hz) 80 to 128 | 96 | -28.6 | -17.8 |
+| Freq (Hz) 128 to 200 | 124 | -29.2 | -18.8 |
+| Freq (Hz) 200 to 257 | 56 | -29.0 | -15.3 |
+| Ratio 1 to 1.001 | 124 | -32.2 | -18.5 |
+| Ratio 1.001 to 1.5 | 92 | -28.3 | -18.0 |
+| Ratio 1.5 to 2.5 | 128 | -26.6 | -19.9 |
+| Ratio 2.5 to 4.01 | 136 | -31.1 | -19.5 |
+| Decay (dB) -24 to -20 | 144 | -28.9 | -20.9 |
+| Decay (dB) -20 to -16 | 136 | -30.9 | -21.4 |
+| Decay (dB) -16 to -12 | 120 | -29.2 | -17.2 |
+| Decay (dB) -12 to -8.9 | 80 | -27.8 | -15.0 |
+| High-pass index 0 to 1 | 168 | -29.6 | -20.6 |
+| High-pass index 1 to 2 | 172 | -29.7 | -19.1 |
+| High-pass index 2 to 3 | 140 | -28.0 | -17.4 |
+| bass notes | 120 | -26.8 | -22.1 |
+| kick-like | 120 | -20.8 | -13.5 |
+| sine 50 Hz -12 dBFS | 120 | -35.8 | -28.9 |
+| pink-ish noise -20 rms | 120 | -34.6 | -27.3 |

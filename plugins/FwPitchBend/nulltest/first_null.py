@@ -1,9 +1,9 @@
 """The first null test of Flatwater Pitch Bend: proves the hosts and the build before any DSP is written (the house
 workflow's Phase 0 gate). PASS / FAIL per check:
 
-  1. the reference renders (Stereo and Mono components): not silent, no latency reported
-  2. the reference's host Bypass is the input: below -80 dB
-  3. the reference renders the same twice (fresh instances, the shifter on: Pitch -5): below -120 dB (determinism)
+  1. The reference renders (Stereo and Mono components): not silent, no latency reported
+  2. The reference's host Bypass is the input: below -80 dB
+  3. The reference renders the same twice (fresh instances, the shifter on: Pitch -5): below -120 dB (determinism)
   4. our renderer at Mix 0 is the input: below -100 dB
   5. our VST3 at Mix 0 is the input: below -100 dB (the build and the renderer agree on the dry path)
   6. our VST3 equals our renderer at the defaults and at Mix 50: below -100 dB
@@ -13,7 +13,7 @@ workflow's Phase 0 gate). PASS / FAIL per check:
 import sys, os, re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-import vb as H
+import pb_ref as H
 
 FS = 48000
 

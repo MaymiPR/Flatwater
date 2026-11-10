@@ -8,7 +8,7 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 | Item | Value |
 |---|---|
 | Reference | H-Delay (Waves), the H-Delay Stereo, Mono and Mono/Stereo components, from a licensed install |
-| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/hd.py`); the measured values are in `measurements/FwDelay/results.json` and the measured echo kernels in `measurements/FwDelay/kernel_*.csv`; 48 kHz unless noted |
+| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/de_ref.py`); the measured values are in `measurements/FwDelay/results.json` and the measured echo kernels in `measurements/FwDelay/kernel_*.csv`; 48 kHz unless noted |
 | Defaults of the probes | Analog Off, Feedback 0, Mix 100, Delay 375 ms, small impulses (0.001) |
 | Pre-roll | the reference shows but does not process values set before its first block, so RefRender renders a silent pre-roll (`preroll=`) and sets the values after its first block; both sides get the same pre-roll in whole blocks (a 3 s pre-roll is 144 384 samples, not 144 000, which matters while a glide or the LFO runs) |
 | First block | the reference's first block runs at its defaults, Analog mode 2 included, and puts that noise into its delay line; cases start with Feedback 0 and set the case's Feedback at the input's start |
@@ -91,7 +91,7 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 |---|---|---|---|
 | Position | colours the input before the dry / wet split, so the dry and the delayed signal both carry it (with Mix 50 its noise comes back in the echo at a correlation of 0.50 at the delay's lag) | noise correlation | measured |
 | Mode 4 | Flatwater Comp's mode 4: its fitted model applied to the reference's Analog-Off output | renders | -100 dB (peaks 0.55), -79 dB (peaks 0.06) |
-| Modes 1 to 3 | not Flatwater Comp's, although the original's Analog settings carry the same numbers (no Comp mode nulls them better than -31 dB); fitted with Flatwater Comp's model on the reference's own data (`plugins/FwDelay/nulltest/measure_analog.py`, `plugins/FwComp/nulltest/fit_analog2.py` with `ANALOG_PREFIX=hd`), exported by `plugins/FwDelay/scripts/export_analog_tables.py` to `plugins/FwDelay/Source/dsp/AnalogTables.h`: mode 1 with its low dip as a band-pass before H1, mode 3 with a band-pass at 71 Hz, Q 0.41 | the 54-case probe set | median mode 1 -53.0 dB, mode 2 -41.6, mode 3 -41.3; the quietest probes limited by the modes' own noise |
+| Modes 1 to 3 | not Flatwater Comp's, although the original's Analog settings carry the same numbers (no Comp mode nulls them better than -31 dB); fitted with Flatwater Comp's model on the reference's own data (`plugins/FwDelay/nulltest/measure_analog.py`, `plugins/FwComp/nulltest/fit_analog.py` with `ANALOG_PREFIX=hd`), exported by `plugins/FwDelay/scripts/export_analog_tables.py` to `plugins/FwDelay/Source/dsp/AnalogTables.h`: mode 1 with its low dip as a band-pass before H1, mode 3 with a band-pass at 71 Hz, Q 0.41 | the 54-case probe set | median mode 1 -53.0 dB, mode 2 -41.6, mode 3 -41.3; the quietest probes limited by the modes' own noise |
 | Small-signal responses | at -30 dBFS (noise in, `results.json` `analog`): mode 1 a low cut (-3.6 dB at 30 Hz, -0.3 dB in the mids); mode 2 a high shelf (-0.67 dB below 200 Hz, -1.55 dB above 4 kHz); mode 3 a deep dip near 100 Hz (-13.9 dB) that depends on level; mode 4 within 0.9 dB | noise | measured |
 | Low-level transfer | modes 1 and 2 agree with the reference at every frequency; mode 3 is off below 1 kHz (the reference 1 dB lower below 20 Hz, up to 1 dB higher around 100 Hz), and the ratio is not a smooth filter: mode 3 is still non-linear at these levels (its single-sine response at -50 dBFS differs from the multitone's) | `plugins/FwDelay/nulltest/probe_analog_tf.py`, a multitone at -60 dBFS per tone, Mix 0 | modes 1 and 2 -50 to -85 dB; mode 3 -18 to -40 dB |
 | Noise | with silence in: -100.9 / -83.7 / -104.0 / -106.8 dBFS for modes 1 to 4, and -122 dBFS even with Off; with Mix 0 -102.7 / -85.5 / -106.0 / -108.9 dBFS; independent per channel | silence | measured |
@@ -112,7 +112,7 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 |---|---|---|---|
 | The delay path | the defaults, ms and synced times, the filters, Ping Pong from either side and Feedback up to 200 % | [NULLTESTS.md](NULLTESTS.md) | -84 to -104 dB |
 | Modulation | modulated cases | the same | -60 to -84 dB |
-| Factory presets | the reference's 88 presets loaded as it loads them, against ours with the values as stored | [NULLTESTS-presets.md](NULLTESTS-presets.md) | median -53.2 dB; Analog mode 3 the weakest part (about -41 dB on every material) |
+| Factory presets | the reference's 88 presets loaded as it loads them, against ours with the values as stored | [the presets null test](NULLTESTS.md#presets) | median -53.2 dB; Analog mode 3 the weakest part (about -41 dB on every material) |
 
 ## 11. Declined changes
 

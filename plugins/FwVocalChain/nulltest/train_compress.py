@@ -1,10 +1,10 @@
 """Learned Compress correction for Flatwater Vocal Chain (gray-box, the learned-block procedure in docs/improvements.md): the fitted
-compressor (comp.c, the plug-in's Compressor) stays exact; a small GRU per colour scales its output.
+compressor (Compress.c, the plug-in's Compressor) stays exact; a small GRU per colour scales its output.
 
     out = D(H(u * exp(c)))      c = CMAX tanh(GRU), one step per 4 samples at 48 kHz (12 kHz), each sample taking the
                                 last two finished steps' values, interpolated (causal, as the plug-in can run it)
 
-Inputs per step (prep_compress.py): the detector level, the compressor's and the limiter's reduction, the
+Inputs per step (render_compress_cache.py): the detector level, the compressor's and the limiter's reduction, the
 peak and the power of the compressor's input (dB / 20), and the fader position / 10, each normalised. Loss: the null
 residual of each piece (10 log10 of the residual over the reference, the first quarter second skipped), averaged,
 plus the amount any piece is worse than the fitted model alone (so what nulls already, the tone ladders and the light
@@ -24,7 +24,7 @@ default 1), SUP (the first SUP steps supervised on the reference's gain: per 2 m
 the fitted model's output against the reference, smoothed over 10 ms, weighted by the block's energy), SEL (keep
 the checkpoint with the best held-out mean plus SEL x the mean amount any held-out piece is worse, both floored at
 FLOOR; default 0, the mean alone), TAG (appended to the checkpoint's name), CACHE (the cache's suffix: _wallx for
-prep_compress.py's WALLX=1 cache).
+render_compress_cache.py's WALLX=1 cache).
 """
 import json
 import math
@@ -187,9 +187,9 @@ def train(c, steps=4000, hidden=32, batch=24, lr=3e-3):
 
 
 def exact(c):
-    """whole examples through the exact chain: comp.c, the correction, the colour's filter, the fixed filter and the
+    """whole examples through the exact chain: Compress.c, the correction, the colour's filter, the fixed filter and the
     de-esser computed on the corrected signal"""
-    import prep_compress as Pp
+    import render_compress_cache as Pp
     import null_compress_baseline as Bl
     import fit_compress as F
     torch.backends.cudnn.allow_tf32 = False                      # (full float32, as the plug-in)

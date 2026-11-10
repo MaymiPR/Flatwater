@@ -231,7 +231,7 @@ private:
     int count = 0;
 };
 
-// Compress, as fitted (plugins/FwVocalChain/nulltest/fit_compress.py; plugins/FwVocalChain/nulltest/comp.c is the same algorithm): an input gain into a
+// Compress, as fitted (plugins/FwVocalChain/nulltest/fit_compress.py; plugins/FwVocalChain/nulltest/native/Compress.c is the same algorithm): an input gain into a
 // compressor (stereo-linked; a power or peak detector, the threshold, ratio and knee, attack and a two-stage release),
 // a static shaper (x^2, x |x|, x^3) before or after it, a look-ahead limiter holding the output under its ceiling, an
 // output gain, the learned correction (CompressNet), then the colour's own linear filter (exact per rate). Its
@@ -262,7 +262,7 @@ private:
     CompressNet net;
 };
 
-// The main de-esser, as fitted (plugins/FwVocalChain/nulltest/fit_deess.py; plugins/FwVocalChain/nulltest/deess.c is the same algorithm): a zero-phase high band H
+// The main de-esser, as fitted (plugins/FwVocalChain/nulltest/fit_deess.py; plugins/FwVocalChain/nulltest/native/DeEss.c is the same algorithm): a zero-phase high band H
 // (its taps per rate) is turned down, x - (1 - g) H x; g from two stereo-linked detectors on the signal after the fixed
 // filter: a high-pass one against a threshold that rises with a low-pass one (thr = T + k low, in amplitude), the
 // reduction smoothed (attack, hold, release, a slow stage). The gain is computed lookAhead samples before the audio it

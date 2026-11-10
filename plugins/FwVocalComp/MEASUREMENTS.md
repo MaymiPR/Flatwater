@@ -48,7 +48,7 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_kernel.py` fits the detector o
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | Audio delay | 64 samples (the reported latency); the lengths below scale with it at 88.2 to 192 kHz | the latency report, impulse offsets | exact |
-| Gain hold | the instant gain of each sample held as a minimum over 65 samples | `plugins/FwVocalComp/nulltest/probe_ramp.py`, `plugins/FwVocalComp/nulltest/fit_ramp2.py` | error 0.05 dB around single-sample and 24-sample events |
+| Gain hold | the instant gain of each sample held as a minimum over 65 samples | `plugins/FwVocalComp/nulltest/probe_ramp.py`, `plugins/FwVocalComp/nulltest/fit_gain_hold.py` | error 0.05 dB around single-sample and 24-sample events |
 | Smoothing | two moving averages of 39 and 26 samples in the linear gain domain | the same | the same; the residuals do not depend on the sample rate |
 | Attack as seen from outside | the gain moves ahead of the input step, 0.3 ms before it, and is complete within 0.3 ms; a 1 ms tone burst already gets the full steady-state gain (+8.80 dB at -10 dBFS, Compression -24) | 12 kHz sine steps and bursts | exact |
 
@@ -100,7 +100,7 @@ of the reference's slow path, not an identification of it.
 | Dataset | 3600 random 2 s renders of the reference's mono component (voice, speech-like noise, white and pink noise, tones 25 Hz to 10 kHz, steps, AM, sweeps, drums, mixes; peaks -60 ... 0 dBFS; Compression 0 ... -36 dB, gate off), the plug-in's internals dumped by `VcRender dump=1` (`plugins/FwVocalComp/nulltest/render_trainset.py`) |
 | Training | `plugins/FwVocalComp/nulltest/train_net.py`: supervised on the gain first, then fine-tuned on the null residual with the compression settings balanced; training on the residual alone does not move (the slow ratio gets no gradient while it is above the fast ratio) |
 | Export | `plugins/FwVocalComp/scripts/export_net.py` to `plugins/FwVocalComp/Source/dsp/Net.h` |
-| Result, settings grid (672 cases, 48 kHz) | worst -10.1 dB without the net, -22.8 dB with it; median -71.4 and -70.2 dB; 396 cases below -60 dB either way ([NULLTESTS-grid.md](NULLTESTS-grid.md)) |
+| Result, settings grid (672 cases, 48 kHz) | worst -10.1 dB without the net, -22.8 dB with it; median -71.4 and -70.2 dB; 396 cases below -60 dB either way ([the settings grid](NULLTESTS.md#grid)) |
 | Result, null-test set | worst -9.3 to -19.3 dB; 44 of 117 rows better by more than 1 dB, 4 worse ([NULLTESTS.md](NULLTESTS.md)) |
 | Per signal, Compression -24 / -36, without and with the net | white and pink noise -13 / -10 to -27 / -24 dB (the same at 44.1 to 192 kHz and in stereo); voice-like -31 / -21 to -40 / -30 dB; 100 Hz tone -30 / -24 to -48 / -51 dB; sweeps -36 / -29 to -49 / -48 dB |
 | Cases worse with the net | AM at Compression -12 (-59 to -49 dB); level steps at light compression (grid median at -6 dB: -105 to -88 dB); steady tones unchanged |
@@ -142,6 +142,16 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_gate.py` fits the gate on DC s
 |---|---|
 | Linked stereo at 48 kHz, the learned slow path on | about 3.5 % of one core |
 | Dual mono | about twice that |
+
+## Scripts that replace earlier ones
+
+Every script named on this page by its current name; the earlier names stay in the history.
+
+| Script | Replaces |
+|---|---|
+| `nulltest/fit_gain_hold.py` | the gain hold's length and smoothing (fit_ramp2.py) |
+| `nulltest/vc_ref.py` | the harness and the null test of the settings (null_fwvocalcomp.py) |
+| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer check (check_vst3.py) |
 
 ## Provenance
 

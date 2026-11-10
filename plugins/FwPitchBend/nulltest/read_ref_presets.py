@@ -2,7 +2,7 @@
 in our terms: the controls, the modulators' settings, the modulation slots, and what kind of shape each modulator holds
 (a standard waveform by its math, or a drawn one). Shape points are not written anywhere in the repository: a drawn
 shape is only named "drawn" (the original's shape library is not shipped; presets using a drawn shape get one of
-ours, "shape substituted"). The preset folder is the Vocal Bender folder under local.yaml's ref_presets_dir.
+ours, "shape substituted"). The preset folder is the reference folder under local.yaml's ref_presets_dir.
 
     python -I read_ref_presets.py            -> measurements/FwPitchBend/presets.json (by position) and a table on the console
 """
@@ -10,8 +10,8 @@ import base64, glob, json, os, re, sys, zlib
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import editor_state as S
-import local_config as L
+import editor_state_lib as S
+import local_config_lib as L
 
 PRESETS = os.path.join(L.get('ref_presets_dir'), 'Vocal Bender')
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwPitchBend', 'presets.json')

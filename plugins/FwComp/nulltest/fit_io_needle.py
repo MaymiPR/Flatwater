@@ -1,4 +1,4 @@
-"""Fits H-Comp's In / Out needle (MeterCapture gl=1 films) with the law read off the step tests (MEASUREMENTS.md):
+"""Fits the reference's In / Out needle (MeterCapture gl=1 films) with the law read off the step tests (MEASUREMENTS.md):
 the level is the signal's peak over each frame's interval (dBFS, at least the last 10 ms block) on the strip's 71
 frames, v = 70 (dB + 48) / 48. A rise (level above the needle) shows at once and starts a hold that decays from that
 moment (amplitude x exp(-t / tau)). The first drop after a rise shows the level at once, unless the hold is still

@@ -1,8 +1,8 @@
 """Flatwater Bass Lift: combined fit of the two-detector gain model: time-domain renders (4 Freq settings + transients, as
-fit_multif2.py) together with the steady harmonic and detector-pinning data (as fit_twodet.py)."""
+the joint multi-Freq fit it replaces) together with the steady harmonic and detector-pinning data (as fit_twodet.py)."""
 import sys, json, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import numpy as np, model as M
+import numpy as np, model_lib as M
 from scipy.optimize import least_squares
 import fit_twodet as H                      # harmonic cases and helpers (its fit does not run on import)
 FS = 48000

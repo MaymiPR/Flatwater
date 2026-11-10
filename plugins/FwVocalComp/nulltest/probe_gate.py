@@ -2,10 +2,11 @@
 import sys, os; sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, refhost as R
+import vc_ref as VC
 FS = 48000
 def run(levels_db, durs, gate, comp=0):
     x = np.concatenate([np.full(int(d*FS), 10**(L/20), np.float32) for L, d in zip(levels_db, durs)])
-    y = R.render(x, FS, comp=comp, gate=gate)[0]
+    y = VC.render_ref(x, FS, comp=comp, gate=gate)[0]
     return 20*np.log10(np.abs(y/x)) + 0.0873, x
 out = {}
 for name, lv in (('-20 -> -50 -> -20', (-20, -50, -20)), ('-20 -> -70 -> -20', (-20, -70, -20)), ('-20 -> -42 -> -20', (-20, -42, -20))):

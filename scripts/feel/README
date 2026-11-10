@@ -5,5 +5,5 @@ build/meters with MC=../MeterCapture_artefacts/Release/MeterCapture.exe and NT=.
   fader_feel.sh    drag rates from the default thumbs, a fresh session per mode
   ctrl_feel.sh     200 px Ctrl drags in mouse steps of 1, 2, 3 and 10 px, a fresh session per step size
   midctrl_feel.sh  Ctrl pressed or released half way through a drag, a fresh session per mode
-Logs are parsed by ../parse_drags_any.py. Results: plugins/FwBassXLift/MEASUREMENTS.md, section 10 (Wheel and Ctrl
+Logs are parsed by read_drags_any.py in this folder. Results: plugins/FwBassXLift/MEASUREMENTS.md, section 10 (Wheel and Ctrl
 across the suite's references).

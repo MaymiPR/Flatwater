@@ -23,9 +23,9 @@ OUT = os.path.join(HERE, '..', '..', '..', 'reference', 'fwvocalchain', 'train',
 
 
 def job(args):
-    import cv as C
+    import ch_ref as C
     import nulltest as N
-    import vocal_corpus as V
+    import vocal_corpus_lib as V
     from scipy.signal import resample_poly
     c, v, fs, parts, peaks = args
     old = os.environ.get('WVC_RENDER_OLD')

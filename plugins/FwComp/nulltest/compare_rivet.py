@@ -1,4 +1,4 @@
-"""H-Comp's needle tip and rivet against Flatwater Comp's (needle_set_io.npz / needle_set_wc.npz): patches in needle coordinates
+"""The reference's needle tip and rivet against Flatwater Comp's (needle_set_io.npz / needle_set_wc.npz): patches in needle coordinates
 (s along, n across, 0.1 px), the median over strip positions 3 ... 33. Private helper."""
 import numpy as np
 from scipy import ndimage

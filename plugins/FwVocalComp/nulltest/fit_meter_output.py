@@ -1,4 +1,4 @@
-"""Tries rules for the reference RVox output meter against a tools/MeterCapture recording (frames + output audio).
+"""Tries rules for the reference output meter against a tools/MeterCapture recording (frames + output audio).
 The bar shows the frame's peak p while it is above a falling line; the line falls at `rate` dB/s from a hold value,
 and the rules differ in when the hold restarts.
 

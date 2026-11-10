@@ -6,7 +6,7 @@ on the factory presets' two takes.
                                                          measurements/FwPitchBend/shifter/levelgrid.json
     python -I -B measure_level_grid.py fit     the fit per setting (a straight line in the input's ln kurtosis)
                                                          and the C++ tables plugins/FwPitchBend/Source/dsp/Shifter.cpp carries (printed)
-    python -I -B measure_level_grid.py takes   ours (FW_SHIFTER_RENDER, as score_shifter.py) against
+    python -I -B measure_level_grid.py takes   ours (FW_SHIFTER_RENDER, as check_shifter.py) against
                                                          the reference at fixed settings on the presets' sung and spoken
                                                          takes, mono: level, tone and the tone per band; writes the
                                                          'takes' part of levelgrid.json
@@ -23,8 +23,8 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import measure_shifter as M
-import score_shifter as O
-import vb as H
+import check_shifter as O
+import pb_ref as H
 
 FS = M.FS
 OUT = os.path.join(M.OUT, 'levelgrid.json')

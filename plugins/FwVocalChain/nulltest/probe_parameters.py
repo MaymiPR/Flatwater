@@ -1,4 +1,4 @@
-"""Phase 1 probe of the reference CLA Vocals (WaveShell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
+"""Phase 1 probe of the reference (the shell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
 each one's VST3 parameters (name, default text, the values a host can set; pedalboard hosts only the Stereo one), and
 the reported latency with the real delay of the audio (an impulse in, the output's first peak) at 44.1 / 48 / 96 kHz.
 

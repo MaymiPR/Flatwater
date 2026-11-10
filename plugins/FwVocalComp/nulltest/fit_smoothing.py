@@ -4,7 +4,8 @@
 """
 import sys, os; sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import numpy as np, refhost as R, null_fwvocalcomp as N
+import numpy as np, refhost as R, vc_ref as N
+import vc_ref as VC
 from scipy.optimize import minimize
 FS = 48000
 S = N.signals()
@@ -28,7 +29,7 @@ for nme in ["tone steps -50/-10/-30", "white noise -20 rms", "voice-like", "gate
     cases += [(nme, s) for s in gated]
 REF = {}
 for nme, (c, g, gn) in cases:
-    REF[(nme, c, g, gn)] = R.render(S[nme], FS, comp=c, gate=g, gain=gn)[0]
+    REF[(nme, c, g, gn)] = VC.render_ref(S[nme], FS, comp=c, gate=g, gain=gn)[0]
 print('reference renders cached', len(REF), R.STATS, flush=True)
 DOMAIN = os.environ.get('FWVOCALCOMP_DOMAIN', '0')
 KEYS = os.environ.get('FWVOCALCOMP_KEYS', 'ta1 tr1 ta2 tr2').split()

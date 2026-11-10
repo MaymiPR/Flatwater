@@ -16,8 +16,8 @@ import sys, os, subprocess, tempfile
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from scipy.signal import butter, sosfiltfilt
-import vb as H
-import editor_state as S
+import pb_ref as H
+import editor_state_lib as S
 import measure_mods as MM
 import measure_shifter as MS
 

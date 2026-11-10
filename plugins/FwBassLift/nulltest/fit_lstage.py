@@ -2,7 +2,7 @@
 strong tone), the wide stage held at build/combo.json."""
 import sys, json, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import numpy as np, model as M
+import numpy as np, model_lib as M
 from scipy.optimize import least_squares
 FS = 48000; F = 80.0
 B = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build")

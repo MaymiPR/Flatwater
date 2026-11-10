@@ -41,7 +41,7 @@ Each plug-in's MEASUREMENTS.md holds the block's structure, target, dataset, res
    Losses: the per-example residual in dB; corrections trained on the weak cases with a penalty on any case more
    than 0.5 dB worse (a mean over all cases drowns the weak ones); gradient clipping; steps with NaN skipped. When
    the structure is recursive, train end to end through it: the identified recursion and its exact adjoint in C as
-   an autograd function, the fixed filters as FFT convolutions (Flatwater BassX Lift: `plugins/FwBassXLift/nulltest/generator.c`).
+   an autograd function, the fixed filters as FFT convolutions (Flatwater BassX Lift: `plugins/FwBassXLift/nulltest/native/Generator.c`).
 7. **Add the guards.** The block must not spoil what the identified model already nulls: a floor at the static law's
    ratio of the loudest level of the last second, and no correction while the target is flat for 20 ms (the
    correction fades out over 20 ms). Without them a network costs 10 to 60 dB on steady tones and level steps.

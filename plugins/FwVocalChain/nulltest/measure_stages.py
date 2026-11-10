@@ -1,4 +1,4 @@
-"""Phase 3 measurements of the reference CLA Vocals (Stereo component), through plugins/FwVocalChain/nulltest/cv.py (pedalboard; the
+"""Phase 3 measurements of the reference (Stereo component), through plugins/FwVocalChain/nulltest/ch_ref.py (pedalboard; the
 host's faders and colours; the state's Noise slot). Each section writes its data to the git-ignored
 reference/fwvocalchain/meas/<section>.npz / .json and prints a summary (MEASUREMENTS.md, Flatwater Vocal Chain: Phase 3).
 
@@ -9,7 +9,7 @@ import os
 import sys
 import numpy as np
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import cv as C
+import ch_ref as C
 
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'reference', 'fwvocalchain', 'meas')

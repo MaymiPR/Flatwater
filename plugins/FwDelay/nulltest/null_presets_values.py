@@ -1,16 +1,16 @@
-"""Null test of Flatwater Delay's factory presets against the reference H-Delay with the same preset values: the reference set
+"""Null test of Flatwater Delay's factory presets against the reference with the same preset values: the reference set
 by exact normalised values (its own tapers: Delay's measured table, the rest linear or logarithmic), Flatwater Delay's renderer
 by the values themselves. Both with the same pre-roll and timeline as nulltest.py (Sync, then the time, in the
 pre-roll; Feedback from the input's start). Mix as stored (the presets' own Mix, though loading one leaves Mix alone).
 
-    python -I null_presets_values.py [--quick] [--out report.md]
+    python -I null_presets_values.py [--quick] [--save]
 """
 import sys, os, re, math
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
-import hd as H
+import de_ref as H
 import nulltest as N
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,7 +69,7 @@ def render_pair(x, fs, v):
 def main():
     a = sys.argv[1:]
     quick = '--quick' in a
-    out_md = a[a.index('--out') + 1] if '--out' in a else None
+    save = '--save' in a
     fs = 48000
     S = N.signals(fs)
     lines = ['| group | preset | Analog | ' + ' | '.join(S) + ' |', '|---|---|---|' + '---|' * len(S)]
@@ -81,7 +81,9 @@ def main():
             row.append('%.1f' % N.residual_db(o, r))
         lines.append('| %s | %s | %s | %s |' % (g, name, ['Off', '1', '2', '3', '4'][int(v['analog'])], ' | '.join(row)))
         print(lines[-1], flush=True)
-    if out_md: open(out_md, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
+    if save:
+        import report_lib as RL
+        print('wrote', RL.save('FwDelay', 'presets-values', lines, 'Presets'))
 
 
 if __name__ == '__main__':

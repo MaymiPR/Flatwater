@@ -36,9 +36,9 @@ with open(out, 'w', newline='\n') as f:
     f.write('#pragma once\n// Flatwater Vocal Chain\'s learned Compress correction (per colour %d GRU%s of %d hidden units, %s),\n'
             '// trained on renders of the reference by plugins/FwVocalChain/nulltest/train_compress.py and written by\n'
             '// plugins/FwVocalChain/scripts/export_net.py from build/vocalchainnet/c<colour><tag>.pt (the tags below). Do not edit.\n'
-            '// Inputs per 12 kHz step: see fwvocalchain::CompressNet in Engine.h, normalised by mean and scale. Output:\n'
+            '// Inputs per 12 kHz step: see ch::CompressNet in Engine.h, normalised by mean and scale. Output:\n'
             '// cmax tanh (out), the ln correction of the compressor\'s output. PyTorch GRU layout: rows [reset; update; new].\n\n'
-            'namespace fwvocalchain::compressnet\n{\n' % (M, 's' if M > 1 else '', H, 'their corrections averaged' if M > 1 else 'one net'))
+            'namespace ch::compressnet\n{\n' % (M, 's' if M > 1 else '', H, 'their corrections averaged' if M > 1 else 'one net'))
     f.write('inline constexpr int hidden = %d, inputs = %d, members = %d;\n' % (H, I, M))
     f.write('inline constexpr double cmax = %.17g;\n' % math.log(10 ** (2.0 / 20)))
     for (c, m), ck in cks.items():

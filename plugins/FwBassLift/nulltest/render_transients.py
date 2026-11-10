@@ -4,7 +4,8 @@ never acts) and the limited Intensity 0 render kept too. -> measurements/FwBassL
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import numpy as np, refhost as R, null_fwbasslift as N, model as M
+import numpy as np, refhost as R, bf_ref as N, model_lib as M
+import bf_ref as BF
 from scipy.signal import sosfilt
 FS = 48000
 S = N.signals()
@@ -19,8 +20,8 @@ for F in (80, 160, 256):
     for name, x in sig.items():
         x = np.asarray(x, np.float32)
         hp = sosfilt(M.sos(3, 'high', F), x.astype(np.float64))
-        lo = R.render_rbass(x, FS, freq=F, intensity=-24, hp=1)[0].astype(np.float64)
-        y0 = R.render_rbass(x, FS, freq=F, intensity=0, hp=1)[0].astype(np.float64)
+        lo = BF.render_ref(x, FS, freq=F, intensity=-24, hp=1)[0].astype(np.float64)
+        y0 = BF.render_ref(x, FS, freq=F, intensity=0, hp=1)[0].astype(np.float64)
         out["x_%s_%d" % (name, F)] = x
         out["lin_%s_%d" % (name, F)] = (lo - hp) * 10 ** (24 / 20)     # unlimited generated part at Intensity 0
         out["lim_%s_%d" % (name, F)] = y0 - hp                          # what the reference outputs (limited)

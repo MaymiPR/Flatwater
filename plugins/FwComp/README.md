@@ -39,7 +39,7 @@ Over 14 signals and 12 settings, the median residual against the original is -48
 original's 26 factory presets match at a median of -44.0 dB. It is weakest on low notes under long attacks (30 to 60
 ms: -15 to -20 dB on a bass line). Analog modes 1 to 3 add random noise, as the original does, which no null can
 remove. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the original's own:
-[NULLTESTS-presets.md](NULLTESTS-presets.md).
+[the presets null test](NULLTESTS.md#presets).
 
 ## How it was made
 

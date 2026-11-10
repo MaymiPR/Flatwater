@@ -1,4 +1,4 @@
-"""H-Comp's needle line per strip position (needle_set.npz): a weighted line fit on the red needle (weight = redness),
+"""The reference's needle line per strip position (needle_set.npz): a weighted line fit on the red needle (weight = redness),
 its angle against the uniform strip law, its distance from the pivot, and the colour across it. Private helper."""
 import numpy as np
 from scipy import ndimage

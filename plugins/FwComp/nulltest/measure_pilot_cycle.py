@@ -1,4 +1,4 @@
-"""The gain inside each cycle of a low tone, H-Comp against Flatwater Comp: a -40 dBFS 6170 Hz pilot on the tone, demodulated
+"""The gain inside each cycle of a low tone, the reference against Flatwater Comp: a -40 dBFS 6170 Hz pilot on the tone, demodulated
 from input and output (64-sample latency removed, 1.5 kHz low-pass). Writes build/meters/pilot_cycle_<tag>.png and
 prints the mean gain. Private diagnostic.
     python -I measure_pilot_cycle.py <tag> <tone Hz> <tone dBFS> thr ratio attack release punch"""
@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
-import null_fwcomp as N, refhost as R
+import co_ref as N, refhost as R
 
 fs, F0, LA = 48000, 6170.0, 64
 tag = sys.argv[1]; f, db = float(sys.argv[2]), float(sys.argv[3]); st = [float(v) for v in sys.argv[4:9]]

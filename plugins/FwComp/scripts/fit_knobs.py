@@ -1,13 +1,16 @@
 # Measures the reference Hybrid-line knobs (reference/fwcomp/knobs, git-ignored captures) and prints a report: each
-# knob's radius, edge and cast shadow. It writes nothing; fw::hybrid::Knob is drawn in code in Flatwater's look.
+# knob's radius, edge and cast shadow. It writes nothing; flatwater::hybrid::Knob is drawn in code in Flatwater's look.
 #
 # Each knob body is described in polar coordinates around its centre. For every radial bin the colour is fitted, per
 # channel, as a smooth function of the angle: a constant, three harmonics, two lobes around the highlight direction and
 # the flute harmonic (the 10 lobes of the fluted rim). The fluted edge of the large knobs is fitted as a radius that
 # varies with the angle; the cast shadow as a darkening of the panel. Only these smooth fits are kept: no pixels of
-# the reference are stored. The pointer fin is drawn separately (see shared/ui/HybridUI.cpp).
+# The reference are stored. The pointer fin is drawn separately (see shared/ui/HybridUI.cpp).
 #
 #   python plugins/FwComp/scripts/fit_knobs.py      (numpy, Pillow; run from the repository root)
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+import local_config_lib as LC
 import math, os, re
 import numpy as np
 from scipy import ndimage, optimize
@@ -39,7 +42,7 @@ def basis(th, tk=None, extra=False):
     cols += [np.exp(-(d / math.radians(11)) ** 2), np.exp(-(d / math.radians(28)) ** 2)]
     g = np.exp(-(d / math.radians(40)) ** 2)
     cols += [np.cos(NLOBE * tk), np.sin(NLOBE * tk), g * np.cos(NLOBE * tk), g * np.sin(NLOBE * tk)]
-    if extra:                        # sharper flutes (H-Delay's knobs): their second and third harmonics
+    if extra:                        # sharper flutes (the reference's knobs): their second and third harmonics
         cols += [np.cos(2 * NLOBE * tk), np.sin(2 * NLOBE * tk), np.cos(3 * NLOBE * tk), np.sin(3 * NLOBE * tk)]
     return np.stack(cols, axis=-1)
 NB = 13
@@ -52,7 +55,7 @@ def panel(x, y):
     h = np.where(d >= 52, 1.0, 0.76 + 0.24 * np.sqrt(np.clip(d, 0, 52) / 52))
     return np.stack([187 * v * h, 105 * v * h, 39 * v * h], axis=-1)
 
-# H-Delay's panel (fitted on reference/hdelay, as drawPanel's HDelay model): a base colour with a broad warm highlight at
+# The reference's panel (fitted on reference/fwdelay, as drawPanel's delay model): a base colour with a broad warm highlight at
 # the upper left, darkened toward the bottom and the side edges, a bright line along the top
 HD_PANEL = (183.5, 100.5, 35.97, 42.52, 55.87, 15.76, 107.1, 73.12, 100.4, 105.7, 229.3, 0.2535, 0.229, 22.65, 0.2993, 20.33, 0.7836)
 
@@ -132,7 +135,7 @@ def fit_kind(name, frames, median, cx, cy, rs, rbody, flutes, shadow_out, rfin, 
     X = np.concatenate([p[3] for p in parts]); Y = np.concatenate([p[4] for p in parts])
     K = np.concatenate([np.full(len(p[0]), turn(f)) for p, f in zip(parts, frames)])
     def polar(dx, dy):
-        if dx == 0.0 and dy == 0.0: return T, R               # concentric (H-Comp's knobs): the sampling grid itself
+        if dx == 0.0 and dy == 0.0: return T, R               # concentric (the reference's knobs): the sampling grid itself
         x = X - cx - dx; y = Y - cy - dy
         return np.mod(np.arctan2(x, -y), 2 * np.pi), np.hypot(x, y)
     Tf, Rf = polar(*fo); Tc, Rc = polar(*co)
@@ -168,10 +171,10 @@ def fit_kind(name, frames, median, cx, cy, rs, rbody, flutes, shadow_out, rfin, 
     res['shadow'] = best.x
     return res
 
-def hdelay_kinds():
-    # H-Delay (reference/hdelay/knobs): Feedback, Mix and Output typed to nine values in turn, then a click on the panel
+def delay_kinds():
+    # The reference (reference/fwdelay/knobs): Feedback, Mix and Output typed to nine values in turn, then a click on the panel
     # (f_{4i+4}: all three unselected); the values each frame shows are read back from the capture's log
-    KH = 'reference/hdelay/knobs'
+    KH = LC.local_file('reference/fwdelay/knobs')
     vals = []
     for line in open(KH + '/f.log', encoding='utf-8', errors='replace'):
         if line.startswith('after:'):
@@ -253,7 +256,7 @@ def main():
     kinds = [fit_kind('Small', small, A, 58.25, 344.08, 32.4, 32.4, False, 24, 26.0),
              fit_kind('Large', large, A, 86.07, 218.47, 53.9, 44.0, True, 22, 39.0),
              fit_kind('Huge', huge, B, 320.65, 333.35, 73.0, 59.5, True, 22, 55.0)]
-    kinds += hdelay_kinds()
+    kinds += delay_kinds()
     # a report only: the knobs are drawn in code in Flatwater's look (shared/ui/HybridUI.cpp); the measured radii and centres
     # printed here are what the editors use
     for k in kinds: print(k['name'], 'edge', np.round(k['edge'], 2), 'emin %.2f' % k['emin'], 'shadow', np.round(k['shadow'], 2))

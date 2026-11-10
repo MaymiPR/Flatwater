@@ -2,7 +2,7 @@
 a GRU over Flatwater Comp's own states and settings (render_trainset.py FEATURES, one step per 16 samples) gives a
 correction in dB of the compressor's gain, held over each step and faded out without gain reduction (guard) and while
 the target reduction stays flat (flat_guard: steady tones, which the analytical model nulls already). The loss
-is the null itself: the mean over cases of 10 log10(energy(FwComp x correction - H-Comp) / energy(H-Comp) + 1e-7) from
+is the null itself: the mean over cases of 10 log10(energy(FwComp x correction - the reference) / energy(the reference) + 1e-7) from
 0.3 s for the weak cases (worse than -35 dB without the net), plus a penalty on every case that ends up more than 0.5 dB worse
 than its own null without the net (or than -60 dB, if it was better): the nulls that are good already must stay so.
 The first epochs train on the weak cases alone; the penalty then comes in over 200 epochs.

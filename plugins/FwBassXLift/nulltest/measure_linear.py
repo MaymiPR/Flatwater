@@ -1,17 +1,18 @@
-"""Flatwater BassX Lift identification, step 1: the small-signal transfer of the generated part G (MaxxBass monitor).
+"""Flatwater BassX Lift identification, step 1: the small-signal transfer of the generated part G (the reference monitor).
 Impulse responses at very low level (G is linear there); fitted against products of bilinear Butterworth sections."""
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, scipy.signal as ss
 import refhost as R
+import bx_ref as BX
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassXLift")
 
 
 def gir(a, n=FS, **kw):
     x = np.zeros(2 * n, np.float32); x[n] = a
-    return R.render_mb(x, FS, harmonics_gain=0.0, monitor=1, **kw)[0][n:].astype(np.float64) / a
+    return BX.render_ref(x, FS, harmonics_gain=0.0, monitor=1, **kw)[0][n:].astype(np.float64) / a
 
 
 if __name__ == "__main__":

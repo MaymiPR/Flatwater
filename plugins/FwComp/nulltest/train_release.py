@@ -1,7 +1,7 @@
-"""Flatwater Comp Phase 4: train H-Comp's release law end to end with exact gradients (PyTorch), on the probes exported to
-build/hc_torch_set.npz (fit_release4.py / fit_release6.py cases).
+"""Flatwater Comp Phase 4: train the reference's release law end to end with exact gradients (PyTorch), on the probes exported to
+build/hc_torch_set.npz (the settled probes of fit_release_law.py collectsettled).
 
-Model (as gain_fast6.c): R rises to the target at once and falls at F(R) / (release * w) + A(R) dB/s, never below it;
+Model (the sixth release form, declined: MEASUREMENTS.md section 5): R rises to the target at once and falls at F(R) / (release * w) + A(R) dB/s, never below it;
 ln w = ln w1(R - S1) + m(R / 20, (R - S1) / 10, (R - S2) / 10, (R - S3) / 10, ln(release / 100 ms) / 2), S1..S3 averages
 of R (one-pole on the linear gain; tau1 learned, 30 and 5 ms), all S at S0 after a reset; then the attack one-pole
 (falling only) and the two moving averages (38, 27). F, A, w1 are log tables on knots, m a small MLP.

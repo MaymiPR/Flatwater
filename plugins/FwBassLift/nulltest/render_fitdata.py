@@ -1,4 +1,4 @@
-"""Renders the RBass fitting set: the generated path alone, split off with two Intensity settings (Intensity is an exact
+"""Renders the reference's fitting set: the generated path alone, split off with two Intensity settings (Intensity is an exact
 gain on the generated path), for tones, level steps, two-tones, noise and decaying notes.
     python -I render_fitdata.py [freq]        -> measurements/FwBassLift/fitdata_<freq>.npz (git-ignored)"""
 import sys, os
@@ -7,6 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy.signal import butter, sosfilt
 import refhost as R
+import bf_ref as BF
 
 FS = 48000
 F = float(sys.argv[1]) if len(sys.argv) > 1 else 80.0
@@ -40,8 +41,8 @@ if __name__ == "__main__":
     data = {}
     for name, x in signals().items():
         x32 = x.astype(np.float32)
-        y0 = R.render_rbass(x32, FS, freq=F, intensity=0, hp=1)[0].astype(np.float64)
-        y1 = R.render_rbass(x32, FS, freq=F, intensity=-24, hp=1)[0].astype(np.float64)
+        y0 = BF.render_ref(x32, FS, freq=F, intensity=0, hp=1)[0].astype(np.float64)
+        y1 = BF.render_ref(x32, FS, freq=F, intensity=-24, hp=1)[0].astype(np.float64)
         data["x_" + name] = x32
         data["gen_" + name] = (y0 - y1) / (1 - G24)
         data["orig_" + name] = (y1 - G24 * y0) / (1 - G24)

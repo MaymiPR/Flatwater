@@ -5,6 +5,7 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, refhost as R
+import bf_ref as BF
 FS = 48000; F = 80.0
 
 
@@ -21,8 +22,8 @@ for f0 in (10, 12, 15, 18, 22, 27, 33, 40, 48, 56):
         for LB in (None, -3):
             x = 10 ** (LA / 20) * np.sin(2 * np.pi * f0 * t) + (0 if LB is None else 10 ** (LB / 20) * np.sin(2 * np.pi * fb * t))
             x = x.astype(np.float32)
-            a = R.render_rbass(x, FS, freq=F, intensity=0, hp=1, extra={8: 0})[0].astype(np.float64)
-            b = R.render_rbass(x, FS, freq=F, intensity=-24, hp=1, extra={8: 0})[0].astype(np.float64)
+            a = BF.render_ref(x, FS, freq=F, intensity=0, hp=1, extra={8: 0})[0].astype(np.float64)
+            b = BF.render_ref(x, FS, freq=F, intensity=-24, hp=1, extra={8: 0})[0].astype(np.float64)
             g = (a - b) / (1 - 10 ** (-24 / 20))
             h = [comp(g, k * f0) for k in range(1, 10, 2)]
             out.append(dict(f0=f0, fb=fb, LA=LA, LB=LB, h=[[v.real, v.imag] for v in h]))

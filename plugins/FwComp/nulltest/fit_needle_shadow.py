@@ -1,4 +1,4 @@
-"""Fits H-Comp's needle shadow on the filmed frames (needle_set.npz from the per-position frames): the dial's
+"""Fits the reference's needle shadow on the filmed frames (needle_set.npz from the per-position frames): the dial's
 darkening (1 - frame / clean dial, green channel) outside the red needle, modelled as a Gaussian ridge of depth A and
 width sigma around the needle's segment from radius s0 to s1, translated by (dx, dy). Private measurement helper."""
 import numpy as np

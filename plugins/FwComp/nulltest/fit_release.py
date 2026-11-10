@@ -1,7 +1,7 @@
-"""Flatwater Comp Phase 4: identify H-Comp's release (fast and slow envelopes) on burst responses.
+"""Flatwater Comp Phase 4: identify the reference's release (fast and slow envelopes) on burst responses.
 
     python -I fit_release.py collect     render the reference cases (cached in build/hc_release_cases.npz)
-    python -I fit_release.py fit [mode]  fit the envelope parameters of gain_fast.c
+    python -I fit_release.py fit [mode]  fit the envelope parameters of GainPath.c
 
 Bursts of an alternating signal over a -60 dBFS carrier, output -18 dB (the limiter stays out).
 """
@@ -40,7 +40,7 @@ def load():
 
 
 def model(c, q, mode):
-    import model as H
+    import model_lib as H
     fast_rate, slow_k, charge_ms, att_scale, fast_exp = q
     p = H.params(thr=-30.0, ratio=c['rat'], att_c=np.exp(-1 / (c['att'] * att_scale * 1e-3 * FS)), rel_c=0.0,
                  fast_rate=fast_rate, slow_rate=slow_k / (c['rel'] * 1e-3 * FS), charge_c=np.exp(-1 / (charge_ms * 1e-3 * FS)),

@@ -10,7 +10,7 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 import numpy as np
-import cv as C
+import ch_ref as C
 import nulltest as N
 
 CLEAR = dict(N.CLEAR)

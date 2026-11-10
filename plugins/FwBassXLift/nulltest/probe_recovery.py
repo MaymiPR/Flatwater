@@ -8,7 +8,8 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import refhost as R, extract_g3 as E3
+import refhost as R, fit_gain_trace as E3
+import bx_ref as BX
 
 FS = 48000
 F = float(sys.argv[1]) if len(sys.argv) > 1 else 80.0
@@ -26,7 +27,7 @@ for ratio in (1.0, 2.0, 4.0):
     for resp in (10.0, 20.0, 30.0):
         for gap in (0.01, 0.03, 0.1, 0.3, 1.0):
             x = np.concatenate([np.zeros(int(0.05 * FS)), burst(0.3, -6), np.zeros(int(gap * FS)), burst(0.15, -12), np.zeros(int(0.05 * FS))])
-            G = R.render_mb(x.astype(np.float32), FS, harmonics_gain=0.0, monitor=1, frequency=F, ratio=ratio, response=resp)[0].astype(np.float64)
+            G = BX.render_ref(x.astype(np.float32), FS, harmonics_gain=0.0, monitor=1, frequency=F, ratio=ratio, response=resp)[0].astype(np.float64)
             g, err = E3.extract(x, G, F, 1, -15.0, outer=10, iters=300)
             s0 = int((0.05 + 0.3 + gap) * FS)
             # gain over the probe: the knot values at 0, 2, 5, 10, 20, 50, 100 ms after its onset (dB)

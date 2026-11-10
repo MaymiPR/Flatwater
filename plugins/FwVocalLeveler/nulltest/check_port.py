@@ -1,4 +1,4 @@
-"""The C++ ride (Flatwater Vocal Leveler's processor, run by VlRender) against the fitting model (model.c with the values in
+"""The C++ ride (Flatwater Vocal Leveler's processor, run by VlRender) against the fitting model (RideModel.c with the values in
 plugins/FwVocalLeveler/Source/dsp/Fit.h, as plugins/FwVocalLeveler/scripts/export_fit.py wrote them): the gains should agree to float precision.
 
     python -I check_port.py
@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import render_reference as Q
 import compare_model as E
-import model as M
+import model_lib as M
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', '..', '..', 'build', 'VlRender_artefacts', 'Release', 'VlRender.exe'))

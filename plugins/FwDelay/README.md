@@ -43,7 +43,7 @@ The delay path nulls against the original at -84 to -104 dB: the defaults, ms an
 from either side and Feedback up to 200 %. Modulation matches at -61 to -81 dB, and the original's 88 factory presets
 at a median of -53.2 dB. Analog mode 3 is the weakest part (about -41 dB). Modes 1 to 3 add random noise, as the
 original does, which no null can remove. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the
-original's own: [NULLTESTS-presets.md](NULLTESTS-presets.md).
+original's own: [the presets null test](NULLTESTS.md#presets).
 
 ## How it was made
 

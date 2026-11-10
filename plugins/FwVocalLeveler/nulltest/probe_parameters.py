@@ -1,4 +1,4 @@
-"""Phase 1 probe of the reference Vocal Rider (WaveShell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
+"""Phase 1 probe of the reference (the shell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
 each one's VST3 parameters (name, default text, the values a host can set), the reported latency, the real delay of
 the audio (cross-correlation in and out), the input buses a host sees (tools/RefRender) and the gain it applies to a
 steady voice-like buzz at a few levels (the default Target -21).

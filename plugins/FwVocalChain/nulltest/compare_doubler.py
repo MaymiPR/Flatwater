@@ -16,8 +16,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import cv as C
-import vocal_corpus as V
+import ch_ref as C
+import vocal_corpus_lib as V
 import nulltest as N
 
 FS = 48000

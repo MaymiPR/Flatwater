@@ -290,7 +290,7 @@ private:
         return fw::math::exp (logv[i] + f * (logv[i + 1] - logv[i]));
     }
 
-    // the fourth / fifth form (plugins/FwComp/nulltest/fit_release4.py): the release time shrinks as R rises above two averages of itself,
+    // the fourth / fifth form (declined, off: MEASUREMENTS.md section 5): the release time shrinks as R rises above two averages of itself,
     // a slow one (the reference's Crest detector) and a faster one, so short events release almost at once and long
     // ones at the Release time; after a reset the averages start high (the reference releases slowly at first)
     void stepRelease4 (double t)

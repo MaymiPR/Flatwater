@@ -2,6 +2,7 @@
 import sys, os; sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, refhost as R
+import vc_ref as VC
 FS = 48000; c = -24; M = 10**(-c/20)
 def inv_law(g):           # detected amplitude for a gain g (linear, incl. 0.99)
     return (0.99*M/g - 1)/(M - 1)
@@ -10,7 +11,7 @@ res = {}
 for L in (-10, -20, -30):
     for d in (2, 5, 10, 20, 50, 100, 200, 400, 1000):
         x = np.concatenate([np.full(int(0.5*FS), 10**(base/20)), np.full(int(d/1000*FS), 10**(L/20)), np.full(int(1.6*FS), 10**(base/20))]).astype(np.float32)
-        y = R.render(x, FS, comp=c)[0]
+        y = VC.render_ref(x, FS, comp=c)[0]
         g = np.abs(y/x)
         lev = 20*np.log10(np.maximum(inv_law(g), 1e-9))
         res[(L, d)] = lev

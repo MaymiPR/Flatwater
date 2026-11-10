@@ -12,6 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy.signal import butter, sosfilt
 import refhost as R
+import bf_ref as BF
 
 FS = 48000
 N = 2 * FS
@@ -94,8 +95,8 @@ if __name__ == "__main__":
     for i in range(count):
         F = float(rng.choice(FREQS)); decay = 1 if rng.random() < 0.75 else 0
         kind, x = make(rng, F)
-        a = R.render_rbass(x, FS, freq=F, intensity=-12, hp=1, extra={8: decay})[0].astype(np.float64)
-        b = R.render_rbass(x, FS, freq=F, intensity=-24, hp=1, extra={8: decay})[0].astype(np.float64)
+        a = BF.render_ref(x, FS, freq=F, intensity=-12, hp=1, extra={8: decay})[0].astype(np.float64)
+        b = BF.render_ref(x, FS, freq=F, intensity=-24, hp=1, extra={8: decay})[0].astype(np.float64)
         gen = (a - b) / (db(-12) - db(-24))          # the generated part at Intensity 0
         np.savez_compressed(os.path.join(OUT, "%s_%04d.npz" % (split, i)), x=x, gen=gen.astype(np.float32), F=F, decay=decay, kind=kind)
         if i % 20 == 0: print(split, i, kind, F, decay, "peak gen %.3f" % np.max(np.abs(gen)), flush=True)

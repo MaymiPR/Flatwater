@@ -1,5 +1,5 @@
-"""Training set for the Flatwater BassX Lift learned gain: reference renders of the generated part G (MaxxBass monitor) and the
-level-control gain g(t) extracted from them with the identified structure (extract_g2.py).
+"""Training set for the Flatwater BassX Lift learned gain: reference renders of the generated part G (the reference monitor) and the
+level-control gain g(t) extracted from them with the identified structure (gain_trace_lib.py).
 
     python -I render_trainset_extract.py split count seed [noextract]   -> measurements/FwBassXLift/train/<split>_<seed>_<i>.npz
     (noextract: the reference render only, for the end-to-end training; g is left empty)
@@ -10,8 +10,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwBassLift', 'nulltest'))   # plugins/FwBassLift/nulltest/
 import numpy as np
 import refhost as R
+import bx_ref as BX
 import render_trainset as RT
-import extract_g2 as E
+import gain_trace_lib as E
 
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassXLift", "train")
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         kind, x = RT.make(rng, F)
         fn = os.path.join(OUT, "%s_%d_%04d.npz" % (split, seed, i))
         if os.path.exists(fn): continue          # resume (the draws above keep the sequence the same)
-        G = R.render_mb(x, FS, harmonics_gain=0.0, monitor=1, frequency=F, ratio=ratio, response=response,
+        G = BX.render_ref(x, FS, harmonics_gain=0.0, monitor=1, frequency=F, ratio=ratio, response=response,
                         harmonics_decay=decay, highpass=hp)[0].astype(np.float64)
         if noext: g, err = np.zeros(1), 0.0
         else: g, err = E.extract(x.astype(np.float64), G, F, hp, decay, outer=3, iters=150)

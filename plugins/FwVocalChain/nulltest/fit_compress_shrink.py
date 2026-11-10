@@ -14,7 +14,7 @@ import torch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
-import prep_compress as Pp
+import render_compress_cache as Pp
 import null_compress_baseline as Bl
 import train_compress as Tr
 

@@ -1,4 +1,4 @@
-"""Checks Flatwater Vocal Leveler's riding model (model.c) against the reference renders (render_reference.py) by a local fit: CMA-ES over
+"""Checks Flatwater Vocal Leveler's riding model (RideModel.c) against the reference renders (render_reference.py) by a local fit: CMA-ES over
 the continuous constants (times in log), started at the reference's hidden values (model.DEFAULTS). The objective is
 the mean null in dB over the probes and the training corpus parts (0 .. 23); the held-out parts (24 .. 35) are only
 reported. The result goes to measurements/FwVocalLeveler/riding_fit.json; the plug-in keeps the hidden values unless the
@@ -13,8 +13,8 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 import compare_model as E
-import model as M
-import vocal_corpus as V
+import model_lib as M
+import vocal_corpus_lib as V
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalLeveler', 'riding_fit.json')
 # (name, log scale?, low, high); the starts are model.DEFAULTS

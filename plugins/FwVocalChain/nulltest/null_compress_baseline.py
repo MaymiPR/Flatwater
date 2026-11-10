@@ -1,5 +1,5 @@
 """The learned Compress correction's starting point: on render_trainset.py's examples, the fitted model's null
-(fit_compress.py's model: the clear chain's shaper, comp.c, the colour's filter, the fixed filter and the main
+(fit_compress.py's model: the clear chain's shaper, Compress.c, the colour's filter, the fixed filter and the main
 de-esser) per colour and fader step, and the ceiling a gain correction could reach: the model's output scaled per
 block by its least-squares gain against the reference (2 ms and 10 ms blocks; an estimate, since a correction inside
 the plug-in acts before the filters and the de-esser). Positions between the steps (the frac_ set) take the plug-in's

@@ -1,15 +1,17 @@
-"""Measures the reference H-Delay editor on its screenshots (reference/hdelay, git-ignored): each knob's centre and radius
+"""Measures the reference editor on its screenshots (reference/fwdelay, git-ignored): each knob's centre and radius
 (the connected non-panel blob around the GUIXML rectangle's centre, its outline fitted with a circle), and the printed
 ink around it. Numbers only; no pixels are kept.
 
-    python -I plugins/FwDelay/scripts/measure_ui.py [reference/hdelay/st_1_hover.png]
+    python -I plugins/FwDelay/scripts/measure_ui.py [reference/fwdelay/st_1_hover.png]
 """
-import sys
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+import local_config_lib as LC
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 
-SHOT = sys.argv[1] if len(sys.argv) > 1 else "reference/hdelay/st_1_hover.png"
+SHOT = sys.argv[1] if len(sys.argv) > 1 else LC.local_file("reference/fwdelay/st_1_hover.png")
 TOP = 19                                     # the toolbar's height above the GUIXML view
 KNOBS = {                                    # GUIXML rectangles (view coordinates)
     "Delay": (130, 27, 152, 154), "Feedback": (442, 27, 152, 154),

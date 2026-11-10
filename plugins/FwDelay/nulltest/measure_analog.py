@@ -1,5 +1,5 @@
-"""Flatwater Delay Phase 4: H-Delay's Analog modes (its stage colours the input: Mix 0 gives the stage's output alone). The same
-probe set as H-Comp's (plugins/FwComp/nulltest/probe_analog.py), fitted with the same model (plugins/FwComp/nulltest/fit_analog2.py, ANALOG_PREFIX=hd).
+"""Flatwater Delay Phase 4: the reference's Analog modes (its stage colours the input: Mix 0 gives the stage's output alone). The same
+probe set as the reference's (plugins/FwComp/nulltest/probe_analog.py), fitted with the same model (plugins/FwComp/nulltest/fit_analog.py, ANALOG_PREFIX=hd).
 
     python -I measure_analog.py collect <mode>     build/hd_analog<mode>.npz
     python -I measure_analog.py noise              build/hd_analog_noise.npz
@@ -9,7 +9,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwComp', 'nulltest'))   # plugins/FwComp/nulltest/
 import numpy as np
-import hd as H
+import de_ref as H
 import probe_analog as A
 
 FS = 48000

@@ -1,4 +1,4 @@
-"""The reference Bass Rider's applied gain on musical material, for fitting Flatwater Bass Leveler's riding model alongside the
+"""The reference's applied gain on musical material, for fitting Flatwater Bass Leveler's riding model alongside the
 probes: the bass line (reference/fwbassleveler/bassline.f32) and synthetic bass parts (compare_model.synth_notes), at the
 defaults and a few settings; cached as 10 ms medians where the input is loud enough to read a gain
 (measurements/FwBassLeveler/traces.npz).

@@ -1,5 +1,5 @@
 """Training set for Flatwater Comp's learned gain correction (plugins/FwComp/nulltest/train_net.py): random settings and signals rendered
-through the reference H-Comp and through Flatwater Comp's offline renderer, with Flatwater Comp's states traced (CoRender trace=).
+through the reference and through Flatwater Comp's offline renderer, with Flatwater Comp's states traced (CoRender trace=).
 Mix 100, Output cancelling the makeup (so neither limiter nor clip acts), Analog Off. The null test's settings and the
 factory presets' settings are added on top of the random cases, so the training sees the cases that already null.
 
@@ -15,7 +15,7 @@ import sys, os, subprocess
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import null_fwcomp as N, refhost as R
+import co_ref as N, refhost as R
 
 FS, STEP, LA = 48000, 16, 64
 HERE = os.path.dirname(os.path.abspath(__file__))

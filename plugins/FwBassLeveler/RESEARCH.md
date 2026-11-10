@@ -83,4 +83,4 @@ editors). The layout of every control was measured on the editor's frames (B4,
 17 presets (a reset, a live-sound start, and 15 for bass styles: slow / fast, fretless, upright, picked, slap, fret noise,
 stage, a suppressor with Max 0). They change only Output, Range Min / Max, Sensitivity, Response, Idle, Artifacts and
 Spill (and Target in the first two). Flatwater's presets carry them over by their values under Flatwater names; their
-null test loads the reference's own preset states (`RefRender state=`, [NULLTESTS-presets.md](NULLTESTS-presets.md)).
+null test loads the reference's own preset states (`RefRender state=`, [the presets null test](NULLTESTS.md#presets)).

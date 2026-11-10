@@ -4,7 +4,7 @@
     ln g = -softplus(Linear(GRU(features)))       (g <= 1: the measured gain cap)
     features: compressed |x|, |u|, ln Ratio, (Response - 20) / 10, ln(F / 80)    (magnitudes only: the gain is symmetric)
 
-Targets: the gain extracted from reference renders (render_trainset_extract.py, extract_g2.py). Loss: the gain error weighted
+Targets: the gain extracted from reference renders (render_trainset_extract.py, gain_trace_lib.py). Loss: the gain error weighted
 by u^2, i.e. by how much it changes the output (where u is near zero the extracted gain is not determined).
 Runs in the PyTorch environment (local.yaml's gpu_python).
 
@@ -36,7 +36,8 @@ def feat(v): return np.abs(np.arcsinh(v / 1e-3)) / 8.0
 FEAT = os.environ.get("MB_FEAT", "base")
 ZENV_PEAK, ZENV_POW = (0.003, 0.01, 0.03, 0.1), (0.01, 0.05)
 import ctypes as _ctf
-_F = _ctf.CDLL(os.path.join(HERE, "features.dll")) if os.path.exists(os.path.join(HERE, "features.dll")) else None
+_FEATURES = os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Features' + ('.dll' if os.name == 'nt' else '.so'))
+_F = _ctf.CDLL(_FEATURES) if os.path.exists(_FEATURES) else None
 if _F is not None:
     _F.mb_peak.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]
     _F.mb_power.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]       # "env": three peak followers of |u| as extra inputs
@@ -129,7 +130,7 @@ def evaluate(net, exs, bs=16):
 
 # ---- end-to-end: the loss on the generated part itself, through the identified structure ---------------------------
 import ctypes as ct
-_J = ct.CDLL(os.path.join(HERE, "generator.dll"))      # build_generator.bat
+_J = ct.CDLL(os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Generator' + ('.dll' if os.name == 'nt' else '.so')))      # scripts/build_native.py
 _P = ct.c_void_p
 _J.mbp_traj.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 7
 _J.mbp_vjp.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 5
@@ -154,7 +155,7 @@ IRL = 1 << 15
 
 
 class GenFn(torch.autograd.Function):
-    """y = w (1 + a v[n-1]), v = HP_B(y), |y| <= 1: forward and exact adjoint in C (generator.c), per example"""
+    """y = w (1 + a v[n-1]), v = HP_B(y), |y| <= 1: forward and exact adjoint in C (Generator.c), per example"""
     @staticmethod
     def forward(ctx, w, coefs):
         wn = w.detach().cpu().double().numpy(); B, n = wn.shape

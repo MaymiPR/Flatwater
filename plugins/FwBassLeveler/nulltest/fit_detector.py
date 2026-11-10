@@ -1,7 +1,7 @@
-"""Fits the note detector of Flatwater Bass Leveler's riding model (model.c) to the reference's probe set (make_probes.py) and its
+"""Fits the note detector of Flatwater Bass Leveler's riding model (RideModel.c) to the reference's probe set (render_probes.py) and its
 gain traces on musical material (measure_traces.py): CMA-ES on the sum over probes and read times of |model gain -
 reference gain| (clipped at 2 dB) plus 0.1 x the same over the traces' 10 ms blocks, plus CW x the same over the bass
-corpus's training parts at every recorded setting (scripts/nulltest/bass_corpus.py, render_corpus.py); prints the mismatches.
+corpus's training parts at every recorded setting (scripts/nulltest/bass_corpus_lib.py, render_corpus.py); prints the mismatches.
 
     python -I fit_detector.py [generations [sigma]]  writes measurements/FwBassLeveler/detector_fit.json
     python -I fit_detector.py check              the current fit's mismatches, probe by probe
@@ -11,8 +11,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
-import model as B
-import make_probes as PR
+import model_lib as B
+import render_probes as PR
 import measure_traces as TR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -39,7 +39,7 @@ TRACES = TR.load()
 TSIGS = {n: TR.material(n) for n in set(t['name'] for t in TRACES)}
 TW = 0.1
 # the bass corpus's training parts at every recorded setting, as 10 ms blocks (render_corpus.py)
-import bass_corpus as KC, render_corpus as CR
+import bass_corpus_lib as KC, render_corpus as CR
 CORPUS = []
 for _k in KC.TRAIN:
     _x = KC.part(_k)[0]

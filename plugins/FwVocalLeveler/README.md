@@ -38,7 +38,7 @@ Against the original, level steps match at -74 dB, and vocal parts held out from
 That holds at Studio and Live, Slow and Fast, other Targets, ranges and Idle values, Stereo, and at 44.1 and 96 kHz.
 Attack Fast is the weakest (about -50 dB), at word onsets. The original's 13 presets match at a median of -60.9 dB.
 The Music side-chain is not covered: Flatwater Vocal Leveler rides without it. Every case: [NULLTESTS.md](NULLTESTS.md);
-the factory presets against the original's own: [NULLTESTS-presets.md](NULLTESTS-presets.md).
+the factory presets against the original's own: [the presets null test](NULLTESTS.md#presets).
 
 ## How it was made
 

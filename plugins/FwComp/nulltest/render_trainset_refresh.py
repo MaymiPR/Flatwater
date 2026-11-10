@@ -8,7 +8,7 @@ is not hosted again.
 import glob, os, subprocess, sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-import null_fwcomp as N
+import co_ref as N
 _argv, sys.argv = sys.argv, sys.argv[:1]
 import render_trainset as T                          # (its import reads sys.argv for an output folder)
 sys.argv = _argv

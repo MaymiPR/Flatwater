@@ -1,4 +1,4 @@
-"""Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/VuRender) with H-Comp's filmed needle at the same strip positions
+"""Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/VuRender) with the reference's filmed needle at the same strip positions
 (needle_set_<face>.npz): both dials with the needle, the difference around the needle and its shadow only (the
 print's own differences cancel: each is measured against the same dial without its needle). Private helper.
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         e = (dW - dH)[near]
         errs.append((k, np.abs(e).mean(), np.sqrt((e ** 2).mean()), near.sum()))
         y0, y1, x0, x1 = 20, 175, 20, 285
-        hh = np.clip(bgW[..., :3] + dH, 0, 255)                    # H-Comp's needle on our dial, for an even view
+        hh = np.clip(bgW[..., :3] + dH, 0, 255)                    # The reference's needle on our dial, for an even view
         diff = np.clip(128 + 2 * (dW - dH).mean(2, keepdims=True).repeat(3, 2), 0, 255)
         tiles.append(np.concatenate([hh[y0:y1, x0:x1], w[y0:y1, x0:x1, :3], diff[y0:y1, x0:x1]], 1))
     for k, ma, rms, n in errs: print('k %2d (%+d deg): needle-area mean abs error %.1f, rms %.1f (%d px)' % (k, DEG[k], ma, rms, n))

@@ -11,8 +11,8 @@ one over the whole curve (0.01).
 import sys, os, json, subprocess
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-import vb as H
-import editor_state as S
+import pb_ref as H
+import editor_state_lib as S
 import measure_mods as M
 
 FS = 48000
@@ -163,7 +163,7 @@ def take(group, secs=6.0):
     for _, _, ph in MS.corpus_phrases(1.0, group=group):
         parts += [ph, np.zeros(FS // 5)]; n += len(ph) + FS // 5
         if n > secs * FS: break
-    if not parts: raise SystemExit('the vocal corpus is not decoded (scripts/nulltest/vocal_corpus.py)')
+    if not parts: raise SystemExit('the vocal corpus is not decoded (scripts/nulltest/vocal_corpus_lib.py)')
     x = np.concatenate(parts)[:int(secs * FS)]
     x *= 10 ** (-18 / 20) / np.sqrt(np.mean(x[np.abs(x) > 1e-4] ** 2))
     return np.repeat(x[None, :].astype(np.float32), 2, 0)

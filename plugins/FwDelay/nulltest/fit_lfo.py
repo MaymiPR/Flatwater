@@ -1,4 +1,4 @@
-"""Fits H-Delay's modulation (Phase 3): the LFO moves the target time T = D0 (1 + k depth/100 shape(phase)), and the
+"""Fits the reference's modulation (Phase 3): the LFO moves the target time T = D0 (1 + k depth/100 shape(phase)), and the
 delay follows T with the glide law (d' = (T - d) / T, at most -1). Data: build/hd_mod.npy from the 500 Hz phase probe
 (delay in ms every 1 ms, left then right, for depth/rate 100/1, 50/1, 25/1, 100/0.25, 100/4; Delay 100 ms)."""
 import numpy as np

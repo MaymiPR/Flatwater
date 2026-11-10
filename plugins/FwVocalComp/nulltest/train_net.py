@@ -153,7 +153,7 @@ def batch(exs, idx):
 
 
 def supervised(lnSc, lnF, xd, ref, eps=0.003):
-    """the reference's own gain read sample by sample (ref / delayed input): where it is below the fast ratio the slow
+    """The reference's own gain read sample by sample (ref / delayed input): where it is below the fast ratio the slow
     ratio must equal it; elsewhere the slow ratio must not go below the fast ratio. Weighted by the signal energy."""
     w = xd ** 2
     ok = (w > 1e-10)

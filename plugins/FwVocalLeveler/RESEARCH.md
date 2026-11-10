@@ -95,4 +95,4 @@ measured on the editor's frames (V4, `reference/fwvocalleveler/shots/default_400
 hard-limit ride, a de-compression with the full +-12 range). Each stores Target, Music and Vocal Sensitivity, Range
 Min and Max, Output, Idle, Attack and the Attack-tied internal settings above; the rest are shared. Flatwater's
 presets carry them over by their values under Flatwater names; their null test loads the reference's own preset states
-([NULLTESTS-presets.md](NULLTESTS-presets.md)).
+([the presets null test](NULLTESTS.md#presets)).

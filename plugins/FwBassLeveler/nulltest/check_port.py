@@ -1,4 +1,4 @@
-"""The C++ ride (Flatwater Bass Leveler's processor, run by BlRender) against the fitting model (model.c with the fit in
+"""The C++ ride (Flatwater Bass Leveler's processor, run by BlRender) against the fitting model (RideModel.c with the fit in
 measurements/FwBassLeveler/detector_fit.json): the same material, the gain applied by each, sample by sample. They are the
 same model, so they should agree to rounding.
 
@@ -8,12 +8,12 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import model as B
+import model_lib as B
 import fit_detector as F
 import compare_model as C
 import measure_reference as M
 import nulltest as N
-import make_probes as PR, bass_corpus as K
+import render_probes as PR, bass_corpus_lib as K
 
 g, td = F.load_fit()
 for name, x, st in (('bass line', C.bassline(), {}), ('synthetic part 6', C.synth_notes(seed=6, secs=10.0), {}),
