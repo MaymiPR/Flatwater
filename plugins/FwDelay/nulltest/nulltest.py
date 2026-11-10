@@ -1,25 +1,28 @@
-"""Null test: Flatwater Delay (offline renderer of the plug-in DSP, plugins/FwDelay/tools/DeRender) against the reference H-Delay
-(hd.py), residual in dB. Settings by hd.py's short names; both get the same silent pre-roll (the
+"""Null test: Flatwater Delay (offline renderer of the plug-in DSP, plugins/FwDelay/tools/DeRender) against the reference
+(de_ref.py), residual in dB. Settings by de_ref.py's short names; both get the same silent pre-roll (the
 reference starts at 375 ms and glides to the settings during it; its first block runs at the default Analog
 Mod2, whose noise enters the delay line: 3 s let it die away). Analog Off unless a case names a mode.
 
-    python -I nulltest.py [--quick] [--out report.md] [--fs 48000] [--band 20000]
+    python -I nulltest.py [--quick] [--save] [--fs 48000] [--band 20000]
 
 Residual = 20 log10( rms(ours - reference) / rms(reference) ) over the input (the pre-roll is not written). Numbers
 are reported as they come.
+    python -I nulltest.py --report     NULLTESTS.md again from measurements/FwDelay/nulltests.json, rendering nothing
+    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
 """
 import sys, os, subprocess
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwComp', 'nulltest'))   # plugins/FwComp/nulltest/
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import hd as H
-import null_fwcomp as NC
+import de_ref as H
+import co_ref as NC
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXE = os.environ.get("FWDELAY_RENDER", os.path.join(HERE, "..", "..", "..", "build", "DeRender_artefacts", "Release", "DeRender.exe"))
 TMP = os.path.join(HERE, "renders"); os.makedirs(TMP, exist_ok=True)
 EXTRA = []                                               # more DeRender arguments (fitting)
-_T = 1.0 - 3.0e-9                                        # the reference's triplets, a hair short (as plugins/FwDelay/Source/PluginProcessor.cpp)
+_T = 1.0 - 3.0e-9                                        # The reference's triplets, a hair short (as plugins/FwDelay/Source/PluginProcessor.cpp)
 BEATS = [_T / 24, 1 / 16, 3 / 32, _T / 12, 1 / 8, 3 / 16, _T / 6, 1 / 4, 3 / 8, _T / 3, 1 / 2, 3 / 4, 2 * _T / 3, 1, 1.5, 4 * _T / 3, 2, 3, 4, 8]
 
 
@@ -34,7 +37,7 @@ def rate_res(v):
 
 
 class State:
-    """the reference's time from Sync, the note, the tempo and Delay (as the plug-in computes it)"""
+    """The reference's time from Sync, the note, the tempo and Delay (as the plug-in computes it)"""
     def __init__(self, host_bpm):
         self.v = dict(sync="Host", note="1/8D", note_r="1/8D", bpm=120.0, delay=375.0, delay_r=375.0, rate=0.1)
         self.host = host_bpm
@@ -47,7 +50,7 @@ class State:
     def times(self):
         def t(note, ms):
             s = self.v["sync"]
-            if s == "ms": return float(ms if EXACT else round(ms))  # the reference's resolution: 1 ms (and 1 BPM)
+            if s == "ms": return float(ms if EXACT else round(ms))  # The reference's resolution: 1 ms (and 1 BPM)
             beats = BEATS[H.NOTES.index(note)]
             return beats * 60000.0 / ((float(self.v["bpm"]) if EXACT else float(round(float(self.v["bpm"])))) if s == "BPM" else self.host)
         return t(self.v["note"], float(self.v["delay"])), t(self.v["note_r"], float(self.v["delay_r"]))
@@ -74,7 +77,7 @@ def ours(x, fs=48000, comp="Stereo", preroll=3.0, host_bpm=120.0, changes=(), bl
     x = np.atleast_2d(np.asarray(x, np.float32))
     if x.shape[0] == 1: x = np.concatenate([x, x])
     st = State(host_bpm)
-    args = (["exact=1"] if EXACT else []) + ["analog=2", "rate0=%.9f" % State(host_bpm).rate()]   # the reference's defaults (its first block at 375 ms)
+    args = (["exact=1"] if EXACT else []) + ["analog=2", "rate0=%.9f" % State(host_bpm).rate()]   # The reference's defaults (its first block at 375 ms)
     for k, v in settings.items():
         st.set(k, v); args += our_args(k, v)
     tl, tr = st.times()
@@ -139,10 +142,16 @@ def signals(fs, quick=False):
 
 
 def main():
+    if '--report' in sys.argv:
+        import report_lib as RL
+        print('wrote', os.path.relpath(RL.write('FwDelay')))
+        return
+    if '--vst3' in sys.argv:
+        sys.exit(0 if vst3_check() is not False else 1)
     a = sys.argv[1:]
     quick = "--quick" in a
     fs = int(a[a.index("--fs") + 1]) if "--fs" in a else 48000
-    out_md = a[a.index("--out") + 1] if "--out" in a else None
+    save = "--save" in a
     global BAND
     BAND = float(a[a.index("--band") + 1]) if "--band" in a else None
     S = signals(fs, quick)
@@ -160,7 +169,17 @@ def main():
             row.append("%.1f" % residual_db(o, r, fs=fs))
         lines.append("| %s | %s |" % (name, " | ".join(row)))
         print(lines[-1], flush=True)
-    if out_md: open(out_md, "w").write("\n".join(lines) + "\n")
+    if save:
+        import report_lib as RL
+        print("wrote", RL.save("FwDelay", "settings" if fs == 48000 else "settings-96k", lines))
+
+
+def vst3_check():
+    """--vst3: our built VST3 against our renderer at the defaults, on noise, a low tone and drums"""
+    import refhost as R, nulltest_lib as nl, de_ref as h
+    S = {'noise -18 dBFS': nl.noise(3.0, -18.0, seed=7), 'tone 100 Hz -12 dBFS': nl.tone(100.0, 3.0, -12.0),
+         'drums': nl.drums(3.0, -6.0)}
+    return R.vst3_equals_renderer(h, S)
 
 
 if __name__ == "__main__":

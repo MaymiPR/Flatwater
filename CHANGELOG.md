@@ -9,6 +9,10 @@
   preset is named Default in every plug-in.
 - Keys in VST3 hosts: the VST3 editors take the keys the host offers them, so a focused editor receives its keys
   in FL Studio; every key the editor does not use still goes to the host (the space bar, Ctrl+Z).
+- **Null-test layout:** each plug-in's null tests have a harness `<ab>_ref.py`, `nulltest_lib.py` and `first_null.py`;
+  scripts are named by their purpose, helpers end in `_lib.py`, the iteration scripts whose output does not ship left
+  the tree, the C helpers are built by `scripts/build_native.py`, and one `NULLTESTS.md` per plug-in (Settings,
+  Presets, Grid) is written from `measurements/<Id>/nulltests.json` by `nulltest.py --report` with the same numbers.
 
 ## 1.0.0 (2026-11-04)
 

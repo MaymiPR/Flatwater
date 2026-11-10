@@ -3,20 +3,20 @@
 The current values of every stage of Flatwater Pitch Bend, measured on the original it recreates (Vocal Bender), with
 the method and the residual or confidence of each. The data is in
 [measurements/FwPitchBend/](../../measurements/FwPitchBend); the generated case tables are in
-[NULLTESTS.md](NULLTESTS.md) and [NULLTESTS-presets.md](NULLTESTS-presets.md).
+[NULLTESTS.md](NULLTESTS.md) and [the presets null test](NULLTESTS.md#presets).
 
 ## Setup
 
 | Item | Value |
 |---|---|
 | Reference | Vocal Bender (Waves), the Mono and Stereo components, from a licensed install |
-| Host | `tools/RefRender` through `plugins/FwPitchBend/nulltest/vb.py`, a fresh instance per render; the settings only the editor sets are written into the reference's saved state (`plugins/FwPitchBend/nulltest/editor_state.py`) |
+| Host | `tools/RefRender` through `plugins/FwPitchBend/nulltest/pb_ref.py`, a fresh instance per render; the settings only the editor sets are written into the reference's saved state (`plugins/FwPitchBend/nulltest/editor_state_lib.py`) |
 | Rates | 48 kHz unless noted; 44.1 and 96 kHz checks |
 | Hosting check | `plugins/FwPitchBend/nulltest/first_null.py`: latency 0 on both components; the host Bypass is the input (-282 dB); two renders of the same input and settings null to -280 dB (deterministic, so every stage compares render against render); our renderer equals the VST3 (-282 dB) |
 | Modulator readout | Mix is an exact crossfade (section 1), so m(t), the Mix the reference applies, reads any modulator's output sample by sample: Pitch +12 for a wet far from the dry, noise input, 16-sample windows |
 | Shifter battery | `plugins/FwPitchBend/nulltest/measure_shifter.py`: about 2,600 renders of the Mono component at Mix 100; per case in `measurements/FwPitchBend/shifter/SUMMARY.md` and its JSON files |
 | Modulator battery | `plugins/FwPitchBend/nulltest/measure_mods.py` (`measurements/FwPitchBend/mods/`); the nulls `plugins/FwPitchBend/nulltest/null_mods.py` |
-| Scorecard | `plugins/FwPitchBend/nulltest/score_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`); thresholds M1 to M8 in `SUMMARY.md` |
+| Scorecard | `plugins/FwPitchBend/nulltest/check_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`); thresholds M1 to M8 in `SUMMARY.md` |
 
 A shifter does not null sample for sample once it shifts, so the shifter is judged on the scorecard (behaviour) and
 the modulators, which are exact or fitted laws, are nulled through Mix: an exact law away from the jumps against
@@ -212,7 +212,7 @@ difference is 2.3 cents on the sung take and 6.5 on the spoken one; the median s
 | Blends at Mix about 35 % with AM or PT | Bass Backing, Tracked Double Low | the pitch column measures which of the two voices a tracker hears; with the AM slot removed both sides pass, and AM itself matches on that voice to 0.0003 rms |
 | Fast sweeps | Arcade Steps | where the tracks part, they part at whole-harmonic ratios, the tracker reading a harmonic of one output |
 
-Every pair: [NULLTESTS-presets.md](NULLTESTS-presets.md).
+Every pair: [the presets null test](NULLTESTS.md#presets).
 
 ## Numerics on every platform
 

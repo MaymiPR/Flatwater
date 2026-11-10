@@ -1,53 +1,65 @@
 # Flatwater Vocal Comp null tests
 
-The scripts that measure Renaissance Vox, fit and train Flatwater Vocal Comp's models and null the two against each other. They need
-Windows, Python 3.12 or newer with the root `requirements.txt` (`requirements-train.txt` for the learned blocks), the
-original installed, the tools built (`build/`) and `local.yaml` at the repository root; the suite-wide modules they
-import (hosting, state, corpora, meters) and the `local.yaml` keys are in
-[scripts/nulltest/README.md](../../../scripts/nulltest/README.md). Run a script from this folder with
-`python -I <script>.py`; its docstring gives its arguments. Renders, captures and result files stay git-ignored; the
-results are published in [NULLTESTS.md](../NULLTESTS.md).
+The scripts that measure the reference, fit and train Flatwater Vocal Comp's models and null the two against each other. They
+need Windows, Python 3.12 or newer with the root `requirements.txt` (`requirements-train.txt` for the learned blocks),
+the reference installed, the tools built (`build/`, the native helpers by `python scripts/build_native.py`) and
+`local.yaml` at the repository root; the suite-wide modules they import (the reference host, the saved state, the
+corpora, the report) and the `local.yaml` keys are in [scripts/nulltest/README.md](../../../scripts/nulltest/README.md).
+Run a script from this folder with `python -I <script>.py`; its docstring gives its arguments. Renders, captures and
+result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), written from
+`measurements/FwVocalComp/nulltests.json` by `nulltest.py --report` and never edited by hand.
 
 ## Entry points
 
-| File | Role |
+| File | What it does |
 |---|---|
-| `nulltest.py` | every case: runs `null_fwvocalcomp.py` with the arguments given |
-| `null_fwvocalcomp.py` | the null test against the reference (`--quick`, `--tune key=value`, `--out report.md`); its helpers are imported by Flatwater Comp's scripts |
+| `nulltest.py` | Null tests of Flatwater Vocal Comp: the null scripts in order, the numbers NULLTESTS.md publish |
+| `first_null.py` | The first null test of Flatwater Vocal Comp: proves the harness, the hosts and the build before any measurement |
+| `vc_ref.py` | Flatwater Vocal Comp (offline renderer of the plug-in DSP) against the reference's render, residual in dB |
+| `nulltest_lib.py` | Generic null-test and measurement helpers for the house null-test harnesses |
 
-## Measuring
+## Probes
 
-| Script | What it does |
+| File | What it does |
 |---|---|
-| `probe_kernel.py` | Renaissance Vox: the fast peak reading of isolated short patterns |
-| `probe_ramp.py` | Renaissance Vox: sample-accurate gain around events on a DC carrier |
-| `probe_slow_dc.py` | Renaissance Vox: the slow path on level steps of several lengths |
-| `probe_gate.py` | Renaissance Vox: the gate's gain trajectory on a DC carrier |
+| `probe_gate.py` | Gate gain trajectory, sample-accurate on a DC carrier (private) |
+| `probe_kernel.py` | Measure the reference's fast peak reading for isolated short patterns (private) |
+| `probe_ramp.py` | Sample-accurate gain around events, on a DC carrier (private) |
+| `probe_slow_dc.py` | Compressor slow path on a DC carrier: level steps of various lengths (private) |
 
 ## Fitting
 
-| Script | What it does |
+| File | What it does |
 |---|---|
-| `fit_ramp2.py` | Renaissance Vox: the gain ramp law on the DC-carrier data |
-| `fit_smoothing.py` | Renaissance Vox: the gain-smoothing constants against reference renders |
+| `fit_gain_hold.py` | Fits the gain hold on a DC carrier: the instant gain held as a minimum over H samples, then two box smoothers, in the linear or the dB domain |
+| `fit_meter_energy.py` | Fits the reference Energy meter (input level) to a tools/MeterCapture recording: frame peak of the input, then one or two one-pole stages on linear amplitude |
+| `fit_meter_output.py` | Tries rules for the reference output meter against a tools/MeterCapture recording (frames + output audio) |
+| `fit_smoothing.py` | Tune the gain-smoothing constants of Flatwater Vocal Comp against the reference (private |
 
 ## Training
 
-| Script | What it does |
+| File | What it does |
 |---|---|
-| `render_trainset.py` | training and validation renders for Flatwater Vocal Comp's learned slow path |
-| `train_net.py` | Flatwater Vocal Comp's learned slow path (a small GRU) |
-| `score_net.py` | scores a trained slow-path network on the null-test signals |
+| `train_net.py` | Learned slow path for Flatwater Vocal Comp (gray-box): the identified detector, fast path (look-ahead) and static law stay exact |
 
-## Validation
+## Renders
 
-| Script | What it does |
+| File | What it does |
 |---|---|
-| `check_vst3.py` | the built Flatwater Vocal Comp VST3 against its offline renderer (identical) |
+| `render_trainset.py` | Training / validation renders for the learned Flatwater Vocal Comp slow path (plugins/FwVocalComp/nulltest/train_net.py) |
 
-## Editor, meters and control feel
+## Checks and comparisons
 
-| Script | What it does |
+| File | What it does |
 |---|---|
-| `fit_meter_energy.py` | fits the Renaissance Vox Energy meter |
-| `fit_meter_output.py` | tries rules for the Renaissance Vox output meter |
+| `check_net.py` | Scores a trained Flatwater Vocal Comp slow-path network (plugins/FwVocalComp/nulltest/train_net.py) on the standard null-test signals |
+
+## The plug-in's scripts
+
+In [plugins/FwVocalComp/scripts/](../scripts/): the scripts that write under `Source/` or `resources/`
+(`make_`, `export_`, `pack_`) and the editor measurements (`measure_ui.py`, `compare_ui.py`, `fit_<part>.py`).
+
+| File | What it does |
+|---|---|
+| `../scripts/compare_ui.py` | Compares a FwVocalCompSnapshot PNG with the reference skin composed from the local the reference install (extracted into reference/, which is git-ignored) |
+| `../scripts/export_net.py` | Writes the trained Flatwater Vocal Comp slow-path network (build/fwvocalcompnet/<name>.pt |

@@ -1,4 +1,4 @@
-"""Flatwater Comp Phase 4: refit H-Comp's release law on realistic envelopes.
+"""Flatwater Comp Phase 4: refit the reference's release law on realistic envelopes.
 
 The detector reads |x|, so any material's envelope e = |x| can be carried by an alternating signal e[n] (-1)^n: the
 reference's sample-wise gain is then exact (y / x). The envelopes come from the null-test signals (voice-like, drums,
@@ -14,9 +14,9 @@ import numpy as np
 import ctypes as ct
 from scipy import optimize
 from scipy.ndimage import maximum_filter1d
-from model import static_gain_db
-import fit_release2 as I
-import fit_release_w0 as W
+from model_lib import static_gain_db
+import release_law_lib as I
+import fit_release_time_factor as W
 
 FS = 48000
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build', 'hc_real_cases.npz')
@@ -24,7 +24,7 @@ CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..
 
 def collect():
     import measure_reference as M
-    import null_fwcomp as N
+    import co_ref as N
     S = N.signals(FS, quick=False)
     names = ['voice-like', 'drum loop', 'bass line', 'white noise -20 rms', 'pink noise -20 rms', 'noise bursts', 'log sweep -20',
              'tone steps -50/-10/-30', 'AM 5 Hz 3 kHz']
@@ -64,7 +64,7 @@ def run(c, x, Rt):
 
 
 def makeup(c):
-    # the reference's gain includes makeup and the output (-18): normalise by its gain where nothing compresses
+    # The reference's gain includes makeup and the output (-18): normalise by its gain where nothing compresses
     return None
 
 
@@ -101,7 +101,7 @@ def makeup_db(thr, rat, rel):
 
 
 def prepare(cases):
-    # the reference's gain without makeup and the output (-18 dB)
+    # The reference's gain without makeup and the output (-18 dB)
     for c in cases:
         c['Rt'] = target(c)
         c['norm'] = 10 ** (-(makeup_db(c['thr'], c['rat'], c['rel']) - 18.0) / 20)

@@ -11,7 +11,7 @@ ear hears (after the first 0.1 s):
   null    the residual (dB), for the record
 A preset whose LFO is one of ours in place of a drawn one ("shape substituted") is run twice: as it ships, and with
 the reference's own table loaded into ours (PbRender table=), which tells the shape apart from the rest.
-Writes plugins/FwPitchBend/NULLTESTS-presets.md and measurements/FwPitchBend/presets_null.json.
+Writes the Presets section of plugins/FwPitchBend/NULLTESTS.md and measurements/FwPitchBend/presets_null.json.
 
     python -I -B null_presets.py [our preset name ...]
 """
@@ -19,10 +19,11 @@ import sys, os, re, json, glob, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts'))   # plugins/FwPitchBend/scripts/
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
-import vb as H
-import editor_state as S
+import pb_ref as H
+import editor_state_lib as S
 import measure_shifter as M
 import read_ref_presets as R
 import make_presets as MP
@@ -30,9 +31,8 @@ import make_presets as MP
 FS = 48000
 BPM = 120
 SKIP = FS // 10
-OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'NULLTESTS-presets.md')
 OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwPitchBend', 'presets_null.json')
-HEADER = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'Source', 'Presets.h')
+HEADER = next(p for p in (os.path.join(HERE, '..', 'Source', n) for n in ('PresetTable.h', 'Presets.h')) if os.path.exists(p))   # the generated table
 TARGETS = dict(level=1.5, pitch=15.0, gross=0.10, tone=3.0)
 
 
@@ -41,7 +41,7 @@ def takes():
     out = []
     for name, group in (('sung', 'sung'), ('spoken', 'rap')):
         ph = M.corpus_phrases(1.0, group=group)
-        if not ph: raise SystemExit('the vocal corpus is not decoded (scripts/nulltest/vocal_corpus.py)')
+        if not ph: raise SystemExit('the vocal corpus is not decoded (scripts/nulltest/vocal_corpus_lib.py)')
         parts, n = [], 0
         for _, _, p in ph:
             parts += [p, np.zeros(FS // 4)]; n += len(p) + FS // 4
@@ -164,7 +164,8 @@ def write(rows):
             if 'own_shape' in r['takes'][t]:
                 L.append('| &nbsp;&nbsp;with the reference\'s shape | %s |' % cell(r['takes'][t]['own_shape']))
         L.append('')
-    open(OUT_MD, 'w', encoding='utf-8', newline='\n').write('\n'.join(L))
+    import report_lib as RL
+    print('wrote', RL.save('FwPitchBend', 'presets', L, 'Presets'))
 
 
 def main():

@@ -1,11 +1,11 @@
-"""Null test of Flatwater Delay's factory presets against the reference's OWN presets: each preset array of H-Delay's preset file
+"""Null test of Flatwater Delay's factory presets against the reference's OWN presets: each preset array of the reference's preset file
 (the local install's, named by local.yaml's FwDelay.ref_presets) written into the reference's state, as the reference loads it (read_ref_presets.py's
-method; the state files go to the git-ignored build/hdelay_states/), and that state given to RefRender in the
+method; the state files go to the git-ignored build/ref_states_FwDelay/), and that state given to RefRender in the
 pre-roll; Flatwater Delay's renderer gets the Flatwater Delay preset's values at the same time. Unlike null_presets_values.py
 (which sets the reference's parameters to Flatwater Delay's values), this also catches a preset that Flatwater Delay's table carries
 over wrongly.
 
-    python -I null_presets.py [--states] [--only name,...] [--rounded] [--out report.md]
+    python -I null_presets.py [--states] [--only name,...] [--rounded] [--save]
       --states: (re)write the state files first; --rounded: Flatwater Delay's renderer rounds the values (as set by a host)
 """
 import sys, os, re, json
@@ -13,18 +13,19 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
-import local_config as L
-import hd as H
+import local_config_lib as L
+import de_ref as H
 import nulltest as N
 import null_presets_values as P
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = L.get('FwDelay.ref_presets')
-STATES = os.path.join(HERE, "..", "..", "..", "build", "hdelay_states")
+import local_config_lib as LC
+STATES = LC.local_file("build/ref_states_FwDelay")
 
 
 def write_states():
-    import refstate as W
+    import ref_state_lib as W
     os.makedirs(STATES, exist_ok=True)
     t = open(SRC, encoding="utf-8").read()
     p = R.load("H-Delay Stereo")
@@ -48,7 +49,7 @@ def write_states():
 
 def state_file(vals, path, kind="RealWorld"):
     """a reference state with this preset array (45 values, '*' keeps the current one) loaded, written to path"""
-    import refstate as W
+    import ref_state_lib as W
     p = R.load("H-Delay Stereo")
     base = p.raw_state
     inner0 = W.get_inner(base).decode("latin-1")
@@ -68,7 +69,7 @@ def preset_array(v):
     a = ['*'] * 45
     for i, k in ((1, 'sync'), (2, 'bpm'), (3, 'delay'), (4, 'delayNote'), (6, 'mix'), (7, 'feedback'), (8, 'phaseL'), (9, 'phaseR'),
                  (10, 'pingPong'), (14, 'output'), (15, 'lopass'), (17, 'hipass'), (19, 'depth'), (20, 'rate'), (21, 'lofi'), (23, 'analog')):
-        val = 20100.0 if k == 'lopass' and v[k] >= 20100 else v[k]   # the reference's Off is 20100 (20138.77 filters)
+        val = 20100.0 if k == 'lopass' and v[k] >= 20100 else v[k]   # The reference's Off is 20100 (20138.77 filters)
         a[i] = repr(float(val)) if k not in ('sync', 'delayNote', 'phaseL', 'phaseR', 'pingPong', 'lofi', 'analog') else str(int(val))
     return a
 
@@ -94,7 +95,7 @@ def main():
     if '--states' in a or not os.path.exists(os.path.join(STATES, "00.bin")): write_states()
     only = a[a.index('--only') + 1].split(',') if '--only' in a else None
     N.EXACT = '--rounded' not in a                       # a preset's values go in exactly (the reference's preset load)
-    out_md = a[a.index('--out') + 1] if '--out' in a else None
+    save = '--save' in a
     fs = 48000
     S = N.signals(fs)
     lines = ['| group | preset | Analog | ' + ' | '.join(S) + ' |', '|---|---|---|' + '---|' * len(S)]
@@ -106,7 +107,9 @@ def main():
             row.append('%.1f' % N.residual_db(o, r))
         lines.append('| %s | %s | %s | %s |' % (g, name, ['Off', '1', '2', '3', '4'][int(v['analog'])], ' | '.join(row)))
         print(lines[-1], flush=True)
-    if out_md: open(out_md, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
+    if save:
+        import report_lib as RL
+        print('wrote', RL.save('FwDelay', 'presets', lines, 'Presets'))
 
 
 if __name__ == '__main__':

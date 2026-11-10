@@ -1,5 +1,6 @@
-"""Reads the reference's factory and artist presets (the Renaissance Vox and Renaissance Bass preset files of the local
-install, under the folder local.yaml's ref_presets_dir names) and writes their parameter values, converted to real-world units, to build/ref_presets_<plugin>.json.
+"""Reads the reference's factory and artist presets (the preset files of Flatwater Bass Lift's and Flatwater Vocal
+Comp's references in the local install, under the folder local.yaml's ref_presets_dir names) and writes their parameter values, converted to real-world units, to
+build/ref_presets_<plugin id>.json.
 
 Presets stored as "RealWorld" are read directly. Presets stored as "States" (0..1000) are converted by the reference
 itself: the array is written into the loaded plugin's state with Type="States" and read back as RealWorld, so the
@@ -8,8 +9,8 @@ presets are made from the values with new names (scripts/make_presets.py)."""
 import sys, os, re, json, glob
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import refhost as R
-import refstate as W
-import local_config as L
+import ref_state_lib as W
+import local_config_lib as L
 
 ROOT = L.get('ref_presets_dir')
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "build")
@@ -23,12 +24,12 @@ def parse(path):
     return name, m.group(1), m.group(2).split()
 
 
-# RVox ParamXML scales (all linear): min, max, resolution. The plug-in's own conversion of the two RVox "States"
+# The reference ParamXML scales (all linear): min, max, resolution. The plug-in's own conversion of the two the reference "States"
 # artist presets (which it accepts) matches this formula exactly; the factory ones it rejects are converted with it.
 RVOX_SCALES = [(-36, 0, 0.1), (-80, 0, 0.1), (10, 250, 0.1), None, None, None, None, (-36, 0, 0.1)]
 
 
-def rvox_states(vals):
+def vocal_comp_states(vals):
     out = []
     for i, v in enumerate(vals):
         sc = RVOX_SCALES[i] if i < len(RVOX_SCALES) else None
@@ -43,7 +44,7 @@ def to_realworld(plugin, base, kind, vals):
     if kind == "RealWorld":
         return vals
     if "RVox" in plugin.name if hasattr(plugin, "name") else False:
-        return rvox_states(vals)
+        return vocal_comp_states(vals)
     inner0 = W.get_inner(base).decode('latin-1')
     for pad in range(16):
         text = ' '.join(vals) + ' ' * (1 + pad)
@@ -57,8 +58,9 @@ def to_realworld(plugin, base, kind, vals):
     raise RuntimeError("the plugin did not take the States array %s" % vals)
 
 
+OURS = {folder: plugin for folder, plugin in zip(PLUGINS, ("FwBassLift", "FwVocalComp"))}   # the file per plug-in
 only = sys.argv[1:] or list(PLUGINS)
-assert rvox_states("836 893 500 0 0 0 0 1000".split())[:3] == ['-5.9', '-8.6', '130'], rvox_states("836 893 500".split())
+assert vocal_comp_states("836 893 500 0 0 0 0 1000".split())[:3] == ['-5.9', '-8.6', '130'], vocal_comp_states("836 893 500".split())
 for folder, comp in PLUGINS.items():
     if folder not in only: continue
     p = R.load(comp)
@@ -68,10 +70,10 @@ for folder, comp in PLUGINS.items():
         rel = os.path.relpath(path, os.path.join(ROOT, folder))
         name, kind, vals = parse(path)
         if comp.startswith("RVox") and kind == "States":
-            rw = rvox_states(vals)
+            rw = vocal_comp_states(vals)
         else:
             rw = to_realworld(p, base, kind, vals)
         p.raw_state = base
         out.append({"file": rel, "name": name, "kind": kind, "raw": vals, "realworld": rw})
         print("%-55s %-9s %s" % (rel, kind, " ".join(rw)), flush=True)
-    json.dump(out, open(os.path.join(OUT, "ref_presets_%s.json" % comp.split()[0]), "w"), indent=1)
+    json.dump(out, open(os.path.join(OUT, "ref_presets_%s.json" % OURS[folder]), "w"), indent=1)

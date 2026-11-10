@@ -19,8 +19,8 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 import measure_shifter as M
 import measure_level_flatten as L
-import score_shifter as O
-import vb as H
+import check_shifter as O
+import pb_ref as H
 
 FS = M.FS
 OUT = os.path.join(M.OUT, 'control.json')

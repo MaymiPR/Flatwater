@@ -1,4 +1,4 @@
-"""Compares model (Flatwater Bass Leveler's riding model) with the reference Bass Rider, case by case: the reference's applied
+"""Compares model (Flatwater Bass Leveler's riding model) with the reference, case by case: the reference's applied
 gain (its output over its input, sample by sample) against the model's ride, and the output residual.
 
     python -I compare_model.py [case ...]      (no case: all)
@@ -7,7 +7,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import measure_reference as M
-import model as B
+import model_lib as B
 
 FS = M.FS
 HOST_KEYS = {'artifacts', 'sensitivity', 'response', 'target', 'range_min', 'range_max', 'idle', 'spill'}

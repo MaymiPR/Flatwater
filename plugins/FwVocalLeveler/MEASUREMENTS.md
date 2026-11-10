@@ -12,9 +12,9 @@ own hidden default or preset values; none is fitted. The data is in [measurement
 | Host | the reference's VST3 through `plugins/FwVocalLeveler/nulltest/measure_reference.py` (a fresh instance per render) and `tools/RefRender`, 48 kHz unless noted |
 | Gain readout | the applied gain as output over input, sample by sample: a least-squares ratio over 1 to 20 ms; a -80 dBFS pilot at 3001 Hz exposes the gain in silences; no latency, so nothing is aligned |
 | Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `plugins/FwVocalLeveler/nulltest/measure_reference.py` is named in the tables |
-| Corpus | `scripts/nulltest/vocal_corpus.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
+| Corpus | `scripts/nulltest/vocal_corpus_lib.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
 | Reference renders | `plugins/FwVocalLeveler/nulltest/render_reference.py`: the probes and the 36 parts at ten settings each, 620 renders |
-| Model | `plugins/FwVocalLeveler/nulltest/model.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
+| Model | `plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
 
 ## 1. The level read
 
@@ -77,7 +77,7 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 | C++ against the model | 25 cases | `plugins/FwVocalLeveler/nulltest/check_port.py` | worst difference 0.0000 dB |
 | Median null over the 620 renders | probes -70.5 dB, training parts -60.8, held-out parts -62.3 (per setting -50 ... -69 dB; Attack Fast the weakest, about -50, at word onsets) | `plugins/FwVocalLeveler/nulltest/fit_model.py report` | |
 | The plug-in on fresh renders | -47 ... -74 dB, Stereo, Live, 44.1 and 96 kHz included | [NULLTESTS.md](NULLTESTS.md) | |
-| The factory presets | the reference's 13 presets loaded into its own state against ours: median -60.9 dB, worst -37.9 | [NULLTESTS-presets.md](NULLTESTS-presets.md) | |
+| The factory presets | the reference's 13 presets loaded into its own state against ours: median -60.9 dB, worst -37.9 | [the presets null test](NULLTESTS.md#presets) | |
 
 ## Declined changes
 
@@ -91,6 +91,14 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 | Configuration | Cost |
 |---|---|
 | Stereo at 48 kHz through the offline renderer | about 0.6 % of one core |
+
+## Scripts that replace earlier ones
+
+Every script named on this page by its current name; the earlier names stay in the history.
+
+| Script | Replaces |
+|---|---|
+| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer and CPU checks (check_vst3.py) |
 
 ## Provenance
 

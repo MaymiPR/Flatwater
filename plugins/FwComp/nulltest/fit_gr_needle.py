@@ -1,4 +1,4 @@
-"""Fits H-Comp's GR needle ballistics: the compressor's gain g(t) (measure_pilot_gain.py, 1 ms steps) through a candidate meter
+"""Fits the reference's GR needle ballistics: the compressor's gain g(t) (measure_pilot_gain.py, 1 ms steps) through a candidate meter
 law, sampled at the filmed frames' audio times, quantised to the strip's 71 frames (k = round(70 v)), against the
 filmed frame index. Private measurement helper.
 

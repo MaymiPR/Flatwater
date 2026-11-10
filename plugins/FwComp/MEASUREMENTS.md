@@ -11,7 +11,7 @@ and the residual or confidence of each. The data and plots are in [measurements/
 | Host | pedalboard through `scripts/nulltest/refhost.py` `render_hc`, which sets every user control (all are VST3 parameters; the rest at their defaults, Analog Off unless stated); `tools/RefRender` (a small JUCE host, `refhost.render_ref`) where pedalboard cannot feed the side-chain bus or give a host tempo; 48 kHz unless noted; `python -I plugins/FwComp/nulltest/measure_reference.py [section ...]` reproduces the first battery |
 | Parameter order | Sync is set before Release: the reference does not keep a Release value set while it is synced to a note |
 | Gain readout | the detector reads the sample peak, so an alternating +-a signal (Nyquist) is a constant level to it, and with Analog Off the output is g[n] x[n]: the gain trace is y / x, exact at every sample; static curves, attack, release, Punch, Mix and the limiter are measured that way, and sine staircases check the static curves |
-| Identification scripts | `plugins/FwComp/nulltest/fit_detector.py`, `plugins/FwComp/nulltest/fit_struct.py` (detector, smoothing, order of the stages), `plugins/FwComp/nulltest/fit_release.py`, `plugins/FwComp/nulltest/fit_release2.py`, `plugins/FwComp/nulltest/fit_release_w0.py`, `plugins/FwComp/nulltest/fit_release_real.py`, `plugins/FwComp/nulltest/fit_release3.py` to `plugins/FwComp/nulltest/fit_release8.py` (release), `plugins/FwComp/nulltest/probe_analog.py`, `plugins/FwComp/nulltest/fit_analog.py`, `plugins/FwComp/nulltest/fit_analog2.py` (Analog stage); the C models `gain_fast*.c`; `plugins/FwComp/nulltest/fit_release_cma.py` (CMA-ES) |
+| Identification scripts | `plugins/FwComp/nulltest/fit_detector.py`, `plugins/FwComp/nulltest/fit_struct.py` (detector, smoothing, order of the stages), `plugins/FwComp/nulltest/fit_release.py`, `plugins/FwComp/nulltest/fit_release_time_factor.py`, `plugins/FwComp/nulltest/fit_release_real.py`, `plugins/FwComp/nulltest/fit_release_law.py` with `plugins/FwComp/nulltest/release_law_lib.py` (release), `plugins/FwComp/nulltest/probe_analog.py`, `plugins/FwComp/nulltest/fit_analog_offset.py`, `plugins/FwComp/nulltest/fit_analog.py` (Analog stage); the C models in `plugins/FwComp/nulltest/native/` (built by `scripts/build_native.py`); `plugins/FwComp/nulltest/fit_release_law.py` (CMA-ES, the law the plug-in uses) |
 | Tables | `static_h.npz`, `makeup*.csv`, `release_law*.json`, `release_w0.json`, `analog_model.json`, `analog_noise.csv` in `measurements/FwComp/`, exported to `plugins/FwComp/Source/dsp/Tables.h` by `plugins/FwComp/scripts/export_tables.py` |
 
 ## 1. Path and latency
@@ -51,29 +51,29 @@ and the residual or confidence of each. The data and plots are in [measurements/
 
 ## 5. Release
 
-The law, in the gain-reduction domain, with two states (`plugins/FwComp/nulltest/fit_release2.py`, `plugins/FwComp/nulltest/fit_release_w0.py`):
+The law, in the gain-reduction domain, with two states (`plugins/FwComp/nulltest/release_law_lib.py`, `plugins/FwComp/nulltest/fit_release_time_factor.py`):
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/gain_fast2.c hc_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
-| Slow state S | charges toward out + 0.032 (R - out), out the reduction after the attack (the previous sample's), as a one-pole on the linear gain (142 ms; the reference's own hidden crest time is 149.6 ms); releases at Fs(S) / Release + As(S) dB/s with a release time of at least 16.8 ms; charges only when its source rises by more than rounding (src > S + 1e-9; any margin from 1e-12 to 1e-6 gives the same output), level or falling it releases | CMA-ES over all the tables (`plugins/FwComp/nulltest/fit_release_cma.py`, 250 generations) | objective -43.97 dB |
+| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/native/ReleaseLaw.c hc_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
+| Slow state S | charges toward out + 0.032 (R - out), out the reduction after the attack (the previous sample's), as a one-pole on the linear gain (142 ms; the reference's own hidden crest time is 149.6 ms); releases at Fs(S) / Release + As(S) dB/s with a release time of at least 16.8 ms; charges only when its source rises by more than rounding (src > S + 1e-9; any margin from 1e-12 to 1e-6 gives the same output), level or falling it releases | CMA-ES over all the tables (`plugins/FwComp/nulltest/fit_release_law.py`, 250 generations) | objective -43.97 dB |
 | Start-up | the effective release time is pulled toward the Release time by exp(-t / 90 ms) after a reset | start-up probes and program material from 0.05 s | null test median -40.0 -> -41.9 dB when added; threshold -24 / ratio 10 / Release 300 -21.9 -> -31.5; the defaults lose about 3 dB in their first half second only |
 | Release time seen from outside | after sustained compression the 63 % point is 0.75 x Release (3 -> 3.0, 100 -> 76, 1000 -> 753, 3000 -> 2258 ms); the gain rises at a constant rate in dB and stops sharply at the threshold: the release acts on the detector's level, not on the gain | steps | measured |
 | Rate against the reduction | a function of the reduction itself, the same at every ratio: after a 1 s charge at Release 300 the reduction falls 86 / 110 / 167 / 306 / 1364 dB/s at 17 / 19 / 23 / 29 / 39 dB (ratios 10, 2, 50, 50, 50), not of the level over the threshold | probes | measured |
 | Program dependence | the release depends on how long the compression lasted, not on its depth: after 5 / 20 / 100 / 200 / 350 / 500 / 700 ms bursts the 63 % point is 0.7 / 2.8 / 31 / 43 / 65 / 73 / 76 ms (Release 100), then constant; attack and ratio barely change it | `release_pd` | measured |
 | Fast part | after a short charge (10 to 50 ms) the reduction falls along one curve whatever its depth (to about 15.8 dB 4 ms after the end, 12.9 at 8 ms, 11 at 20 ms, from 23, 29 or 39 dB); longer charges slow it (500 ms: down to 27 dB at 4 ms from 29); below about 12 dB there is no fast part; it barely depends on the Release time | probes | measured |
-| Settled behaviour | with a 1 s quiet lead-in: bursts of 2 to 5 ms release almost at once at every depth (gone within 4 ms); 20 ms bursts nearly so; 50 ms and longer release progressively more slowly, up to about 500 ms of compression, after which the release no longer changes; a 4 ms burst with Attack 7 ms releases at once too; a slow average of R with a time constant of 148 to 159 ms (fitted twice) explains much of this | `plugins/FwComp/nulltest/fit_release4.py`, 312 probes | measured |
+| Settled behaviour | with a 1 s quiet lead-in: bursts of 2 to 5 ms release almost at once at every depth (gone within 4 ms); 20 ms bursts nearly so; 50 ms and longer release progressively more slowly, up to about 500 ms of compression, after which the release no longer changes; a 4 ms burst with Attack 7 ms releases at once too; a slow average of R with a time constant of 148 to 159 ms (fitted twice) explains much of this | `plugins/FwComp/nulltest/fit_release_law.py collectsettled`, 312 probes | measured |
 | Start-up of the reference | for the first 0.1 to 0.3 s after a reset the reference releases slowly with no reduction to show for it (a pitch spike that releases at once after 0.3 s of quiet holds its reduction after 0.02 s, and builds up over repeated spikes); it lasts 0.2 to 0.4 s at every Release time (30 ms to 3 s); probes with a short quiet lead-in measure this start-up, so the fits use cases past it; the probes prefer a longer, step-like start-up, program material about 85 ms | start-up probes | measured |
 | Steady tones | a steady 100 Hz tone keeps its reduction almost still between peaks (0.05 dB ripple at Release 300) | probes | the w0 term releases ten times faster there |
 | Repeated events | 2 ms pulses every 7 ms release fully between the first pulses, but after about 100 ms (Release 100; 75 ms at Release 300, 250 ms at Release 30; sooner at greater depth) the reduction hardly recovers between pulses (5 dB pulses: 4.8 dB minimum after 0.5 s); 2 ms every 20 ms builds up only at depth: the slow state's structure | pulse trains | measured |
-| Memory through the tail | after a 500 ms burst and a quiet gap, a 5 ms burst still releases slowly when the gap is 100 ms (the gain already back to 0.05 dB), and at once after 200 ms or more | `plugins/FwComp/nulltest/fit_release8.py collectmem`, 90 double-burst probes | measured |
+| Memory through the tail | after a 500 ms burst and a quiet gap, a 5 ms burst still releases slowly when the gap is 100 ms (the gain already back to 0.05 dB), and at once after 200 ms or more | `plugins/FwComp/nulltest/fit_release_law.py collectmem`, 90 double-burst probes | measured |
 | Memory follows the output | with a long attack (Round Kick preset: Attack 33 ms) the target swings to 9 dB on every half-cycle of a kick but the output only reaches about 1.5 dB, and the reference releases almost to 0 between half-cycles, while a slow state charged from R held 5.7 dB; hence the charge toward out + blend (R - out) | presets on program signals | when added (CMA-ES, 1034 cases, objective -42.7 -> -43.7 dB): presets' median -32.0 -> -35.5 dB (Round Kick drums -12.9 -> -21.7, Kit Smack voice -21.6 -> -38.0, Pumping Kit voice -33.1 -> -44.5, Drum Knockout drums -24.7 -> -41.7); the null test's worst -10.5 -> -16.7, its median -41.9 -> -40.3 |
 | Memory at short Release | on a sustained bass note with Attack 17.7 and Release 13.5 ms (Classic Kit Crush preset) the reference keeps 6 to 9 dB between cycles; hence the floor on the slow state's release time | presets | when added (objective -43.70 -> -43.81 dB): Classic Kit Crush bass -8.4 -> -17.0 dB, Lo-Fi Radio bass -24.3 -> -27.5, Kit Smack voice -38.0 -> -33.5; presets' median -35.5 -> -34.8; the null test the same or better everywhere (deep slow setting -31.5 -> -33.5) |
 | Final joint fit | the blend (0.032) and the floor (16.8 ms) fitted with all the tables | CMA-ES, 250 generations | objective -43.81 -> -43.97 dB; the null test's median -40.3 -> -41.4 dB (worst -16.8); the presets' median -34.8 -> -35.6 dB (Classic Kit Crush bass -17.0 -> -19.1, Lo-Fi Radio bass -27.5 -> -31.1) |
 
 Method notes: the CMA-ES objective is the energy-weighted mean null in dB over the settled probes, the memory probes,
 realistic envelopes and the null-test material (x3), all past the start-up, plus the 26 factory presets' settings on
-program signals (`plugins/FwComp/nulltest/fit_release8.py collectpresets`, 104 cases x3); least squares and exact gradients stall on this
+program signals (`plugins/FwComp/nulltest/fit_release_law.py collectpresets`, 104 cases x3); least squares and exact gradients stall on this
 law's rough error surface. The first CMA-ES refit of the two-state form (722 cases) took the mean null from -46.8 to
 -49.0 dB and the null test's median from -37.2 to -39.6 dB: at the defaults the drum loop -20.7 -> -31.7 dB with the
 voice-like signal and the bass line unchanged (-62.5, -58.5); threshold -30 / ratio 4 / attack 0.5 / release 50 better
@@ -106,7 +106,7 @@ Release 1000. Adding the presets took their null median from -30.4 to -31.3 dB.
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | Position | the last stage: after the output gain and the limiter, applied to the dry part too, per channel; its offsets stay the same in output units under Output -18 / +12, Mix 0 and heavy compression | applied to the Analog-Off output | -73 dB against the reference with the limiter working |
-| Model | y = (1 + gain) L(x) + H2(g(H1(x))) + noise: first-order sections (mode 3: a band-pass biquad first, f0 183 Hz, Q 0.52), g a measured table with free odd and even parts; memoryless in level (a level step changes mode 3's dip at once, both ways) | `plugins/FwComp/nulltest/probe_analog.py`, `plugins/FwComp/nulltest/fit_analog.py`, `plugins/FwComp/nulltest/fit_analog2.py`, `analog_model.json` | on loud material (peaks 0.3 to 0.7): mode 4 -82 to -100 dB, mode 1 -72 to -78, mode 2 -44 to -56 (its noise alone limits it to about -54 to -69), mode 3 -29 to -64 (median -40); quiet signals null less (mode 4 at -60 dBFS: -40 dB), the offset being of the order of 0.001 |
+| Model | y = (1 + gain) L(x) + H2(g(H1(x))) + noise: first-order sections (mode 3: a band-pass biquad first, f0 183 Hz, Q 0.52), g a measured table with free odd and even parts; memoryless in level (a level step changes mode 3's dip at once, both ways) | `plugins/FwComp/nulltest/probe_analog.py`, `plugins/FwComp/nulltest/fit_analog_offset.py`, `plugins/FwComp/nulltest/fit_analog.py`, `analog_model.json` | on loud material (peaks 0.3 to 0.7): mode 4 -82 to -100 dB, mode 1 -72 to -78, mode 2 -44 to -56 (its noise alone limits it to about -54 to -69), mode 3 -29 to -64 (median -40); quiet signals null less (mode 4 at -60 dBFS: -40 dB), the offset being of the order of 0.001 |
 | Mode 1 | flat -0.26 dB at -20 dBFS; harmonics (1 kHz at 0 dBFS, re fundamental) h2 -54, h3 -58; noise -102 dBFS | small-signal response, harmonics, noise with silence in | measured |
 | Mode 2 | a dip of -0.77 dB around 1 to 2 kHz; h3 -48 (odd harmonics); noise -83 dBFS rising toward high frequencies | the same | measured |
 | Mode 3 | a level-dependent dip (-4.8 dB at 1 kHz for -40 dBFS, -3.1 at -20, -0.5 at 0); strong h2 / h3 (-22 / -33); noise -101 | the same | measured |
@@ -128,7 +128,7 @@ Full tables: `results.json` `analog`.
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | Null test | 168 cases: median -48.7 dB, worst -22.1 (Threshold -24, Ratio 10, Release 300 on a 5 Hz AM tone) | [NULLTESTS.md](NULLTESTS.md) | median a close match, worst a model |
-| Factory presets | the 26 presets: median -44.0 dB, worst -20.8 | [NULLTESTS-presets.md](NULLTESTS-presets.md), a fresh reference per preset | |
+| Factory presets | the 26 presets: median -44.0 dB, worst -20.8 | [the presets null test](NULLTESTS.md#presets), a fresh reference per preset | |
 | The last change | the rounding tie and the retrained correction, against the build before: null test median -47.0 -> -48.7 dB, worst -24.5 -> -22.1 (31 cases better and 26 worse by more than 1 dB; the largest loss the 5 Hz AM case, -31.8 -> -22.1); presets median -43.7 -> -44.0 dB, worst -20.8 both | the same null tests on the Windows build | |
 | Before the correction was added | null test median -41.4 dB (worst -16.8); presets median -35.6 | the same | |
 
@@ -136,8 +136,8 @@ Full tables: `results.json` `analog`.
 
 | Change | Measured effect |
 |---|---|
-| Release rate against R with a 2-D fast part, fitted on the start-up probes (`plugins/FwComp/nulltest/fit_release3.py`) | not adopted: fitted on the start-up, not the settled behaviour |
-| Release time scaled by a table of the distance between R and its slow average (`plugins/FwComp/nulltest/fit_release4.py`, `plugins/FwComp/nulltest/gain_fast4.c`), charging upward only or both ways (both fits better); a second, 30 ms average (`plugins/FwComp/nulltest/gain_fast5.c`); a learned correction of the release time (8 tanh units) from the distances to 156 / 30 / 5 ms averages (`plugins/FwComp/nulltest/gain_fast6.c`, exact gradients through `plugins/FwComp/nulltest/gain_grad.c`, `plugins/FwComp/nulltest/train_release2.py`, 0.4 s per gradient over 482 cases) | steady tones (100 Hz: -27 -> -54 dB at threshold -30) and modulated signals better, but the voice-like signal and the bass line lost (-59 -> -13 dB at the defaults): at a pitch spike the distance between R and its average is the same as after a 50 ms burst, yet the reference releases the first at once and the second over tens of milliseconds; fitting stalls from every start (finite differences and exact gradients alike, also with softened gates) |
+| Release rate against R with a 2-D fast part, fitted on the start-up probes (a third release form; its fit script has left the tree) | not adopted: fitted on the start-up, not the settled behaviour |
+| Release time scaled by a table of the distance between R and its slow average (the fourth form), charging upward only or both ways (both fits better); a second, 30 ms average (the fifth form); a learned correction of the release time (8 tanh units) from the distances to 156 / 30 / 5 ms averages (the sixth form, trained with exact gradients, 0.4 s per gradient over 482 cases) | steady tones (100 Hz: -27 -> -54 dB at threshold -30) and modulated signals better, but the voice-like signal and the bass line lost (-59 -> -13 dB at the defaults): at a pitch spike the distance between R and its average is the same as after a 50 ms burst, yet the reference releases the first at once and the second over tens of milliseconds; fitting stalls from every start (finite differences and exact gradients alike, also with softened gates) |
 | w0 = 1 (no w0 term) | fixes steady tones, loses the voice-like signal (-62 -> -8 dB) |
 | The attack before the release | fits worse (-46.1 dB mean null) |
 | Charging the slow state purely from the output (blend 0) | breaks: before the attack starts the output is 0 dB, the slow state takes its release branch and is floored at the target, so it jumps to the full reduction at once |
@@ -153,8 +153,8 @@ Filmed with `tools/MeterCapture gl=1`, which reads the editor's OpenGL back buff
 design pixels at 63 fps, without the DAW and without the screen. Outside the DAW the reference's editor renders (about
 62 OpenGL frames a second, 48 draw calls each) but its frames never reach the window, which stays white; the editor
 takes its meter values from the processing only while the host's transport advances, so MeterCapture gives the
-plug-in a playing transport. Probes: `plugins/FwComp/nulltest/make_vu_probe.py` (tones, 5 / 50 / 300 ms bursts, drums, voice),
-`plugins/FwComp/nulltest/make_vu_cal.py` (a level staircase and sine / square pairs) and descending steps; for GR the probe carries a
+plug-in a playing transport. Probes: `plugins/FwComp/nulltest/render_vu_probe.py` (tones, 5 / 50 / 300 ms bursts, drums, voice),
+`plugins/FwComp/nulltest/render_vu_calibration.py` (a level staircase and sine / square pairs) and descending steps; for GR the probe carries a
 -54 dBFS 6170 Hz pilot whose gain through the compressor shows its gain during the silences too (`plugins/FwComp/nulltest/measure_pilot_gain.py`).
 Angles: `plugins/FwComp/nulltest/read_vu_angles.py`; pivot: `plugins/FwComp/nulltest/fit_pivot.py`; fits: `plugins/FwComp/nulltest/fit_gr_needle.py`, `plugins/FwComp/nulltest/fit_io_needle.py`; the print:
 `plugins/FwComp/nulltest/measure_vu_face.py`. Summary: `measurements/FwComp/needle.json`; the law in `plugins/FwComp/Source/ui/Needle.h`.
@@ -175,7 +175,7 @@ Angles: `plugins/FwComp/nulltest/read_vu_angles.py`; pivot: `plugins/FwComp/null
 
 Measured with the `tools/MeterCapture` drag and click scripts on the reference editor; every knob with 100 px moves in
 mouse steps of 1 to 30 px, 12 ms apart, and the wheel (`drag=x,y,n,0,wheel`, n notches; logs parsed by
-`plugins/FwComp/nulltest/parse_drags.py`).
+`plugins/FwComp/nulltest/read_drags.py`).
 
 | Quantity | Value |
 |---|---|
@@ -193,6 +193,21 @@ mouse steps of 1 to 30 px, 12 ms apart, and the wheel (`drag=x,y,n,0,wheel`, n n
 |---|---|
 | 60 s of stereo at 48 kHz through the offline renderer, without the learned correction | 1.39 s |
 | The same with the learned correction | 1.99 s (about 1 % of a core more) |
+
+## Scripts that replace earlier ones
+
+Every script named on this page by its current name; the earlier names stay in the history.
+
+| Script | Replaces |
+|---|---|
+| `nulltest/fit_release_law.py` | the release law's fit (CMA-ES, the law the plug-in uses), with the first fit, the settled, memory, null-set and preset probe sets and the least-squares refit folded in from fit_release2.py, fit_release4.py and fit_release8.py; it was fit_release_cma.py |
+| `nulltest/release_law_lib.py` | the two-state law's binding and stages (fit_release2.py without its run) |
+| `nulltest/fit_release_time_factor.py` | the release-time factor w0 (fit_release_w0.py) |
+| `nulltest/fit_analog.py` | the Analog stage in its general form, the fit that ships (fit_analog2.py) |
+| `nulltest/fit_analog_offset.py` | the Analog stage as an offset, the start of the general fit (fit_analog.py) |
+| `nulltest/native/GainPath.c`, `nulltest/native/ReleaseLaw.c` | the gain path and the two-state law in C (gain_fast.c, gain_fast2.c), built by `scripts/build_native.py` |
+| removed | fit_release3.py, fit_release6.py, train_release2.py and the C models gain_fast3.c to gain_fast6.c and gain_grad.c: the release forms of the declined changes (section 5), none of which the plug-in uses |
+| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer check (check_vst3.py) |
 
 ## Provenance
 

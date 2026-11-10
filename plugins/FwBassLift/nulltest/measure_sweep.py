@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
+import bf_ref as BF
 
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "sweep.json")
@@ -31,7 +32,7 @@ for fset in (160.0, 64.0):
             if f0 > fset * 0.7:
                 continue
             x = R.tone(FS, f0, max(1.5, 30.0 / f0), L)
-            y = R.render_rbass(x, FS, freq=fset, intensity=0, hp=1)[0]
+            y = BF.render_ref(x, FS, freq=fset, intensity=0, hp=1)[0]
             c = comps(y, f0, NH)
             rows.append({"f0": float(f0), "re": c.real.tolist(), "im": c.imag.tolist()})
         res["runs"].append({"freq": fset, "level": L, "rows": rows})

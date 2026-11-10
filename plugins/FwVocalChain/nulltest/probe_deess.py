@@ -12,7 +12,7 @@ from scipy.signal import csd, welch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
-import cv as C
+import ch_ref as C
 FS = 48000
 OUT = os.path.join(HERE, '..', '..', '..', 'reference', 'fwvocalchain', 'meas', 'deess_probe.npz')
 CLEAR = dict(bass_color=0, treble_color=0, compress_color=0, reverb_color=0, delay_color=0, pitch_color=0)

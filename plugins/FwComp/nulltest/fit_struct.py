@@ -1,4 +1,4 @@
-"""Flatwater Comp Phase 4: search the structure of H-Comp's look-ahead gain path on spike and burst responses.
+"""Flatwater Comp Phase 4: search the structure of the reference's look-ahead gain path on spike and burst responses.
 
 Candidates: h = max |x| over H look-ahead samples; gt = static gain(h); a one-pole (attack coefficient falling,
 instant rising: short events) and an FIR made of two boxes, in either order, each in the linear or the dB domain.
@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from scipy.ndimage import maximum_filter1d, uniform_filter1d
 import measure_reference as M
-from model import static_gain_db
+from model_lib import static_gain_db
 
 FS = 48000
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build', 'hc_struct_cases.npz')

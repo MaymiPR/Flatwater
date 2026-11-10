@@ -3,7 +3,7 @@ values (read by plugins/FwPitchBend/nulltest/read_ref_presets.py from the instal
 (approved 2026-11-01). Each preset's settings that are not host parameters travel as extra values (the slots,
 Fine, the modulators' shapes and steps), applied by the processor when the preset loads. A modulator's LFO shape is
 one of ours: the same shape where the reference's is a standard one by its math, the nearest of ours where it is drawn
-("shape substituted", listed in NULLTESTS-presets.md); a sequence keeps its step values (approved
+("shape substituted", listed in the Presets section of NULLTESTS.md); a sequence keeps its step values (approved
 2026-11-01). A rate stored in Hz without the reference's free-running flag (every factory preset's) is not run free
 by the reference but snapped to the synced length nearest in time at the host's tempo (MEASUREMENTS.md, Phase 3), so
 it becomes that synced length at 120 bpm.

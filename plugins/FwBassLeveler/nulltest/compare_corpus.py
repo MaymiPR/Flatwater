@@ -1,4 +1,4 @@
-"""Flatwater Bass Leveler's riding model (model.c, the current fit) against the reference's riding on the bass corpus
+"""Flatwater Bass Leveler's riding model (RideModel.c, the current fit) against the reference's riding on the bass corpus
 (render_corpus.py): per part and setting the output residual and the gain error; with --events, the ride events: the
 moments either side starts moving its gain after holding (a note taken), matched within 15 ms, and each unmatched one
 with its context (the input's level step, the time since the last event, the gain before and after on both sides).
@@ -9,7 +9,7 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import bass_corpus as K, render_corpus as CR, fit_detector as F, model as B
+import bass_corpus_lib as K, render_corpus as CR, fit_detector as F, model_lib as B
 
 FS = 48000
 

@@ -10,4 +10,4 @@ for c in "$@"; do
     done
 done
 timeout 1500 "$MC" "$vst" "$name" x.raw design=$design $D > scan_$tag.log 2>&1
-py -3.15 -I "$NT"/parse_drags_any.py scan_$tag.log | grep -v "no change" > scan_$tag.txt
+py -3.15 -I "$NT"/read_drags_any.py scan_$tag.log | grep -v "no change" > scan_$tag.txt

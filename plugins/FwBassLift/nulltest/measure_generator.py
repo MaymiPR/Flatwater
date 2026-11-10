@@ -10,6 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy.signal import butter, freqs as afreqs
 import refhost as R
+import bf_ref as BF
 
 FS = 48000
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwBassLift", "nl.json")
@@ -35,7 +36,7 @@ for f0 in (20.0, 30.0, 40.0):
     for L in np.arange(-60, 0.1, 3.0):
         A = 10 ** (L / 20)
         x = R.tone(FS, f0, 2.0, L)
-        y = R.render_rbass(x, FS, freq=FSET, intensity=0, hp=1)[0]
+        y = BF.render_ref(x, FS, freq=FSET, intensity=0, hp=1)[0]
         Y = comps(y, f0, NH)
         Y[0] -= A * bw(3, 'high', f0, FSET)[0] * (-1j)           # remove the original path (sine: complex amp -j*A)
         hp2 = np.array([bw(3, 'high', h * f0, FSET)[0] ** 2 for h in range(1, NH + 1)])

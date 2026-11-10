@@ -1,6 +1,6 @@
 """Phase 4: Compress, per colour and fader step (-10 .. +10), fitted on the reference with every other colour clear:
 a 1 kHz tone ladder (-45 .. +6 dBFS, the static curve), two tone bursts (-30 -> -6 -> -30 and -20 -> 0 -> -20 dBFS: the
-timing) and two loud held-out vocals. The model (comp.c) followed by the chain's fixed filter is nulled against the
+timing) and two loud held-out vocals. The model (Compress.c) followed by the chain's fixed filter is nulled against the
 reference; its parameters are searched (Nelder-Mead, each step starting from its neighbour's) for the deepest mean null.
 
     python -I fit_compress.py render          (the reference's renders, reference/fwvocalchain/meas/compress/)
@@ -36,7 +36,7 @@ CLEAR = dict(bass_color=0, treble_color=0, compress_color=0, reverb_color=0, del
 
 
 def signals():
-    import vocal_corpus as V
+    import vocal_corpus_lib as V
     out = []
     levels = list(range(-45, 7, 3)); n = int(0.5 * FS); t = np.arange(n) / FS
     out.append(np.concatenate([10 ** (l / 20) * np.sin(2 * np.pi * 1000 * t) for l in levels]))
@@ -59,7 +59,7 @@ def low_signals():
 
 
 def _render_low(job):
-    import cv as C
+    import ch_ref as C
     c, v = job
     path = os.path.join(MEAS, 'c%d_%+03d_low.npz' % (c, v))
     if os.path.exists(path): return path
@@ -89,7 +89,7 @@ def noise_signals():
 
 
 def _render_extra(job):
-    import cv as C
+    import ch_ref as C
     c, v, kind = job
     path = os.path.join(MEAS, 'c%d_%+03d_%s.npz' % (c, v, kind))
     if os.path.exists(path): return path
@@ -120,7 +120,7 @@ def load_data(c, v):
 
 
 def _render(job):
-    import cv as C
+    import ch_ref as C
     c, v = job
     path = os.path.join(MEAS, 'c%d_%+03d.npz' % (c, v))
     if os.path.exists(path): return path
@@ -164,7 +164,7 @@ def model(x, p):
     if LIN is None:
         LIN = json.load(open(os.path.join(HERE, '..', '..', '..', 'reference', 'fwvocalchain', 'meas', 'compress_linear.json')))
     if _lib is None:
-        _lib = ctypes.CDLL(os.path.join(HERE, 'comp.dll'))
+        _lib = ctypes.CDLL(os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwVocalChain', 'Compress' + ('.dll' if os.name == 'nt' else '.so')))
         D = ctypes.POINTER(ctypes.c_double)
         _lib.comp.argtypes = [D, D, D, D, D, ctypes.c_int, ctypes.c_double, D]
         import fit_deess as Fd

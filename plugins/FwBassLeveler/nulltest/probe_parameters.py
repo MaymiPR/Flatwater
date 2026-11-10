@@ -1,4 +1,4 @@
-"""Phase 1 probe of the reference Bass Rider (WaveShell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
+"""Phase 1 probe of the reference (the shell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
 each one's VST3 parameters (name, default text, the values a host can set), the reported latency, the real delay of
 the audio (cross-correlation of a bass-like signal in and out) and the gain it applies to a steady tone at a few
 levels (the default Target -14).
@@ -16,7 +16,7 @@ import refhost as R
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
     br = [n for n in names if "Bass Rider" in n]
-    print("shell components with 'Bass Rider':", br)
+    print("the reference's components in the shell:", br)
     for name in br:
         R.fresh(name); p = R.load(name)
         print("\n==", name, "latency (reported)", getattr(p, "reported_latency_samples", "?"))

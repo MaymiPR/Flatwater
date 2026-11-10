@@ -1,5 +1,5 @@
 """The plug-in's learned Compress correction against PyTorch's: ChRender (every colour clear but Compress, the
-Noise off) against train_compress.py's net run through the exact model (prep_compress.py), on a
+Noise off) against train_compress.py's net run through the exact model (render_compress_cache.py), on a
 held-out vocal after a second of silence, per colour at a few fader positions. Optionally an older renderer (built
 without the net) against the model alone. PyTorch runs in full float32 (cuDNN's TF32 alone differs from the plug-in
 by -65 .. -89 dB); the net's steps start where the plug-in's compressor starts, so the model is tried 0 .. 3 samples
@@ -17,7 +17,7 @@ import torch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
-import prep_compress as Pp
+import render_compress_cache as Pp
 import null_compress_baseline as Bl
 import train_compress as Tr
 

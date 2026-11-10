@@ -8,7 +8,7 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwBassLift', 'nulltest'))   # plugins/FwBassLift/nulltest/
 import numpy as np
-import null_fwbasslift as NW, nulltest as NX, extract_g3 as E3
+import bf_ref as NW, nulltest as NX, fit_gain_trace as E3
 
 E3.KIND = "prev"
 rows = json.load(open(sys.argv[1]))

@@ -1,8 +1,8 @@
-"""Phase 3, the full campaign on the reference CLA Vocals (Stereo component unless said; 48 kHz unless said): every
+"""Phase 3, the full campaign on the reference (Stereo component unless said; 48 kHz unless said): every
 control at every amount, the level dependence, every pair of stages over a grid of amounts, the tempo, stereo input,
 the Mono/Stereo component, the sample rates, the timing and parameter changes, and random combinations / the factory
 presets on vocals. Jobs run in parallel workers (one plug-in instance each); each section writes
-reference/fwvocalchain/meas/campaign/<section>.json (git-ignored); analyse_campaign.py reads them.
+reference/fwvocalchain/meas/campaign/<section>.json (git-ignored); read_campaign.py reads them.
 
     python -I measure_campaign.py <section> ... [--workers 12]
     sections: single levels pairs tempo stereo monostereo rates timing changes combos (or all)
@@ -52,7 +52,7 @@ def signal(spec, fs=FS):
         env = np.concatenate([np.full(n0, 10 ** (lo / 20)), np.full(n1, 10 ** (hi / 20)), np.full(n2, 10 ** (lo / 20))])
         return (env * np.sin(2 * np.pi * f0 * t)).astype(np.float32)
     if kind == 'vocal':                                             # ('vocal', part, secs, gain dB)
-        import vocal_corpus as V
+        import vocal_corpus_lib as V
         x = V.part(spec[1])[0][:int(FS * spec[2])] * 10 ** (spec[3] / 20)
         if fs != FS:
             from scipy.signal import resample_poly
@@ -75,7 +75,7 @@ _C = None
 
 def _init():
     global _C
-    import cv as C
+    import ch_ref as C
     _C = C
     C.plugin()
 
@@ -337,7 +337,7 @@ def jobs_timing():
 
 def factory_presets():
     import re
-    import local_config as L
+    import local_config_lib as L
     path = L.get('FwVocalChain.ref_presets')
     txt = open(path, encoding='utf-8', errors='replace').read()
     out = []

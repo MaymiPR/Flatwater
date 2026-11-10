@@ -2,6 +2,8 @@
 
 Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match.
 
+## Settings
+
 | signal | comp / gate / gain (dB) | residual all (dB) | residual steady (dB) | peak error (dB re. peak) |
 |---|---|---:|---:|---:|
 | sine 1 kHz -40 dBFS | 0/off/0 | -196.9 | -196.9 | -199.9 |
@@ -115,7 +117,7 @@ Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, afte
 
 Median -53.1 dB, best -230.9 dB, worst -19.3 dB; 51 of 108 cases below -60 dB.
 
-## Summary by signal
+### Summary by signal
 
 Compression settings -12, -24, -36 dB (with and without gate / gain); residual over everything after 0.2 s, and over the last second only.
 
@@ -146,9 +148,51 @@ Compression settings -12, -24, -36 dB (with and without gate / gain); residual o
 | stereo: noise L -20 / R -30 | -33.1 | -30.3 | -27.5 | -28.8 |
 | stereo: alternating loud channel | -105.6 | -102.5 | -99.4 | -100.8 |
 
-## How to read this
+### How to read this
 
 - **Steady tones match to numerical precision** (about -95 to -120 dB at 1 kHz and 8 kHz, at 44.1 to 192 kHz, mono and stereo). A null is claimed only for these stationary cases and for Compression 0 (a fixed gain).
 - **Level changes are close but not a null** (medians over the settings): sweeps about -53 dB, a 100 Hz tone about -50 dB, voice-like material about -40 dB, steps about -37 dB (-48 dB at the other rates), amplitude modulation about -35 dB, noise bursts about -33 dB, white / pink noise about -26 to -32 dB; the worst case is -19 dB (AM at Compression -36). The detector, look-ahead and gate are identified exactly (MEASUREMENTS.md, sections 2, 3 and 7); the slow path is the fitted analytical path plus a small learned correction (MEASUREMENTS.md, section 6), so on dynamic material expect a small difference in how the gain moves, not in the tone.
 - The gate matches to 0.0004 dB rms on level steps; with gate and compression together the residual follows the compressor numbers.
 - The learned correction was trained on separate random renders of the same kinds of material (voice, noise, tones, steps, AM, sweeps, drums), not on these signals; the analytical path was tuned on signals like these, so the numbers are not a fully independent test set.
+
+## Grid
+
+Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for four signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, about -60 dB or less is a close match.
+
+### By Compression
+
+| Comp (dB) | voice-like | white noise | tone steps | sine 1 kHz |
+|---|---:|---:|---:|---:|
+| 0 | -142.8 / -80.5 | -142.9 / -75.3 | -126.3 / -106.4 | -143.1 / -100.4 |
+| -6 | -74.0 / -64.1 | -59.8 / -44.5 | -88.3 / -75.7 | -120.0 / -100.3 |
+| -12 | -66.2 / -52.2 | -48.5 / -33.3 | -78.8 / -62.4 | -114.8 / -99.1 |
+| -18 | -59.7 / -45.2 | -38.4 / -32.4 | -70.7 / -47.8 | -110.4 / -100.2 |
+| -24 | -50.8 / -39.8 | -34.6 / -27.6 | -58.8 / -36.9 | -110.2 / -100.1 |
+| -30 | -45.1 / -34.3 | -30.6 / -26.7 | -46.2 / -29.0 | -107.4 / -98.9 |
+| -36 | -38.9 / -29.5 | -26.3 / -25.2 | -36.3 / -22.8 | -104.8 / -97.2 |
+
+### By Gate
+
+| Gate (dB) | voice-like | white noise | tone steps | sine 1 kHz |
+|---|---:|---:|---:|---:|
+| off | -59.7 / -29.5 | -38.4 / -25.2 | -70.2 / -22.9 | -117.1 / -103.5 |
+| -60 | -59.7 / -29.5 | -38.4 / -25.2 | -70.2 / -22.9 | -117.1 / -103.5 |
+| -40 | -59.7 / -29.5 | -38.4 / -25.2 | -71.9 / -22.8 | -110.1 / -103.5 |
+| -20 | -58.4 / -29.6 | -38.1 / -25.2 | -74.9 / -25.6 | -105.3 / -97.2 |
+
+### By Gain
+
+| Gain (dB) | voice-like | white noise | tone steps | sine 1 kHz |
+|---|---:|---:|---:|---:|
+| 0 | -59.7 / -29.5 | -38.4 / -25.2 | -72.7 / -22.8 | -110.4 / -97.2 |
+| -12 | -59.7 / -29.5 | -38.4 / -25.2 | -72.7 / -22.8 | -110.4 / -97.2 |
+
+### By input level
+
+| Input trim (dB) | voice-like | white noise | tone steps | sine 1 kHz |
+|---|---:|---:|---:|---:|
+| -24 | -69.7 / -48.2 | -54.8 / -33.8 | -84.8 / -57.8 | -111.0 / -97.2 |
+| -12 | -59.7 / -38.9 | -38.4 / -25.8 | -70.7 / -36.3 | -112.8 / -102.8 |
+| 0 | -45.2 / -29.5 | -32.4 / -25.2 | -47.8 / -22.8 | -110.0 / -103.2 |
+
+Overall: median -70.2 dB, worst -22.8 dB, 396 of 672 cases below -60 dB.

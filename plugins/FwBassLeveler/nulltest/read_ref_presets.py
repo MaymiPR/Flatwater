@@ -1,15 +1,15 @@
-"""Reads the reference Bass Rider presets (the factory preset file of the local install, named by local.yaml's FwBassLeveler.ref_presets)
-and writes their stored values to build/ref_presets_BassRider.json. The arrays are RealWorld values in the preset-array
+"""Reads the reference's presets (the factory preset file of the local install, named by local.yaml's FwBassLeveler.ref_presets)
+and writes their stored values to build/ref_presets_FwBassLeveler.json. The arrays are RealWorld values in the preset-array
 order of RESEARCH.md section 6 (4 Output, 8 / 9 Range Min / Max, 12 Target or "*" (kept), 31 Sensitivity, 33 Response,
 34 the Idle arrow's place in the range, 44 Artifacts as its -20 .. -3 dB gate, 45 Spill). Nothing from the file is
 published; Flatwater Bass Leveler presets are made from the values with new names (scripts/make_presets.py)."""
 import os, re, json, sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import local_config as L
+import local_config_lib as L
 
 SRC = L.get('FwBassLeveler.ref_presets')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_BassRider.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_FwBassLeveler.json")
 t = open(SRC, encoding="utf-8").read()
 out = []
 for m in re.finditer(r'<Preset [^>]*Name="([^"]*)".*?<Parameters Type="(\w+)">([^<]*)</Parameters>', t, re.S):

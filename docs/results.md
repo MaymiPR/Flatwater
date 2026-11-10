@@ -22,7 +22,7 @@ page summarises them. How each model was found is in each plug-in's MEASUREMENTS
 
 ## Flatwater Pitch Bend
 
-`plugins/FwPitchBend/nulltest/null_presets.py`, `plugins/FwPitchBend/nulltest/null_mods.py`, `plugins/FwPitchBend/nulltest/score_shifter.py`:
+`plugins/FwPitchBend/nulltest/null_presets.py`, `plugins/FwPitchBend/nulltest/null_mods.py`, `plugins/FwPitchBend/nulltest/check_shifter.py`:
 
 - With every control at 0 both pass the voice through with the same delay: -67 dB on a sung take, the delay within
   0.0002 samples.
@@ -126,7 +126,7 @@ either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -
 
 ## Flatwater Comp
 
-`plugins/FwComp/nulltest/null_fwcomp.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
+`plugins/FwComp/nulltest/co_ref.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
 output limiter, the four Analog modes): median -48.7 dB, worst -22.1 dB; the reference's 26 factory presets (each on
 voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
 
@@ -155,7 +155,7 @@ voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
 
 ## Flatwater Vocal Comp
 
-`plugins/FwVocalComp/nulltest/null_fwvocalcomp.py`:
+`plugins/FwVocalComp/nulltest/vc_ref.py`:
 
 | Set | Result |
 |---|---|
@@ -187,7 +187,7 @@ Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on 
 
 ## Flatwater Bass Lift
 
-`plugins/FwBassLift/nulltest/null_fwbasslift.py`, 12 signals x 8 settings (Freq, Intensity, Gain, Original Bass In / Out): median
+`plugins/FwBassLift/nulltest/bf_ref.py`, 12 signals x 8 settings (Freq, Intensity, Gain, Original Bass In / Out): median
 -36.8 dB on the whole output and -31.5 dB on the created harmonics alone.
 
 - Per signal (median over the settings): tones at or above Freq, sweeps, white noise -43 to -49 dB; bass notes, level

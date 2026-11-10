@@ -1,22 +1,23 @@
-"""Reads the reference MaxxBass presets (the factory preset file of the local install, named by local.yaml's FwBassXLift.ref_presets)
-and writes their settings, converted by the reference itself, to build/ref_presets_MaxxBass.json: each preset array is
+"""Reads the reference's presets (the factory preset file of the local install, named by local.yaml's FwBassXLift.ref_presets)
+and writes their settings, converted by the reference itself, to build/ref_presets_FwBassXLift.json: each preset array is
 written into the loaded plug-in's state (as stored, States or RealWorld) and the plug-in's own parameter values are
 read back. Nothing from the file is published; Flatwater BassX Lift presets are made from the values with new names
 (scripts/make_presets.py)."""
 import sys, os, re, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import local_config as L
+import local_config_lib as L
 import refhost as R
-import refstate as W
+import ref_state_lib as W
+import bx_ref as BX
 
 SRC = L.get('FwBassXLift.ref_presets')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_MaxxBass.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_FwBassXLift.json")
 import math
 
 
 def gain_db(v):
-    """the reference's gain fader taper (FwBassXLift Phase 2): 40 log10(1.5 v) up to 0 dB at 2/3, then 8u + 4u^2, u = 3v - 2"""
+    """The reference's gain fader taper (FwBassXLift Phase 2): 40 log10(1.5 v) up to 0 dB at 2/3, then 8u + 4u^2, u = 3v - 2"""
     if v <= 0: return float("-inf")
     return 40 * math.log10(1.5 * v) if v <= 2 / 3 else 8 * (3 * v - 2) + 4 * (3 * v - 2) ** 2
 
@@ -43,7 +44,7 @@ def from_strings(rw):
 PARAMS = ("frequency", "harmonics_decay", "response", "ratio", "highpass", "orig_bass_gain", "harmonics_gain", "monitor")
 
 t = open(SRC, encoding="utf-8").read()
-p = R.load("MaxxBass Stereo")
+p = R.load(BX.component())
 base = p.raw_state
 inner0 = W.get_inner(base).decode("latin-1")
 assert re.search(r'<Parameters Type="RealWorld">', inner0), inner0[:400]

@@ -1,4 +1,4 @@
-"""The reference Bass Rider's riding on the bass corpus (scripts/nulltest/bass_corpus.py): its applied gain on every part at a set of
+"""The reference's riding on the bass corpus (scripts/nulltest/bass_corpus_lib.py): its applied gain on every part at a set of
 settings, through pedalboard (lined up with the input), kept at 0.5 ms (the 2 ms least-squares gain trace, every 24th
 sample) in measurements/FwBassLeveler/corpus/<part>_<setting>.npy (git-ignored).
 
@@ -9,7 +9,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import bass_corpus as K
+import bass_corpus_lib as K
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'corpus')

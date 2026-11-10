@@ -1,9 +1,8 @@
 """Generates the factory preset tables of Flatwater Bass Lift, Flatwater Vocal Comp, Flatwater BassX Lift, Flatwater Comp, Flatwater Delay and Flatwater Bass Leveler (plugins/<P>/Source/Presets.h).
 
-Input: build/ref_presets_RBass.json and build/ref_presets_RVox.json, written by scripts/nulltest/read_ref_presets.py, and
-build/ref_presets_MaxxBass.json, written by plugins/FwBassXLift/nulltest/read_ref_presets.py, and build/ref_presets_HComp.json, written
-by plugins/FwComp/nulltest/read_ref_presets.py, and build/ref_presets_HDelay.json, written by plugins/FwDelay/nulltest/read_ref_presets.py, and
-build/ref_presets_BassRider.json, written by plugins/FwBassLeveler/nulltest/read_ref_presets.py,
+Input: build/ref_presets_<PluginId>.json, written by plugins/<PluginId>/nulltest/read_ref_presets.py (FwBassXLift, FwComp,
+FwDelay, FwBassLeveler, FwVocalLeveler) and by scripts/nulltest/read_ref_presets.py (FwBassLift, FwVocalComp); a file
+still under its name before 1.1 is read under that name,
 from the reference presets of the local install (setting values only). Each table maps a preset's position in the
 reference's preset file (or in its sorted preset folder), in the order the reader lists them, to our group and name; no
 reference preset name or path is kept here. The preset names are our own: no artist names, no vendor product names,
@@ -15,6 +14,14 @@ import json, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
+
+
+def ref_presets(plugin):
+    """build/ref_presets_<plugin>.json (under its earlier name while only that one exists: scripts/nulltest/local_config_lib.py)"""
+    import sys
+    sys.path.append(os.path.join(HERE, "nulltest"))
+    import local_config_lib as L
+    return L.local_file("build/ref_presets_%s.json" % plugin)
 
 # position in the reference's preset folder (read_ref_presets.py: the sorted file list) -> (group, our name); the
 # positions left out are its reset presets
@@ -194,7 +201,7 @@ def vocal_values(rw):
 
 
 def write(pid, product, src, names, conv, order):
-    data = json.load(open(os.path.join(ROOT, "build", src)))
+    data = json.load(open(ref_presets(src)))
     missing = [k for k, d in enumerate(data) if k not in names and "reset" not in d["file"].lower()]
     assert not missing, missing
     assert sorted(order) == sorted(name for _, name in names.values()), "the order list and the names differ"
@@ -217,7 +224,7 @@ NL = "\n"
 
 
 def write_maxx():
-    data = json.load(open(os.path.join(ROOT, "build", "ref_presets_MaxxBass.json")))
+    data = json.load(open(ref_presets("FwBassXLift")))
     assert len(data) == len(MAXX_NAMES) == 22, "preset list changed"
     db = lambda v, hi: -100.0 if v == float("-inf") or v <= -99.9 else num(v, -100, hi, 1)
     rows = []
@@ -244,7 +251,7 @@ def write_hcomp():
     # reading its parameters back (plugins/FwComp/nulltest/read_ref_presets.py): 0 Threshold, 1 Ratio, 3 Punch, 4 Mix, 5 Output,
     # 6 Attack, 7 Release, 8 Release Note (index), 9 Sync (0 BPM, 1 Host, 2 ms), 10 BPM, 13 Limiter (1 On), 28 Analog
     # (0 Off .. 4); '*' leaves a parameter at its default
-    data = json.load(open(os.path.join(ROOT, "build", "ref_presets_HComp.json")))
+    data = json.load(open(ref_presets("FwComp")))
     assert len(data) == len(HCOMP_NAMES) == 26, "preset list changed"
     rows = []
     for k, d in enumerate(data):
@@ -293,7 +300,7 @@ def write_hdelay():
     # 19 Depth, 20 Rate, 21 LoFi, 23 Analog. The start side, Dual and the right side's times are not stored.
     # Values as stored: the reference takes a preset's values exactly (FwDelayProcessor uses them while the parameter
     # stays where the preset put it); LoPass 20 100 is Off, 20 139 a filter at 20 139 Hz.
-    data = json.load(open(os.path.join(ROOT, "build", "ref_presets_HDelay.json")))
+    data = json.load(open(ref_presets("FwDelay")))
     assert len(data) == len(HDELAY_NAMES) == 88, "preset list changed"
     assert len(set(HDELAY_NAMES)) == len(HDELAY_NAMES)
     rows = []
@@ -330,7 +337,7 @@ def write_bassleveler():
     # the arrays hold real-world values: 4 Output, 8 / 9 Range Min / Max, 12 Target ("*": the preset leaves it), 31
     # Sensitivity, 33 Response (0 Slow, 1 Fast), 34 the Idle arrow's place in the range, 44 the Artifacts gate (-20 .. -3
     # dB, shown 0 .. 100 linearly), 45 Spill. The other stored values are the same in every preset (the hidden ones).
-    data = json.load(open(os.path.join(ROOT, "build", "ref_presets_BassRider.json")))
+    data = json.load(open(ref_presets("FwBassLeveler")))
     assert len(data) == len(BASSLEVELER_NAMES) == 17, "preset list changed"
     rows = []
     for k, d in enumerate(data):
@@ -357,7 +364,7 @@ def write_bassleveler():
 
 
 # the reference's 13 presets, in its order, with our names
-VOCALRIDER_NAMES = [
+VOCALLEVELER_NAMES = [
     "Default", "Gentle Ride", "Steady Lead", "Quick Ride", "Floor Ride", "Upper Ride", "Big Swings", "Loud Mix",
     "Loud Lead", "Auto Fader", "Level Tamer", "Ceiling Ride", "Open Up"]
 
@@ -367,8 +374,8 @@ def write_vocalrider():
     # Sensitivity, 20 Output, 30 Automation ("*": the preset leaves it), 32 the Idle arrow's place in the range (some
     # presets use 0 and 1, outside the arrow's 0.02 .. 0.98: kept exactly, see FwVocalLevelerProcessor), 42 Attack (which
     # sets the Attack-tied hidden values the presets also store). Spill is not stored in presets.
-    data = json.load(open(os.path.join(ROOT, "build", "ref_presets_VocalRider.json")))
-    assert len(data) == len(VOCALRIDER_NAMES) == 13, "preset list changed"
+    data = json.load(open(ref_presets("FwVocalLeveler")))
+    assert len(data) == len(VOCALLEVELER_NAMES) == 13, "preset list changed"
     rows = []
     for k, d in enumerate(data):
         r = d["raw"]; get = lambda i: float(r[i])
@@ -376,7 +383,7 @@ def write_vocalrider():
                 ("rangeMax", num(get(3), -11, 12, 1)), ("vocalSensitivity", num(get(6), -12, 12, 1)), ("output", num(get(20), -12, 12, 1)),
                 ("idle", num(get(32), 0.0, 1.0, 2)), ("attack", float(int(get(42))))]
         if r[30] != "*": vals.append(("automation", float(int(get(30)))))
-        rows.append('    { "Essentials", "%s", { %s } },' % (VOCALRIDER_NAMES[k], ", ".join('{ "%s", %rf }' % (pid, float(v)) for pid, v in vals)))
+        rows.append('    { "Essentials", "%s", { %s } },' % (VOCALLEVELER_NAMES[k], ", ".join('{ "%s", %rf }' % (pid, float(v)) for pid, v in vals)))
     out = os.path.join(ROOT, "plugins", "FwVocalLeveler", "Source", "Presets.h")
     head = ("#pragma once" + NL + "// Factory presets of Flatwater Vocal Leveler, generated by scripts/make_presets.py (do not edit by hand)." + NL
             + "// Setting values carried over from the reference's presets (see plugins/FwVocalLeveler/nulltest/read_ref_presets.py); names are Flatwater's" + NL
@@ -389,8 +396,8 @@ def write_vocalrider():
     print(out, len(rows), "presets")
 
 
-write("FwBassLift", "Flatwater Bass Lift", "ref_presets_RBass.json", BASS_NAMES, bass_values, BASS_ORDER)
-write("FwVocalComp", "Flatwater Vocal Comp", "ref_presets_RVox.json", VOCAL_NAMES, vocal_values, VOCAL_ORDER)
+write("FwBassLift", "Flatwater Bass Lift", "FwBassLift", BASS_NAMES, bass_values, BASS_ORDER)
+write("FwVocalComp", "Flatwater Vocal Comp", "FwVocalComp", VOCAL_NAMES, vocal_values, VOCAL_ORDER)
 write_maxx()
 write_hcomp()
 write_hdelay()
@@ -424,7 +431,7 @@ def write_vocalchain():
     import re
     import sys
     sys.path.append(os.path.join(HERE, "nulltest"))
-    import local_config as L
+    import local_config_lib as L
     path = os.environ.get("FW_CLAV_PRESETS") or L.get("FwVocalChain.ref_presets", required=False) or ""
     if not os.path.exists(path):
         print("skipped Flatwater Vocal Chain: no", path)

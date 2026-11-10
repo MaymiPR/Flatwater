@@ -10,9 +10,9 @@ with the method and the residual or confidence of each. The data and plots are i
 |---|---|
 | Reference | Renaissance Bass (Waves), the RBass Stereo and RBass Mono components, from a licensed install |
 | Host | pedalboard loading the reference's VST3 (`scripts/nulltest/refhost.py`, `render_rbass`), 512-sample buffers, 48 kHz |
-| Hidden parameters | the parameters the VST3 does not expose (Original Bass In / Out, Response, Ratio, Decay and the rest) are written into the reference's saved state, which holds all its parameter values (`scripts/nulltest/refstate.py`); the reference ignores some otherwise valid states depending on the payload size, so every write is padded and verified by reading it back; Freq, Intensity and Gain are set as normal parameters; Input (the first in the original's parameter order) stays at 0 when written this way and is not measured |
+| Hidden parameters | the parameters the VST3 does not expose (Original Bass In / Out, Response, Ratio, Decay and the rest) are written into the reference's saved state, which holds all its parameter values (`scripts/nulltest/ref_state_lib.py`); the reference ignores some otherwise valid states depending on the payload size, so every write is padded and verified by reading it back; Freq, Intensity and Gain are set as normal parameters; Input (the first in the original's parameter order) stays at 0 when written this way and is not measured |
 | Signals | sine tones (component amplitudes and phases by synchronous detection over whole periods), level steps, DC-free parameter sweeps, two-tone kernels, AM and beating tones, kicks, bass notes and a riff |
-| Identification scripts | `plugins/FwBassLift/nulltest/measure_generator.py`, `plugins/FwBassLift/nulltest/measure_sweep.py`, `plugins/FwBassLift/nulltest/measure_k2.py`, `plugins/FwBassLift/nulltest/render_fitdata.py`, `plugins/FwBassLift/nulltest/model.py` (the Python model) |
+| Identification scripts | `plugins/FwBassLift/nulltest/measure_generator.py`, `plugins/FwBassLift/nulltest/measure_sweep.py`, `plugins/FwBassLift/nulltest/measure_kernel.py`, `plugins/FwBassLift/nulltest/render_fitdata.py`, `plugins/FwBassLift/nulltest/model_lib.py` (the Python model) |
 | Data files | `linear_paths.json`, `k2_grid6.json`, `levels_decay0.json`, `cs_vs_f0.json`, `am70.json`, `beat70.json`, `dyn_env70.json` and others in `measurements/FwBassLift/` |
 | Generated part | Intensity is an exact gain on the generated path, so a second render at another Intensity splits the generated part off the reference's output in every null test |
 
@@ -37,7 +37,7 @@ with the method and the residual or confidence of each. The data and plots are i
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | Low-level response | -C0 \* LP3(F/3) \* HP3(F) \* HP3(F), C0 about 290 to 300 (about +49.5 dB); a resonant boost just above Freq: +13.4 dB at 82 Hz (Freq 80, Intensity 0, -30 dBFS tone), +12.2 dB at 168 Hz (Freq 160); with Intensity -24 it shrinks to +1.6 dB, so it is the generated path, not a fixed EQ | tones over F = 40 to 256 Hz | log-magnitude error 0.0044 rms |
-| Harmonic product | a second-order term u \* b followed by HP3(F/3) and HP3(F), with u = LP3(F/3) HP3(F) x and b = LP3(F) x | 190 two-tone kernels on a grid where many pairs share the sum frequency (`plugins/FwBassLift/nulltest/measure_k2.py`) | free post-filter and factors: 0.04 dB / 0.05 degrees rms; the closed form: 0.085 dB / 0.3 degrees rms |
+| Harmonic product | a second-order term u \* b followed by HP3(F/3) and HP3(F), with u = LP3(F/3) HP3(F) x and b = LP3(F) x | 190 two-tone kernels on a grid where many pairs share the sum frequency (`plugins/FwBassLift/nulltest/measure_kernel.py`) | free post-filter and factors: 0.04 dB / 0.05 degrees rms; the closed form: 0.085 dB / 0.3 degrees rms |
 | Harmonic content | mainly the 2nd and 3rd harmonics, the 4th and 5th 20 to 30 dB lower; for -20 dBFS tones with Freq 80 the 2nd harmonic is -14.8 dB re input at 50 Hz and -29.6 dB at 120 Hz; a strong component at the input frequency itself (+8.4 dB at 80 Hz); content falls away above about 2 x Freq | tones | measured |
 | Decay (hidden) | the gain of the harmonic product: Decay 0 removes the even harmonics completely (2nd harmonic -166 dB) and leaves the rest unchanged; it reads back only 0 or 1; level effect -7.4 dB at 0 against -6.6 at 1 (-10 dBFS step) | tones, steps | exact |
 | Intensity | an exact gain on the generated path: for a 50 Hz tone the generated fundamental is -23.2 / -1.0 / +12.5 dB re input at Intensity -12 / 0 / +12 | tones | -147 dB as a gain, until the generated limiter (section 5) |
@@ -50,7 +50,7 @@ with the method and the residual or confidence of each. The data and plots are i
 |---|---|---|---|
 | Level dependence | strongly non-linear: the generated harmonics grow about 2 dB per dB at low level (-99.8 dB at -60 dBFS, -76.7 at -48, -55.8 at -36) and level off towards 1 dB per dB at high level (-25.6 at -12, -14.9 at 0 dBFS); the generated fundamental is compressed (-52.8 dB at -60 dBFS, -18.0 at -12, -19.0 at 0 dBFS) | tone levels | measured |
 | Ratio (hidden) | 1.0 and 0.63 give identical output in the identification renders; below about 0.5 the compression gets stronger (0.25: -5.95 dB at 0 dBFS); the first step battery read a steady gain of -24.4 / -6.6 / -5.1 dB for Ratio 0.25 / 0.63 / 1.0 (-10 dBFS step); Flatwater Bass Lift keeps the parameter (the presets use 0.63) and does not use it | steps, sweeps | measured |
-| Where the gain acts | mostly after the first HP3(F), with about 5 % of it (in dB) ahead of it (`alpha`); a gain fully ahead of the high-passes gives the right 3rd harmonic on low notes but the wrong one near F, and the reverse when fully after | a free gain trajectory solved under each placement (`plugins/FwBassLift/nulltest/extract_cs.py`), complete models fitted | fitted |
+| Where the gain acts | mostly after the first HP3(F), with about 5 % of it (in dB) ahead of it (`alpha`); a gain fully ahead of the high-passes gives the right 3rd harmonic on low notes but the wrong one near F, and the reverse when fully after | a free gain trajectory solved under each placement (`plugins/FwBassLift/nulltest/fit_gain_trace.py`), complete models fitted | fitted |
 | Dynamics | a second-order, asymmetric response: about 10 ms of delay, then the gain settles within 30 to 40 ms after a rise and more slowly after a fall, without overshoot; seen on the output, the generated part follows a step within about 50 to 100 ms and after a step down overshoots briefly, settling within about 100 ms; modelled as two attack / release followers in cascade | level steps of a 70 Hz tone, the ratio of Hilbert envelopes (`dyn_env70.json`) | fitted |
 | Ripple | the gain over one period is a sawtooth locked to the zero crossings of LP3(F/3) x: it jumps at each zero crossing and slides down through the half-cycle; the first follower reproduces it by falling almost at once and rising slowly | recovered gain per period | fitted |
 | Level band | a resonant low-pass near F (LP2 at 1.0 F, Q 1.35, times LP1 at 10 F): compression is strongest for notes just below F and lighter above it | `cs_vs_f0.json` | fitted |
@@ -100,7 +100,7 @@ It is a learned model of the reference's gain control, not an identification of 
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Whole output | median -36.8 dB | 12 signals x 8 settings, [NULLTESTS.md](NULLTESTS.md) (`plugins/FwBassLift/nulltest/null_fwbasslift.py`) | a model, not a null |
+| Whole output | median -36.8 dB | 12 signals x 8 settings, [NULLTESTS.md](NULLTESTS.md) (`plugins/FwBassLift/nulltest/bf_ref.py`) | a model, not a null |
 | Generated part alone | median -31.5 dB; by setting -34 to -36 dB at Freq 32 / 40, -30 to -31 at Freq 80, -26 at Freq 160, -17 at Freq 256 (whose worst cases are very low notes with a generated part 38 dB under the output) | the same | a model |
 | Weakest signals | kick-like transients (-22 dB) and a 30 Hz tone (-22 dB) | the same | |
 
@@ -120,7 +120,7 @@ The reference's meters cannot be read through the plug-in interface, so they wer
 the plug-in, plays a test signal through it in real time, records its output, and grabs the editor about 40 times a
 second; `scripts/nulltest/read_meter_frames.py` turns the frames into bar heights (numbers in
 [measurements/FwBassLift/meters](../../measurements/FwBassLift/meters); the screenshots stay out of the repository).
-Signals: tone bursts and level steps at 25 / 50 / 300 / 1000 Hz, 5 / 20 / 100 ms bursts (`scripts/nulltest/make_meter_probe.py`),
+Signals: tone bursts and level steps at 25 / 50 / 300 / 1000 Hz, 5 / 20 / 100 ms bursts (`scripts/nulltest/render_meter_probe.py`),
 a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Meter.h`).
 
 | Quantity | Value | Method | Residual or confidence |
@@ -148,6 +148,17 @@ signals; bar heights in [measurements/FwVocalComp/meters](../../measurements/FwV
 | Configuration | Cost |
 |---|---|
 | Stereo in real time, with the learned block | about 6 % of one core |
+
+## Scripts that replace earlier ones
+
+Every script named on this page by its current name; the earlier names stay in the history.
+
+| Script | Replaces |
+|---|---|
+| `nulltest/fit_combo.py` | the combined fit whose constants ship; the earlier joint multi-Freq fit (fit_multif2.py) is removed |
+| `nulltest/measure_kernel.py` | the two-tone second-order kernels (measure_k2.py) |
+| `nulltest/fit_gain_trace.py` | the generated path's gain over time by least squares (extract_cs.py) |
+| `nulltest/bf_ref.py` | the harness and the null test of the settings (null_fwbasslift.py) |
 
 ## Provenance
 

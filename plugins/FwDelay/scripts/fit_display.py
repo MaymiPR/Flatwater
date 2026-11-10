@@ -1,8 +1,11 @@
-"""Fits the segment font of the reference H-Delay's time display (reference/hdelay, git-ignored screenshots) and prints
+"""Fits the segment font of the reference's time display (reference/fwdelay, git-ignored screenshots) and prints
 the geometry Flatwater Delay's display draws with. No pixels are kept: only cell sizes, stroke widths, slants, segment insets
 and positions.
 
 A character is a 7-segment cell (w x h, its top left at x, y before the slant), strokes t wide; horizontal strokes run
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+import local_config_lib as LC
 from hx to w - hx, vertical ones from vy to h/2 - vy and from h/2 + vy to h - vy; the cell leans right by `slant` px per
 px of height. The amber coverage of the reference (R - B of the pixels: the glass is grey) is matched by a supersampled
 rendering of the same polygons.
@@ -73,7 +76,7 @@ def fit(path, box, layout, p0, names):
     return r.x
 
 
-R = 'reference/hdelay/'
+R = LC.local_file('reference/fwdelay') + '/'
 
 
 def main():

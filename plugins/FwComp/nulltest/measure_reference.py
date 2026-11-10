@@ -1,4 +1,4 @@
-"""Phase 3 measurements of the reference H-Comp (private analysis; the rendered audio is not published).
+"""Phase 3 measurements of the reference (private analysis; the rendered audio is not published).
 
     python -I measure_reference.py [section ...]
 
@@ -14,6 +14,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import refhost as R
+import co_ref as CO
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwComp")
 os.makedirs(OUT, exist_ok=True)
@@ -41,7 +42,7 @@ def db(v):
 
 
 def hc(x, **kw):
-    return R.render_hc(x, FS, **kw)
+    return CO.render_ref(x, FS, **kw)
 
 
 def sine(f, secs, amp, phase=0.0):
@@ -356,7 +357,7 @@ def sec_stereo():
     r['loud_left'] = float(np.median(db(gain_trace(xl, y[0]))[FS // 2:]))
     r['quiet_right'] = float(np.median(db(gain_trace(xr, y[1]))[FS // 2:]))
     r['quiet_alone'] = float(np.median(db(gain_trace(xr, hc(xr, threshold=-30.0, ratio=4.0)[0]))[FS // 2:]))
-    ym = R.render_hc(xl, FS, name="H-Comp Mono", threshold=-30.0, ratio=4.0)[0]
+    ym = CO.render_ref(xl, FS, name="H-Comp Mono", threshold=-30.0, ratio=4.0)[0]
     r['mono_loud'] = float(np.median(db(gain_trace(xl, ym))[FS // 2:]))
     print(r, flush=True)
     RES['stereo'] = r

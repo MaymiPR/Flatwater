@@ -1,9 +1,9 @@
-"""The learned lock of Flatwater Bass Leveler's ride (model.c, lock 1): when the gain stops following the law after a note's
-start and holds, learned from the reference's riding on the bass corpus (scripts/nulltest/bass_corpus.py, render_corpus.py).
+"""The learned lock of Flatwater Bass Leveler's ride (RideModel.c, lock 1): when the gain stops following the law after a note's
+start and holds, learned from the reference's riding on the bass corpus (scripts/nulltest/bass_corpus_lib.py, render_corpus.py).
 
 Labels: for each note the model starts where the reference rides too, the reference's lock moment is where our law
 (clamped to the range) last meets the value the reference then holds, just before its gain goes flat. Inputs: the
-model's own detector state every millisecond of the attack (model.c writes them: the same numbers the plug-in
+model's own detector state every millisecond of the attack (RideModel.c writes them: the same numbers the plug-in
 computes); the lock does not feed back into the detector, so they are exact for any lock. A note held at the range's
 end, or one the reference does not ride, gives no label; one the reference never holds before the next note gives
 only "not yet".
@@ -16,7 +16,7 @@ import sys, os, json, ctypes
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import model as B, fit_detector as F, bass_corpus as K, render_corpus as CR, compare_corpus as E
+import model_lib as B, fit_detector as F, bass_corpus_lib as K, render_corpus as CR, compare_corpus as E
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NET = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'lock_net.json')
@@ -54,7 +54,7 @@ def labels(x, gr, tr, kw):
         s2 = st[j + 1] if j + 1 < len(st) else len(x)
         end = min(s2, s + 400 * 48, len(x) - 1500)
         if end - s < 30 * 48: continue
-        # the reference rides here: it follows the law within 0.5 dB 15 .. 35 ms after the start (after its smoothing)
+        # The reference rides here: it follows the law within 0.5 dB 15 .. 35 ms after the start (after its smoothing)
         if np.median(np.abs(gr[s + 720:s + 1680] - L[s + 720:s + 1680])) > 0.5: continue
         seg = gr[s:end:48]; dd = np.abs(np.diff(seg))
         flat = [q for q in range(len(dd) - 30) if np.all(dd[q:q + 30] < 0.004)]

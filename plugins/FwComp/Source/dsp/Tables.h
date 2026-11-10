@@ -37,7 +37,7 @@ constexpr float memoryFloorMs = 16.7561366f;
 // true: R never falls below the slow state; false: the memory only slows the release
 constexpr bool rFloorAtS = true;
 
-// release law, fourth form (plugins/FwComp/nulltest/fit_release4.py): R falls at fs4(R) / (release * w4(R - S)) + as4(R) dB/s
+// release law, fourth form (declined, off without its fit; MEASUREMENTS.md section 5): R falls at fs4(R) / (release * w4(R - S)) + as4(R) dB/s
 // (w4 = w4(0) while R <= S), never below the target; S charges toward R (one-pole on the linear gain, crest4Ms)
 // and follows it down the same way (the Crest detector of the reference); after a reset S = start4Db; natural-log values
 constexpr bool hasRelease4 = false;

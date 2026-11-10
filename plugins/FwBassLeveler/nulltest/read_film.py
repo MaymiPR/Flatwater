@@ -1,4 +1,4 @@
-"""Reads a MeterCapture gl=1 film of Bass Rider (or Flatwater Bass Leveler's screen grab) into per-frame readings: the audio
+"""Reads a MeterCapture gl=1 film of the reference (or Flatwater Bass Leveler's screen grab) into per-frame readings: the audio
 time, the Energy meter's lit length (px of the 184 px bar, and the dB it shows on its -42 .. 0 scale), the Rider
 cap's position (dB on the fader's scale, by matching its default frame), the clip LED, and the plug-in's own gain
 over the same moment (output / input rms of the recorded audio, the 42 ms latency removed).

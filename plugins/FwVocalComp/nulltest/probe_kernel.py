@@ -2,6 +2,7 @@
 import sys, os; sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np, refhost as R
+import vc_ref as VC
 FS = 48000; c = -24; M = 10**(-c/20); A = 0.1
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'measurements', 'FwVocalComp', 'kernel_patterns.npz')
 def xdet(g_db): g = 10**(g_db/20); return (0.99*M/g - 1)/(M - 1)
@@ -17,7 +18,7 @@ for _ in range(150):
 res = []
 for p in pats:
     x = np.zeros(FS, np.float32); s = FS//2; x[s:s+len(p)] = A*np.array(p)
-    y = R.render(x, FS, comp=c)[0]
+    y = VC.render_ref(x, FS, comp=c)[0]
     # gain at the sample of largest |x| (the look-ahead ramp is complete there)
     k = int(np.argmax(np.abs(p)))
     g = 20*np.log10(abs(y[s+k])/abs(x[s+k]))

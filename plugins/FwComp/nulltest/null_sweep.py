@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'FwVocalComp', 'nulltest'))   # plugins/FwVocalComp/nulltest/
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import null_fwcomp as N, null_fwvocalcomp as NV, refhost as R
+import co_ref as N, vc_ref as NV, refhost as R
 
 fs = 48000
 S = N.signals(fs)

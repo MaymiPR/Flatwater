@@ -1,4 +1,4 @@
-"""Phase 3 measurements of the reference Vocal Rider (WaveShell VST3, the local install named by local.yaml's ref_vst3), from its audio: no latency,
+"""Phase 3 measurements of the reference (the shell VST3, the local install named by local.yaml's ref_vst3), from its audio: no latency,
 so the gain it applies is the output over the input, sample by sample. Every experiment renders a fresh instance at
 48 kHz (pedalboard; the side-chain through tools/RefRender).
 

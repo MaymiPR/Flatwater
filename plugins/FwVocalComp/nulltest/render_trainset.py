@@ -12,7 +12,8 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy.signal import butter, sosfilt
 import refhost as R
-import null_fwvocalcomp as N
+import vc_ref as VC
+import vc_ref as N
 
 FS = 48000
 SECS = 2.0
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     for i in range(count):
         kind, x = make(rng)
         comp = float(np.round(-36 * rng.random() ** 0.7, 1))         # weighted toward heavy compression
-        ref = R.render(x, FS, comp=comp)[0].astype(np.float32)
+        ref = VC.render_ref(x, FS, comp=comp)[0].astype(np.float32)
         ours, tr = internals(x, comp)
         np.savez_compressed(os.path.join(OUT, "%s_%04d.npz" % (split, i)), x=x, ref=ref, ours=ours, v=tr[:, 0], fast=tr[:, 1],
                             slow=tr[:, 2], comp=comp, kind=kind)

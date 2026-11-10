@@ -1,4 +1,4 @@
-"""Phase 1 probe of the reference CLA Vocals (WaveShell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
+"""Phase 1 probe of the reference (the shell VST3, the local install named by local.yaml's ref_vst3): the components the shell offers,
 each one's VST3 parameters (name, default text, the values a host can set; pedalboard hosts only the Stereo one), and
 the reported latency with the real delay of the audio (an impulse in, the output's first peak) at 44.1 / 48 / 96 kHz.
 
@@ -17,7 +17,7 @@ UIDS = ('CLA Vocals Stereo@1510537014', 'CLA Vocals Mono/Stereo@1511767094')
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
     cv = [n for n in names if "CLA Vocals" in n]
-    print("shell components with 'CLA Vocals':", cv)
+    print("the reference's components in the shell:", cv)
     for name in cv:
         if "Mono" in name: continue                        # (pedalboard cannot host 1 in / 2 out: RefRender below)
         R.fresh(name); p = R.load(name)

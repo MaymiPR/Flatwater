@@ -1,5 +1,5 @@
-"""Reads the reference Vocal Rider presets (the factory preset file of the local install, named by local.yaml's
-FwVocalLeveler.ref_presets) and writes their stored arrays to build/ref_presets_VocalRider.json. The arrays are RealWorld values in the
+"""Reads the reference's presets (the factory preset file of the local install, named by local.yaml's
+FwVocalLeveler.ref_presets) and writes their stored arrays to build/ref_presets_FwVocalLeveler.json. The arrays are RealWorld values in the
 ParamXML order of RESEARCH.md section 7 (0 Target, 1 Music Sensitivity, 2 / 3 Range Min / Max, 6 Vocal Sensitivity,
 20 Output, 30 Automation or "*" (kept), 32 the Idle arrow's place in the range, 42 Attack; the Attack-tied hidden
 values follow Attack). Nothing from the file is published; Flatwater Vocal Leveler presets are made from the values with new names
@@ -7,10 +7,10 @@ values follow Attack). Nothing from the file is published; Flatwater Vocal Level
 import os, re, json, sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import local_config as L
+import local_config_lib as L
 
 SRC = L.get('FwVocalLeveler.ref_presets')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_VocalRider.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_FwVocalLeveler.json")
 t = open(SRC, encoding="utf-8").read()
 out = []
 for m in re.finditer(r'<Preset [^>]*Name="([^"]*)".*?<Parameters Type="(\w+)">([^<]*)</Parameters>', t, re.S):

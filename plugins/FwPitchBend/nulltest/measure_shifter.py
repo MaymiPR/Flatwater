@@ -22,7 +22,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from scipy.signal import lfilter, butter, sosfiltfilt, correlate
-import vb as H
+import pb_ref as H
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwPitchBend', 'shifter')
@@ -30,7 +30,7 @@ CACHE = os.path.join(H.TMP, 'pbshift')
 os.makedirs(OUT, exist_ok=True); os.makedirs(CACHE, exist_ok=True)
 FS = 48000
 
-# the preset array's places (editor_state.py; repeated here so a cached run need not load the reference's state)
+# the preset array's places (editor_state_lib.py; repeated here so a cached run need not load the reference's state)
 PITCH, FORMANT, MIX, SEMITONES, FLATTEN_NOTE, FLATTEN_ON = 1372, 1373, 1456, 1484, 1495, 1497
 
 
@@ -68,7 +68,7 @@ def render_all(jobs, workers=4):
     """render a list of jobs (cached), in parallel; returns the outputs (mono float32 arrays) in order"""
     todo = [j for j in jobs if not os.path.exists(os.path.join(CACHE, j['key'] + '.npy'))]
     if todo and any(j['state'] for j in todo):
-        import editor_state as S                                    # (loads the reference once to write the state files)
+        import editor_state_lib as S                                    # (loads the reference once to write the state files)
         for j in todo:
             if j['state']: j['statefile'] = S.state_file(j['state'], 'pbs_' + j['key'], H.COMPONENTS[1].split('@')[0], check=False)
     if todo: print('rendering %d of %d' % (len(todo), len(jobs)), flush=True)
@@ -80,7 +80,7 @@ def render_all(jobs, workers=4):
 
 
 def st_job(x, pitch_c=0.0, formant_c=0.0, fs=FS, mix=100, flatten=None, extra=None):
-    """the reference with Fine on and Pitch / Formant in cents (through the state); flatten: a note 0 .. 23"""
+    """The reference with Fine on and Pitch / Formant in cents (through the state); flatten: a note 0 .. 23"""
     s = {SEMITONES: 0, PITCH: float(pitch_c), FORMANT: float(formant_c), MIX: float(mix)}
     if flatten is not None: s.update({FLATTEN_ON: 1, FLATTEN_NOTE: int(flatten)})
     if extra: s.update(extra)
@@ -88,7 +88,7 @@ def st_job(x, pitch_c=0.0, formant_c=0.0, fs=FS, mix=100, flatten=None, extra=No
 
 
 def semi_job(x, pitch_st=0, formant_st=0, fs=FS):
-    """the reference with Fine off and whole semitones through the host parameters"""
+    """The reference with Fine off and whole semitones through the host parameters"""
     return job(x, fs, params={'Pitch:': (pitch_st + 12) / 24.0, 'Formant:': (formant_st + 12) / 24.0})
 
 

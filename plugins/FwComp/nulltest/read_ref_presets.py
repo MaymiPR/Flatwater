@@ -1,16 +1,16 @@
-"""Reads the reference H-Comp presets (the factory preset file of the local install, named by local.yaml's FwComp.ref_presets) and
-writes their settings, converted by the reference itself, to build/ref_presets_HComp.json: each preset array is
+"""Reads the reference's presets (the factory preset file of the local install, named by local.yaml's FwComp.ref_presets) and
+writes their settings, converted by the reference itself, to build/ref_presets_FwComp.json: each preset array is
 written into the loaded plug-in's state and the plug-in's own parameter values are read back. Nothing from the file is
 published; Flatwater Comp presets are made from the values with new names (scripts/make_presets.py)."""
 import sys, os, re, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import local_config as L
+import local_config_lib as L
 import refhost as R
-import refstate as W
+import ref_state_lib as W
 
 SRC = L.get('FwComp.ref_presets')
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_HComp.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "build", "ref_presets_FwComp.json")
 PARAMS = ("threshold", "ratio", "punch", "mix", "output", "attack", "release", "releasebpm", "sync", "analog", "limiter", "meter_select")
 
 

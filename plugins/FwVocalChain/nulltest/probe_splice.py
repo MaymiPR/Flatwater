@@ -15,7 +15,7 @@ from scipy.signal import sosfilt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
-import cv as C
+import ch_ref as C
 import fit_deess as Fd
 FS = 48000
 CLEAR = dict(bass_color=0, treble_color=0, compress_color=0, reverb_color=0, delay_color=0, pitch_color=0)

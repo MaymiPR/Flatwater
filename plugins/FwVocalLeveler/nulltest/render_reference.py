@@ -1,5 +1,5 @@
-"""Reference renders for fitting Flatwater Vocal Leveler's riding (Phase 4): the vocal corpus (scripts/nulltest/vocal_corpus.py) and a set of
-probes (steps, gaps, glides, syllable trains), each at a list of settings, through the reference Vocal Rider (fresh
+"""Reference renders for fitting Flatwater Vocal Leveler's riding (Phase 4): the vocal corpus (scripts/nulltest/vocal_corpus_lib.py) and a set of
+probes (steps, gaps, glides, syllable trains), each at a list of settings, through the reference (fresh
 instance per render). Cached as npz in reference/fwvocalleveler/renders (git-ignored): x (input), y (output).
 
     python -I render_reference.py corpus | probes      render what is missing
@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
-import vocal_corpus as V
+import vocal_corpus_lib as V
 from measure_reference import seg, with_pilot, FS
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'reference', 'fwvocalleveler', 'renders')

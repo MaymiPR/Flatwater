@@ -44,7 +44,7 @@ their null cases (to 0.0001 ... 0.006 of the control's range, rms), and 62 of th
 every target for level, pitch and tone. On a steady vowel the grains sit where the reference's do: up to -27 dB of
 cancellation with small Formant moves. On a real voice the reference rebuilds the sound from its own period
 estimates, so no recreation nulls it sample for sample. Every case: [NULLTESTS.md](NULLTESTS.md) and
-[NULLTESTS-presets.md](NULLTESTS-presets.md).
+[the presets null test](NULLTESTS.md#presets).
 
 ## How it was made
 

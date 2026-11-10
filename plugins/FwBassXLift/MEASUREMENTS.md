@@ -12,7 +12,7 @@ G is the generated part, what the Harmonics monitor plays.
 | Reference | MaxxBass (Waves), the MaxxBass Stereo and MaxxBass Mono components, from a licensed install |
 | Host | pedalboard loading the reference's VST3, 512-sample buffers, 48 kHz; every control is a VST3 parameter, so `scripts/nulltest/refhost.py` `render_mb` sets them all (the rest at their defaults) and no state writing is needed |
 | Analysis | sine tones by synchronous detection over whole periods; level steps by the Hilbert envelope; the linear path by impulse responses |
-| Identification scripts | `plugins/FwBassXLift/nulltest/measure_linear.py` (small-signal response), `plugins/FwBassXLift/nulltest/measure_k2.py` (two-tone kernels), `plugins/FwBassXLift/nulltest/extract_g2.py` / `plugins/FwBassXLift/nulltest/extract_g3.py` (the gain over time), `plugins/FwBassXLift/nulltest/model.py` (the Python model), `plugins/FwBassXLift/nulltest/render_trainset_extract.py`, `plugins/FwBassXLift/nulltest/train_net.py` |
+| Identification scripts | `plugins/FwBassXLift/nulltest/measure_linear.py` (small-signal response), `plugins/FwBassXLift/nulltest/measure_kernel.py` (two-tone kernels), `plugins/FwBassXLift/nulltest/gain_trace_lib.py` / `plugins/FwBassXLift/nulltest/fit_gain_trace.py` (the gain over time), `plugins/FwBassXLift/nulltest/model_lib.py` (the Python model), `plugins/FwBassXLift/nulltest/render_trainset_extract.py`, `plugins/FwBassXLift/nulltest/train_net.py` |
 | Data files | `g_small_signal.json`, `k_out_table.json`, `static_gain_50hz.json`, `harmonics.csv`, `level.csv`, `level_ratio.png`, `dynamics_steps.png`, `recovery_F80.json` and others in `measurements/FwBassXLift/` |
 
 ## 1. Structure, latency and the faders
@@ -42,7 +42,7 @@ G is the generated part, what the Harmonics monitor plays.
 | At rest (very low level) | an exact LTI response -K(F) LP3(F) HP_G, bilinear Butterworth sections; HP_G at 6 dB/oct is HP2(16 Hz)^2, at 12 dB/oct HP2(F) HP2(16 Hz), at 24 dB/oct HP2(0.8 F)^2; below about 8 Hz the reference leaks a little DC (-50 to -98 dB), the mark of single-precision filter coefficients | impulse responses at 1e-4 (`plugins/FwBassXLift/nulltest/measure_linear.py`) | 0.009 to 0.035 dB, 0.2 degrees; linear to -58 dB; bit-exact time-invariant |
 | High-pass on G | applies to G only, not to the original path: at Freq 80, h1 of G is -4.1 / -21.6 / -36.1 dB at 20 Hz and -2.2 / -10.3 / -14.3 at 40 Hz for 6 / 12 / 24 dB/oct; equal above Freq | tones | measured |
 | Output scale K(F) | carried as the measured value for each of the 225 whole-Hz settings (2.77 at 32 Hz, 4.53 at 80 Hz, 5.59 at 256 Hz); smooth, but no simple formula fits better than 0.9 % | `k_out_table.json` | each fitted to -46 to -77 dB |
-| Harmonic product | 8 D \* u \* HP2_B(u), u = LP3(F) x, followed by the same HP_G, with HP2_B a Butterworth high-pass at F/3 held within 20 to 40 Hz; Decay is an exact gain on it (-9.00 / +6.00 dB for Decay -24 / -9) | 190 two-tone kernels per setting (`plugins/FwBassXLift/nulltest/measure_k2.py`) | sum and difference terms -46 to -50 dB at Freq 50 to 256 (the difference terms differ only below 10 Hz, the DC-leak region) |
+| Harmonic product | 8 D \* u \* HP2_B(u), u = LP3(F) x, followed by the same HP_G, with HP2_B a Butterworth high-pass at F/3 held within 20 to 40 Hz; Decay is an exact gain on it (-9.00 / +6.00 dB for Decay -24 / -9) | 190 two-tone kernels per setting (`plugins/FwBassXLift/nulltest/measure_kernel.py`) | sum and difference terms -46 to -50 dB at Freq 50 to 256 (the difference terms differ only below 10 Hz, the DC-leak region) |
 | Product against linear | 7.98 +- 0.01 x D at every Freq: the level control's ceiling is exactly 1, and K(F) is a separate output scale | kernels | measured |
 | Decay feedback | the product feeds back: y = w (1 + 8 D HP2_B(y)); the 3rd harmonic grows with D^2; the reference applies the loop with one sample of delay: when 8 D b0 abs(w) exceeds 1 (strong Decay, high Ratio, loud low bass) it oscillates at Nyquist, as seen in its own output, and y is held within +-1 | static harmonics | h1 -56 to -62 dB, h2 -40 to -55 dB |
 | G content | a strong component at the input frequency itself plus mostly 2nd and 3rd harmonics; -20 dBFS tones at Freq 80 and Decay -15, in dB re input: 40 Hz h1 -10.3, h2 -35.6, h3 -50.9, h4 -66; 60 Hz -6.6 / -37.8 / -47.0; 100 Hz -7.5 / -48.3 / -53.1 | `harmonics.csv`, 105 rows over Freq, Decay and f0 | measured |
@@ -59,7 +59,7 @@ G is the generated part, what the Harmonics monitor plays.
 | Steps | a 50 Hz step -40 -> -10 -> -40 dBFS: at Ratio 1, G settles within 1 dB in 34 / 51 / 72 ms after the rise for Response 10 / 20 / 30, overshooting +1.5 / +3.0 / +3.8 dB; after the fall it undershoots -6 to -10 dB and settles in 48 to 58 ms; at Ratio 4 the rise settles faster (16 to 40 ms) with less overshoot | `dynamics_steps.png` | measured |
 | Response on steady material | 10 or 30 ms against 20 ms changes G by -25 to -29 dB re G on a steady amplitude-modulated bass (an attack / release time, small on steady material) | AM bass | measured |
 | Recovery and attack | the level control recovers fully within 0.1 to 0.3 s of silence and, after silence, attacks over a time set by Response: at Ratio 1, 10 ms into a burst the gain is still -6.9 / -3.9 / -2.7 dB for Response 10 / 20 / 30, settling in about 4 x Response | `plugins/FwBassXLift/nulltest/probe_recovery.py`, `recovery_F80.json` | measured |
-| Gain over time | a fast drop at onsets, a release of hundreds of ms, and ripple within each cycle that adds odd harmonics at high level | extracted from renders by least squares through the exact structure (Gauss-Newton with the generator's exact Jacobian, `plugins/FwBassXLift/nulltest/extract_g2.py`, `plugins/FwBassXLift/nulltest/extract_g3.py`) | the model then re-renders the reference's G at -50 dB median (-38 dB on bass notes, -27 to -33 dB on kicks) |
+| Gain over time | a fast drop at onsets, a release of hundreds of ms, and ripple within each cycle that adds odd harmonics at high level | extracted from renders by least squares through the exact structure (Gauss-Newton with the generator's exact Jacobian, `plugins/FwBassXLift/nulltest/gain_trace_lib.py`, `plugins/FwBassXLift/nulltest/fit_gain_trace.py`) | the model then re-renders the reference's G at -50 dB median (-38 dB on bass notes, -27 to -33 dB on kicks) |
 
 Method notes: no analytical detector was found for the gain law (its knee and slope both move with Ratio, plus the
 resting state), so the plug-in learns g (section 5).
@@ -71,7 +71,7 @@ The plug-in keeps every identified part exact and learns only the level control 
 | Item | Value |
 |---|---|
 | Structure | a GRU with 48 units; inputs abs(x), abs(u) and abs(z) (compressed with asinh; z = K(F) HP_G(u), the signal the level control listens to), ln Ratio, Response, ln(F/80) and the High-pass setting; output ln g = -softplus(.), so g is at most 1; runs on its own 48 kHz clock at any host rate |
-| Target | the reference's generated part, trained end to end: the generator's forward and adjoint recursions run in C (`plugins/FwBassXLift/nulltest/generator.c`), HP_G as FFT convolutions on the GPU |
+| Target | the reference's generated part, trained end to end: the generator's forward and adjoint recursions run in C (`plugins/FwBassXLift/nulltest/native/Generator.c`), HP_G as FFT convolutions on the GPU |
 | Dataset | about 13 900 training renders of the reference (tones, steps, AM, two-tones, noise, kicks, bass lines, pinned pairs, sweeps) over random Freq, Ratio, Response, Decay and High-pass, onset-heavy (kicks, steps, bass lines, a third of it at Ratio 1), with long fine-tunes at a lower learning rate |
 | Held-out result | the validation set at -39.1 dB; the generated part in the null test -42.7 dB (-35.9 before the onset-heavy material and fine-tunes, which also brought kicks and steps 3 to 5 dB closer) |
 | C++ against PyTorch | -71 to -117 dB on most examples, -43 dB on a kick |
@@ -84,7 +84,7 @@ It is a learned model of the reference's gain control, not an identification of 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | Fixed cases | median -48.5 dB on the whole output, -42.7 dB on the generated part (Harmonics monitor); by signal (generated part): white noise -49 dB, quiet tones -59, tones and sweeps -40 to -49, pink noise -43, level steps -34, bass notes -27, kick-like transients -19 | 12 signals x 8 settings over Freq, Ratio, Response, Decay, High-pass and the faders, [NULLTESTS.md](NULLTESTS.md) | a model, not a null |
-| Random grid | median -35.2 dB whole output, -29.2 dB generated part (p90 -19 dB); no parameter range stands out (generated part -26 to -31 dB median in every Freq, Ratio, Decay and High-pass band) | 120 random settings over every control with the four hardest signals (`plugins/FwBassXLift/nulltest/null_grid.py`, `plugins/FwBassXLift/NULLTESTS-grid.json`) | a model |
+| Random grid | median -35.2 dB whole output, -29.2 dB generated part (p90 -19 dB); no parameter range stands out (generated part -26 to -31 dB median in every Freq, Ratio, Decay and High-pass band) | 120 random settings over every control with the four hardest signals (`plugins/FwBassXLift/nulltest/null_grid.py`, `measurements/FwBassXLift/nulltests-grid.json`) | a model |
 | The structure's ceiling | with the reference's own extracted gain the grid reaches -37.1 dB median against the network's -28.1 on the same 36 cases: bass notes -31 against -24, pink noise -46 against -36, the tone -39 against -31, kicks -21 against -18; kicks are mostly a limit of the structure (partly the reference's own monitor clipping at +-1 on the first kick peak), the rest mostly the learned level control | `plugins/FwBassXLift/nulltest/null_oracle_grid.py` | |
 | Worst cases | loud material at extreme settings (Freq 256 / Ratio 4 / Decay -12 with a -3 dBFS tone: +2.5 dB; Decay -9): there the reference's own Decay loop goes unstable and turns chaotic (Nyquist content -7 dB, h2 above h1, output pinned at +-1); even the reference's own extracted gain reproduces it only to -4 dB, and the structure with that gain reaches -20 to -27 dB at Decay -9 | the grid | open |
 | 96 kHz | within 1.8 dB of 48 kHz | the fixed cases | |
@@ -96,7 +96,7 @@ It is a learned model of the reference's gain control, not an identification of 
 | The network without z and the High-pass input | stopped at -22 dB on the generated part |
 | Explicit envelope followers of abs(z) as extra inputs (3 to 100 ms peak, 10 / 50 ms power) | no gain: the network does not lack them |
 | The previous output sample as an input (teacher-forced) | worse in closed loop |
-| An explicit detector instead of the GRU: two attack / release followers in cascade on abs(z) with learned time constants scaled by Response, Freq and Ratio, and a learned per-sample gain law (`plugins/FwBassXLift/nulltest/train_net_det.py`) | -30.8 dB on the validation set against -39.1 for the GRU, weakest on kicks (-17 dB) and steps (-21 dB): the reference's attack is richer than two followers; its fitted time constants (about 5 to 11 ms attack, 22 ms release, then a 15 to 22 ms smoother) agree with the recovery probe |
+| An explicit detector instead of the GRU: two attack / release followers in cascade on abs(z) with learned time constants scaled by Response, Freq and Ratio, and a learned per-sample gain law (`plugins/FwBassXLift/nulltest/train_detector.py`) | -30.8 dB on the validation set against -39.1 for the GRU, weakest on kicks (-17 dB) and steps (-21 dB): the reference's attack is richer than two followers; its fitted time constants (about 5 to 11 ms attack, 22 ms release, then a 15 to 22 ms smoother) agree with the recovery probe |
 
 ## 8. Meters
 
@@ -145,6 +145,17 @@ The Comp reference's knob law is in [plugins/FwComp/MEASUREMENTS.md](../FwComp/M
 | Configuration | Cost |
 |---|---|
 | Stereo in real time, with the learned block (SSE2 / NEON inner loops) | about 7 % of one core |
+
+## Scripts that replace earlier ones
+
+Every script named on this page by its current name; the earlier names stay in the history.
+
+| Script | Replaces |
+|---|---|
+| `nulltest/fit_gain_trace.py` | the gain over time by Gauss-Newton with the exact Jacobian (extract_g3.py) |
+| `nulltest/gain_trace_lib.py` | the forward least-squares extraction the training set uses (extract_g2.py) |
+| `nulltest/measure_kernel.py` | the two-tone kernels (measure_k2.py) |
+| `nulltest/train_detector.py` | the explicit-detector level control of the declined changes (train_net_det.py) |
 
 ## Provenance
 

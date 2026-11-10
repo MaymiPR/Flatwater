@@ -1,4 +1,4 @@
-"""Flatwater Comp Phase 4: identify H-Comp's Analog modes (compressor idle: threshold 0, ratio 1).
+"""Flatwater Comp Phase 4: identify the reference's Analog modes (compressor idle: threshold 0, ratio 1).
 
     python -I probe_analog.py probe <mode>     determinism, memory, static curve
 """
@@ -7,13 +7,14 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
+import co_ref as CO
 
 FS = 48000
 IDLE = dict(threshold=0.0, ratio=1.0, output=0.0, mix=100.0)
 
 
 def hc(x, mode, **kw):
-    return R.render_hc(x, FS, analog=mode, **{**IDLE, **kw})
+    return CO.render_ref(x, FS, analog=mode, **{**IDLE, **kw})
 
 
 def probe(mode):
@@ -52,7 +53,7 @@ BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..
 
 
 def dataset_signals():
-    import null_fwcomp as N
+    import co_ref as N
     rng = np.random.default_rng(11)
     n = int(1.5 * FS); t = np.arange(n) / FS
     S = []

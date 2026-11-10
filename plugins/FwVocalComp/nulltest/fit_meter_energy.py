@@ -1,4 +1,4 @@
-"""Fits the RVox Energy meter (input level) to a tools/MeterCapture recording: frame peak of the input, then one or
+"""Fits the reference Energy meter (input level) to a tools/MeterCapture recording: frame peak of the input, then one or
 two one-pole stages on linear amplitude (instant rise) with time constants tau1, tau2; px = off + ppd * dB.
 
     python -I fit_meter_energy.py build/meters/rv_probe.raw build/meters/probe.f32 [more pairs ...]

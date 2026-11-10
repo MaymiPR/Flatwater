@@ -9,5 +9,5 @@ for m in plain ctrl midctrl ctrlup; do
     mm=$m; [ $m = plain ] && mm=""
     D=""; for c in "${ctl[@]}"; do IFS=, read x y dx dy <<< "$c"; n=$(( (${dx#-} + ${dy#-}) / 10 )); D="$D drag=$x,$y,$dx,$dy,$mm,$n"; done
     timeout 300 "$MC" "$vst" "$name" x.raw design=$design $EXTRA $D > mf_$tag.log 2>&1
-    echo "-- $m" >> mfeel_$tag.txt; py -3.15 -I "$NT"/parse_drags_any.py mf_$tag.log >> mfeel_$tag.txt
+    echo "-- $m" >> mfeel_$tag.txt; py -3.15 -I "$NT"/read_drags_any.py mf_$tag.log >> mfeel_$tag.txt
 done

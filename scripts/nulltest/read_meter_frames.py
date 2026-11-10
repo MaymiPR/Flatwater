@@ -1,4 +1,4 @@
-"""Reads a tools/MeterCapture recording of a Renaissance-style editor (RBass / Flatwater Bass Lift, RVox / Flatwater Vocal Comp): bar fill (px) of
+"""Reads a tools/MeterCapture recording of a reference's editor (Flatwater Bass Lift's or Flatwater Vocal Comp's reference, or our own editor): bar fill (px) of
 each meter per frame, plus the recorded output audio."""
 import numpy as np
 

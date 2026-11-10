@@ -1,19 +1,20 @@
 """The first null test of Flatwater Pitch Bend: proves the hosts and the build before any DSP is written (the house
 workflow's Phase 0 gate). PASS / FAIL per check:
 
-  1. the reference renders (Stereo and Mono components): not silent, no latency reported
-  2. the reference's host Bypass is the input: below -80 dB
-  3. the reference renders the same twice (fresh instances, the shifter on: Pitch -5): below -120 dB (determinism)
+  1. The reference renders (Stereo and Mono components): not silent, no latency reported
+  2. The reference's host Bypass is the input: below -80 dB
+  3. The reference renders the same twice (fresh instances, the shifter on: Pitch -5): below -120 dB (determinism)
   4. our renderer at Mix 0 is the input: below -100 dB
   5. our VST3 at Mix 0 is the input: below -100 dB (the build and the renderer agree on the dry path)
   6. our VST3 equals our renderer at the defaults and at Mix 50: below -100 dB
 
-    python -I first_null.py
+    python -I first_null.py            # every check
+    python -I first_null.py --self     # without the reference: checks 4 to 6 only (the harness and the build)
 """
-import sys, os, re
+import argparse, sys, os, re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-import vb as H
+import pb_ref as H
 
 FS = 48000
 
@@ -25,27 +26,31 @@ def check(name, db, limit):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__.split(chr(10))[0])
+    ap.add_argument('--self', action='store_true', help='skip the reference (not installed here)')
+    a = ap.parse_args()
     x = H.noise(3.0, -18.0)
     v = H.vowel(3.0, 196.0, -18.0, vib=30.0)
     skip = FS // 10
     ok = True
 
-    for ch in (2, 1):
-        y, log = H.render_ref(v[:ch], FS, log=True)
-        m = re.search(r'latency (\d+)', log)
-        lat = int(m.group(1)) if m else -1
-        print('reference %s: rms %.1f dB, latency %d samples' % (H.COMPONENTS[ch], H.rms_db(y), lat))
-        ok &= check('reference %d ch not silent (rms above -60 dB)' % ch, -H.rms_db(y), 60.0)
-        ok &= check('reference %d ch reports no latency (samples)' % ch, abs(lat), 0.5)
+    if not a.self:
+        for ch in (2, 1):
+            y, log = H.render_ref(v[:ch], FS, log=True)
+            m = re.search(r'latency (\d+)', log)
+            lat = int(m.group(1)) if m else -1
+            print('reference %s: rms %.1f dB, latency %d samples' % (H.COMPONENTS[ch], H.rms_db(y), lat))
+            ok &= check('reference %d ch not silent (rms above -60 dB)' % ch, -H.rms_db(y), 60.0)
+            ok &= check('reference %d ch reports no latency (samples)' % ch, abs(lat), 0.5)
 
-    y = H.render_ref(x, FS, {'Bypass:': 1.0})
-    ok &= check('reference: Bypass = input', H.residual_db(x, y, skip), -80.0)
+        y = H.render_ref(x, FS, {'Bypass:': 1.0})
+        ok &= check('reference: Bypass = input', H.residual_db(x, y, skip), -80.0)
 
-    # (the reference reads a typed "-5" as 0 semitones: its Pitch is set by normalised value, (-5 + 12) / 24)
-    y1 = H.render_ref(v, FS, {'Pitch:': 7 / 24})
-    y2 = H.render_ref(v, FS, {'Pitch:': 7 / 24})
-    print('reference at Pitch -5 against the input: %.1f dB (the shifter is on)' % H.residual_db(v, y1, skip))
-    ok &= check('reference renders the same twice (Pitch -5)', H.residual_db(y1, y2, 0), -120.0)
+        # (the reference reads a typed "-5" as 0 semitones: its Pitch is set by normalised value, (-5 + 12) / 24)
+        y1 = H.render_ref(v, FS, {'Pitch:': 7 / 24})
+        y2 = H.render_ref(v, FS, {'Pitch:': 7 / 24})
+        print('reference at Pitch -5 against the input: %.1f dB (the shifter is on)' % H.residual_db(v, y1, skip))
+        ok &= check('reference renders the same twice (Pitch -5)', H.residual_db(y1, y2, 0), -120.0)
 
     ok &= check('our renderer: Mix 0 = input', H.residual_db(x, H.render_ours(x, FS, {'mix': 0}), 0), -100.0)
     ok &= check('our VST3: Mix 0 = input', H.residual_db(x, H.render_vst3(x, FS, {'Mix': '0'}), 0), -100.0)

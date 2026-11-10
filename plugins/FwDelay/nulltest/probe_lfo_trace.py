@@ -20,8 +20,8 @@ if __name__ == "__main__":
     t = np.arange(int(2.0 * fs)) / fs
     x = (0.3 * np.sin(2 * np.pi * f * (t + 3.0))).astype(np.float32); x2 = np.stack([x, x])
     k = dict(analog="Off", feedback=0, mix=100, depth=d, rate=rt, preroll=3.0, changes=[(-2.5, "sync", "ms"), (-2.45, "delay", ms), (0.0, "feedback", 0)])
-    if os.environ.get("STATE"):                     # the reference by a preset state (its exact values), not parameters
-        import refhost as R, hd as H, null_presets as Q
+    if os.environ.get("STATE"):                     # The reference by a preset state (its exact values), not parameters
+        import refhost as R, de_ref as H, null_presets as Q
         v = dict(sync=2, bpm=120, delay=ms, delayNote=11, mix=100, feedback=0, phaseL=0, phaseR=0, pingPong=0, output=0,
                  lopass=20138.77, hipass=19, depth=d, rate=rt, lofi=0, analog=0)
         sf = Q.state_file(Q.preset_array(v), os.path.join(N.TMP, 'trace_state.bin'))

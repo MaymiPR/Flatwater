@@ -1,0 +1,15 @@
+# Local data files (git-ignored) whose names changed in 1.1, so that no vendor word names a file a script reads.
+# One line per file: the current path | the earlier path, both from the repository root. local_config_lib.local_file()
+# reads a file under its earlier path while only that one exists; this list and the fallback go in the release after.
+build/ref_presets_FwBassLeveler.json | build/ref_presets_BassRider.json
+build/ref_presets_FwBassLift.json | build/ref_presets_RBass.json
+build/ref_presets_FwBassXLift.json | build/ref_presets_MaxxBass.json
+build/ref_presets_FwComp.json | build/ref_presets_HComp.json
+build/ref_presets_FwDelay.json | build/ref_presets_HDelay.json
+build/ref_presets_FwVocalComp.json | build/ref_presets_RVox.json
+build/ref_presets_FwVocalLeveler.json | build/ref_presets_VocalRider.json
+build/ref_states_FwDelay | build/hdelay_states
+reference/fwbassleveler/skin | reference/fwbassleveler/webp/Bass Rider_Webp
+reference/fwvocalleveler/skin/images | reference/fwvocalleveler/skin/Vocal Rider_Webp
+reference/fwdelay | reference/hdelay
+reference/fwvocalcomp/skin | reference/rvox_png

@@ -5,7 +5,7 @@
 #include <vector>
 
 // Flatwater Bass Leveler's riding (Phase 4): the reference's measured stages (MEASUREMENTS.md "Flatwater Bass Leveler: Phase 3 / 4"), fitted
-// on its audio; plugins/FwBassLeveler/nulltest/model.c is the same model, line for line, and plugins/FwBassLeveler/nulltest/fit_detector.py fits its note detector. Per
+// on its audio; plugins/FwBassLeveler/nulltest/native/RideModel.c is the same model, line for line, and plugins/FwBassLeveler/nulltest/fit_detector.py fits its note detector. Per
 // input sample (the mid of the input, undelayed) it returns the ride in dB, which the processor applies to the audio its
 // latency later (the look-ahead).
 //   the level read: E = 10 log10 of the analytic envelope's power of the input through a low shelf (two first-order
@@ -38,7 +38,7 @@ public:
     void prepare (double sampleRate)
     {
         fs = sampleRate;
-        // the quadrature pair for the rate (plugins/FwBassLeveler/nulltest/design_hilbert.py: 12 Hz .. 20 kHz to 0.09 .. 0.23 degrees)
+        // the quadrature pair for the rate (plugins/FwBassLeveler/nulltest/fit_hilbert.py: 12 Hz .. 20 kHz to 0.09 .. 0.23 degrees)
         static const double a44[] = { 0.0866808661, 0.5220622640, 0.8280574169, 0.9465481697, 0.9843337230, 0.9961024007 };
         static const double b44[] = { 0.2941886855, 0.7048765504, 0.9031801816, 0.9708695148, 0.9918102724, 0.9988535508 };
         static const double a48[] = { 0.0883565679, 0.5293150639, 0.8335757261, 0.9490582015, 0.9852616074, 0.9963705210 };
@@ -170,7 +170,7 @@ public:
     double energy = -300.0;          // the level read (dB), what the Energy meter shows
     int64_t preHold = 0;             // the look-ahead in samples (set by the processor)
 
-    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; plugins/FwBassLeveler/nulltest/export_detector.py)
+    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; plugins/FwBassLeveler/scripts/export_detector.py)
     double slowAtt = 9.8499, slowRel = 1351.1864, refRel = 5677.9174, hyst = 0.0043, relMs = 1.3193, holdMs = 53.7331,
            followAtt = 10.4011, followRel = 345.0301, bandHi = 172.0, bandLo = 78.0, reRideLo = 36.7818, reRideHi = 49.2817, reRideDepth = 4.4, offMs = 26.5947, offRelMs = 6.6073, winMs = 1.1550, floorDb = -48.75;
     // at Sensitivity 0 .. 100 by 25: the rise over S that is a new note, the margin over F that keeps the attack, and a

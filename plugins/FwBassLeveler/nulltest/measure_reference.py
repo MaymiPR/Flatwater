@@ -1,4 +1,4 @@
-"""Phase 3 measurements of the reference Bass Rider (WaveShell VST3, the local install named by local.yaml's ref_vst3), from its audio: the gain it
+"""Phase 3 measurements of the reference (the shell VST3, the local install named by local.yaml's ref_vst3), from its audio: the gain it
 applies is the output over the input (pedalboard compensates the reported 42 ms latency: the output lines up). Every
 experiment renders a fresh instance (the reference keeps note state between renders) at 48 kHz.
 

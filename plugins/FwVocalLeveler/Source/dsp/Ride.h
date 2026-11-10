@@ -5,7 +5,7 @@
 #include "Fit.h"
 
 // Flatwater Vocal Leveler's riding (Phase 4): the reference's measured stages (MEASUREMENTS.md "Flatwater Vocal Leveler: Phase 3 / 4") with
-// its hidden values; plugins/FwVocalLeveler/nulltest/model.c is the same model, line for line. Per input sample (the mid of the input) it
+// its hidden values; plugins/FwVocalLeveler/nulltest/native/RideModel.c is the same model, line for line. Per input sample (the mid of the input) it
 // returns the gain in dB; there is no look-ahead (the reference has no latency).
 //   weighting  two shelves, each two identical first-order sections with half the gain (low 100 Hz -18 dB, high
 //              6.5 kHz -6 dB)

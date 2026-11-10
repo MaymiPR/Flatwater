@@ -1,4 +1,4 @@
-"""Fits the reference H-Delay's tap pad (reference/hdelay/notes: x_3_hover released, x_4_down pressed; git-ignored) as a
+"""Fits the reference's tap pad (reference/fwdelay/notes: x_3_hover released, x_4_down pressed; git-ignored) as a
 shading model: per state, the colour as a smooth function of the depth in from the pad's rounded outline
 (0.5 px bins) and of the angle around its centre (1, cos, sin, cos 2, sin 2, cos 4, sin 4). The maker's mark in the
 middle is masked out. It prints a report (the fit's error) and writes nothing: the editor draws the pad in code from
@@ -6,6 +6,9 @@ the measured geometry (its outline, face and corners).
 
     python -I plugins/FwDelay/scripts/fit_tap_pad.py
 """
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+import local_config_lib as LC
 import math
 import numpy as np
 from PIL import Image
@@ -69,8 +72,8 @@ def fit(path):
 
 
 def main():
-    up = fit('reference/hdelay/notes/x_3_hover.png')
-    down = fit('reference/hdelay/notes/x_4_down.png')
+    up = fit(LC.local_file('reference/fwdelay/notes/x_3_hover.png'))
+    down = fit(LC.local_file('reference/fwdelay/notes/x_4_down.png'))
     # a report only: the editor draws the pad in code from the measured geometry (plugins/FwDelay/Source/PluginEditor.cpp)
     print('released %s, pressed %s coefficients' % (up.shape, down.shape))
 

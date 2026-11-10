@@ -3,7 +3,7 @@ faders, colours and Balance it stores, set as host parameters, the only way they
 as 0; Sensitivity and Output stay at 0, as the reference keeps them when a preset loads), Flatwater Vocal Chain loading
 its factory preset (ChRender preset=k). Three held-out vocal parts at -6 dBFS peaks after 6 s of silence (the
 delays settled, the doubler started in step), 48 kHz; each preset also with the Pitch stage clear in both. Writes
-measurements/FwVocalChain/presets.json and plugins/FwVocalChain/NULLTESTS-presets.md.
+measurements/FwVocalChain/presets.json and the Presets section of plugins/FwVocalChain/NULLTESTS.md.
 
     python -I null_presets.py [jobs]
 """
@@ -12,15 +12,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import cv as C
-import vocal_corpus as V
+import ch_ref as C
+import vocal_corpus_lib as V
 import measure_campaign as CV
 import nulltest as N
 
 FS = 48000
 PARTS = (24, 27, 33)
 OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalChain', 'presets.json')
-OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwVocalChain', 'NULLTESTS-presets.md')
 
 
 def names():
@@ -92,7 +91,8 @@ def write_md(res, nm):
     for col in ('clear', 'Stereo', 'Wide', 'Spreader'):
         v = [r['null'] for r in res if r['pitch'] == col]
         if v: L.append('- Doubler %s: %d renders, median %.1f dB, worst %.1f.' % (col, len(v), np.median(v), max(v)))
-    open(OUT_MD, 'w', encoding='utf-8', newline='\n').write('\n'.join(L) + '\n')
+    import report_lib as RL
+    print('wrote', RL.save('FwVocalChain', 'presets', L, 'Presets'))
 
 
 if __name__ == '__main__':

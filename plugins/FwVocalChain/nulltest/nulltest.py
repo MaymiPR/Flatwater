@@ -1,4 +1,4 @@
-"""Phase 4 nulls: the reference CLA Vocals (cv_ref) against our Flatwater Vocal Chain VST3 (pedalboard), the same settings and
+"""Phase 4 nulls: the reference (cv_ref) against our Flatwater Vocal Chain VST3 (pedalboard), the same settings and
 input, aligned (both report their latency); the null is the difference's energy under the reference output's (dB).
 
     python -I nulltest.py [linear | all]
@@ -8,6 +8,8 @@ input, aligned (both report their latency); the null is the difference's energy 
     python -I nulltest.py md                (NULLTESTS.md again from nulls.json and doubler.json)
 
 WVC_RENDER in the environment names another ChRender (an older build, to compare).
+    python -I nulltest.py --report     NULLTESTS.md again from measurements/FwVocalChain/nulltests.json, rendering nothing
+    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
 """
 import os
 import sys
@@ -15,8 +17,8 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
-import cv as C
-import vocal_corpus as V
+import ch_ref as C
+import vocal_corpus_lib as V
 
 RENDER = os.environ.get('WVC_RENDER') or os.path.abspath(os.path.join(HERE, '..', '..', '..', 'build', 'ChRender_artefacts', 'Release', 'ChRender.exe'))
 FS = 48000
@@ -99,7 +101,6 @@ def full(part=30):
 RATES = (44100, 48000, 96000)
 FULL_PARTS = (30, 33)
 OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwVocalChain', 'nulls.json')
-OUT_MD = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwVocalChain', 'NULLTESTS.md')
 PITCH = {0: 'clear', 1: 'Stereo', 2: 'Wide', 3: 'Spreader'}
 
 
@@ -157,12 +158,12 @@ def write_md(res):
     import datetime
     med = lambda v: float(np.median(v)) if v else float('nan')
     L = ['# Flatwater Vocal Chain: null tests', '',
-         'Residuals of Flatwater Vocal Chain against the reference CLA Vocals (Stereo), lower is better: the energy of the',
+         'Residuals of Flatwater Vocal Chain against the reference (its Stereo component), lower is better: the energy of the',
          "difference under the reference output's, in dB. Written by `plugins/FwVocalChain/nulltest/nulltest.py report` from",
          '`measurements/FwVocalChain/nulls.json` (%s); our processor through `ChRender`, the reference through'
          % datetime.date.today().isoformat(),
-         "`plugins/FwVocalChain/nulltest/cv.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the",
-         'corpus (`scripts/nulltest/vocal_corpus.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).', '',
+         "`plugins/FwVocalChain/nulltest/ch_ref.py`, the Noise off in both (two noise sources cannot null). The vocals are held-out parts of the",
+         'corpus (`scripts/nulltest/vocal_corpus_lib.py`); how each stage was identified is in [MEASUREMENTS.md](MEASUREMENTS.md).', '',
          '## Summary', '',
          '| set | rate | cases | median (dB) | worst (dB) |', '|---|---:|---:|---:|---:|']
     for fs in RATES:
@@ -203,7 +204,7 @@ def write_md(res):
                     cy = '%.2f (%.2f)' % (o['period'], f['period'])
                 L.append('| %s | %s | %s | %+.2f | %.2f / %.2f | %s | %s | %.1f |' % (r['colour'], r['signal'], 'LR'[c],
                          r['level_diff'][c], r['band_rms'][c], r['band_max'][c], dl, cy, r['null'][c]))
-    L += ['', "The factory presets against the reference's own: [NULLTESTS-presets.md](NULLTESTS-presets.md)."]
+    L += ['', "The factory presets against the reference's own: [Presets](#presets)."]
     L += ['', '## Bass, Treble and Reverb', '',
           'A held-out vocal at -16 dBFS peak (under the dynamics), every other colour clear.', '',
           '| case | ' + ' | '.join('%g kHz (dB)' % (fs / 1000) for fs in RATES) + ' |', '|---|' + '---:|' * len(RATES)]
@@ -212,7 +213,8 @@ def write_md(res):
         if r['set'] == 'linear': by.setdefault(r['case'], {})[r['fs']] = r['null']
     for case, d in by.items():
         L.append('| %s | ' % case + ' | '.join('%.1f' % d[fs] if fs in d else '' for fs in RATES) + ' |')
-    open(OUT_MD, 'w', encoding='utf-8', newline='\n').write('\n'.join(L) + '\n')
+    import report_lib as RL                  # the title and the introduction stay; the rest is the Settings part
+    print('wrote', RL.save('FwVocalChain', 'settings', L[L.index('## Summary'):]))
 
 
 def main():
@@ -226,8 +228,21 @@ def main():
     print('median %.1f dB, worst %.1f dB' % (np.median(res), max(res)))
 
 
+def vst3_check():
+    """--vst3: our built VST3 against our renderer at the defaults, on noise, a low tone and drums"""
+    import refhost as R, nulltest_lib as nl, ch_ref as h
+    S = {'noise -18 dBFS': nl.noise(3.0, -18.0, seed=7), 'tone 100 Hz -12 dBFS': nl.tone(100.0, 3.0, -12.0),
+         'drums': nl.drums(3.0, -6.0)}
+    return R.vst3_equals_renderer(h, S)
+
+
 if __name__ == '__main__':
-    if 'md' in sys.argv[1:]:
+    if '--report' in sys.argv:
+        import report_lib as RL
+        print('wrote', os.path.relpath(RL.write('FwVocalChain')))
+    elif '--vst3' in sys.argv:
+        sys.exit(0 if vst3_check() is not False else 1)
+    elif 'md' in sys.argv[1:]:
         import json
         write_md(json.load(open(OUT_JSON, encoding='utf-8')))
     elif 'report' in sys.argv[1:]:

@@ -1,6 +1,6 @@
-"""Flatwater Bass Leveler's factory presets against the reference's own (build/ref_presets_BassRider.json, plugins/FwBassLeveler/nulltest/read_ref_presets.py):
+"""Flatwater Bass Leveler's factory presets against the reference's own (build/ref_presets_FwBassLeveler.json, plugins/FwBassLeveler/nulltest/read_ref_presets.py):
 each preset's values set on both (Target left at its default where the preset keeps it), on the bass line and two
-held-out corpus parts; the output residual over the loud parts. Writes plugins/FwBassLeveler/NULLTESTS-presets.md.
+held-out corpus parts; the output residual over the loud parts. Writes the Presets section of plugins/FwBassLeveler/NULLTESTS.md.
 
     python -I null_presets.py
 """
@@ -8,11 +8,11 @@ import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
-import measure_reference as M, nulltest as N, compare_model as C, bass_corpus as K
+import measure_reference as M, nulltest as N, compare_model as C, bass_corpus_lib as K
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, '..', '..', '..', 'build', 'ref_presets_BassRider.json')
-OUT = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwBassLeveler', 'NULLTESTS-presets.md')
+import local_config_lib as LC
+SRC = LC.local_file('build/ref_presets_FwBassLeveler.json')
 import importlib.util
 spec = importlib.util.spec_from_file_location('mp', os.path.join(HERE, '..', '..', '..', 'scripts', 'make_presets.py'))
 
@@ -56,8 +56,8 @@ def main():
              '| preset | ' + ' | '.join(m for m, _ in mats) + ' |', '|---|' + '---|' * len(mats)]
     lines += ['| %s | %s |' % (n, ' | '.join('%.1f' % v for v in r)) for n, r in rows]
     lines += ['', 'Median %.1f dB, worst %.1f dB.' % (np.median(allv), allv.max()), '']
-    open(OUT, 'w', encoding='utf-8').write('\n'.join(lines))
-    print('median %.1f, worst %.1f -> %s' % (np.median(allv), allv.max(), OUT))
+    import report_lib as RL
+    print('median %.1f, worst %.1f -> %s' % (np.median(allv), allv.max(), RL.save('FwBassLeveler', 'presets', lines, 'Presets')))
 
 
 if __name__ == '__main__':

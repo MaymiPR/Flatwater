@@ -5,7 +5,7 @@
 
 // Flatwater Pitch Bend's shifter (the header has the method). Numbers marked "measured" come from
 // measurements/FwPitchBend/shifter/SUMMARY.md; the rest are our own choices, tuned on its scorecard
-// (plugins/FwPitchBend/nulltest/score_shifter.py).
+// (plugins/FwPitchBend/nulltest/check_shifter.py).
 namespace fwpitchbend
 {
 namespace

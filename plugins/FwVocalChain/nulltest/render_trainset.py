@@ -45,7 +45,7 @@ def db(v): return 10 ** (v / 20)
 
 
 def part(k):
-    import vocal_corpus as V
+    import vocal_corpus_lib as V
     if k not in _parts: _parts[k] = V.part(k)[0].astype(np.float64)
     return _parts[k]
 
@@ -186,9 +186,9 @@ def moves(c):
 
 
 def render_moving(x, f, c):
-    """the reference with the Compress fader set before each block (f: its position per block)"""
-    import cv as C
-    import refstate as W
+    """The reference with the Compress fader set before each block (f: its position per block)"""
+    import ch_ref as C
+    import ref_state_lib as W
     p = C.plugin()
     vals = list(W.get_values(C._base)); vals[C.NOISE] = 0
     W.apply_values(p, vals, C._base); p.reset()
@@ -216,7 +216,7 @@ def _render_moves(c):
 
 
 def _render(job):
-    import cv as C
+    import ch_ref as C
     split, c, v = job
     if split == 'moves': return _render_moves(c)
     prefix = {'held': 'held_', 'val': 'val_', 'frac': 'frac_', 'wallx': 'wallx_'}.get(split, '')
