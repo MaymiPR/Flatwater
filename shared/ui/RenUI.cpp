@@ -282,6 +282,7 @@ Editor::Editor (AudioProcessor& p, AudioProcessorValueTreeState& state, UndoMana
     const bool hosted = state.processor.wrapperType != AudioProcessor::wrapperType_Undefined;
     const int savedW = (int) state.state.getProperty ("uiWidth", roundToInt (W * (hosted ? flatwater::defaultWindowScale() : 1.0f)));
     setSize (jlimit (W * 3 / 4, W * 3, savedW), jlimit (H * 3 / 4, H * 3, savedW * H / W));
+    hostFocus = std::make_unique<flatwater::HostFocus> (*this);
     startTimerHz (60);   // meter frames; the reference's bars fall smoothly
 }
 

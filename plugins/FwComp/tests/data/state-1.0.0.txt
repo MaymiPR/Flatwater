@@ -1,0 +1,15 @@
+Threshold	-6.6 dB
+Ratio	21.02
+Punch	11.2
+Mix	99.1
+Output	3.9 dB
+Attack	1.67 ms
+Release	1030 ms
+Release Note	1/8T
+Sync	BPM
+BPM	219
+Analog	1
+Limiter	On
+Meter	GR
+Mode	Stereo
+Bypass	Off

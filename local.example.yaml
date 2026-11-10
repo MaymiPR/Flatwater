@@ -24,3 +24,30 @@ clap_src: ''
 pluginval: ''
 # The Inno Setup 7 compiler (ISCC.exe), for the Windows installer
 iscc: ''
+
+# Suite keys: the keys this suite's own scripts read, below this line. sync_template.py replaces everything above it
+# with the starter's form and keeps this block as it is.
+# The reference's stereo component in the shell, per plug-in ("Name@uid"); every harness has a default except
+# FwBassXLift's, which needs its key (scripts/nulltest/README.md lists the readers)
+FwBassLeveler.ref_name: ''
+FwBassLift.ref_name: ''
+FwBassXLift.ref_name: ''
+FwComp.ref_name: ''
+FwDelay.ref_name: ''
+FwPitchBend.ref_name: ''
+FwVocalChain.ref_name: ''
+FwVocalComp.ref_name: ''
+FwVocalLeveler.ref_name: ''
+# The reference's mono component for FwVocalComp's mono cases (a default otherwise)
+FwVocalComp.ref_mono_name: ''
+# The vendor's shared preset folder, for the preset readers of FwBassLift, FwVocalComp and FwPitchBend
+ref_presets_dir: ''
+# Each reference's factory preset file, for its plug-in's preset reader and scripts/make_presets.py
+FwBassLeveler.ref_presets: ''
+FwBassXLift.ref_presets: ''
+FwComp.ref_presets: ''
+FwDelay.ref_presets: ''
+FwVocalChain.ref_presets: ''
+FwVocalLeveler.ref_presets: ''
+# FL Studio's sample packs folder, for the bass and vocal corpora (decoded once into a git-ignored cache)
+fl_packs: ''

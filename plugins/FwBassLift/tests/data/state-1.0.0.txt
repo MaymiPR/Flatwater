@@ -1,0 +1,6 @@
+Freq	43 Hz
+Intensity	12.2 dB
+Original Bass	Out
+Gain	-0.3 dB
+Mode	Mono
+Bypass	Off

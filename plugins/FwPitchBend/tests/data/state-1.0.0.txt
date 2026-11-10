@@ -1,0 +1,31 @@
+Mod1 Warp	0.04
+Mod1 Level	0.76
+Mod1 Rate Synced	1/2T
+Mod1 Rate	28.386 Hz
+Mod1 Sync On/Off	ms
+Mod1 Phase	0.227
+Mod1 Type	Seq
+Mod1 Smooth	24.5
+Mod1 Steps	3
+Mod2 Warp	6.27
+Mod2 Level	0.32
+Mod2 Rate Synced	1/64
+Mod2 Rate	1.870 Hz
+Mod2 Sync On/Off	Note
+Mod2 Phase	0.789
+Mod2 Type	LFO
+Mod2 Smooth	1.2
+Mod2 Steps	11
+AM Attack	1.1 ms
+AM Release	330.1 ms
+AM Level	1.00
+PT Smooth	2.2
+PT Offset	0.47
+PT Level	0.70
+Pitch	11 semitones
+Formant	2 semitones
+Mix	20.6
+Flatten Note	G3
+Flatten On/Off	Off
+Mode	Stereo
+Bypass	Off

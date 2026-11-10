@@ -54,7 +54,7 @@ jobs:
             libglu1-mesa-dev mesa-common-dev xvfb
 
       - name: Configure
-        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFW_CLAP=OFF
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFLATWATER_TOOLS=ON -DFLATWATER_CLAP=OFF
 
       - name: Build
         shell: bash
@@ -63,7 +63,7 @@ jobs:
       - name: Warnings (zero allowed)
         shell: bash
         run: |
-          if grep -E 'warning C[0-9]+|warning:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
+          if grep -E 'warning C[0-9]+|warning ?:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
             cat warnings.txt
             echo "$(wc -l < warnings.txt) warning line(s) in the build log: zero allowed (STANDARDS.md)"
             exit 1
@@ -85,7 +85,7 @@ jobs:
           persist-credentials: false
 
       - name: Configure
-        run: cmake -B build -A x64 -DFW_CLAP=OFF
+        run: cmake -B build -A x64 -DFLATWATER_TOOLS=ON -DFLATWATER_CLAP=OFF
 
       - name: Build
         shell: pwsh
@@ -94,7 +94,7 @@ jobs:
       - name: Warnings (zero allowed)
         shell: bash
         run: |
-          if grep -E 'warning C[0-9]+|warning:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
+          if grep -E 'warning C[0-9]+|warning ?:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
             cat warnings.txt
             echo "$(wc -l < warnings.txt) warning line(s) in the build log: zero allowed (STANDARDS.md)"
             exit 1
@@ -138,7 +138,7 @@ jobs:
       - name: Configure
         # Ninja, as on Linux, runs one compile per core. The Makefile generator either sets no job limit (the
         # runner runs out of memory) or, given a count, warns that JUCE's nested helper build has no jobserver.
-        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFW_CLAP=OFF
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFLATWATER_TOOLS=ON -DFLATWATER_CLAP=OFF
 
       - name: Build
         shell: bash
@@ -147,7 +147,7 @@ jobs:
       - name: Warnings (zero allowed)
         shell: bash
         run: |
-          if grep -E 'warning C[0-9]+|warning:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
+          if grep -E 'warning C[0-9]+|warning ?:|warning MSB|[0-9]+ warnings? generated' build.log | grep -vE '::warning|hint:' > warnings.txt; then
             cat warnings.txt
             echo "$(wc -l < warnings.txt) warning line(s) in the build log: zero allowed (STANDARDS.md)"
             exit 1

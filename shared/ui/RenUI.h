@@ -6,6 +6,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <functional>
 #include "shared/ui/Widgets.h"
+#include "shared/ui/HostFocus.h"
 #include "shared/ui/Theme.h"
 
 namespace flatwater::ren
@@ -146,6 +147,7 @@ private:
     std::unique_ptr<juce::LookAndFeel> auxLook;           // destroyed after the widgets that use it (declared first)
     std::unique_ptr<Content> contentComp;
     std::unique_ptr<flatwater::Toolbar> toolbar;
+    std::unique_ptr<flatwater::HostFocus> hostFocus;      // the host's keys after a click (FL Studio)
     juce::RangedAudioParameter* modeParam;
     juce::ComponentBoundsConstrainer constrainer;
     std::vector<std::unique_ptr<juce::SliderParameterAttachment>> sliderAtts;

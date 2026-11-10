@@ -1,0 +1,5 @@
+Comp	-31.1 dB
+Gate	-19.6 dB
+Gain	-22.6 dB
+Mode	Mono
+Bypass	Off
