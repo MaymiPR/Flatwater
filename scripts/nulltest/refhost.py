@@ -121,7 +121,8 @@ def vst3_equals_renderer(h, signals, fs=48000, limit=-100.0):
     for name, x in signals.items():
         x = np.asarray(x, np.float32)
         if x.ndim == 1: x = np.stack([x, x])
-        a, b = h.render_vst3(x, fs), h.render_model(x, fs)
+        params, keys = getattr(h, 'CHECK', ({}, {}))      # settings both need to be deterministic (an Analog stage off)
+        a, b = h.render_vst3(x, fs, params), h.render_model(x, fs, **keys)
         n = min(a.shape[1], b.shape[1])
         d = np.asarray(a[:, :n], np.float64) - b[:, :n]
         res = 10 * np.log10(max(float(np.sum(d * d)), 1e-30) / max(float(np.sum(np.asarray(b[:, :n], np.float64) ** 2)), 1e-30))

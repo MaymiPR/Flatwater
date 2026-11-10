@@ -114,6 +114,6 @@ def render_ref_host(x, fs=48000, params=None, extra=()):
     return render_ref(x, fs, params, extra=extra)
 
 
-def render_model(x, fs=48000):
-    return render_ours(x, fs)
+def render_model(x, fs=48000, **keys):
+    return render_ours(x, fs, keys or None)
 

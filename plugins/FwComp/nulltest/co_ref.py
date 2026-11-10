@@ -112,6 +112,9 @@ _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'CoRender_artefacts', 'Release', 'CoRender.exe')
 
+# the VST3-equals-renderer checks run with the Analog stage off: its modes add random noise (default mode 2)
+CHECK = ({'Analog:': 0}, {'analog': 0})
+
 
 def render_ref_host(x, fs=48000, params=None, extra=()):
     """The reference through tools/RefRender (latency removed); params by display text, 'Name:' for a normalised value"""
@@ -123,9 +126,9 @@ def render_vst3(x, fs=48000, params=None, extra=()):
     return R.render_ref(x, fs, PRODUCT, params=params, extra=extra, vst3=VST3)[0]
 
 
-def render_model(x, fs=48000):
-    """our processor through CoRender at the plug-in's defaults"""
-    return R.render_exe(RENDER, x, fs)
+def render_model(x, fs=48000, **keys):
+    """our processor (keys: renderer keys) through CoRender at the plug-in's defaults"""
+    return R.render_exe(RENDER, x, fs, **keys)
 
 
 # ---- the reference: every user control is a VST3 parameter; measurements default to Analog Off ---------------------

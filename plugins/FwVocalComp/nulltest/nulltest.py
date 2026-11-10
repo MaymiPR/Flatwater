@@ -10,6 +10,7 @@ import os
 import subprocess
 import sys
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -31,21 +32,21 @@ def main():
 
 
 def vst3_check():
-    """--vst3: The built Flatwater Vocal Comp.vst3, hosted through pedalboard, against the offline DSP renderer (they must be identical)."""
-    import numpy as np, pedalboard as pb, vc_ref as N, refhost as R
+    """--vst3: the built Flatwater Vocal Comp VST3 (through tools/RefRender) against the offline renderer, which must be
+    identical; prints one line per case and returns False when one is above -100 dB"""
+    import numpy as np, vc_ref as N
 
     FS = 48000
-    VST = N.VST3
-    p = pb.load_plugin(VST)
-    print('loaded', p.name, 'params', [k for k in p.parameters.keys()][:8], 'latency', p.reported_latency_samples)
-    S = N.signals(quick=True)
-    for name, x in S.items():
+    ok = True
+    for name, x in N.signals(quick=True).items():
+        xs = np.stack([x, x]).astype(np.float32)
         for comp, gate, gain in ((-24, None, 0), (-12, -30, -3)):
-            p.comp = float(comp); p.gate = -80.0 if gate is None else float(gate); p.gain = float(gain)
-            y = p(x[None, :].astype(np.float32), FS, buffer_size=512, reset=True)[0]
-            m = N.ours(x, FS, comp, gate, gain)[0]
-            print('%-26s %4d/%s  plug-in vs offline %7.1f dB' % (name, comp, 'off' if gate is None else gate, N.residual_db(y, m, int(0.1 * FS))))
-
+            y = N.render_vst3(xs, FS, {'Comp': comp, 'Gate': -80.0 if gate is None else gate, 'Gain': gain})[0]
+            m = N.ours(xs, FS, comp, gate, gain)[0]
+            r = N.residual_db(y, m, int(0.1 * FS))
+            ok &= r < -100
+            print('%-26s %4d/%s  plug-in vs offline %7.1f dB' % (name, comp, 'off' if gate is None else gate, r), flush=True)
+    return ok
 
 if __name__ == '__main__':
     main()

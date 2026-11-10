@@ -32,9 +32,9 @@ def render_vst3(x, fs=48000, params=None, extra=()):
     return R.render_ref(x, fs, PRODUCT, params=params, extra=extra, vst3=VST3)[0]
 
 
-def render_model(x, fs=48000):
-    """our processor through BlRender at the plug-in's defaults"""
-    return R.render_exe(RENDER, x, fs)
+def render_model(x, fs=48000, **keys):
+    """our processor (keys: renderer keys) through BlRender at the plug-in's defaults"""
+    return R.render_exe(RENDER, x, fs, **keys)
 
 
 _BASE = REF_NAME.rsplit(' ', 1)[0]
