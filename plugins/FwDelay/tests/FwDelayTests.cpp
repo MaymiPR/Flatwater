@@ -12,7 +12,7 @@ static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
 #define CHECK_NEAR(a, b, tol) do { ++checks; const double va = (a), vb = (b); if (! (std::fabs (va - vb) <= (tol))) { ++failures; std::printf ("FAIL %s:%d  %s = %g, expected %g +- %g\n", __FILE__, __LINE__, #a, va, vb, (double) (tol)); } } while (0)
 
-// the Delay taper against values read from the reference (build/hdelay_tapers.json, normalised 0, 0.05, ... 1)
+// the Delay taper against the reference's Delay values read back at the normalised values 0, 0.05, ... 1
 static void testDelayTaper()
 {
     const float ref[] = { 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 636, 815, 1024, 1265, 1540, 1852, 2201, 2591, 3023, 3500 };

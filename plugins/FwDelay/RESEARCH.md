@@ -10,7 +10,7 @@ behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 |---|---|
 | D1 | The official product page, [waves.com/plugins/h-delay-hybrid-delay](https://www.waves.com/plugins/h-delay-hybrid-delay), and the manual linked from it, [h-delay-hybrid-delay.pdf](https://assets.wavescdn.com/pdf/plugins/h-delay-hybrid-delay.pdf) (H-Delay Hybrid Delay User Guide) |
 | D2 | The original plug-in observed in a host: its parameters, its editor and its 88 factory presets (read back through the reference plug-in, `plugins/FwDelay/nulltest/read_ref_presets.py`) |
-| D3 | The original plug-in as a host loads it (`nulltest/probe_hdelay.py`): components H-Delay Mono, H-Delay Stereo and H-Delay Mono/Stereo (one input and two outputs, which pedalboard cannot load); automatable parameters below; no side-chain bus |
+| D3 | The original plug-in as a host loads it: components H-Delay Mono, H-Delay Stereo and H-Delay Mono/Stereo (one input and two outputs, which pedalboard cannot load); automatable parameters below; no side-chain bus |
 | D4 | Screenshots of the real editor taken with `tools/MeterCapture` (git-ignored `reference/hdelay/`): stereo and mono at the defaults, MS sync, a Delay drag, Ping Pong, LoFi, Dual |
 
 ## Documented behaviour (D1)
@@ -44,7 +44,7 @@ behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 | Echo kernel | not a single sample: at 48 kHz an impulse comes back as a symmetric kernel over +-14 samples (centre 0.666, side taps -0.020 / +0.021, -0.010, +0.007 ...) whose sum is 2/3 (-3.5 dB) with Feedback 0 and Mix 100; at 96 kHz it is twice as wide (centre 0.333): an interpolated read with a fixed-frequency low-pass, and a wet gain that MEASUREMENTS.md section 3 explains |
 | Mix | at Mix 50 the dry signal is at 0.707: an equal-power law (MEASUREMENTS.md section 7) |
 | Glide | in a running instance, changing Delay from 375 to 100 ms put the next echo at 148 ms, and 100 to 50 ms put it at 52 ms: the read point moves at a limited speed (the documented tape behaviour); loading a state with the new time jumps at once |
-| Harness | parameters set through pedalboard before the instance's first block are shown, but the processing keeps its previous values (the echo stayed at 375 ms while Delay read 100 ms), so settings go through the state's preset array (`nulltest/wavesstate.py`) or after a first rendered block; values set from outside do not redraw the reference's editor, so screenshots of other states are taken by clicking its buttons (MeterCapture `click`) |
+| Harness | parameters set through pedalboard before the instance's first block are shown, but the processing keeps its previous values (the echo stayed at 375 ms while Delay read 100 ms), so settings go through the state's preset array (`scripts/nulltest/refstate.py`) or after a first rendered block; values set from outside do not redraw the reference's editor, so screenshots of other states are taken by clicking its buttons (MeterCapture `click`) |
 
 ## Parameters (D2, D3), in preset-array order
 

@@ -1,4 +1,4 @@
-"""Flatwater Comp Phase 4: a Python model of H-Comp's gain path, built up as it is identified (ident_hc_*.py)."""
+"""Flatwater Comp Phase 4: a Python model of H-Comp's gain path, built up as it is identified (the fit_*.py scripts beside it)."""
 import os, json
 import numpy as np
 

@@ -1,5 +1,5 @@
 """Phase 3 helper: renders the reference CLA Vocals (Stereo component) through pedalboard with any of its 68 preset-array
-values set through the state (nulltest/wavesstate.py), so the chain's children can be measured one at a time through
+values set through the state (scripts/nulltest/refstate.py), so the chain's children can be measured one at a time through
 their bypass slots. The output is aligned (the 193-sample latency at 44.1 / 48 kHz removed).
 
     import cv as C
