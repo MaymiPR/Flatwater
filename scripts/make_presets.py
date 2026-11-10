@@ -118,7 +118,7 @@ VOCAL_ORDER = [
 
 # Flatwater BassX Lift: the reference's presets in the order of its preset file -> (group, our name). "Essentials": the
 # reference's factory set, "Studio": its artist set.
-MAXX_NAMES = [
+BASSXLIFT_NAMES = [
     ('Essentials', 'Default'),
     ('Essentials', 'PA System'),
     ('Essentials', 'Deepest Reach'),
@@ -146,7 +146,7 @@ MAXX_NAMES = [
 
 # Flatwater Comp: the reference's presets in the order of its preset file -> (group, our name). "Studio": the
 # reference's guest presets.
-HCOMP_NAMES = [
+COMP_NAMES = [
     ('Essentials', 'Default'),
     ('Essentials', 'Live Sound Start'),
     ('Essentials', 'Kit Smack'),
@@ -223,13 +223,13 @@ def write(pid, product, src, names, conv, order):
 NL = "\n"
 
 
-def write_maxx():
+def write_bassxlift():
     data = json.load(open(ref_presets("FwBassXLift")))
-    assert len(data) == len(MAXX_NAMES) == 22, "preset list changed"
+    assert len(data) == len(BASSXLIFT_NAMES) == 22, "preset list changed"
     db = lambda v, hi: -100.0 if v == float("-inf") or v <= -99.9 else num(v, -100, hi, 1)
     rows = []
     for k, d in enumerate(data):
-        group, name = MAXX_NAMES[k]; s = d["settings"]
+        group, name = BASSXLIFT_NAMES[k]; s = d["settings"]
         vals = [("freq", num(s["frequency"], 32, 256, 0)), ("decay", num(s["harmonics_decay"], -24, -9, 1)),
                 ("response", num(s["response"], 10, 30, 1)), ("ratio", num(s["ratio"], 1, 4, 2)), ("highpass", int(s["highpass"])),
                 ("origBass", db(s["orig_bass_gain"], 12)), ("harmonics", db(s["harmonics_gain"], 12)), ("monitor", 0)]
@@ -246,16 +246,16 @@ def write_maxx():
     print(out, len(rows), "presets")
 
 
-def write_hcomp():
+def write_comp():
     # the preset arrays are stored as real-world values; positions found by loading presets into the reference and
     # reading its parameters back (plugins/FwComp/nulltest/read_ref_presets.py): 0 Threshold, 1 Ratio, 3 Punch, 4 Mix, 5 Output,
     # 6 Attack, 7 Release, 8 Release Note (index), 9 Sync (0 BPM, 1 Host, 2 ms), 10 BPM, 13 Limiter (1 On), 28 Analog
     # (0 Off .. 4); '*' leaves a parameter at its default
     data = json.load(open(ref_presets("FwComp")))
-    assert len(data) == len(HCOMP_NAMES) == 26, "preset list changed"
+    assert len(data) == len(COMP_NAMES) == 26, "preset list changed"
     rows = []
     for k, d in enumerate(data):
-        group, name = HCOMP_NAMES[k]; r = d["raw"]
+        group, name = COMP_NAMES[k]; r = d["raw"]
         get = lambda i: None if i >= len(r) or r[i] == '*' else float(r[i])
         spec = ((0, "threshold", -48, 0, 1), (1, "ratio", 1, 50, 2), (3, "punch", 0, 30, 1), (4, "mix", 0, 100, 1),
                 (5, "output", -18, 18, 1), (6, "attack", 0.5, 100, 2), (7, "release", 3, 3000, 2), (8, "releaseNote", 0, 19, 0),
@@ -276,7 +276,7 @@ def write_hcomp():
 
 
 # Flatwater Delay: the reference's presets in their order; the first 68 are its factory set, the last 20 its guest set
-HDELAY_NAMES = [
+DELAY_NAMES = [
     "Default", "Live Sound Start", "Side to Side", "Plain Stereo", "Plain Stereo Worn", "Worn Slap", "Band-Pass Echo",
     "Plain Echo", "Tape Echo", "Dub Echo", "Wide Echo", "Tape Runaway (Loud)", "Quarter Side to Side", "Just Right Echo",
     "Filtered Dub 1/4T", "Vintage Echo", "Even Eighths", "Sixteenths", "Murky Dub 1/8D", "Retro Insert",
@@ -293,7 +293,7 @@ HDELAY_NAMES = [
     "Roaming Wireless", "Off Stage", "Rotor (Loud)", "Quarter Note Echo", "Eighth Note Echo", "Rock Vocal Echo"]
 
 
-def write_hdelay():
+def write_delay():
     # the preset arrays hold real-world values (positions checked against the reference's own parameters, see
     # plugins/FwDelay/nulltest/read_ref_presets.py): 1 Sync (0 BPM, 1 Host, 2 ms), 2 BPM, 3 Delay ms, 4 Delay note (index), 6 Mix,
     # 7 Feedback, 8 / 9 Phase L / R, 10 Ping Pong, 14 Output, 15 LoPass (20 100 and up: Off), 17 HiPass (19: Off),
@@ -301,8 +301,8 @@ def write_hdelay():
     # Values as stored: the reference takes a preset's values exactly (FwDelayProcessor uses them while the parameter
     # stays where the preset put it); LoPass 20 100 is Off, 20 139 a filter at 20 139 Hz.
     data = json.load(open(ref_presets("FwDelay")))
-    assert len(data) == len(HDELAY_NAMES) == 88, "preset list changed"
-    assert len(set(HDELAY_NAMES)) == len(HDELAY_NAMES)
+    assert len(data) == len(DELAY_NAMES) == 88, "preset list changed"
+    assert len(set(DELAY_NAMES)) == len(DELAY_NAMES)
     rows = []
     for k, d in enumerate(data):
         r = d["raw"]; get = lambda i: float(r[i])
@@ -312,7 +312,7 @@ def write_hdelay():
                 (10, "pingPong", 0, 1, 0), (14, "output", -18, 18, 2), (15, "lopass", 19, 20139, 2), (17, "hipass", 19, 20138.77, 2),
                 (19, "depth", 0, 100, 3), (20, "rate", 0.1, 6000, 4), (21, "lofi", 0, 1, 0), (23, "analog", 0, 4, 0))
         vals = [(pid, num(get(i), lo, hi, nd)) for i, pid, lo, hi, nd in spec]
-        rows.append('    { "%s", "%s", { %s } },' % (group, HDELAY_NAMES[k], ", ".join('{ "%s", %rf }' % (pid, float(v)) for pid, v in vals)))
+        rows.append('    { "%s", "%s", { %s } },' % (group, DELAY_NAMES[k], ", ".join('{ "%s", %rf }' % (pid, float(v)) for pid, v in vals)))
     out = os.path.join(ROOT, "plugins", "FwDelay", "Source", "Presets.h")
     head = ("#pragma once" + NL + "// Factory presets of Flatwater Delay, generated by scripts/make_presets.py (do not edit by hand)." + NL
             + "// Setting values carried over from the reference's presets (array positions checked against the reference's" + NL
@@ -369,7 +369,7 @@ VOCALLEVELER_NAMES = [
     "Loud Lead", "Auto Fader", "Level Tamer", "Ceiling Ride", "Open Up"]
 
 
-def write_vocalrider():
+def write_vocalleveler():
     # the arrays hold real-world values: 0 Target, 1 Music Sensitivity (-12.1 = Off), 2 / 3 Range Min / Max, 6 Vocal
     # Sensitivity, 20 Output, 30 Automation ("*": the preset leaves it), 32 the Idle arrow's place in the range (some
     # presets use 0 and 1, outside the arrow's 0.02 .. 0.98: kept exactly, see FwVocalLevelerProcessor), 42 Attack (which
@@ -398,11 +398,11 @@ def write_vocalrider():
 
 write("FwBassLift", "Flatwater Bass Lift", "FwBassLift", BASS_NAMES, bass_values, BASS_ORDER)
 write("FwVocalComp", "Flatwater Vocal Comp", "FwVocalComp", VOCAL_NAMES, vocal_values, VOCAL_ORDER)
-write_maxx()
-write_hcomp()
-write_hdelay()
+write_bassxlift()
+write_comp()
+write_delay()
 write_bassleveler()
-write_vocalrider()
+write_vocalleveler()
 
 
 # Flatwater Vocal Chain (self-contained: its names, values and writer). The reference's 43 presets, in its order, with
