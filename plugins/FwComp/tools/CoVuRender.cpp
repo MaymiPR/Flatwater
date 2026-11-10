@@ -7,10 +7,10 @@ int main (int argc, char** argv)
 {
     if (argc < 4) { std::fprintf (stderr, "usage: VuRender out.png gr|io degrees [scale]\n"); return 2; }
     juce::ScopedJuceInitialiser_GUI init;
-    fw::hybrid::VuMeter vu;
+    flatwater::hybrid::VuMeter vu;
     vu.setBounds (197, 73, 251, 170);                         // FwCompEditor's kDial
     vu.pivot = juce::Point<float> (320.7f, 220.9f) - vu.getPosition().toFloat();    // kVuPivot
-    vu.setFace (juce::String (argv[2]) == "io" ? fw::hybrid::VuMeter::Face::io : fw::hybrid::VuMeter::Face::gr);
+    vu.setFace (juce::String (argv[2]) == "io" ? flatwater::hybrid::VuMeter::Face::io : flatwater::hybrid::VuMeter::Face::gr);
     vu.setNeedle ((float) std::atof (argv[3]));
     const float scale = argc > 4 ? (float) std::atof (argv[4]) : 1.0f;
     auto img = vu.createComponentSnapshot (vu.getLocalBounds(), true, scale);

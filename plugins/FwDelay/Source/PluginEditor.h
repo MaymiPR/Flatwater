@@ -2,11 +2,11 @@
 #include "PluginProcessor.h"
 #include "shared/ui/RenUI.h"
 #include "shared/ui/HybridUI.h"
-#include "shared/ui/Meter.h"
+#include "shared/ui/Widgets.h"
 
 // Flatwater Delay editor: 749 x 292 px design grid including the toolbar, resizable at that aspect ratio. The layout keeps
 // the measured positions and sizes (RESEARCH.md "Flatwater Delay"); everything is drawn in Flatwater's own look (shared/ui/Theme.h).
-class FwDelayEditor : public fw::ren::Editor
+class FwDelayEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwDelayEditor (FwDelayProcessor&);
@@ -100,40 +100,40 @@ private:
     double tempo() const;                                 // the tempo the note values follow (Host or BPM)
     void updateDelayKnobs();
     void contentMouseDown (const juce::MouseEvent&) override { selectOnly (nullptr); }
-    int modeIndex() const { return juce::roundToInt (value (fwdelay::mode)); }
+    int modeIndex() const { return juce::roundToInt (value (de::mode)); }
     bool mono() const { return modeIndex() == 1; }
 
     FwDelayProcessor& proc;
-    fw::hybrid::Knob& delay;
-    fw::hybrid::Knob& delayNote;
-    fw::hybrid::Knob& delayR;
-    fw::hybrid::Knob& delayNoteR;
-    fw::hybrid::Knob& feedback;
-    fw::hybrid::Knob& depth;
-    fw::hybrid::Knob& rate;
-    fw::hybrid::Knob& hipass;
-    fw::hybrid::Knob& lopass;
-    fw::hybrid::Knob& mix;
-    fw::hybrid::Knob& output;
-    fw::hybrid::Knob& analog;
+    flatwater::hybrid::Knob& delay;
+    flatwater::hybrid::Knob& delayNote;
+    flatwater::hybrid::Knob& delayR;
+    flatwater::hybrid::Knob& delayNoteR;
+    flatwater::hybrid::Knob& feedback;
+    flatwater::hybrid::Knob& depth;
+    flatwater::hybrid::Knob& rate;
+    flatwater::hybrid::Knob& hipass;
+    flatwater::hybrid::Knob& lopass;
+    flatwater::hybrid::Knob& mix;
+    flatwater::hybrid::Knob& output;
+    flatwater::hybrid::Knob& analog;
     Display& display;
     TapPad& tap;
     LinkWheel& link;
     Meter& meter;
     RMark& rMark;
-    fw::hybrid::ToggleRow* stereoRow = nullptr;
-    fw::hybrid::ToggleRow* monoRow = nullptr;
-    fw::hybrid::ButtonGroup* syncGroup = nullptr;
-    fw::hybrid::ButtonGroup* lofiButton = nullptr;
+    flatwater::hybrid::ToggleRow* stereoRow = nullptr;
+    flatwater::hybrid::ToggleRow* monoRow = nullptr;
+    flatwater::hybrid::ButtonGroup* syncGroup = nullptr;
+    flatwater::hybrid::ButtonGroup* lofiButton = nullptr;
     juce::Component* lastPrimary = nullptr;
     void selectOnly (juce::Component*);
-    fw::flat::Selection selection;
+    flatwater::flat::Selection selection;
     // Dual: the Delay knob sets the right side (kept while Ping Pong or Dual is off, as the reference)
     bool rightSide = false;
     int lastSync = -1, lastMode = -1, lastDual = -1, lastPing = -1, lastDualOn = -1;
     bool lastRight = false;
     double lastTick = 0.0, clipLevel = 0.0, clipAge = 1.0e9;
-    fw::MeterBallistics meterL, meterR;
+    flatwater::MeterBallistics meterL, meterR;
     friend class Display;
     friend class TapPad;
     friend class LinkWheel;

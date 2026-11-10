@@ -6,7 +6,7 @@
 // Flatwater Pitch Bend's shifter (the header has the method). Numbers marked "measured" come from
 // measurements/FwPitchBend/shifter/SUMMARY.md; the rest are our own choices, tuned on its scorecard
 // (plugins/FwPitchBend/nulltest/check_shifter.py).
-namespace fwpitchbend
+namespace pb
 {
 namespace
 {
@@ -752,8 +752,8 @@ void Shifter::process (float* const* data, int ch, int n, float pitchSt, float f
     lastBeta = beta;
     regranulate = pSet || fSet;
     const int mode = flat ? kLevelFlatten : (pSet || fSet ? kLevelSet : kLevelFree);
-    if (! fw::math::exactlyEqual (pitchSt, lastP) || ! fw::math::exactlyEqual (formantSt, lastF)
-        || ! fw::math::exactlyEqual (flattenHz, lastFlat) || ! fw::math::exactlyEqual (Pc, lastPc) || mode != levelMode)
+    if (! flatwater::math::exactlyEqual (pitchSt, lastP) || ! flatwater::math::exactlyEqual (formantSt, lastF)
+        || ! flatwater::math::exactlyEqual (flattenHz, lastFlat) || ! flatwater::math::exactlyEqual (Pc, lastPc) || mode != levelMode)
     {
         lastP = pitchSt; lastF = formantSt; lastFlat = flattenHz; lastPc = Pc; levelMode = mode; lastPeff = 1e9;
     }
@@ -774,7 +774,7 @@ void Shifter::process (float* const* data, int ch, int n, float pitchSt, float f
         for (int c = 0; c < cn; ++c)
         {
             history[(size_t) c][(size_t) w] = data[c][i]; mono += data[c][i];
-            still = still && fw::math::exactlyEqual (data[c][i], lastIn[c]); lastIn[c] = data[c][i];
+            still = still && flatwater::math::exactlyEqual (data[c][i], lastIn[c]); lastIn[c] = data[c][i];
         }
         // (measured: a run of zeros or of a constant: 1030 samples from a place 0 mod 8 of the processing, not 1029;
         // 1029 from 3 mod 8; a sine of 1e-9 never)

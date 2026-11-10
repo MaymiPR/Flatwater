@@ -16,7 +16,7 @@ nobody's words are quoted in a file, a commit message, a tag or release notes.
 
 Requirements and the commands per platform are in the [build guide](docs/BUILDING.md). Every build also makes each
 plug-in's offline renderer (`<Ab>Render`, for example `CoRender`) and editor snapshot tool (`<Id>Snapshot`);
-on Windows it adds the hosts for the reference plug-ins (RefRender, MeterCapture, VuRender, OggDecode) and the
+on Windows it adds the hosts for the reference plug-ins (RefRender, MeterCapture, CoVuRender, OggDecode) and the
 keyboard check (FocusCheck). The plug-ins are included from `plugins/<Id>/plugin.cmake`, so every target lands in
 `build/<Target>_artefacts/Release/`; a copy of every VST3 also lands in `build/plugins/`. The `ci_targets` target
 builds what CI builds: every plug-in's VST3, unit tests and renderer, and on Windows its snapshot tool.
@@ -26,7 +26,7 @@ builds what CI builds: every plug-in's VST3, unit tests and renderer, and on Win
 | FwBassLeveler | `BlRender` |
 | FwBassLift | `BfRender` |
 | FwBassXLift | `BxRender` |
-| FwComp | `CoRender` (and `VuRender`, the VU dial alone) |
+| FwComp | `CoRender` (and `CoVuRender`, the VU dial alone) |
 | FwDelay | `DeRender` |
 | FwPitchBend | `PbRender` (and `PbShifterRender`, the shifter alone) |
 | FwVocalChain | `ChRender` |
@@ -136,7 +136,6 @@ plug-in raises the middle number, a fix the last. Tags are `vx.y.z`; `vx.y.z-rc.
 
 | Deviation | Reason |
 |---|---|
-| The C++ namespaces are `fw<plugin>` (`fwcomp`, `fwvocalchain` and the others) and the shared code's `fw` and `th`, not the two-letter tool abbreviation | renaming them touches every source file and is no layout change; the renderers take the abbreviations |
 | The shared code is a static library, FwCommon (`shared/shared.cmake`), which every plug-in, test, snapshot and renderer with JUCE links, not `SUITE_UI_SOURCES` compiled into each target | it is built once for nine plug-ins |
 | One `tools/Snapshot.cpp` serves the snapshot tool of every plug-in but FwVocalComp, which has its own (`plugins/FwVocalComp/tools/Snapshot.cpp`) | the same program renders any editor |
 | `Source/` has no `Params.h`, `Presets.cpp` or `dsp/Tuning.h`: the parameter ids are in `PluginProcessor.h`, the presets are generated headers, and FwBassLift and FwVocalComp keep their `Tuning` struct in `dsp/Engine.h` | the plug-ins predate the starter's files; moving the declarations is no layout change |

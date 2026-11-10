@@ -1,12 +1,12 @@
 #include "PluginEditor.h"
 
 using namespace juce;
-using namespace fw::flat;
-namespace th = fw::theme;
+using namespace flatwater::flat;
+namespace theme = flatwater::theme;
 
 namespace
 {
-// design grid (measured on the reference, reference/fwbassxlift)
+// design grid (measured on the reference, reference/bx)
 const Rectangle<int> kGraph (3, 38, 534, 243), kBottom (3, 285, 534, 107), kMix (541, 38, 134, 354), kOut (679, 38, 118, 339);
 const Rectangle<int> kClip (718, 84, 46, 4);
 constexpr float kGraphDbTop = 118.0f, kPxPerDb = 40.0f / 6.0f;            // 0 dB at y 118, 6 dB per 40 px
@@ -17,8 +17,8 @@ float graphY (float db) { return kGraphDbTop - db * kPxPerDb; }
 }
 
 FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwbassxlift::mode), "Flatwater BassX Lift", JucePlugin_VersionString, W, H,
-              fw::Toolbar::Style::Flat),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bx::mode), "Flatwater BassX Lift", JucePlugin_VersionString, W, H,
+              flatwater::Toolbar::Style::Flat),
       proc (p),
       input (make<VFader> (kWhite)), origBass (make<VFader> (kBlue)), harmonics (make<VFader> (kOrange)),
       ratio (make<Knob> ("Ratio")), response (make<Knob> ("Response")), decay (make<Knob> ("Decay")),
@@ -28,25 +28,25 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     // the window still resizes from its corner, but the grip is not drawn over the badge
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (fwbassxlift::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (fwbassxlift::input) });     // presets leave Input alone, as the reference
+    setFactoryPresets (bx::factoryPresets());
+    setKeepOnPresetLoad ({ p.apvts.getParameter (bx::input) });     // presets leave Input alone, as the reference
 
     auto gainFmt = [] (double v) { return gainText ((float) v); };
     for (auto* f : { &input, &origBass, &harmonics }) f->format = gainFmt;
-    attachSlider (input, fwbassxlift::input, { 553, 90, 31, 250 }, 0.0);
-    attachSlider (origBass, fwbassxlift::origBass, { 592, 90, 31, 250 }, 0.0);
-    attachSlider (harmonics, fwbassxlift::harmonics, { 630, 90, 31, 250 }, -100.0);
+    attachSlider (input, bx::input, { 553, 90, 31, 250 }, 0.0);
+    attachSlider (origBass, bx::origBass, { 592, 90, 31, 250 }, 0.0);
+    attachSlider (harmonics, bx::harmonics, { 630, 90, 31, 250 }, -100.0);
     for (auto* f : { &input, &origBass, &harmonics }) applyFormat (*f, f->format);
-    // measured on MaxxBass: Input's wheel and slow Ctrl steps go 1.6 times as far here (its range is 2/3 of the
+    // measured on the reference: Input's wheel and slow Ctrl steps go 1.6 times as far here (its range is 2/3 of the
     // reference's scale)
     input.wheelScale = 1.6; input.feel.linCtrlSlow *= 1.6f;
 
     ratio.format = [] (double v) { return String (v, 2) + ":1"; };
     response.format = [] (double v) { return String (v, 1); };
     decay.format = [] (double v) { return String (v, 1); };
-    attachSlider (ratio, fwbassxlift::ratio, { 106, 305, 54, 84 }, 1.0);
-    attachSlider (response, fwbassxlift::response, { 172, 305, 54, 84 }, 20.0);
-    attachSlider (decay, fwbassxlift::decay, { 418, 305, 54, 84 }, -15.0);
+    attachSlider (ratio, bx::ratio, { 106, 305, 54, 84 }, 1.0);
+    attachSlider (response, bx::response, { 172, 305, 54, 84 }, 20.0);
+    attachSlider (decay, bx::decay, { 418, 305, 54, 84 }, -15.0);
     for (auto* k : { &ratio, &response }) applyFormat (*k, k->format);
     applyFormat (decay, decay.format, true);         // a typed "15" means -15 (the reference's PositiveTextEntryToNegative)
 
@@ -54,8 +54,8 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     for (float f : { 32.0f, 64.0f, 128.0f, 256.0f }) freq.tickPositions.push_back (std::log2 (f / 32.0f) / 3.0f);
     freq.x0 = 7.0f; freq.x1 = 271.0f; freq.y = 16.0f;
     freq.textArea = { 284, 10, 50, 13 };
-    attachSlider (freq, fwbassxlift::freq, { 86, 286, 344, 26 }, 80.0);    // wide enough for the entry box (x 380 ... 429)
-    freq.wheelScale = 1.2;                                                 // measured on MaxxBass's Freq
+    attachSlider (freq, bx::freq, { 86, 286, 344, 26 }, 80.0);    // wide enough for the entry box (x 380 ... 429)
+    freq.wheelScale = 1.2;                                                 // measured on the reference's Freq
 
     for (auto* f : { &input, &origBass, &harmonics }) f->selection = &selection;
     for (auto* k : { &ratio, &response, &decay }) k->selection = &selection;
@@ -63,9 +63,9 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
 
     slope.addItemList ({ "6 dB/oct", "12 dB/oct", "24 dB/oct" }, 1);
     slope.selection = &selection;
-    attachCombo (slope, fwbassxlift::highpass, { 340, 325, 57, 28 });              // box at 344, 329 (49 x 20)
+    attachCombo (slope, bx::highpass, { 340, 325, 57, 28 });              // box at 344, 329 (49 x 20)
 
-    auto& mon = make<RadioColumn> (*p.apvts.getParameter (fwbassxlift::monitor), &p.undo,
+    auto& mon = make<RadioColumn> (*p.apvts.getParameter (bx::monitor), &p.undo,
                                        StringArray { "Audio", "Harmonics", "Original Bass" },
                                        std::vector<Colour> { kWhite, kOrange, kBlue });
     mon.selection = &selection;
@@ -98,9 +98,9 @@ void FwBassXLiftEditor::setUpGroups()
 {
     // the reference's control order (as its layout lists them); Freq does not take part in groups. Input's 0..1 covers only
     // the lower 2/3 of the reference's scale (it stops at 0 dB)
-    groupable = { { &input, fwbassxlift::input, 2.0f / 3.0f }, { &origBass, fwbassxlift::origBass, 1.0f }, { &ratio, fwbassxlift::ratio, 1.0f },
-                  { &harmonics, fwbassxlift::harmonics, 1.0f }, { &decay, fwbassxlift::decay, 1.0f }, { &response, fwbassxlift::response, 1.0f },
-                  { monitor, fwbassxlift::monitor, 1.0f }, { &slope, fwbassxlift::highpass, 1.0f } };
+    groupable = { { &input, bx::input, 2.0f / 3.0f }, { &origBass, bx::origBass, 1.0f }, { &ratio, bx::ratio, 1.0f },
+                  { &harmonics, bx::harmonics, 1.0f }, { &decay, bx::decay, 1.0f }, { &response, bx::response, 1.0f },
+                  { monitor, bx::monitor, 1.0f }, { &slope, bx::highpass, 1.0f } };
     input.feel.referenceScale = 2.0f / 3.0f;
     auto paramOf = [this] (Component* c) -> RangedAudioParameter*
     {
@@ -176,12 +176,12 @@ void FwBassXLiftEditor::paintGraph (Graphics& g)
 {
     const auto area = kGraph.toFloat();
     // background: a well tinted toward the original bass's cyan on the left and the harmonics' amber on the right
-    ColourGradient bg (th::well.interpolatedWith (kBlue, 0.07f), area.getX(), area.getY(),
-                       th::well.interpolatedWith (kOrange, 0.06f), area.getRight(), area.getY(), false);
-    bg.addColour (0.5, th::well);
+    ColourGradient bg (theme::well.interpolatedWith (kBlue, 0.07f), area.getX(), area.getY(),
+                       theme::well.interpolatedWith (kOrange, 0.06f), area.getRight(), area.getY(), false);
+    bg.addColour (0.5, theme::well);
     g.setGradientFill (bg);
     g.fillRect (area);
-    ColourGradient shade (th::raisedTop.withAlpha (0.3f), area.getX(), area.getBottom(),
+    ColourGradient shade (theme::raisedTop.withAlpha (0.3f), area.getX(), area.getBottom(),
                           Colours::transparentBlack, area.getX() + area.getWidth() * 0.55f, area.getY() + area.getHeight() * 0.35f, false);
     g.setGradientFill (shade);
     g.fillRect (area);
@@ -190,22 +190,22 @@ void FwBassXLiftEditor::paintGraph (Graphics& g)
     g.reduceClipRegion (kGraph);
 
     // dB grid labels and the 0 dB line
-    g.setColour (th::line.brighter (0.3f));
+    g.setColour (theme::line.brighter (0.3f));
     g.fillRect (21.0f, kGraphDbTop, area.getRight() - 21.0f, 1.0f);
     g.setFont (font (10.0f));
-    g.setColour (th::textDim);
+    g.setColour (theme::textDim);
     const std::pair<float, const char*> labels[] = { { 6.0f, "+6" }, { 0.0f, "0" }, { -6.0f, "-6" }, { -12.0f, "-12" }, { -18.0f, "-18" } };
     for (auto& [db, t] : labels)
         g.drawText (t, Rectangle<float> (4.0f, graphY (db) - 6.0f, 14.0f, 12.0f), Justification::centredRight);
-    g.setColour (th::textFaint);
+    g.setColour (theme::textFaint);
     g.fillRect (20.0f, graphY (6.0f), 1.0f, 275.0f - graphY (6.0f) + 1.0f);
     for (float db : { 6.0f, -12.0f, -18.0f }) g.fillRect (21.0f, graphY (db), 7.0f, 1.0f);
     g.fillRect (21.0f, 275.0f, 7.0f, 1.0f);
 
     // bands
-    const float F = value (fwbassxlift::freq), orig = value (fwbassxlift::origBass), harm = value (fwbassxlift::harmonics);
-    const float dec = value (fwbassxlift::decay);
-    const int hp = roundToInt (value (fwbassxlift::highpass));
+    const float F = value (bx::freq), orig = value (bx::origBass), harm = value (bx::harmonics);
+    const float dec = value (bx::decay);
+    const int hp = roundToInt (value (bx::highpass));
     std::vector<Point<float>> blue, orange;
     for (float x = area.getX(); x <= area.getRight() + 1.0f; x += 2.0f)
     {
@@ -230,7 +230,7 @@ void FwBassXLiftEditor::paintGraph (Graphics& g)
 
     // frequency labels
     g.setFont (font (10.0f));
-    g.setColour (th::textDim);
+    g.setColour (theme::textDim);
     const std::pair<float, const char*> fl[] = { { 46.0f, "16" }, { 92.0f, "32" }, { 180.0f, "64" }, { 268.0f, "128" }, { 356.0f, "256" } };
     for (auto& [x, t] : fl) g.drawText (t, Rectangle<float> (x - 15.0f, 269.0f, 30.0f, 12.0f), Justification::centred);
 
@@ -284,7 +284,7 @@ void FwBassXLiftEditor::paintMeters (Graphics& g)
         g.setColour (kLabel);
         g.drawText (String (i * 8), Rectangle<float> (sx - 9.0f, y - 6.0f, 18.0f, 12.0f), Justification::centred);
     }
-    th::drawLamp (g, kClip.toFloat(), clip);
+    theme::drawLamp (g, kClip.toFloat(), clip);
 }
 
 void FwBassXLiftEditor::paintContent (Graphics& g)
@@ -292,19 +292,19 @@ void FwBassXLiftEditor::paintContent (Graphics& g)
     g.fillAll (kGap);
     // the four panels as cards: graph, bottom controls, mix and output
     for (auto r : { kGraph, kBottom, kMix, kOut })
-        th::drawCard (g, r.expanded (1).toFloat(), 3.0f);
+        theme::drawCard (g, r.expanded (1).toFloat(), 3.0f);
 
     paintGraph (g);
 
     // bottom section headings and connecting lines
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.setFont (font (12.5f, true));
     g.drawText ("Dynamics", Rectangle<int> (20, 331, 75, 16), Justification::centredRight);
     g.drawText ("Harmonics", Rectangle<int> (240, 331, 80, 16), Justification::centredRight);
     g.setColour (kLabel);
     g.setFont (font (12.0f));
     g.drawText ("Filter", Rectangle<int> (341, 356, 51, 16), Justification::centred);
-    g.setColour (th::line.brighter (0.2f));                          // the same colour as the Filter box border
+    g.setColour (theme::line.brighter (0.2f));                          // the same colour as the Filter box border
     for (auto [x0, x1] : { std::pair<int, int> { 98, 113 }, { 156, 179 }, { 323, 340 }, { 397, 425 } })
         g.fillRect (x0, 339, x1 - x0, 1);
 
@@ -337,19 +337,19 @@ void FwBassXLiftEditor::paintContent (Graphics& g)
     Path cut;                                                       // gap + badge area, cut out of the mix panel corner
     cut.startNewSubPath (655.5f, 393.0f); cut.lineTo (674.0f, 377.5f); cut.lineTo (799.0f, 377.5f); cut.lineTo (799.0f, 393.0f);
     cut.closeSubPath();
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillPath (cut);
-    g.setColour (th::line);                                         // the mix panel's frame follows the cut
+    g.setColour (theme::line);                                         // the mix panel's frame follows the cut
     g.drawLine (654.5f, 392.0f, 673.5f, 376.5f, 1.0f);
     Path badge;
     badge.startNewSubPath (659.0f, 393.0f); badge.lineTo (676.0f, 379.0f); badge.lineTo (799.0f, 379.0f); badge.lineTo (799.0f, 393.0f);
     badge.closeSubPath();
-    ColourGradient bg (th::cyan, 690.0f, 0.0f, th::amber, 790.0f, 0.0f, false);
+    ColourGradient bg (theme::cyan, 690.0f, 0.0f, theme::amber, 790.0f, 0.0f, false);
     g.setGradientFill (bg);
     g.fillPath (badge);
     g.setColour (Colours::black.withAlpha (0.3f));                  // a darker top row
     g.fillRect (676.0f, 379.0f, 123.0f, 1.0f);
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.setFont (font (13.5f, true));
     const String name ("BassX Lift");
     const float pitch = juce::jmin (12.4f, 112.0f / (float) name.length()), x0 = 739.0f - pitch * (float) (name.length() - 1) * 0.5f;

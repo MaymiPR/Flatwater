@@ -6,7 +6,7 @@
 
 // Flatwater BassX Lift editor: 800 x 395 px design grid (the measured flat layout, drawn in Flatwater's look), resizable at
 // that aspect ratio.
-class FwBassXLiftEditor : public fw::ren::Editor
+class FwBassXLiftEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwBassXLiftEditor (FwBassXLiftProcessor&);
@@ -25,16 +25,16 @@ private:
     float value (const char* id) const;
 
     FwBassXLiftProcessor& proc;
-    fw::flat::VFader& input;
-    fw::flat::VFader& origBass;
-    fw::flat::VFader& harmonics;
-    fw::flat::Knob& ratio;
-    fw::flat::Knob& response;
-    fw::flat::Knob& decay;
-    fw::flat::HSlider& freq;
-    fw::flat::SlopeBox& slope;
-    fw::flat::RadioColumn* monitor = nullptr;
-    fw::flat::LassoOverlay& lasso;
+    flatwater::flat::VFader& input;
+    flatwater::flat::VFader& origBass;
+    flatwater::flat::VFader& harmonics;
+    flatwater::flat::Knob& ratio;
+    flatwater::flat::Knob& response;
+    flatwater::flat::Knob& decay;
+    flatwater::flat::HSlider& freq;
+    flatwater::flat::SlopeBox& slope;
+    flatwater::flat::RadioColumn* monitor = nullptr;
+    flatwater::flat::LassoOverlay& lasso;
     juce::Point<int> lassoStart;
     bool lassoing = false;
     // the controls a lasso can take, in the reference's control order, with their parameters
@@ -43,8 +43,8 @@ private:
     std::map<juce::Component*, float> gangStart;          // each member's value when the group drag began
     float gangTotal = 0.0f;
 
-    fw::flat::Selection selection;
-    fw::MeterBallistics barL { 0.155 }, barR { 0.155 };     // MaxxBass's meters release faster than RBass's (measured)
+    flatwater::flat::Selection selection;
+    flatwater::MeterBallistics barL { 0.155 }, barR { 0.155 };     // the reference's meters release faster than Bass Lift's (measured)
     int lastBlocks = -1;
     double lastBlockMs = -1.0e9;
     double lastTick = 0.0;

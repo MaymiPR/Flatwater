@@ -35,8 +35,8 @@ int main (int argc, char** argv)
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked
     {
-        const float lo = p.get (fwbassleveler::rangeMin), hi = p.get (fwbassleveler::rangeMax);
-        set (fwbassleveler::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
+        const float lo = p.get (bl::rangeMin), hi = p.get (bl::rangeMax);
+        set (bl::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }

@@ -3,11 +3,11 @@
 // Setting values carried over from the reference's presets; names are Flatwater's own.
 #include "shared/Presets.h"
 
-namespace fwbasslift
+namespace bf
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Basic Bass", { { "inGain", 0.0f }, { "freq", 80.0f }, { "response", 5.0f }, { "ratio", 0.63f }, { "intensity", -1.0f }, { "origBass", 0.0f }, { "gain", 0.0f }, { "decay", 1.0f }, { "smoothTc", 20.0f }, { "tc", 20.0f }, { "xfadeTc", 10.0f }, { "smooth", 1.0f } } },
     { "Essentials", "Bass Bomb", { { "inGain", 0.0f }, { "freq", 72.0f }, { "response", 5.0f }, { "ratio", 0.63f }, { "intensity", 6.0f }, { "origBass", 1.0f }, { "gain", -1.9f }, { "decay", 1.0f }, { "smoothTc", 20.0f }, { "tc", 20.0f }, { "xfadeTc", 10.0f }, { "smooth", 1.0f } } },
     { "Essentials", "Deep Floor", { { "inGain", 0.0f }, { "freq", 58.0f }, { "response", 5.0f }, { "ratio", 0.63f }, { "intensity", 6.0f }, { "origBass", 1.0f }, { "gain", -2.0f }, { "decay", 1.0f }, { "smoothTc", 20.0f }, { "tc", 20.0f }, { "xfadeTc", 10.0f }, { "smooth", 1.0f } } },

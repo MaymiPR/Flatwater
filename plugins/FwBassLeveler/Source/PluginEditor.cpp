@@ -1,30 +1,30 @@
 #include "PluginEditor.h"
 #include "shared/ui/Theme.h"
-#include "shared/ui/Logo.h"
+#include "shared/ui/Widgets.h"
 
 using namespace juce;
-using namespace fwbassleveler::ui;
-using fw::ren::arial;
-namespace th = fw::theme;
+using namespace bl::ui;
+using flatwater::ren::arial;
+namespace theme = flatwater::theme;
 
 namespace
 {
 // the editor in Flatwater's own look (shared/ui/Theme.h): the layout keeps the reference's measured positions and sizes
-const Colour kLabelLight (th::textDim), kLabelDim (th::textFaint), kFrame (th::line), kLabelDark (th::textDim), kTick (th::textFaint),
-    kIdleLine (th::amber), kIdleArrow (th::amber), kMarkSelected (th::amber), kMarkMember (th::cyan);
+const Colour kLabelLight (theme::textDim), kLabelDim (theme::textFaint), kFrame (theme::line), kLabelDark (theme::textDim), kTick (theme::textFaint),
+    kIdleLine (theme::amber), kIdleArrow (theme::amber), kMarkSelected (theme::amber), kMarkMember (theme::cyan);
 
 // a value in a well (Range, Rider, Output)
-void valueBox (Graphics& g, Rectangle<float> r, const String& text) { th::drawValueBox (g, r, text); }
+void valueBox (Graphics& g, Rectangle<float> r, const String& text) { theme::drawValueBox (g, r, text); }
 
 // a selected control's value: a raised box in an amber frame
 void hoverBox (Graphics& g, Rectangle<float> r, const String& text)
 {
-    g.setColour (th::raised);
+    g.setColour (theme::raised);
     g.fillRect (r);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawRect (r, 1.0f);
-    g.setColour (th::text);
-    g.setFont (th::font (11.0f));
+    g.setColour (theme::text);
+    g.setFont (theme::font (11.0f));
     g.drawText (text, r, Justification::centred);
 }
 
@@ -37,7 +37,7 @@ void setMarks (Marks* m, Component* c, bool hover)
 }
 
 //==============================================================================
-void fwbassleveler::ui::drawMark (Graphics& g, Rectangle<float> r, Mark m, bool round)
+void bl::ui::drawMark (Graphics& g, Rectangle<float> r, Mark m, bool round)
 {
     if (m == Mark::None) return;
     g.setColour (m == Mark::Member ? kMarkMember : kMarkSelected);
@@ -64,7 +64,7 @@ void LinearDrag::drag (Slider& s, const MouseEvent& e, float unitPx, bool vert)
     const auto d = e.position - last;
     last = e.position;
     float k = 1.0f;
-    if (fw::ctrlHeldNow()) k = std::abs (vert ? d.y : d.x) <= 2.0f ? 0.037f : 0.19f;
+    if (flatwater::ctrlHeldNow()) k = std::abs (vert ? d.y : d.x) <= 2.0f ? 0.037f : 0.19f;
     virt += d * k;
     vertical = vert;
     pxPerUnit = unitPx;
@@ -114,7 +114,7 @@ void Knob::paint (Graphics& g)
     const Point<float> c (22.0f, 21.5f);
     const auto& rp = getRotaryParameters();
     const float a = rp.startAngleRadians + (float) valueToProportionOfLength (getValue()) * (rp.endAngleRadians - rp.startAngleRadians);
-    th::drawKnob (g, c, 15.5f, a, rp.startAngleRadians, rp.endAngleRadians, rp.startAngleRadians);
+    theme::drawKnob (g, c, 15.5f, a, rp.startAngleRadians, rp.endAngleRadians, rp.startAngleRadians);
     drawMark (g, Rectangle<float> (39.0f, 39.0f).withCentre (c), marks != nullptr ? marks->of (this) : Mark::None, true);
 }
 
@@ -168,7 +168,7 @@ void Fader::mouseUp (const MouseEvent& e)
 void Fader::paint (Graphics& g)
 {
     const auto cap = capBounds();
-    th::drawCap (g, cap.reduced (kind == Rider ? 2.0f : 1.0f, kind == Rider ? 4.0f : 1.0f), kind == Rider ? 5 : 1);
+    theme::drawCap (g, cap.reduced (kind == Rider ? 2.0f : 1.0f, kind == Rider ? 4.0f : 1.0f), kind == Rider ? 5 : 1);
     drawMark (g, cap, marks != nullptr ? marks->of (this) : Mark::None);
 }
 
@@ -197,13 +197,13 @@ void TargetSlider::mouseUp (const MouseEvent& e) { if (! blocked) feel.up (*this
 void TargetSlider::paint (Graphics& g)
 {
     // the Energy meter under the thumb: 184 x 15 at 12, 3 (local); -42 .. 0 dBFS from left to right
-    th::drawMeter (g, { 12.0f, 3.0f, 184.0f, 15.0f }, (energyDb + 42.0f) / 42.0f, false);
+    theme::drawMeter (g, { 12.0f, 3.0f, 184.0f, 15.0f }, (energyDb + 42.0f) / 42.0f, false);
     // the thumb on whole pixels: a clear glass in an amber frame, the amber line down its centre
     const Rectangle<float> t (std::round (thumbX (getValue())), 0.0f, 29.0f, 22.0f);
     const auto glass = t.reduced (2.0f, 1.0f).withTrimmedBottom (2.0f);
-    g.setColour (th::text.withAlpha (0.12f));
+    g.setColour (theme::text.withAlpha (0.12f));
     g.fillRoundedRectangle (glass, 2.0f);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawRoundedRectangle (glass.reduced (0.5f), 2.0f, 1.0f);
     g.fillRect (glass.getCentreX() - 0.5f, glass.getY() + 1.0f, 1.0f, glass.getHeight() - 2.0f);
     drawMark (g, t, marks != nullptr ? marks->of (this) : Mark::None);
@@ -215,13 +215,13 @@ void Switch::paintButton (Graphics& g, bool, bool)
 {
     // a well with the raised block on the left (Slow) or the right (Fast), a cyan line on its outer edge
     const bool fast = getToggleState();
-    th::drawWell (g, getLocalBounds().toFloat(), 3.0f);
+    theme::drawWell (g, getLocalBounds().toFloat(), 3.0f);
     const Rectangle<float> block (fast ? 16.0f : 1.0f, 1.0f, 20.0f, 15.0f);
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, block.getY(), th::raised, 0.0f, block.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, block.getY(), theme::raised, 0.0f, block.getBottom(), false));
     g.fillRoundedRectangle (block, 2.0f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawRoundedRectangle (block.reduced (0.5f), 2.0f, 1.0f);
-    g.setColour (th::cyan);
+    g.setColour (theme::cyan);
     g.fillRect (fast ? block.getRight() - 3.0f : block.getX() + 2.0f, block.getY() + 3.0f, 1.0f, block.getHeight() - 6.0f);
     if (marks != nullptr && marks->of (this) != Mark::None)
     {
@@ -303,15 +303,15 @@ static MouseCursor dragCursor()
 
 //==============================================================================
 FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwbassleveler::mode), "Flatwater Bass Leveler", JucePlugin_VersionString, W, H,
-              fw::Toolbar::Style::Renaissance, fwbassleveler::modeNames()),
-      lasso (make<fw::flat::LassoOverlay>()),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bl::mode), "Flatwater Bass Leveler", JucePlugin_VersionString, W, H,
+              flatwater::Toolbar::Style::TwoRow, bl::modeNames()),
+      lasso (make<flatwater::flat::LassoOverlay>()),
       proc (p),
       sensitivity (make<Knob>()), spill (make<Knob>()), artifacts (make<Knob>()), responseSwitch (make<Switch>()),
       target (make<TargetSlider>()), rangeMax (make<Fader> (Fader::RangeMax)), rangeMin (make<Fader> (Fader::RangeMin)),
       output (make<Fader> (Fader::Output)), rider (make<Fader> (Fader::Rider)), idleColumn (make<IdleColumn>())
 {
-    setFactoryPresets (fwbassleveler::factoryPresets());             // Target stays where it is, as in the reference, unless a preset sets it
+    setFactoryPresets (bl::factoryPresets());             // Target stays where it is, as in the reference, unless a preset sets it
     marks.blueAlone = { &rider, &idleColumn };
     marks.changed = [this] { content().repaint(); };
     const auto dragging = dragCursor();
@@ -324,14 +324,14 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
     responseSwitch.marks = &marks;
 
     // control rectangles from the reference's layout
-    attachSlider (sensitivity, fwbassleveler::sensitivity, { 24, 90, 44, 44 }, 50.0);
-    attachSlider (spill, fwbassleveler::spill, { 178, 90, 44, 44 }, -40.0);
-    attachSlider (artifacts, fwbassleveler::artifacts, { 253, 90, 44, 44 }, 50.0);
-    attach (responseSwitch, fwbassleveler::response, { 104, 106, 37, 17 });
-    attachSlider (target, fwbassleveler::target, { 59, 45, 210, 22 }, -14.0);
-    attachSlider (rangeMax, fwbassleveler::rangeMax, { 36, 190, 48, 270 }, 12.0);
-    attachSlider (rangeMin, fwbassleveler::rangeMin, { 36, 190, 48, 270 }, -12.0);
-    attachSlider (output, fwbassleveler::output, { 235, 190, 48, 270 }, 0.0);
+    attachSlider (sensitivity, bl::sensitivity, { 24, 90, 44, 44 }, 50.0);
+    attachSlider (spill, bl::spill, { 178, 90, 44, 44 }, -40.0);
+    attachSlider (artifacts, bl::artifacts, { 253, 90, 44, 44 }, 50.0);
+    attach (responseSwitch, bl::response, { 104, 106, 37, 17 });
+    attachSlider (target, bl::target, { 59, 45, 210, 22 }, -14.0);
+    attachSlider (rangeMax, bl::rangeMax, { 36, 190, 48, 270 }, 12.0);
+    attachSlider (rangeMin, bl::rangeMin, { 36, 190, 48, 270 }, -12.0);
+    attachSlider (output, bl::output, { 235, 190, 48, 270 }, 0.0);
     // the Rider: not a parameter; it shows the processor's gain and can be held by hand
     rider.setRange (-12.0, 12.0, 0.01);
     addToContent (rider, { 128, 190, 64, 270 });
@@ -356,12 +356,12 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
         k->onValueChange = [this, k] { content().repaint (k->getX(), 150, k->getWidth() + 20, 28); };
     target.onValueChange = [this] { content().repaint (266, 42, 44, 26); };
     // the Idle arrow
-    auto* idleParam = p.apvts.getParameter (fwbassleveler::idle);
+    auto* idleParam = p.apvts.getParameter (bl::idle);
     idleColumn.marks = &marks;
     idleColumn.idleDb = [this] { return proc.idleDb(); };
     idleColumn.setIdleDb = [this, idleParam] (float db)
     {
-        const float lo = proc.get (fwbassleveler::rangeMin), hi = proc.get (fwbassleveler::rangeMax);
+        const float lo = proc.get (bl::rangeMin), hi = proc.get (bl::rangeMax);
         idleParam->setValueNotifyingHost (idleParam->convertTo0to1 (jlimit (0.02f, 0.98f, (jlimit (lo, hi, db) - lo) / jmax (1.0f, hi - lo))));
         content().repaint();
     };
@@ -404,10 +404,10 @@ void FwBassLevelerEditor::openEntry (Slider* sl)
     entry->setFont (arial (11.0f));
     entry->setJustification (Justification::centredLeft);
     entry->setIndents (2, 0);
-    entry->setColour (TextEditor::backgroundColourId, th::well);
-    entry->setColour (TextEditor::textColourId, th::text);
-    entry->setColour (TextEditor::outlineColourId, th::line);
-    entry->setColour (TextEditor::focusedOutlineColourId, th::cyan);
+    entry->setColour (TextEditor::backgroundColourId, theme::well);
+    entry->setColour (TextEditor::textColourId, theme::text);
+    entry->setColour (TextEditor::outlineColourId, theme::line);
+    entry->setColour (TextEditor::focusedOutlineColourId, theme::cyan);
     entry->setText (sl->getTextFromValue (sl->getValue()).upToFirstOccurrenceOf (" ", false, false), false);
     entry->onReturnKey = [this] { closeEntry (true); };
     entry->onEscapeKey = [this] { closeEntry (false); };
@@ -520,9 +520,9 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
 {
     // the name plate: a dark strip with fine scratches (our own seeded pattern), the Flatwater mark and the plug-in's name
     {
-        g.setColour (th::panel);
+        g.setColour (theme::panel);
         g.fillRect (0.0f, 511.0f, 320.0f, 49.0f);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.fillRect (0.0f, 511.0f, 320.0f, 1.0f);
         Random rnd (20261101);
         for (int i = 0; i < 220; ++i)
@@ -530,13 +530,13 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
             const float x = rnd.nextFloat() * 320.0f, y = 513.0f + rnd.nextFloat() * 46.0f;
             const float ang = degreesToRadians ((rnd.nextBool() ? 62.0f : 118.0f) + (rnd.nextFloat() - 0.5f) * 30.0f);
             const float len = 3.0f + rnd.nextFloat() * 16.0f;
-            g.setColour (th::textFaint.withAlpha (0.05f + 0.08f * rnd.nextFloat()));
+            g.setColour (theme::textFaint.withAlpha (0.05f + 0.08f * rnd.nextFloat()));
             g.drawLine (x, y, x + len * std::cos (ang), jlimit (513.0f, 559.0f, y + len * std::sin (ang)), 0.6f);
         }
     }
-    fw::drawMark (g, { 14.0f, 520.0f, 30.0f, 30.0f }, false, false);
-    g.setColour (th::text);
-    g.setFont (th::font (17.0f, true));
+    flatwater::drawMark (g, { 14.0f, 520.0f, 30.0f, 30.0f }, false, false);
+    g.setColour (theme::text);
+    g.setFont (theme::font (17.0f, true));
     g.drawText ("Flatwater Bass Leveler", Rectangle<float> (50.0f, 518.0f, 262.0f, 34.0f), Justification::centredLeft);
 
     // ---- top panel: the group frames (2 px of grey 132 at 0.69, measured on x 7-8 / 311-312, y 75-77 and 154-155 over
@@ -576,7 +576,7 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
     g.drawText ("Response", Rectangle<float> (92.0f, 137.0f, 62.0f, 14.0f), Justification::centred);
     g.drawText ("Spill", Rectangle<float> (178.0f, 137.0f, 44.0f, 14.0f), Justification::centred);
     g.drawText ("Artifacts", Rectangle<float> (245.0f, 137.0f, 60.0f, 14.0f), Justification::centred);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.setFont (arial (13.5f, true));
     g.drawText ("Detect", Rectangle<float> (58.0f, 68.0f, 47.0f, 16.0f), Justification::centred);
     g.drawText ("Ignore", Rectangle<float> (214.0f, 68.0f, 48.0f, 16.0f), Justification::centred);
@@ -598,7 +598,7 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
         static constexpr float dashes[] = { -122.3f, -100.0f, -76.7f, -54.0f, -32.0f, -10.0f, 11.4f, 33.2f, 54.6f, 76.6f, 98.8f, 120.2f };
         for (float mid : dashes)
         {
-            g.setColour (th::textFaint.withAlpha (std::abs (mid) > 110.0f ? 0.75f : 0.9f));
+            g.setColour (theme::textFaint.withAlpha (std::abs (mid) > 110.0f ? 0.75f : 0.9f));
             Path seg;
             seg.addPieSegment (ring, degreesToRadians (mid - 8.25f), degreesToRadians (mid + 8.25f), 21.1f / 25.25f);
             g.fillPath (seg);
@@ -616,10 +616,10 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
                     if (juce::exactlyEqual (t.angle, 0.0f) && side > 0.0f) continue;
                     const float a = degreesToRadians (side * t.angle);
                     const Point<float> d (std::sin (a), -std::cos (a));
-                    g.setColour (th::textFaint.withAlpha (t.weight));
+                    g.setColour (theme::textFaint.withAlpha (t.weight));
                     g.drawLine (Line<float> (c + d * t.r0, c + d * t.r1), 2.0f);
                 }
-            g.setGradientFill (ColourGradient (th::line.brighter (0.6f), 0.0f, c.y - 20.0f, th::line.darker (0.4f), 0.0f, c.y + 20.0f, false));
+            g.setGradientFill (ColourGradient (theme::line.brighter (0.6f), 0.0f, c.y - 20.0f, theme::line.darker (0.4f), 0.0f, c.y + 20.0f, false));
             g.drawEllipse (Rectangle<float> (39.6f, 39.6f).withCentre (c), 1.2f);
         }
     }
@@ -634,22 +634,22 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
     {
         // a screw at its measured place (centred at 159.5): a dark ring on a raised face, a small cross
         const Point<float> c (159.5f, y);
-        g.setColour (th::raised);
+        g.setColour (theme::raised);
         g.fillEllipse (Rectangle<float> (7.0f, 7.0f).withCentre (c));
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.drawEllipse (Rectangle<float> (8.4f, 8.4f).withCentre (c), 1.3f);
-        g.setColour (th::line.brighter (0.4f));
+        g.setColour (theme::line.brighter (0.4f));
         g.fillRect (c.x - 1.5f, c.y - 0.5f, 3.0f, 1.0f);
         g.fillRect (c.x - 0.5f, c.y - 1.5f, 1.0f, 3.0f);
     }
     for (float x : { 52.0f, 150.0f, 248.0f })                       // the wells behind the tracks
     {
-        g.setColour (th::well.withAlpha (0.45f));
+        g.setColour (theme::well.withAlpha (0.45f));
         g.fillRoundedRectangle (x, 200.0f, 20.0f, 256.0f, 5.0f);
     }
-    th::drawWell (g, { 59.0f, 210.0f, 5.0f, 238.0f }, 2.5f);           // Range
-    th::drawWell (g, { 156.5f, 210.0f, 6.0f, 238.0f }, 3.0f);          // Rider
-    th::drawWell (g, { 255.0f, 215.0f, 5.0f, 227.0f }, 2.5f);          // Output
+    theme::drawWell (g, { 59.0f, 210.0f, 5.0f, 238.0f }, 2.5f);           // Range
+    theme::drawWell (g, { 156.5f, 210.0f, 6.0f, 238.0f }, 3.0f);          // Rider
+    theme::drawWell (g, { 255.0f, 215.0f, 5.0f, 227.0f }, 2.5f);          // Output
     // the scales (measured on the reference's 2x skin): a mark every 3 dB (2 px at +-12 and 0, else 1 px), five faint
     // half-pixel ticks between marks at 5, 9, 13, 17 and 21 px below each; numbers every 6 dB centred at x 117.5 and
     // 202 (the Rider) and at +-12 / 0 centred at 291 (the Output)
@@ -688,9 +688,9 @@ void FwBassLevelerEditor::paintStatic (Graphics& g) const
 // the panels in Flatwater's look: the background, a card for the top controls, one for the faders, the name plate
 static void paintPanels (Graphics& g)
 {
-    g.fillAll (th::bg);
-    th::drawCard (g, { 6.0f, 38.0f, 308.0f, 122.0f });
-    th::drawCard (g, { 4.0f, 166.0f, 312.0f, 340.0f });
+    g.fillAll (theme::bg);
+    theme::drawCard (g, { 6.0f, 38.0f, 308.0f, 122.0f });
+    theme::drawCard (g, { 4.0f, 166.0f, 312.0f, 340.0f });
 }
 
 void FwBassLevelerEditor::paintContent (Graphics& g)
@@ -713,17 +713,17 @@ void FwBassLevelerEditor::paintContent (Graphics& g)
     }
 
     // the Range band: the space between Min and Max, lit, up to the Rider's scale; the Idle line across it
-    const float lo = proc.get (fwbassleveler::rangeMin), hi = proc.get (fwbassleveler::rangeMax);
-    g.setColour (th::cyan.withAlpha (0.10f));
+    const float lo = proc.get (bl::rangeMin), hi = proc.get (bl::rangeMax);
+    g.setColour (theme::cyan.withAlpha (0.10f));
     g.fillRect (Rectangle<float>::leftTopRightBottom (72.0f, scaleY (hi), 149.0f, scaleY (lo)));
     g.setColour (kIdleLine.withAlpha (0.8f));
     g.fillRect (72.0f, scaleY (proc.idleDb()) - 0.5f, 77.0f, 1.0f);
     if (idleColumn.dragging || marks.hover == &idleColumn || marks.showsValue (&idleColumn)) hoverBox (g, { 3.0f, 323.0f, 27.0f, 13.0f }, String (proc.idleDb(), 1));
 
     // the clip LED at its measured place: lit red until it is clicked
-    g.setColour (th::well);
+    g.setColour (theme::well);
     g.fillRect (280.0f, 186.0f, 15.0f, 10.0f);
-    th::drawLamp (g, { 281.0f, 187.0f, 13.0f, 8.0f }, clip);
+    theme::drawLamp (g, { 281.0f, 187.0f, 13.0f, 8.0f }, clip);
 
     // value boxes
     valueBox (g, { 44.0f, 468.5f, 34.0f, 13.5f }, String (hi - lo, 1));
@@ -744,17 +744,17 @@ void FwBassLevelerEditor::paintContent (Graphics& g)
         if (k->showing()) hoverBox (g, { x, 157.0f, 37.0f, 13.0f }, String (k->getValue(), 1));
 
     // the Live components' badge
-    if (fwbassleveler::isLive (proc.modeIndex()))
+    if (bl::isLive (proc.modeIndex()))
     {
         const Rectangle<float> b (246.0f, 520.0f, 65.0f, 30.0f);
-        g.setColour (th::raised);
+        g.setColour (theme::raised);
         g.fillRoundedRectangle (b, 3.0f);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawRoundedRectangle (b.reduced (0.5f), 3.0f, 1.0f);
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.setFont (arial (13.0f, true));
         g.drawText ("LIVE", b.withHeight (16.0f).translated (0.0f, 1.0f), Justification::centred);
-        g.setColour (th::text);
+        g.setColour (theme::text);
         g.setFont (arial (10.0f, true));
         g.drawText ("Low Latency", b.withTrimmedTop (15.0f), Justification::centred);
     }

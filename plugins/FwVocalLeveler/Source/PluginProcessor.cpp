@@ -15,22 +15,22 @@ AudioProcessorValueTreeState::ParameterLayout FwVocalLevelerProcessor::layout()
     };
     auto db1 = [] (float v) { return String (v, 1) + " dB"; };
     // in the reference's parameter order
-    addF (fwvocalleveler::target, "Target", { -42.0f, 0.0f, 0.1f }, -21.0f, db1);
-    addF (fwvocalleveler::vocalSensitivity, "Vocal Sensitivity", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    addF (fwvocalleveler::musicSensitivity, "Music Sensitivity", { -12.1f, 12.0f, 0.1f }, 0.0f,
-          [] (float v) { return fwvocalleveler::musicOff (v) ? String ("Off") : String (v, 1) + " dB"; });
-    addF (fwvocalleveler::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 6.0f, db1);
+    addF (vl::target, "Target", { -42.0f, 0.0f, 0.1f }, -21.0f, db1);
+    addF (vl::vocalSensitivity, "Vocal Sensitivity", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
+    addF (vl::musicSensitivity, "Music Sensitivity", { -12.1f, 12.0f, 0.1f }, 0.0f,
+          [] (float v) { return vl::musicOff (v) ? String ("Off") : String (v, 1) + " dB"; });
+    addF (vl::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 6.0f, db1);
     // the Idle arrow is stored as its place in the range (as the reference's preset arrays); the host sees it in dB
     // over a fixed +-12 dB (as the reference's: its text stays 0.0 at 0.5 whatever the range)
-    addF (fwvocalleveler::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (fwvocalleveler::idleDb (v, -12.0f, 12.0f), 1); });
-    addF (fwvocalleveler::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -6.0f, db1);
-    addF (fwvocalleveler::rider, "Rider Fader", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    addF (fwvocalleveler::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwvocalleveler::attack, 1 }, "Attack", StringArray { "Slow", "Fast" }, 0));
-    addF (fwvocalleveler::spill, "Spill", { -48.0f, -12.0f, 0.1f }, -48.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwvocalleveler::automation, 1 }, "Automation", StringArray { "Off", "Write", "Read" }, 0,
+    addF (vl::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (vl::idleDb (v, -12.0f, 12.0f), 1); });
+    addF (vl::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -6.0f, db1);
+    addF (vl::rider, "Rider Fader", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
+    addF (vl::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::attack, 1 }, "Attack", StringArray { "Slow", "Fast" }, 0));
+    addF (vl::spill, "Spill", { -48.0f, -12.0f, 0.1f }, -48.0f, db1);
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::automation, 1 }, "Automation", StringArray { "Off", "Write", "Read" }, 0,
                                                    AudioParameterChoiceAttributes().withAutomatable (false)));
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwvocalleveler::mode, 1 }, "Mode", fwvocalleveler::modeNames(), 0));
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::mode, 1 }, "Mode", vl::modeNames(), 0));
     return l;
 }
 
@@ -57,7 +57,7 @@ void FwVocalLevelerProcessor::prepareToPlay (double sampleRate, int)
     sr = sampleRate;
     ride.prepare (sr);
     smooth5 = std::exp (-1.0 / (0.005 * sr));
-    outGain = Decibels::decibelsToGain ((double) get (fwvocalleveler::output));
+    outGain = Decibels::decibelsToGain ((double) get (vl::output));
     heldDb = 0.0;
     musicLevel = 1.0e-10;
 }
@@ -67,15 +67,15 @@ void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     ScopedNoDenormals nd;
     auto b = getBusBuffer (buffer, true, 0);
     const int n = b.getNumSamples(), ch = b.getNumChannels();
-    fwvocalleveler::RideSettings st;
-    st.target = get (fwvocalleveler::target); st.rangeMin = get (fwvocalleveler::rangeMin); st.rangeMax = get (fwvocalleveler::rangeMax);
-    st.idleDb = idleDb(); st.vocalSensitivity = get (fwvocalleveler::vocalSensitivity); st.spill = get (fwvocalleveler::spill);
-    st.fast = get (fwvocalleveler::attack) > 0.5f; st.live = fwvocalleveler::isLive (modeIndex());
-    const double outTo = Decibels::decibelsToGain ((double) get (fwvocalleveler::output));
+    vl::RideSettings st;
+    st.target = get (vl::target); st.rangeMin = get (vl::rangeMin); st.rangeMax = get (vl::rangeMax);
+    st.idleDb = idleDb(); st.vocalSensitivity = get (vl::vocalSensitivity); st.spill = get (vl::spill);
+    st.fast = get (vl::attack) > 0.5f; st.live = vl::isLive (modeIndex());
+    const double outTo = Decibels::decibelsToGain ((double) get (vl::output));
     const int automation = automationMode();
     const bool held = userRide.load();
-    const double heldTo = held ? (double) userRideDb.load() : (double) get (fwvocalleveler::rider);
-    const bool fixed = held || automation == fwvocalleveler::Read;   // a hand on the fader, or the host's automation
+    const double heldTo = held ? (double) userRideDb.load() : (double) get (vl::rider);
+    const bool fixed = held || automation == vl::Read;   // a hand on the fader, or the host's automation
     if (! fixed && wasHeld) { returning = true; wasHeld = false; }
 
     // the music on the side-chain (its level for the Music LED; the riding does not use it yet)
@@ -120,19 +120,19 @@ void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     outDb.push (pk > 1.0e-5f ? Decibels::gainToDecibels (pk) : -100.0f);
 }
 
-// a factory preset's own Idle value (fw::presetExactTag in the state)
+// a factory preset's own Idle value (flatwater::presetExactTag in the state)
 void FwVocalLevelerProcessor::readExactIdle()
 {
-    const auto t = apvts.state.getChildWithName (fw::presetExactTag);
-    exactIdle.store (t.isValid() && t.hasProperty (fwvocalleveler::idle) ? (float) t.getProperty (fwvocalleveler::idle) : -1.0f);
+    const auto t = apvts.state.getChildWithName (flatwater::presetExactTag);
+    exactIdle.store (t.isValid() && t.hasProperty (vl::idle) ? (float) t.getProperty (vl::idle) : -1.0f);
 }
 
 // Automation Write: the Rider's movements go to the host as if a hand moved its parameter (one gesture while writing)
 void FwVocalLevelerProcessor::timerCallback()
 {
     readExactIdle();
-    auto* p = apvts.getParameter (fwvocalleveler::rider);
-    const bool write = automationMode() == fwvocalleveler::Write;
+    auto* p = apvts.getParameter (vl::rider);
+    const bool write = automationMode() == vl::Write;
     if (write != writing)
     {
         writing = write;

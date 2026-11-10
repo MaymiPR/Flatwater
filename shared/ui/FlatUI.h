@@ -7,16 +7,16 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <functional>
 #include "shared/ui/Theme.h"
-#include "shared/ui/Wheel.h"
+#include "shared/ui/Widgets.h"
 
-namespace fw::flat
+namespace flatwater::flat
 {
 // the kit's colours, from the theme. kBlue and kOrange are the two signals' colours (the original bass and the created
 // harmonics), cyan and amber; kWhite is the plain signal's, light
-inline const juce::Colour kPanel (fw::theme::panel), kFrame (fw::theme::line), kGap (fw::theme::bg), kTrack (fw::theme::well),
-    kTick (fw::theme::textFaint), kValue (fw::theme::text), kLabel (fw::theme::textDim), kRing (fw::theme::line), kDim (fw::theme::textFaint),
-    kWhite (fw::theme::text), kBlue (fw::theme::cyan), kOrange (fw::theme::amber), kBadgeBlue (fw::theme::cyan),
-    kBadgeOrange (fw::theme::amber);
+inline const juce::Colour kPanel (flatwater::theme::panel), kFrame (flatwater::theme::line), kGap (flatwater::theme::bg), kTrack (flatwater::theme::well),
+    kTick (flatwater::theme::textFaint), kValue (flatwater::theme::text), kLabel (flatwater::theme::textDim), kRing (flatwater::theme::line), kDim (flatwater::theme::textFaint),
+    kWhite (flatwater::theme::text), kBlue (flatwater::theme::cyan), kOrange (flatwater::theme::amber), kBadgeBlue (flatwater::theme::cyan),
+    kBadgeOrange (flatwater::theme::amber);
 
 juce::Font font (float h, bool bold = false);
 
@@ -56,7 +56,7 @@ struct Selection
 private:
     void repaintAll();
 };
-inline const juce::Colour kSelect (fw::theme::amber), kMember (fw::theme::cyan);
+inline const juce::Colour kSelect (flatwater::theme::amber), kMember (flatwater::theme::cyan);
 // the selection ring of knobs and the Freq thumb: brightest at 3 and 9 o'clock, gone at the top and bottom
 void drawSelectRing (juce::Graphics&, juce::Point<float> centre, float radius, juce::Colour = kSelect);
 // the lasso: a 1 px light rectangle over everything (does not take the mouse)
@@ -72,10 +72,10 @@ public:
 // "Control feel"): the cursor is hidden while dragging and comes back where the control is; faders and the Freq
 // slider move 1:1 with the mouse; knobs take ~500 px for their full range, ~1000 px when the mouse moves slowly
 // (<= 3 px per move), and Ctrl gives a fine mode. Alt-click resets to the default; a double-click types a value.
-struct WavesDrag
+struct FineDrag
 {
     enum Kind { Linear, Rotary };
-    explicit WavesDrag (Kind k) : kind (k) {}
+    explicit FineDrag (Kind k) : kind (k) {}
     bool down (juce::Slider&, const juce::MouseEvent&, juce::Rectangle<int> textArea, Selection*);  // true: handled
     void drag (juce::Slider&, const juce::MouseEvent&, Selection*);
     bool up (juce::Slider&, const juce::MouseEvent&, juce::Point<float> restoreAt, Selection*);    // true: handled
@@ -83,11 +83,11 @@ struct WavesDrag
     bool active = false, ganged = false;
     float referenceScale = 1.0f;     // this control's 0..1 range on the reference's scale (Input: 2/3, it stops at 0 dB)
     // rotary: mouse steps up to slowMaxStep px move at half speed; Ctrl scales the rate (and, with ctrlScalesSpeed, keeps
-    // the slow / fast difference: H-Comp's 1/4; MaxxBass's 1/6 at any speed)
+    // the slow / fast difference: Flatwater Comp's reference 1/4; Flatwater BassX Lift's 1/6 at any speed)
     float slowMaxStep = 3.0f, ctrlFactor = 1.0f / 6.0f;
     bool ctrlScalesSpeed = false;
     // linear (faders, sliders): Ctrl moves this share of the plain rate on mouse steps over 2 px / up to 2 px (measured on
-    // MaxxBass's faders; its Freq slider sets its own)
+    // Flatwater BassX Lift's reference faders; its Freq slider sets its own)
     float linCtrlFast = 0.19f, linCtrlSlow = 0.037f;
     // a stepped control's own rate, in px per step: slow, fast, Ctrl slow, Ctrl fast (0: the continuous law above)
     float stepPx[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -105,9 +105,9 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { wavesWheel (*this, e, w, wheelAcc, false, wheelScale); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fineWheel (*this, e, w, wheelAcc, false, wheelScale); }
     double wheelAcc = 0.0, wheelScale = 1.0;
-    WavesDrag feel { WavesDrag::Linear };
+    FineDrag feel { FineDrag::Linear };
     Selection* selection = nullptr;
     std::function<juce::String (double)> format;
     juce::Colour lineColour;
@@ -126,9 +126,9 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { wavesWheel (*this, e, w, wheelAcc, false, wheelScale); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fineWheel (*this, e, w, wheelAcc, false, wheelScale); }
     double wheelAcc = 0.0, wheelScale = 1.0;
-    WavesDrag feel { WavesDrag::Rotary };
+    FineDrag feel { FineDrag::Rotary };
     Selection* selection = nullptr;
     std::function<juce::String (double)> format;
     juce::String label;
@@ -149,9 +149,9 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { wavesWheel (*this, e, w, wheelAcc, false, wheelScale); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fineWheel (*this, e, w, wheelAcc, false, wheelScale); }
     double wheelAcc = 0.0, wheelScale = 1.0;
-    WavesDrag feel { WavesDrag::Linear };
+    FineDrag feel { FineDrag::Linear };
     Selection* selection = nullptr;
     void mouseEnter (const juce::MouseEvent&) override { repaint(); }
     void mouseExit (const juce::MouseEvent&) override { repaint(); }

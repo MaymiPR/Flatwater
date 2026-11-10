@@ -13,20 +13,20 @@ AudioProcessorValueTreeState::ParameterLayout FwVocalChainProcessor::layout()
         l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, NormalisableRange<float> (lo, hi, 0.1f), 0.0f, a));
     };
     // in the reference's host order: Sensitivity, then each fader and its colour, Output, Balance
-    addF (fwvocalchain::sensitivity, "Sensitivity", -10.0f, 10.0f, text1, "dB");
+    addF (ch::sensitivity, "Sensitivity", -10.0f, 10.0f, text1, "dB");
     const char* names[6][2] = { { "Bass", "Bass Color" }, { "Treble", "Treble Color" }, { "Compress", "Compress Color" },
                                 { "Reverb", "Reverb Color" }, { "Delay", "Delay Color" }, { "Pitch", "Pitch Color" } };
     for (size_t i = 0; i < 6; ++i)
     {
-        const auto& s = fwvocalchain::stages()[i];
+        const auto& s = ch::stages()[i];
         addF (s.fader, names[i][0], -10.0f, 10.0f, text1);
         l.add (std::make_unique<AudioParameterChoice> (ParameterID { s.colour, 1 }, names[i][1],
                                                        StringArray { s.names[0], s.names[1], s.names[2], s.names[3] }, 1));
     }
-    addF (fwvocalchain::output, "Output", -10.0f, 10.0f, text1, "dB");
-    addF (fwvocalchain::balance, "Balance", -6.0f, 6.0f, text1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwvocalchain::mode, 1 }, "Mode", fwvocalchain::modeNames(), 0));
-    l.add (std::make_unique<AudioParameterBool> (ParameterID { fwvocalchain::link, 1 }, "Link In/Out", false));
+    addF (ch::output, "Output", -10.0f, 10.0f, text1, "dB");
+    addF (ch::balance, "Balance", -6.0f, 6.0f, text1);
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { ch::mode, 1 }, "Mode", ch::modeNames(), 0));
+    l.add (std::make_unique<AudioParameterBool> (ParameterID { ch::link, 1 }, "Link In/Out", false));
     return l;
 }
 
@@ -35,15 +35,15 @@ FwVocalChainProcessor::FwVocalChainProcessor()
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
       apvts (*this, &undo, "FwVocalChain", layout())
 {
-    setLatencySamples (fwvocalchain::latencySamples (48000.0));
+    setLatencySamples (ch::latencySamples (48000.0));
     startTimerHz (30);
 }
 
 void FwVocalChainProcessor::syncLink()
 {
     if (! linked()) return;
-    auto* out = apvts.getParameter (fwvocalchain::output);
-    const float mirror = -get (fwvocalchain::sensitivity);
+    auto* out = apvts.getParameter (ch::output);
+    const float mirror = -get (ch::sensitivity);
     if (std::abs (out->convertFrom0to1 (out->getValue()) - mirror) < 1.0e-3f) return;
     out->beginChangeGesture();
     out->setValueNotifyingHost (out->convertTo0to1 (mirror));
@@ -61,7 +61,7 @@ bool FwVocalChainProcessor::isBusesLayoutSupported (const BusesLayout& l) const
 void FwVocalChainProcessor::prepareToPlay (double sampleRate, int block)
 {
     sr = sampleRate;
-    setLatencySamples (fwvocalchain::latencySamples (sr));
+    setLatencySamples (ch::latencySamples (sr));
     chain.prepare (sr, jmax (block, 16));
     work.setSize (2, jmax (block, 16));
 }
@@ -77,15 +77,15 @@ void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         work.copyFrom (c, 0, b, jmin (c, jmax (0, ins - 1)), 0, n);
         pin[c] = work.getMagnitude (c, 0, n);
     }
-    fwvocalchain::dsp::Params p;
+    ch::dsp::Params p;
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
             if (auto bpm = pos->getBpm()) p.bpm = *bpm;
-    p.sensitivity = get (fwvocalchain::sensitivity); p.output = get (fwvocalchain::output); p.balance = get (fwvocalchain::balance);
+    p.sensitivity = get (ch::sensitivity); p.output = get (ch::output); p.balance = get (ch::balance);
     if (linked()) p.output = -p.sensitivity;                            // (the In/Out link: Output mirrors Sensitivity)
     for (size_t i = 0; i < 6; ++i)
     {
-        const auto& st = fwvocalchain::stages()[i];
+        const auto& st = ch::stages()[i];
         p.fader[i] = get (st.fader);
         p.colour[i] = roundToInt (get (st.colour));
     }

@@ -4,11 +4,11 @@
 // own. An Idle of 0 or 1 is outside the arrow's range; the processor keeps it exactly while the arrow stays put.
 #include "shared/Presets.h"
 
-namespace fwvocalleveler
+namespace vl
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "target", -21.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -6.0f }, { "rangeMax", 6.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 0.0f }, { "automation", 0.0f } } },
     { "Essentials", "Gentle Ride", { { "target", -23.0f }, { "musicSensitivity", 0.0f }, { "rangeMin", -2.0f }, { "rangeMax", 2.0f }, { "vocalSensitivity", 0.0f }, { "output", 0.0f }, { "idle", 0.5f }, { "attack", 0.0f } } },
     { "Essentials", "Steady Lead", { { "target", -13.1f }, { "musicSensitivity", 4.3f }, { "rangeMin", -2.6f }, { "rangeMax", 6.1f }, { "vocalSensitivity", 0.0f }, { "output", 0.1f }, { "idle", 0.63f }, { "attack", 0.0f } } },

@@ -13,7 +13,7 @@
 // (dsp/Model.h); the audio thread works on a copy of them, refreshed whenever the tree changes. Per host block:
 // the modulators (dsp/Mod.h) move the controls, the shifter (dsp/Shifter.h) makes the wet signal, and
 // Mix crossfades the dry input and the wet one (dry + m (wet - dry), as the reference's).
-namespace fwpitchbend
+namespace pb
 {
 // the two LFO / step modulators share a layout: their IDs are "m1..." and "m2..."
 struct ModIds { const char* warp; const char* level; const char* rateSynced; const char* rate; const char* sync;
@@ -74,13 +74,13 @@ public:
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
-    int getNumPrograms() override { return 1 + (int) fwpitchbend::factoryPresets().size(); }
+    int getNumPrograms() override { return 1 + (int) pb::factoryPresets().size(); }
     int getCurrentProgram() override { return currentProgram; }
     void setCurrentProgram (int index) override;
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
-        const auto& p = fwpitchbend::factoryPresets()[(size_t) index - 1];
+        const auto& p = pb::factoryPresets()[(size_t) index - 1];
         return juce::String (p.group) + ": " + p.name;
     }
     void changeProgramName (int, const juce::String&) override {}
@@ -91,7 +91,7 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    bool fine() const { return (bool) apvts.state.getProperty (fwpitchbend::fineId, false); }
+    bool fine() const { return (bool) apvts.state.getProperty (pb::fineId, false); }
     // Pitch / Formant in semitones as they act: whole semitones while Fine is off, cents (0.01) while it is on
     float shiftSemitones (const char* id) const
     {
@@ -101,7 +101,7 @@ public:
 
     // editor taps: each modulatable control's value with its modulation (real units; the white dot), the two
     // modulators' place in their cycle (0 .. 1, the graph's play-head), AM's envelope and PT's pitch value (-1 .. 1)
-    std::array<std::atomic<float>, fwpitchbend::numTargets> modulated;
+    std::array<std::atomic<float>, pb::numTargets> modulated;
     std::atomic<float> cycle[2] { 0.0f, 0.0f }, amValue { 0.0f }, ptValue { 0.0f };
 
     // what Default Preset resets beyond the parameters: no slots, Fine off, the default shapes, the steps at 0
@@ -124,22 +124,22 @@ private:
     juce::SpinLock modelLock;
     struct Model
     {
-        std::array<fwpitchbend::Slot, fwpitchbend::numTargets * fwpitchbend::numSlots> slots {};
-        fwpitchbend::Table tables[2] {};
+        std::array<pb::Slot, pb::numTargets * pb::numSlots> slots {};
+        pb::Table tables[2] {};
         bool fine = false;
     } shared, audio;
 
     double sr = 48000.0;
     long long processed = 0;                                     // samples since the start of processing
-    std::array<juce::RangedAudioParameter*, fwpitchbend::numTargets> targetParams {};
-    std::array<float, fwpitchbend::numTargets> modNorm {};       // last block's modulated values (normalised)
-    std::array<double, fwpitchbend::numTargets> modSum {};       // last block's sums of the slots (depth / 100 x source)
-    std::array<double, fwpitchbend::numSources> lastValue {};    // the sources' values at the last sample
+    std::array<juce::RangedAudioParameter*, pb::numTargets> targetParams {};
+    std::array<float, pb::numTargets> modNorm {};       // last block's modulated values (normalised)
+    std::array<double, pb::numTargets> modSum {};       // last block's sums of the slots (depth / 100 x source)
+    std::array<double, pb::numSources> lastValue {};    // the sources' values at the last sample
     double modulatedValue (int t) const;                         // a control with last block's modulation, real units
-    fwpitchbend::Lfo lfo[2];
-    fwpitchbend::Follower am;
-    fwpitchbend::PitchFollower pt;
-    fwpitchbend::Shifter shifter;
+    pb::Lfo lfo[2];
+    pb::Follower am;
+    pb::PitchFollower pt;
+    pb::Shifter shifter;
     juce::AudioBuffer<float> dry;
     std::vector<float> mono;                                     // the input's mix, then the Mix per sample
     std::vector<float> pitchPer, formantPer;                     // the Pitch and Formant totals per sample (semitones)

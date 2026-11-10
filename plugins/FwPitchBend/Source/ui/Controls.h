@@ -5,7 +5,7 @@
 // with its measured feel (RESEARCH.md, "The editor"): knobs that carry their modulation slots' arcs and a dot at the
 // modulated value, the slots themselves, the modulators' screen (an LFO cycle, a sequence, AM's envelope, PT's pitch)
 // and the shape library. They share one Ui: the processor, the selected control, an assignment being dragged.
-namespace fwpitchbend::ui
+namespace pb::ui
 {
 class ModKnob;
 

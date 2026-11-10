@@ -1,17 +1,17 @@
 #include "PluginEditor.h"
 
 using namespace juce;
-using namespace fw::ren;
+using namespace flatwater::ren;
 
 FwVocalCompEditor::FwVocalCompEditor (FwVocalCompProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwvocalcomp::mode), "Flatwater Vocal Comp", JucePlugin_VersionString, W, H), proc (p),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (vc::mode), "Flatwater Vocal Comp", JucePlugin_VersionString, W, H), proc (p),
       comp (makeFader (Fader::Big)), gate (makeFader (Fader::Small, 4)), gain (makeFader (Fader::Small, 5))
 {
-    setFactoryPresets (fwvocalcomp::factoryPresets());
+    setFactoryPresets (vc::factoryPresets());
     gate.format = [] (double v) { return dbText ((float) v, true); };
-    attach (comp, fwvocalcomp::comp, { 135, 99, 102, 207 }, 0.0);
-    attach (gate, fwvocalcomp::gate, { 37, 89, 42, 211 }, -80.0);
-    attach (gain, fwvocalcomp::gain, { 292, 89, 42, 211 }, 0.0);
+    attach (comp, vc::comp, { 135, 99, 102, 207 }, 0.0);
+    attach (gate, vc::gate, { 37, 89, 42, 211 }, -80.0);
+    attach (gain, vc::gain, { 292, 89, 42, 211 }, 0.0);
 }
 
 Rectangle<int> FwVocalCompEditor::vuRect (bool right) const { return { isMono() ? 311 : (right ? 315 : 307), 122, 5, 155 }; }
@@ -53,7 +53,7 @@ void FwVocalCompEditor::paintContent (Graphics& g)
     paintPanel (g);
 
     // the name plate: the Flatwater mark and the plug-in's name
-    paintTitle (g, "Vocal Comp", fw::theme::text);
+    paintTitle (g, "Vocal Comp", flatwater::theme::text);
 
     paintHousing (g);
     // total compression window: the reduction shows in cyan, from the top

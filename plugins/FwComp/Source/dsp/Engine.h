@@ -22,7 +22,7 @@
 #include "shared/dsp/Math.h"
 #include "Net.h"
 
-namespace fwcomp
+namespace co
 {
 // the learned gain correction: one GRU step (PyTorch layout) per call; returns the correction in dB
 class GainNet
@@ -50,13 +50,13 @@ public:
                 hz += gainnet::Whh[(H + j) * H + m] * h[m];
                 hn += gainnet::Whh[(2 * H + j) * H + m] * h[m];
             }
-            const float r = 1.0f / (1.0f + fw::math::expf (-(g[0] + hr))), z = 1.0f / (1.0f + fw::math::expf (-(g[1] + hz)));
-            const float n = fw::math::tanhf (g[2] + r * hn);
+            const float r = 1.0f / (1.0f + flatwater::math::expf (-(g[0] + hr))), z = 1.0f / (1.0f + flatwater::math::expf (-(g[1] + hz)));
+            const float n = flatwater::math::tanhf (g[2] + r * hn);
             nh[j] = (1.0f - z) * n + z * h[j];
         }
         float o = gainnet::bout[0];
         for (int m = 0; m < H; ++m) { h[m] = nh[m]; o += gainnet::Wout[m] * h[m]; }
-        return 9.0f * fw::math::tanhf (o / 9.0f);
+        return 9.0f * flatwater::math::tanhf (o / 9.0f);
     }
 private:
     float h[gainnet::hidden] {};
@@ -107,18 +107,18 @@ public:
     {
         set = s;
         slope = 1.0 - 1.0 / std::max (1.0, (double) s.ratio);
-        attC = fw::math::exp (-1.0 / (0.99 * std::max (0.05, (double) s.attackMs) * 1e-3 * fs));
+        attC = flatwater::math::exp (-1.0 / (0.99 * std::max (0.05, (double) s.attackMs) * 1e-3 * fs));
         relS = std::max (1e-3, (double) s.releaseMs * 1e-3);
-        crestC = fw::math::exp (-1.0 / ((double) tables::crestMs * 1e-3 * fs));
-        startC = tables::startupMs > 0.0f ? fw::math::exp (-1.0 / ((double) tables::startupMs * 1e-3 * fs)) : 0.0;
+        crestC = flatwater::math::exp (-1.0 / ((double) tables::crestMs * 1e-3 * fs));
+        startC = tables::startupMs > 0.0f ? flatwater::math::exp (-1.0 / ((double) tables::startupMs * 1e-3 * fs)) : 0.0;
         if constexpr (tables::hasRelease4)
         {
-            crest4C = fw::math::exp (-1.0 / ((double) tables::crest4Ms * 1e-3 * fs));
-            fast4C = fw::math::exp (-1.0 / ((double) tables::fast4Ms * 1e-3 * fs));
+            crest4C = flatwater::math::exp (-1.0 / ((double) tables::crest4Ms * 1e-3 * fs));
+            fast4C = flatwater::math::exp (-1.0 / ((double) tables::fast4Ms * 1e-3 * fs));
         }
         punchSamples = std::clamp ((int) std::lround (s.punch * 1e-3 * fs), 0, maxPunch - 1);
-        makeup = fw::math::pow10 (makeupDb (s.thresholdDb, s.ratio) * makeupScale (s.releaseMs) / 20.0);
-        outGain = fw::math::pow10 (s.outputDb / 20.0);
+        makeup = flatwater::math::pow10 (makeupDb (s.thresholdDb, s.ratio) * makeupScale (s.releaseMs) / 20.0);
+        outGain = flatwater::math::pow10 (s.outputDb / 20.0);
     }
 
     static double makeupDb (double thr, double ratio)
@@ -142,10 +142,10 @@ public:
     static double makeupScale (double releaseMs)
     {
         using namespace tables;
-        const double r = fw::math::log (std::clamp (releaseMs, (double) makeupRelMs[0], (double) makeupRelMs[makeupRelCount - 1]));
+        const double r = flatwater::math::log (std::clamp (releaseMs, (double) makeupRelMs[0], (double) makeupRelMs[makeupRelCount - 1]));
         int i = 0;
-        while (i < makeupRelCount - 2 && r > fw::math::log ((double) makeupRelMs[i + 1])) ++i;
-        const double a = fw::math::log ((double) makeupRelMs[i]), b = fw::math::log ((double) makeupRelMs[i + 1]), f = (r - a) / (b - a);
+        while (i < makeupRelCount - 2 && r > flatwater::math::log ((double) makeupRelMs[i + 1])) ++i;
+        const double a = flatwater::math::log ((double) makeupRelMs[i]), b = flatwater::math::log ((double) makeupRelMs[i + 1]), f = (r - a) / (b - a);
         return makeupRelScale[i] + f * (makeupRelScale[i + 1] - makeupRelScale[i]);
     }
 
@@ -162,7 +162,7 @@ public:
             const double h = heldPeak();
             const double Rt = targetGr (h);
             stepRelease (Rt);
-            const double gt = fw::math::pow10 (-R / 20.0);
+            const double gt = flatwater::math::pow10 (-R / 20.0);
             g1 = gt < g1 ? gt + attC * (g1 - gt) : gt;
             sum1 += g1 - b1[(size_t) i1]; b1[(size_t) i1] = (float) g1; i1 = (i1 + 1) % (int) b1.size();
             const double v1 = sum1 / (double) b1.size();
@@ -173,11 +173,11 @@ public:
                 // the steps fall on samples la, la + 16, ... after a reset, as in the training (plugins/FwComp/nulltest/render_trainset.py)
                 if (netCount >= la && (netCount - la) % (16 * scale) == 0)
                 {
-                    const double out = -20.0 * fw::math::log10 (std::max (g, 1e-6));
+                    const double out = -20.0 * flatwater::math::log10 (std::max (g, 1e-6));
                     const float in[gainnet::inputs] = {
-                        (float) (std::clamp (20.0 * fw::math::log10 (h + 1e-5) - set.thresholdDb, -40.0, 40.0) / 24.0), (float) (Rt / 24.0),
-                        (float) (R / 24.0), (float) (S / 24.0), (float) (-20.0 * fw::math::log10 (std::max (g1, 1e-6)) / 24.0), (float) (out / 24.0),
-                        (float) (fw::math::log (set.attackMs) / fw::math::log (100.0)), (float) (fw::math::log (set.releaseMs) / fw::math::log (3000.0)),
+                        (float) (std::clamp (20.0 * flatwater::math::log10 (h + 1e-5) - set.thresholdDb, -40.0, 40.0) / 24.0), (float) (Rt / 24.0),
+                        (float) (R / 24.0), (float) (S / 24.0), (float) (-20.0 * flatwater::math::log10 (std::max (g1, 1e-6)) / 24.0), (float) (out / 24.0),
+                        (float) (flatwater::math::log (set.attackMs) / flatwater::math::log (100.0)), (float) (flatwater::math::log (set.releaseMs) / flatwater::math::log (3000.0)),
                         (float) (1.0 / set.ratio), (float) (set.punch / 30.0), (float) (set.thresholdDb / 48.0) };
                     // the guards (as in plugins/FwComp/nulltest/train_net.py): no correction without reduction, nor while the target
                     // stayed within 0.05 dB over the last 60 steps (20 ms: a steady tone, which the analytical model nulls)
@@ -190,7 +190,7 @@ public:
                         lo = std::min (lo, v); hi = std::max (hi, v);
                     }
                     const double guard = std::clamp (R + out, 0.0, 1.0) * std::clamp ((hi - lo - 0.05) / 0.15, 0.0, 1.0);
-                    corrGain = fw::math::pow10 (net.step (in) * guard / 20.0);
+                    corrGain = flatwater::math::pow10 (net.step (in) * guard / 20.0);
                 }
                 if (netCount < std::numeric_limits<int>::max()) ++netCount;
                 g *= corrGain;
@@ -203,7 +203,7 @@ public:
             }
 
             // the output limiter sees the incoming samples at the current gain (what they will become)
-            const double gTarget = fw::math::pow10 (-Rt / 20.0);
+            const double gTarget = flatwater::math::pow10 (-Rt / 20.0);
             const double gEst = limEstimate == 1 ? gTarget : limEstimate == 2 ? std::max (g, gTarget) : g;
             const double wetGain = (1.0 - set.mix) + set.mix * gEst * makeup;
             const double wetNow = (1.0 - set.mix) + set.mix * g * makeup;
@@ -235,9 +235,9 @@ public:
     std::vector<float>* trace = nullptr;               // plugins/FwComp/tools/CoRender trace=: the model's states for plugins/FwComp/nulltest/train_net.py
     int limEstimate = 3;                               // how the limiter estimates the output (3: the current gain times the pending peak; 0-2 tried, worse)
     // the deepest reduction of the smoothed compressor gain during the last process() call (dB, positive)
-    double blockGainReductionDb() const { return minGain < 1.0 ? -20.0 * fw::math::log10 (std::max (minGain, 1e-6)) : 0.0; }
+    double blockGainReductionDb() const { return minGain < 1.0 ? -20.0 * flatwater::math::log10 (std::max (minGain, 1e-6)) : 0.0; }
     // the same for the output limiter
-    double blockLimiterDb() const { return minLimGain < 1.0 ? -20.0 * fw::math::log10 (std::max (minLimGain, 1e-6)) : 0.0; }
+    double blockLimiterDb() const { return minLimGain < 1.0 ? -20.0 * flatwater::math::log10 (std::max (minLimGain, 1e-6)) : 0.0; }
 
 private:
     // max of the detector over the 64 newest samples, delayed by Punch (the output is la samples behind the input)
@@ -270,7 +270,7 @@ private:
     double targetGr (double h) const
     {
         using namespace tables;
-        const double x = slope * std::max (0.0, 20.0 * fw::math::log10 (h + floorLevel) - set.thresholdDb);
+        const double x = slope * std::max (0.0, 20.0 * flatwater::math::log10 (h + floorLevel) - set.thresholdDb);
         if (x <= 0.0) return 0.0;
         if (x >= staticX[staticCount - 1]) return x - (staticX[staticCount - 1] - staticH[staticCount - 1]);
         // the table is uniform within three ranges; a short search is cheap enough
@@ -282,12 +282,12 @@ private:
 
     static double table (const float* knot, const float* logv, int n, double x)
     {
-        if (x <= knot[0]) return fw::math::exp ((double) logv[0]);
-        if (x >= knot[n - 1]) return fw::math::exp ((double) logv[n - 1]);
+        if (x <= knot[0]) return flatwater::math::exp ((double) logv[0]);
+        if (x >= knot[n - 1]) return flatwater::math::exp ((double) logv[n - 1]);
         int i = 0;
         while (x > knot[i + 1]) ++i;
         const double f = (x - knot[i]) / (knot[i + 1] - knot[i]);
-        return fw::math::exp (logv[i] + f * (logv[i + 1] - logv[i]));
+        return flatwater::math::exp (logv[i] + f * (logv[i + 1] - logv[i]));
     }
 
     // the fourth / fifth form (declined, off: MEASUREMENTS.md section 5): the release time shrinks as R rises above two averages of itself,
@@ -299,13 +299,13 @@ private:
         if constexpr (hasRelease4)
         {
             const double dt = 1.0 / fs;
-            const double w = (R > S ? table (w4Knot, w4Log, w4Count, R - S) : fw::math::exp ((double) w4Log[0]))
-                           * (R > S2 ? table (w4Knot, w4fLog, w4fCount, R - S2) : fw::math::exp ((double) w4fLog[0]));
+            const double w = (R > S ? table (w4Knot, w4Log, w4Count, R - S) : flatwater::math::exp ((double) w4Log[0]))
+                           * (R > S2 ? table (w4Knot, w4fLog, w4fCount, R - S2) : flatwater::math::exp ((double) w4fLog[0]));
             R -= (table (fs4Knot, fs4Log, fs4Count, R) / (relS * w) + table (as4Knot, as4Log, as4Count, R)) * dt;
             R = std::max ({ R, t, 0.0 });
-            const double gt = fw::math::pow10 (-R / 20.0);
-            S2 = -20.0 * fw::math::log10 (gt + fast4C * (fw::math::pow10 (-S2 / 20.0) - gt));
-            S = -20.0 * fw::math::log10 (gt + crest4C * (fw::math::pow10 (-S / 20.0) - gt));
+            const double gt = flatwater::math::pow10 (-R / 20.0);
+            S2 = -20.0 * flatwater::math::log10 (gt + fast4C * (flatwater::math::pow10 (-S2 / 20.0) - gt));
+            S = -20.0 * flatwater::math::log10 (gt + crest4C * (flatwater::math::pow10 (-S / 20.0) - gt));
         }
     }
 
@@ -319,19 +319,19 @@ private:
         double src = std::max (R, t);
         if (chargeBlend < 1.0)
         {
-            const double out = -20.0 * fw::math::log10 (g1);
+            const double out = -20.0 * flatwater::math::log10 (g1);
             src = out + chargeBlend * (src - out);
         }
         if (src > S + 1e-9)                             // rising by more than rounding: charges; level or falling: releases
         {
-            const double gs = fw::math::pow10 (-S / 20.0), gt = fw::math::pow10 (-src / 20.0);
-            S = std::min (src, -20.0 * fw::math::log10 (gt + crestC * (gs - gt)));
+            const double gs = flatwater::math::pow10 (-S / 20.0), gt = flatwater::math::pow10 (-src / 20.0);
+            S = std::min (src, -20.0 * flatwater::math::log10 (gt + crestC * (gs - gt)));
         }
         else { S -= (table (fsKnot, fsLog, fsCount, S) / std::max (relS, memFloorS) + table (asKnot, asLog, asCount, S)) * dt; S = std::max (S, t); }
         S = std::max (S, 0.0);
         double re = relS;
         if (R - S > 1e-9)
-            re = std::min ({ re, relS * table (w0Knot, w0Log, w0Count, S), relSeedMs * 1e-3 / fw::math::pow (R - S, (double) relSeedExp) });
+            re = std::min ({ re, relS * table (w0Knot, w0Log, w0Count, S), relSeedMs * 1e-3 / flatwater::math::pow (R - S, (double) relSeedExp) });
         if (startU > 1e-6) { re += startU * (relS - re); startU *= startC; }   // start-up: slow at first, as the reference
         R -= (table (fsKnot, fsLog, fsCount, R) / re + table (asKnot, asLog, asCount, R)) * dt;
         if constexpr (tables::rFloorAtS) R = std::max (R, S);   // otherwise the memory only slows the release

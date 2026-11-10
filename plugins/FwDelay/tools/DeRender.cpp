@@ -18,7 +18,7 @@
 
 static bool exactValues = false;                                  // exact=1: values as given (a preset's), not rounded
 
-static void apply (fwdelay::dsp::Settings& s, int& analog, int& block, const std::string& a, double fs)
+static void apply (de::dsp::Settings& s, int& analog, int& block, const std::string& a, double fs)
 {
     const auto eq = a.find ('=');
     if (eq == std::string::npos) return;
@@ -55,7 +55,7 @@ int main (int argc, char** argv)
     if (argc < 5) { std::fprintf (stderr, "usage: DeRender in.f32 out.f32 channels fs [key=value ...] [at=t:key=value ...]\n"); return 2; }
     const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
     const double fs = std::atof (argv[4]);
-    fwdelay::dsp::Settings s;
+    de::dsp::Settings s;
     s.timeL = s.timeR = std::floor (0.375 * fs);
     int analogMode = 0, block = 512;
     double preroll = 0.0;
@@ -82,7 +82,7 @@ int main (int argc, char** argv)
     while ((got = std::fread (tmp, sizeof (float), 4096, f)) > 0) in.insert (in.end(), tmp, tmp + got);
     std::fclose (f);
     const long long n = (long long) (in.size() / (size_t) ch);
-    fwdelay::dsp::Delay d;
+    de::dsp::Delay d;
     for (auto& x : settings)                                      // the fitted constants, to fit them again
     {
         if (x.rfind ("modscale=", 0) == 0) d.modScale = std::atof (x.c_str() + 9);
@@ -94,8 +94,8 @@ int main (int argc, char** argv)
         if (x.rfind ("time0=", 0) == 0) s.timeL = s.timeR = std::floor (std::atof (x.c_str() + 6) * fs / 1000.0);   // the first block's time
         if (x.rfind ("rate0=", 0) == 0) s.rateHz = (float) std::atof (x.c_str() + 6);   // the first block's LFO rate
     }
-    fwcomp::Analog analog;
-    analog.modes = fwdelay::tables::analog;                        // H-Delay's modes (4 is H-Comp's)
+    co::Analog analog;
+    analog.modes = de::tables::analog;                        // the reference's modes (4 is Flatwater Comp's)
     analog.prepare (fs, ch);
     std::vector<float> out (in.size());
     std::vector<float> a ((size_t) block), b ((size_t) block);

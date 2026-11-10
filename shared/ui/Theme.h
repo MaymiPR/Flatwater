@@ -5,7 +5,7 @@
 // controls lit from above, near-white lettering, the mark's cyan and amber as the accents (docs/branding/colours.json,
 // docs/branding/flatwater-icon.svg). The layouts keep each original's measured positions and sizes; everything drawn
 // on them comes from here.
-namespace fw::theme
+namespace flatwater::theme
 {
 inline const juce::Colour bg { 0xff000000 },           // behind everything
                           panel { 0xff15171a },        // a card

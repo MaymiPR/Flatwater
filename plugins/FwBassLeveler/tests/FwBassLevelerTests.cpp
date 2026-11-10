@@ -19,29 +19,29 @@ static void testParameters()
     FwBassLevelerProcessor p;
     auto v = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
     auto range = [&p] (const char* id) { return p.apvts.getParameter (id)->getNormalisableRange(); };
-    CHECK_NEAR (v (fwbassleveler::target), -14.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::sensitivity), 50.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::response), 0.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::spill), -40.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::artifacts), 50.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::rangeMax), 12.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::rangeMin), -12.0, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::idle), 0.5, 1e-6);
-    CHECK_NEAR (v (fwbassleveler::output), 0.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::target).start, -42.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::target).end, 0.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::spill).start, -50.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::spill).end, -3.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::rangeMax).start, -11.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::rangeMin).end, 11.0, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::idle).start, 0.02, 1e-6);
-    CHECK_NEAR (range (fwbassleveler::idle).end, 0.98, 1e-6);
+    CHECK_NEAR (v (bl::target), -14.0, 1e-6);
+    CHECK_NEAR (v (bl::sensitivity), 50.0, 1e-6);
+    CHECK_NEAR (v (bl::response), 0.0, 1e-6);
+    CHECK_NEAR (v (bl::spill), -40.0, 1e-6);
+    CHECK_NEAR (v (bl::artifacts), 50.0, 1e-6);
+    CHECK_NEAR (v (bl::rangeMax), 12.0, 1e-6);
+    CHECK_NEAR (v (bl::rangeMin), -12.0, 1e-6);
+    CHECK_NEAR (v (bl::idle), 0.5, 1e-6);
+    CHECK_NEAR (v (bl::output), 0.0, 1e-6);
+    CHECK_NEAR (range (bl::target).start, -42.0, 1e-6);
+    CHECK_NEAR (range (bl::target).end, 0.0, 1e-6);
+    CHECK_NEAR (range (bl::spill).start, -50.0, 1e-6);
+    CHECK_NEAR (range (bl::spill).end, -3.0, 1e-6);
+    CHECK_NEAR (range (bl::rangeMax).start, -11.0, 1e-6);
+    CHECK_NEAR (range (bl::rangeMin).end, 11.0, 1e-6);
+    CHECK_NEAR (range (bl::idle).start, 0.02, 1e-6);
+    CHECK_NEAR (range (bl::idle).end, 0.98, 1e-6);
     // the Idle arrow in dB: its place in the range (a preset with Idle 0.98 and Max 0 sits at -0.24 dB)
-    CHECK_NEAR (fwbassleveler::idleDb (0.5f, -12.0f, 12.0f), 0.0, 1e-6);
-    CHECK_NEAR (fwbassleveler::idleDb (0.98f, -12.0f, 0.0f), -0.24, 1e-5);
-    CHECK (p.apvts.getParameter (fwbassleveler::idle)->getText (0.5f, 16) == "0.0");
-    CHECK (p.apvts.getParameter (fwbassleveler::response)->getText (1.0f, 16) == "Fast");
-    CHECK (fwbassleveler::modeNames().size() == 4);
+    CHECK_NEAR (bl::idleDb (0.5f, -12.0f, 12.0f), 0.0, 1e-6);
+    CHECK_NEAR (bl::idleDb (0.98f, -12.0f, 0.0f), -0.24, 1e-5);
+    CHECK (p.apvts.getParameter (bl::idle)->getText (0.5f, 16) == "0.0");
+    CHECK (p.apvts.getParameter (bl::response)->getText (1.0f, 16) == "Fast");
+    CHECK (bl::modeNames().size() == 4);
 }
 
 // the components' latency (measured: 42.00 ms, Live 5.00 ms at any rate) and the audio path: the input delayed by it,
@@ -52,9 +52,9 @@ static void testLatencyAndPath()
         for (int mode : { 0, 2 })
         {
             FwBassLevelerProcessor p;
-            auto* m = p.apvts.getParameter (fwbassleveler::mode);
+            auto* m = p.apvts.getParameter (bl::mode);
             m->setValueNotifyingHost (m->convertTo0to1 ((float) mode));
-            auto* o = p.apvts.getParameter (fwbassleveler::output);
+            auto* o = p.apvts.getParameter (bl::output);
             o->setValueNotifyingHost (o->convertTo0to1 (-6.0f));
             p.setPlayConfigDetails (2, 2, fs, 256);
             p.prepareToPlay (fs, 256);
@@ -152,24 +152,24 @@ static void testRideStereoMid()
 static void testStateAndEditor()
 {
     FwBassLevelerProcessor p;
-    auto* t = p.apvts.getParameter (fwbassleveler::target);
+    auto* t = p.apvts.getParameter (bl::target);
     t->setValueNotifyingHost (t->convertTo0to1 (-20.0f));
     juce::MemoryBlock mb;
     p.getStateInformation (mb);
     FwBassLevelerProcessor q;
     q.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (q.apvts.getRawParameterValue (fwbassleveler::target)->load(), -20.0, 1e-4);
+    CHECK_NEAR (q.apvts.getRawParameterValue (bl::target)->load(), -20.0, 1e-4);
     std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
     CHECK (ed != nullptr);
     CHECK (ed->getWidth() > 0);
-    CHECK (fwbassleveler::ui::scaleY (12.0f) == 222.0f);
-    CHECK (fwbassleveler::ui::scaleY (-12.0f) == 432.0f);
+    CHECK (bl::ui::scaleY (12.0f) == 222.0f);
+    CHECK (bl::ui::scaleY (-12.0f) == 432.0f);
 }
 
 // the selection rules measured on the reference (click, lasso group, Rider / Idle in blue, member drags blocked)
 static void testSelection()
 {
-    using namespace fwbassleveler::ui;
+    using namespace bl::ui;
     juce::Component a, b, rider;
     Marks m;
     m.blueAlone = { &rider };
@@ -191,9 +191,9 @@ static void testSelection()
     CHECK (m.group.empty() && m.of (&a) == Mark::None);
     // the host sees Idle over a fixed +-12 dB, whatever the range (as the reference's text)
     FwBassLevelerProcessor p;
-    auto* mx = p.apvts.getParameter (fwbassleveler::rangeMax);
+    auto* mx = p.apvts.getParameter (bl::rangeMax);
     mx->setValueNotifyingHost (mx->convertTo0to1 (6.0f));
-    CHECK (p.apvts.getParameter (fwbassleveler::idle)->getText (0.5f, 16) == "0.0");
+    CHECK (p.apvts.getParameter (bl::idle)->getText (0.5f, 16) == "0.0");
     CHECK_NEAR (p.idleDb(), -3.0, 1e-4);                             // the arrow itself: the middle of -12 .. 6
 }
 
@@ -204,7 +204,7 @@ static void testIdle()
 {
     {
         FwBassLevelerProcessor p;
-        auto* idle = p.apvts.getParameter (fwbassleveler::idle);
+        auto* idle = p.apvts.getParameter (bl::idle);
         idle->setValueNotifyingHost (idle->convertTo0to1 (0.88f));      // +9.12 dB at +-12 (0.01 steps)
         runRide (p, 10, [] (int, float& l, float& r) { l = r = 0.0f; });          // 0.1 s
         CHECK (p.rideDb.load() > 1.0f && p.rideDb.load() < 3.5f);       // measured +2.94 at 0.1 s
@@ -213,7 +213,7 @@ static void testIdle()
     }
     {
         FwBassLevelerProcessor p;
-        auto* idle = p.apvts.getParameter (fwbassleveler::idle);
+        auto* idle = p.apvts.getParameter (bl::idle);
         idle->setValueNotifyingHost (idle->convertTo0to1 (0.75f));      // +6 dB
         runRide (p, 100, [] (int n, float& l, float& r) { l = r = (float) sineAt (n, 80.0, -72.0); });
         CHECK_NEAR (p.rideDb.load(), 0.0, 0.05);                         // held at 0 (measured)
@@ -224,7 +224,7 @@ static void testIdle()
         juce::AudioBuffer<float> b (2, 480); juce::MidiBuffer midi;
         for (int blk = 0; blk < 60; ++blk) { b.clear(); p.processBlock (b, midi); }
         CHECK_NEAR (p.rideDb.load(), 0.0, 0.05);
-        auto* idle = p.apvts.getParameter (fwbassleveler::idle);
+        auto* idle = p.apvts.getParameter (bl::idle);
         idle->setValueNotifyingHost (idle->convertTo0to1 (0.25f));      // -6 dB: glides there
         for (int blk = 0; blk < 10; ++blk) { b.clear(); p.processBlock (b, midi); }
         CHECK (p.rideDb.load() < -1.5f && p.rideDb.load() > -4.5f);
@@ -240,19 +240,19 @@ static void testPresets()
     FwBassLevelerProcessor p;
     CHECK (p.getNumPrograms() == 18);
     CHECK (p.getProgramName (1) == "Essentials: Default");
-    auto* target = p.apvts.getParameter (fwbassleveler::target);
+    auto* target = p.apvts.getParameter (bl::target);
     target->setValueNotifyingHost (target->convertTo0to1 (-24.0f));
     p.setCurrentProgram (16);                                         // "Bass Tamer": Max 0, Idle 0.98, Fast, Sensitivity 75
     CHECK (p.getProgramName (16) == "Essentials: Bass Tamer");
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::target)->load(), -24.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::rangeMax)->load(), 0.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::sensitivity)->load(), 75.0, 0.05);
-    CHECK (p.apvts.getRawParameterValue (fwbassleveler::response)->load() > 0.5f);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::target)->load(), -24.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::rangeMax)->load(), 0.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::sensitivity)->load(), 75.0, 0.05);
+    CHECK (p.apvts.getRawParameterValue (bl::response)->load() > 0.5f);
     CHECK_NEAR (p.idleDb(), -0.24, 0.01);
     p.setCurrentProgram (2);                                          // "Live PA Start" sets Target, Artifacts 68.2, Spill -30
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::target)->load(), -14.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::artifacts)->load(), 68.2, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwbassleveler::spill)->load(), -30.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::target)->load(), -14.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::artifacts)->load(), 68.2, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (bl::spill)->load(), -30.0, 0.05);
 }
 
 int main()

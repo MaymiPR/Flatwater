@@ -23,18 +23,18 @@ AudioProcessorValueTreeState::ParameterLayout FwBassXLiftProcessor::layout()
             [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); },
             [step] (float, float, float v) { return std::round (v / step) * step; });
     };
-    auto db = [] (float v) { return fw::flat::gainText (v) + " dB"; };
+    auto db = [] (float v) { return flatwater::flat::gainText (v) + " dB"; };
 
-    addF (fwbassxlift::input, "Input", fw::flat::gainRange (0.0f), 0.0f, db);
-    addF (fwbassxlift::freq, "Frequency", logRange (32.0f, 256.0f, 1.0f), 80.0f, [] (float v) { return String (roundToInt (v)) + " Hz"; });
-    addF (fwbassxlift::decay, "Decay", { -24.0f, -9.0f, 0.1f }, -15.0f, [] (float v) { return String (v, 1) + " dB"; });
-    addF (fwbassxlift::response, "Response", { 10.0f, 30.0f, 0.1f }, 20.0f, [] (float v) { return String (v, 1) + " ms"; });
-    addF (fwbassxlift::ratio, "Ratio", logRange (1.0f, 4.0f, 0.01f), 1.0f, [] (float v) { return String (v, 2) + ":1"; });
-    addC (fwbassxlift::monitor, "Monitor", { "Audio", "Harmonics", "Original Bass" }, 0);
-    addC (fwbassxlift::highpass, "High Pass", { "6 dB/oct", "12 dB/oct", "24 dB/oct" }, 1);
-    addF (fwbassxlift::origBass, "Original Bass", fw::flat::gainRange (12.0f), 0.0f, db);
-    addF (fwbassxlift::harmonics, "Harmonics", fw::flat::gainRange (12.0f), -100.0f, db);
-    addC (fwbassxlift::mode, "Mode", { "Stereo", "Mono" }, 0);
+    addF (bx::input, "Input", flatwater::flat::gainRange (0.0f), 0.0f, db);
+    addF (bx::freq, "Frequency", logRange (32.0f, 256.0f, 1.0f), 80.0f, [] (float v) { return String (roundToInt (v)) + " Hz"; });
+    addF (bx::decay, "Decay", { -24.0f, -9.0f, 0.1f }, -15.0f, [] (float v) { return String (v, 1) + " dB"; });
+    addF (bx::response, "Response", { 10.0f, 30.0f, 0.1f }, 20.0f, [] (float v) { return String (v, 1) + " ms"; });
+    addF (bx::ratio, "Ratio", logRange (1.0f, 4.0f, 0.01f), 1.0f, [] (float v) { return String (v, 2) + ":1"; });
+    addC (bx::monitor, "Monitor", { "Audio", "Harmonics", "Original Bass" }, 0);
+    addC (bx::highpass, "High Pass", { "6 dB/oct", "12 dB/oct", "24 dB/oct" }, 1);
+    addF (bx::origBass, "Original Bass", flatwater::flat::gainRange (12.0f), 0.0f, db);
+    addF (bx::harmonics, "Harmonics", flatwater::flat::gainRange (12.0f), -100.0f, db);
+    addC (bx::mode, "Mode", { "Stereo", "Mono" }, 0);
     return l;
 }
 
@@ -60,15 +60,15 @@ void FwBassXLiftProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
     const int n = b.getNumSamples(), ch = jmin (2, b.getNumChannels());
-    dsp.setInputDb (get (fwbassxlift::input));
-    dsp.setFreq (get (fwbassxlift::freq));
-    dsp.setDecayDb (get (fwbassxlift::decay));
-    dsp.setResponseMs (get (fwbassxlift::response));
-    dsp.setRatio (get (fwbassxlift::ratio));
-    dsp.setHighPass ((int) get (fwbassxlift::highpass));
-    dsp.setOrigBassDb (get (fwbassxlift::origBass));
-    dsp.setHarmonicsDb (get (fwbassxlift::harmonics));
-    dsp.setMonitor ((int) get (fwbassxlift::monitor));
+    dsp.setInputDb (get (bx::input));
+    dsp.setFreq (get (bx::freq));
+    dsp.setDecayDb (get (bx::decay));
+    dsp.setResponseMs (get (bx::response));
+    dsp.setRatio (get (bx::ratio));
+    dsp.setHighPass ((int) get (bx::highpass));
+    dsp.setOrigBassDb (get (bx::origBass));
+    dsp.setHarmonicsDb (get (bx::harmonics));
+    dsp.setMonitor ((int) get (bx::monitor));
     dsp.process (b.getArrayOfWritePointers(), ch, n);
     auto toDb = [] (float v) { return v > 1.0e-5f ? Decibels::gainToDecibels (v) : -100.0f; };
     const float peakL = b.getMagnitude (0, 0, n), peakR = ch > 1 ? b.getMagnitude (1, 0, n) : peakL;

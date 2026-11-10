@@ -7,19 +7,19 @@
 #include <cmath>
 #include "shared/dsp/Math.h"
 
-namespace fwpitchbend::pbmath
+namespace pb::pbmath
 {
 inline constexpr double ln2 = 6.93147180559945309417e-01;
 inline constexpr double piHi = 3.14159265358979311600e+00;     // pi split so that k * twoPiHi is exact for |k| < 2^20
 inline constexpr double piLo = 1.22464679914735317723e-16;
 
-inline double log2 (double x) { return fw::math::log (x) * fw::math::invLn2; }
-inline double exp2 (double x) { return fw::math::exp (x * ln2); }
-inline double exp (double x) { return fw::math::exp (x); }
-inline double log (double x) { return fw::math::log (x); }
-inline double pow10 (double y) { return fw::math::pow10 (y); }
-inline double pow (double a, double b) { return fw::math::pow (a, b); }      // a > 0
-inline double tanh (double x) { return fw::math::tanh (x); }
+inline double log2 (double x) { return flatwater::math::log (x) * flatwater::math::invLn2; }
+inline double exp2 (double x) { return flatwater::math::exp (x * ln2); }
+inline double exp (double x) { return flatwater::math::exp (x); }
+inline double log (double x) { return flatwater::math::log (x); }
+inline double pow10 (double y) { return flatwater::math::pow10 (y); }
+inline double pow (double a, double b) { return flatwater::math::pow (a, b); }      // a > 0
+inline double tanh (double x) { return flatwater::math::tanh (x); }
 
 inline double sin (double x)
 {

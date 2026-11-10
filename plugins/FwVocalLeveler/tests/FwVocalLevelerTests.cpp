@@ -28,28 +28,28 @@ static void testParameters()
     FwVocalLevelerProcessor p;
     auto v = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
     auto range = [&p] (const char* id) { return p.apvts.getParameter (id)->getNormalisableRange(); };
-    CHECK_NEAR (v (fwvocalleveler::target), -21.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::vocalSensitivity), 0.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::musicSensitivity), 0.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::rangeMax), 6.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::rangeMin), -6.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::idle), 0.5, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::rider), 0.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::output), 0.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::attack), 0.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::spill), -48.0, 1e-6);
-    CHECK_NEAR (v (fwvocalleveler::automation), 0.0, 1e-6);
-    CHECK_NEAR (range (fwvocalleveler::target).start, -42.0, 1e-6);
-    CHECK_NEAR (range (fwvocalleveler::musicSensitivity).start, -12.1, 1e-5);
-    CHECK_NEAR (range (fwvocalleveler::spill).start, -48.0, 1e-6);
-    CHECK_NEAR (range (fwvocalleveler::spill).end, -12.0, 1e-6);
-    CHECK_NEAR (range (fwvocalleveler::rangeMax).start, -11.0, 1e-6);
-    CHECK_NEAR (range (fwvocalleveler::rangeMin).end, 11.0, 1e-6);
-    CHECK (p.apvts.getParameter (fwvocalleveler::musicSensitivity)->getText (0.0f, 16) == "Off");
-    CHECK (p.apvts.getParameter (fwvocalleveler::idle)->getText (0.5f, 16) == "0.0");
-    CHECK (p.apvts.getParameter (fwvocalleveler::attack)->getText (1.0f, 16) == "Fast");
-    CHECK (! p.apvts.getParameter (fwvocalleveler::automation)->isAutomatable());
-    CHECK (fwvocalleveler::modeNames().size() == 4);
+    CHECK_NEAR (v (vl::target), -21.0, 1e-6);
+    CHECK_NEAR (v (vl::vocalSensitivity), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::musicSensitivity), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::rangeMax), 6.0, 1e-6);
+    CHECK_NEAR (v (vl::rangeMin), -6.0, 1e-6);
+    CHECK_NEAR (v (vl::idle), 0.5, 1e-6);
+    CHECK_NEAR (v (vl::rider), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::output), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::attack), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::spill), -48.0, 1e-6);
+    CHECK_NEAR (v (vl::automation), 0.0, 1e-6);
+    CHECK_NEAR (range (vl::target).start, -42.0, 1e-6);
+    CHECK_NEAR (range (vl::musicSensitivity).start, -12.1, 1e-5);
+    CHECK_NEAR (range (vl::spill).start, -48.0, 1e-6);
+    CHECK_NEAR (range (vl::spill).end, -12.0, 1e-6);
+    CHECK_NEAR (range (vl::rangeMax).start, -11.0, 1e-6);
+    CHECK_NEAR (range (vl::rangeMin).end, 11.0, 1e-6);
+    CHECK (p.apvts.getParameter (vl::musicSensitivity)->getText (0.0f, 16) == "Off");
+    CHECK (p.apvts.getParameter (vl::idle)->getText (0.5f, 16) == "0.0");
+    CHECK (p.apvts.getParameter (vl::attack)->getText (1.0f, 16) == "Fast");
+    CHECK (! p.apvts.getParameter (vl::automation)->isAutomatable());
+    CHECK (vl::modeNames().size() == 4);
 }
 
 // a main input and output (mono or stereo) and a side-chain input; no latency
@@ -73,9 +73,9 @@ static void testBuses()
 static void testPathAndRead()
 {
     FwVocalLevelerProcessor p;
-    set (p, fwvocalleveler::automation, (float) fwvocalleveler::Read);
-    set (p, fwvocalleveler::rider, -6.0f);
-    set (p, fwvocalleveler::output, 3.0f);
+    set (p, vl::automation, (float) vl::Read);
+    set (p, vl::rider, -6.0f);
+    set (p, vl::output, 3.0f);
     p.setPlayConfigDetails (2, 2, 48000.0, 256);
     p.prepareToPlay (48000.0, 256);
     juce::AudioBuffer<float> b (2, 256);
@@ -95,10 +95,10 @@ static void testPathAndRead()
 static void testWrite()
 {
     FwVocalLevelerProcessor p;
-    set (p, fwvocalleveler::automation, (float) fwvocalleveler::Write);
+    set (p, vl::automation, (float) vl::Write);
     p.rideDb.store (4.2f);
     ((juce::Timer&) p).timerCallback();                              // (the processor's private timer)
-    CHECK_NEAR (p.get (fwvocalleveler::rider), 4.2, 0.06);
+    CHECK_NEAR (p.get (vl::rider), 4.2, 0.06);
 }
 
 // the editor: its size, Spill only on Live, the knobs moving with the layout, Music disabled without a side-chain
@@ -129,25 +129,25 @@ static void testEditor()
     if (vocal == nullptr || spill == nullptr) return;
     CHECK (! spill->isVisible());
     CHECK (vocal->getX() == 83);
-    set (p, fwvocalleveler::mode, 2.0f);                                  // Live Stereo
-    ((juce::Timer&) static_cast<fw::ren::Editor&> (*ed)).timerCallback();   // (the editor's private timer: tick)
+    set (p, vl::mode, 2.0f);                                  // Live Stereo
+    ((juce::Timer&) static_cast<flatwater::ren::Editor&> (*ed)).timerCallback();   // (the editor's private timer: tick)
     CHECK (spill->isVisible());
     CHECK (vocal->getX() == 133);
-    auto* music = dynamic_cast<fwvocalleveler::ui::Knob*> (find ("Knob", 1));
+    auto* music = dynamic_cast<vl::ui::Knob*> (find ("Knob", 1));
     CHECK (music != nullptr && music->disabledLook);                // no side-chain fed
     // a snapshot paints (the models render)
     auto img = ed->createComponentSnapshot (ed->getLocalBounds());
     CHECK (img.getWidth() == FwVocalLevelerEditor::W);
 }
 
-// the riding (fwvocalleveler::Ride) on 1 kHz sines at 48 kHz, against the reference's measured numbers
+// the riding (vl::Ride) on 1 kHz sines at 48 kHz, against the reference's measured numbers
 namespace ridetest
 {
 constexpr double fs = 48000.0;
 // levels (dBFS rms; < -200 = silence) for durations (s); the gain in dB per sample
-static std::vector<double> ride (const std::vector<std::pair<double, double>>& parts, const fwvocalleveler::RideSettings& st)
+static std::vector<double> ride (const std::vector<std::pair<double, double>>& parts, const vl::RideSettings& st)
 {
-    fwvocalleveler::Ride r; r.prepare (fs);
+    vl::Ride r; r.prepare (fs);
     std::vector<double> g; double ph = 0.0;
     for (auto [lev, secs] : parts)
     {
@@ -165,7 +165,7 @@ static double vdb (double gdb, double rangeMin) { return 20.0 * std::log10 (std:
 static void testRiding()
 {
     using namespace ridetest;
-    fwvocalleveler::RideSettings st;
+    vl::RideSettings st;
     // it starts at 1/2 gMin + 1 (the reference: +1.94 dB at Range -6 .. +6)
     auto g = ride ({ { -300.0, 0.1 } }, st);
     const double halfMin = 0.5 * std::pow (10.0, -6.0 / 20.0);
@@ -214,19 +214,19 @@ static void testPresets()
     CHECK (p.getProgramName (1) == "Essentials: Default");
     p.setCurrentProgram (12);                                         // "Ceiling Ride": Target -42, Range -12 .. 0, Fast, Idle 1
     CHECK (p.getProgramName (12) == "Essentials: Ceiling Ride");
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::target)->load(), -42.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::rangeMin)->load(), -12.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::rangeMax)->load(), 0.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::vocalSensitivity)->load(), -12.0, 0.05);
-    CHECK (p.apvts.getRawParameterValue (fwvocalleveler::attack)->load() > 0.5f);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::target)->load(), -42.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::rangeMin)->load(), -12.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::rangeMax)->load(), 0.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::vocalSensitivity)->load(), -12.0, 0.05);
+    CHECK (p.apvts.getRawParameterValue (vl::attack)->load() > 0.5f);
     CHECK_NEAR (p.idleDb(), 0.0, 1.0e-4);                             // Idle 1: at Max exactly (the arrow alone: -0.24)
-    set (p, fwvocalleveler::idle, 0.5f);                                   // the arrow moved: the parameter's value again
+    set (p, vl::idle, 0.5f);                                   // the arrow moved: the parameter's value again
     CHECK_NEAR (p.idleDb(), -6.0, 0.01);
     p.setCurrentProgram (13);                                         // "Open Up": Range -12 .. +12, Idle 0
     CHECK_NEAR (p.idleDb(), -12.0, 1.0e-4);
     p.setCurrentProgram (1);                                          // "Default" also sets Automation Off
-    CHECK_NEAR (p.apvts.getRawParameterValue (fwvocalleveler::target)->load(), -21.0, 0.05);
-    CHECK (p.automationMode() == fwvocalleveler::Off);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::target)->load(), -21.0, 0.05);
+    CHECK (p.automationMode() == vl::Off);
     CHECK_NEAR (p.idleDb(), 0.0, 0.01);
 }
 

@@ -1,13 +1,13 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
-#include "shared/ui/Meter.h"
+#include "shared/ui/Widgets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 
 // Parameters follow the reference's parameter list (its order, ranges, tapers and defaults; see RESEARCH.md,
 // Flatwater BassX Lift). The DSP is in dsp/Engine.h (MEASUREMENTS.md, "Flatwater BassX Lift model").
-namespace fwbassxlift
+namespace bx
 {
 inline constexpr const char* input = "input";          // -inf..0 dB (gain fader taper), default 0
 inline constexpr const char* freq = "freq";            // 32..256 Hz, logarithmic, default 80
@@ -39,20 +39,20 @@ public:
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
     // programs for the host's preset list: 0 = Default, then the factory presets
-    int getNumPrograms() override { return 1 + (int) fwbassxlift::factoryPresets().size(); }
+    int getNumPrograms() override { return 1 + (int) bx::factoryPresets().size(); }
     int getCurrentProgram() override { return currentProgram; }
     void setCurrentProgram (int index) override
     {
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
-        static const fw::FactoryPreset defaults { "", "Default", {} };
-        fw::applyPreset (apvts, index == 0 ? defaults : fwbassxlift::factoryPresets()[(size_t) index - 1], apvts.getParameter (fwbassxlift::mode),
-                           { apvts.getParameter (fwbassxlift::input) });         // presets leave Input alone, as the reference
+        static const flatwater::FactoryPreset defaults { "", "Default", {} };
+        flatwater::applyPreset (apvts, index == 0 ? defaults : bx::factoryPresets()[(size_t) index - 1], apvts.getParameter (bx::mode),
+                           { apvts.getParameter (bx::input) });         // presets leave Input alone, as the reference
     }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
-        const auto& p = fwbassxlift::factoryPresets()[(size_t) index - 1];
+        const auto& p = bx::factoryPresets()[(size_t) index - 1];
         return juce::String (p.group) + ": " + p.name;
     }
     void changeProgramName (int, const juce::String&) override {}
@@ -63,13 +63,13 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     // output meters (dB, highest peak since the editor last read them) and the clip latch
-    fw::PeakTap outLDb, outRDb;
+    flatwater::PeakTap outLDb, outRDb;
     std::atomic<bool> clipped { false };
     std::atomic<int> blocks { 0 };          // counts processed blocks (the meters show their floor dot only while audio runs)
 
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout layout();
-    fwbassxlift::Processor dsp;
+    bx::Processor dsp;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     int currentProgram = 0;
 };

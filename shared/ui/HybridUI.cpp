@@ -1,14 +1,14 @@
 #include "shared/ui/HybridUI.h"
 #include "shared/ui/Theme.h"
-#include "shared/ui/Logo.h"
+#include "shared/ui/Widgets.h"
 #include <cmath>
 
 using namespace juce;
-namespace th = fw::theme;
+namespace theme = flatwater::theme;
 
-namespace fw::hybrid
+namespace flatwater::hybrid
 {
-Font font (float h, bool bold) { return th::font (h, bold); }
+Font font (float h, bool bold) { return theme::font (h, bold); }
 
 static float rad (float deg) { return deg * MathConstants<float>::pi / 180.0f; }
 // a fixed array as a range, so two of different lengths can be chosen between
@@ -25,13 +25,13 @@ static float refToJuce (float deg) { return rad (deg + 180.0f); }
 //==============================================================================
 void drawPanel (Graphics& g, Rectangle<int> area)
 {
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillRect (area);
 }
 
 void drawScale (Graphics& g, Point<float> c, float a0, float a1, const Scale& s)
 {
-    g.setColour (s.colour.isTransparent() ? th::textFaint : s.colour);
+    g.setColour (s.colour.isTransparent() ? theme::textFaint : s.colour);
     for (int i = 0; i < s.ticks; ++i)
     {
         const float a = s.ticks > 1 ? a0 + (a1 - a0) * (float) i / (float) (s.ticks - 1) : a0;
@@ -61,11 +61,11 @@ void printText (Graphics& g, const String& t, Point<float> centre, float em, flo
 // a value in a raised box with an amber frame (a selected knob's value)
 static void valueBox (Graphics& g, Rectangle<float> r, const String& text)
 {
-    g.setColour (th::raised);
+    g.setColour (theme::raised);
     g.fillRect (r);
-    g.setColour (th::amber);
+    g.setColour (theme::amber);
     g.drawRect (r, 1.0f);
-    g.setColour (th::text);
+    g.setColour (theme::text);
     g.setFont (font (11.0f, false));
     g.drawText (text, r, Justification::centred);
 }
@@ -73,15 +73,15 @@ static void valueBox (Graphics& g, Rectangle<float> r, const String& text)
 void drawScrew (Graphics& g, Point<float> c, float r, bool slot)
 {
     const float rr = r + 1.8f;
-    g.setColour (th::well);
+    g.setColour (theme::well);
     g.fillEllipse (c.x - rr, c.y - rr, rr * 2.0f, rr * 2.0f);
-    g.setColour (th::line.withAlpha (0.7f));
+    g.setColour (theme::line.withAlpha (0.7f));
     g.drawEllipse (c.x - rr + 0.5f, c.y - rr + 0.5f, rr * 2.0f - 1.0f, rr * 2.0f - 1.0f, 1.0f);
-    g.setGradientFill (ColourGradient (th::raisedTop, c.x - r * 0.5f, c.y - r * 0.7f, th::raised, c.x + r * 0.5f, c.y + r * 0.8f, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, c.x - r * 0.5f, c.y - r * 0.7f, theme::raised, c.x + r * 0.5f, c.y + r * 0.8f, false));
     g.fillEllipse (c.x - r, c.y - r, r * 2.0f, r * 2.0f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawEllipse (c.x - r + 0.4f, c.y - r + 0.4f, r * 2.0f - 0.8f, r * 2.0f - 0.8f, 0.8f);
-    g.setColour (th::well);
+    g.setColour (theme::well);
     const float w = jmax (1.2f, r * 0.18f);
     if (slot) g.drawLine (c.x - r * 0.75f, c.y + r * 0.27f, c.x + r * 0.75f, c.y - r * 0.27f, w);
     else
@@ -130,7 +130,7 @@ void Knob::mouseUp (const MouseEvent& e)
 void Knob::mouseDoubleClick (const MouseEvent&) { showTextBox(); }
 
 // the wheel: the measured rule (shared/ui/Wheel.h), one step per notch on the stepped knobs
-void Knob::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& w) { wavesWheel (*this, e, w, wheelAcc, steps > 0); }
+void Knob::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& w) { fineWheel (*this, e, w, wheelAcc, steps > 0); }
 
 float Knob::paintExtent() const { return std::ceil (radius() + 4.0f); }
 
@@ -186,13 +186,13 @@ void Knob::paint (Graphics& g)
     {
         Path track;
         track.addCentredArc (c.x, c.y, P.arc, P.arc, 0.0f, rp.startAngleRadians, rp.endAngleRadians, true);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.strokePath (track, PathStrokeType (aw, PathStrokeType::curved, PathStrokeType::rounded));
         if (std::abs (a - from) > 1.0e-3f)
         {
             Path value;
             value.addCentredArc (c.x, c.y, P.arc, P.arc, 0.0f, jmin (from, a), jmax (from, a), true);
-            g.setColour (th::cyan);
+            g.setColour (theme::cyan);
             g.strokePath (value, PathStrokeType (aw, PathStrokeType::curved, PathStrokeType::rounded));
         }
     }
@@ -204,23 +204,23 @@ void Knob::paint (Graphics& g)
         g.setColour (Colours::black.withAlpha (0.14f));
         g.fillEllipse (disc.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k));
     }
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, disc.getY(), th::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
     g.fillEllipse (disc);
-    g.setColour (th::line.brighter (0.15f));
+    g.setColour (theme::line.brighter (0.15f));
     g.drawEllipse (disc.reduced (0.5f), 1.0f);
 
     if (P.cap > 0.0f)
     {
         // the skirt's fine turned rings, then the fluted cap (ten flutes) standing on it with its own shadow
-        g.setColour (th::line.withAlpha (0.55f));
+        g.setColour (theme::line.withAlpha (0.55f));
         for (float r = P.cap + 4.0f; r < P.body - 2.0f; r += 3.0f)
             g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c), 0.6f);
         const auto cap = fluted (c, P.cap, P.cap * 0.07f, 10, turn);
         g.setColour (Colours::black.withAlpha (0.45f));
         g.fillPath (cap, AffineTransform::translation (0.0f, 2.5f));
-        g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, th::raised, 0.0f, c.y + P.cap, false));
+        g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, theme::raised, 0.0f, c.y + P.cap, false));
         g.fillPath (cap);
-        g.setColour (th::line.brighter (0.25f));
+        g.setColour (theme::line.brighter (0.25f));
         g.strokePath (cap, PathStrokeType (1.0f));
         // the cap's lit top: a faint disc a little inside the flutes
         g.setColour (Colours::white.withAlpha (0.035f));
@@ -229,14 +229,14 @@ void Knob::paint (Graphics& g)
     else if (kind == Knurled)
     {
         // the knurled rim: short grooves all round, turning with the value
-        g.setColour (th::line.brighter (0.2f));
+        g.setColour (theme::line.brighter (0.2f));
         for (int i = 0; i < 40; ++i)
         {
             const float t = turn + MathConstants<float>::twoPi * (float) i / 40.0f;
             const Point<float> d (std::sin (t), -std::cos (t));
             g.drawLine (Line<float> (c + d * (P.body - 4.0f), c + d * (P.body - 1.0f)), 1.0f);
         }
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawEllipse (Rectangle<float> ((P.body - 4.5f) * 2.0f, (P.body - 4.5f) * 2.0f).withCentre (c), 0.8f);
     }
 
@@ -247,7 +247,7 @@ void Knob::paint (Graphics& g)
         g.setColour (Colours::black.withAlpha (0.35f));
         const Point<float> drop (0.0f, 1.2f);
         g.drawLine (Line<float> (c + d * r0 + drop, c + d * r1 + drop), P.pointer + 1.0f);
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawLine (Line<float> (c + d * r0, c + d * r1), P.pointer);
     }
 
@@ -255,7 +255,7 @@ void Knob::paint (Graphics& g)
     if (selection != nullptr && selection->contains (this))
     {
         const float rr = ringRadius();
-        g.setColour (selection->is (this) ? th::amber : th::cyan);
+        g.setColour (selection->is (this) ? theme::amber : theme::cyan);
         g.drawEllipse (c.x - rr, c.y - rr, rr * 2.0f, rr * 2.0f, 1.6f);
         if (! valueArea.isEmpty()) valueBox (g, valueArea.toFloat(), getTextFromValue (getValue()));
     }
@@ -301,24 +301,24 @@ static void drawButtonFrame (Graphics& g, Rectangle<float> f)
         g.setColour (Colours::black.withAlpha (0.12f));
         g.fillRoundedRectangle (f.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k), 3.0f + 0.4f * (float) k);
     }
-    th::drawWell (g, f, 3.0f);
+    theme::drawWell (g, f, 3.0f);
 }
 
 void drawButtonFace (Graphics& g, Rectangle<float> r, const String& label, bool on)
 {
     // off: a raised face lit from above, its label in the label colour; on: pressed in (darker), the label and a line
     // along its foot in cyan
-    if (on) g.setGradientFill (ColourGradient (th::well, 0.0f, r.getY(), th::raised, 0.0f, r.getBottom(), false));
-    else g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, r.getY(), th::raised, 0.0f, r.getBottom(), false));
+    if (on) g.setGradientFill (ColourGradient (theme::well, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
+    else g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, 2.0f);
-    g.setColour (on ? th::cyan.withAlpha (0.45f) : th::line.brighter (0.2f));
+    g.setColour (on ? theme::cyan.withAlpha (0.45f) : theme::line.brighter (0.2f));
     g.drawRoundedRectangle (r.reduced (0.5f), 2.0f, 1.0f);
     if (on)
     {
-        g.setColour (th::cyan);
+        g.setColour (theme::cyan);
         g.fillRect (r.getX() + 3.0f, r.getBottom() - 2.5f, r.getWidth() - 6.0f, 1.5f);
     }
-    g.setColour (on ? th::cyan : th::textDim);
+    g.setColour (on ? theme::cyan : theme::textDim);
     printText (g, label, r.getCentre().translated (0.0f, -0.5f), 9.75f, 1.0f, true);
 }
 
@@ -337,7 +337,7 @@ void ButtonGroup::paint (Graphics& g)
         drawButtonFace (g, buttonRect (i), labels[toggle ? 0 : i], toggle ? selected != 0 : selected == i);
     if (outlined)
     {
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawRoundedRectangle (fr.reduced (0.5f), 3.0f, 1.0f);
     }
 }
@@ -384,7 +384,7 @@ void ToggleRow::paint (Graphics& g)
     if (outlinedItem >= 0 && outlinedItem < shown)
     {
         // a single button of the row: the line runs just around its face
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawRoundedRectangle (buttonRect (outlinedItem).expanded (1.0f).reduced (0.5f), 2.5f, 1.0f);
     }
 }
@@ -435,7 +435,7 @@ static Path roundRect (Rectangle<float> r, float top, float bottom)
 VuMeter::VuMeter() { setInterceptsMouseClicks (false, false); }
 
 // The printed scale (measured): an arc of radius 99.8 about the pivot point from -57.7 to 60.1 degrees. The needle turns
-// about a point 2.72, -0.04 px from that centre (measured); where it points is set by the meter (plugins/FwComp/Source/ui/Needle.h), not by
+// about a point 2.72, -0.04 px from that centre (measured); where it points is set by the meter (plugins/FwComp/Source/ui/Controls.h), not by
 // this print.
 static constexpr float kArcR = 99.8f, kNeedleDx = 2.72f, kNeedleDy = -0.04f;
 static constexpr float kNeedleWidth = 2.0f;
@@ -453,8 +453,8 @@ void VuMeter::paint (Graphics& g)
     g.reduceClipRegion (faceShape);
     // the dark face: a soft glow behind the scale, darker toward the edges
     {
-        ColourGradient face (th::raised, c.x, c.y - 70.0f, th::well, c.x, kFace.getY() - 90.0f, true);
-        face.addColour (0.55, th::panel);
+        ColourGradient face (theme::raised, c.x, c.y - 70.0f, theme::well, c.x, kFace.getY() - 90.0f, true);
+        face.addColour (0.55, theme::panel);
         g.setGradientFill (face);
         g.fillPath (faceShape);
     }
@@ -468,16 +468,16 @@ void VuMeter::paint (Graphics& g)
         band.addCentredArc (c.x, c.y, 107.0f, 107.0f, 0.0f, rad (0.2f), rad (60.0f), true);
         band.addCentredArc (c.x, c.y, R, R, 0.0f, rad (60.0f), rad (0.2f), false);
         band.closeSubPath();
-        g.setColour (th::cyan.withAlpha (0.22f));
+        g.setColour (theme::cyan.withAlpha (0.22f));
         g.fillPath (band);
-        g.setColour (th::cyan.withAlpha (0.55f));
+        g.setColour (theme::cyan.withAlpha (0.55f));
         g.strokePath (band, PathStrokeType (1.0f));
         static const float grDiv[] = { 7.7f, 15.6f, 24.6f, 35.6f, 46.5f }, ioDiv[] = { 14.55f, 29.45f, 44.3f, 51.25f };
         for (float a : io ? Items (ioDiv) : Items (grDiv))
             g.drawLine (Line<float> (at (a, R), at (a, 107.0f)), 1.0f);
     }
     // the arc, its ticks standing outward on it (minor 4 px, majors 8 px), the stop at the 48 end
-    const Colour ink = th::text.withAlpha (0.85f);
+    const Colour ink = theme::text.withAlpha (0.85f);
     {
         Path arc;
         arc.addCentredArc (c.x, c.y, R, R, 0.0f, rad (-57.7f), rad (60.1f), true);
@@ -494,7 +494,7 @@ void VuMeter::paint (Graphics& g)
         }
     }
     static const float grDots[] = { -39.3f, -19.6f, -10.0f, 7.8f, 15.7f, 34.7f, 46.9f }, ioDots[] = { -49.1f, -39.3f, -19.6f, -10.0f };
-    g.setColour (th::textDim);
+    g.setColour (theme::textDim);
     for (float a : io ? Items (ioDots) : Items (grDots))
     {
         const auto p = at (a, 117.2f);
@@ -502,7 +502,7 @@ void VuMeter::paint (Graphics& g)
     }
     // the numbers, each turned along the scale (measured centres)
     {
-        g.setColour (th::text);
+        g.setColour (theme::text);
         struct Num { float a, r; const char* t; };
         static const Num grNums[] = { { -58.6f, 116.3f, "48" }, { -49.6f, 116.4f, "24" }, { -29.9f, 116.0f, "12" }, { 0.2f, 115.5f, "6" },
                                       { 24.9f, 116.8f, "3" }, { 59.0f, 117.1f, "0" } },
@@ -513,8 +513,8 @@ void VuMeter::paint (Graphics& g)
             printText (g, n.t, at (n.a, n.r), 13.0f, 1.0f, true, rad (n.a));
     }
     // our mark printed on the face, and what the needle shows
-    drawMark (g, Rectangle<float> (c.x - 18.4f, c.y - 69.1f, 38.0f, 29.0f), false, false, th::textFaint, 1.2f);
-    g.setColour (th::textFaint);
+    drawMark (g, Rectangle<float> (c.x - 18.4f, c.y - 69.1f, 38.0f, 29.0f), false, false, theme::textFaint, 1.2f);
+    g.setColour (theme::textFaint);
     g.setFont (font (9.0f, true));
     g.drawText (io ? "dBFS" : "GR dB", Rectangle<float> (c.x - 30.0f, c.y - 40.0f, 60.0f, 12.0f), Justification::centred);
 
@@ -530,11 +530,11 @@ void VuMeter::paint (Graphics& g)
             g.setColour (Colours::black.withAlpha (alpha));
             g.strokePath (p, PathStrokeType (w, PathStrokeType::curved, PathStrokeType::rounded));
         }
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         g.drawLine (Line<float> (np + dir * 20.0f, np + dir * 111.5f), kNeedleWidth);
         const auto rv = np + dir * 104.7f;
         g.fillEllipse (rv.x - 2.85f, rv.y - 2.85f, 5.7f, 5.7f);
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.fillEllipse (rv.x - 1.15f, rv.y - 1.15f, 2.3f, 2.3f);
     }
     // the glass: a faint sheen across the top
@@ -546,12 +546,12 @@ void VuMeter::paint (Graphics& g)
     const Point<float> bc (c.x + 0.4f, c.y - 0.9f);
     g.saveState();
     g.reduceClipRegion (Rectangle<float> (0.0f, 0.0f, (float) getWidth(), 147.0f).toNearestInt());     // the recess edge only in the window
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillEllipse (bc.x - 21.3f, bc.y - 21.3f, 42.6f, 42.6f);
     g.restoreState();
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, bc.y - 18.3f, th::raised, 0.0f, bc.y + 18.3f, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, bc.y - 18.3f, theme::raised, 0.0f, bc.y + 18.3f, false));
     g.fillEllipse (bc.x - 18.3f, bc.y - 18.3f, 36.6f, 36.6f);
-    g.setColour (th::line);
+    g.setColour (theme::line);
     g.drawEllipse (bc.x - 18.3f, bc.y - 18.3f, 36.6f, 36.6f, 1.0f);
     drawScrew (g, { c.x + 0.5f, c.y - 2.15f }, 7.5f, true);
 }
@@ -588,7 +588,7 @@ void drawVuHousing (Graphics& g, Rectangle<float> h, Point<float> archCentre, fl
         g.fillPath (p, AffineTransform::translation (0.6f * (float) k, 0.9f * (float) k));
     }
     // a raised block lit from above, a lit line along its top edge, its rim
-    g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, y0, th::raised.darker (0.2f), 0.0f, y1, false));
+    g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, y0, theme::raised.darker (0.2f), 0.0f, y1, false));
     g.fillPath (p);
     {
         g.saveState();
@@ -597,18 +597,18 @@ void drawVuHousing (Graphics& g, Rectangle<float> h, Point<float> archCentre, fl
         g.strokePath (p, PathStrokeType (3.0f), AffineTransform::translation (0.0f, 1.5f));
         // the arch's edge faces down toward the knob: an even dark lip all round it
         const float lw = 5.6f, rl = archRadius + lw * 0.5f;
-        g.setColour (th::panel);
+        g.setColour (theme::panel);
         g.drawEllipse (C.x - rl, C.y - rl, rl * 2.0f, rl * 2.0f, lw);
         g.restoreState();
     }
-    g.setColour (th::line.brighter (0.15f));
+    g.setColour (theme::line.brighter (0.15f));
     g.strokePath (p, PathStrokeType (1.2f));
 
     // the face's window: a dark recess, its lower lip catching the light
     const auto frame = roundRect ({ 197.5f, 73.5f, 250.0f, 147.0f }, kFrameTop, kFrameBottom);
-    g.setColour (th::line.brighter (0.3f));
+    g.setColour (theme::line.brighter (0.3f));
     g.strokePath (frame, PathStrokeType (1.0f), AffineTransform::translation (0.0f, 1.0f));
-    g.setColour (th::bg);
+    g.setColour (theme::bg);
     g.fillPath (frame);
     for (auto s : { Point<float> (198.4f, 75.95f), Point<float> (196.6f, 261.05f), Point<float> (449.2f, 260.95f) })
         drawScrew (g, s, 7.0f, false);
@@ -745,10 +745,10 @@ void drawLedDisplay (Graphics& g, Rectangle<float> box, const String& text, cons
         g.setColour (Colours::black.withAlpha (0.12f));
         g.fillRoundedRectangle (box.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k), 5.0f);
     }
-    th::drawWell (g, box, 5.0f);
-    g.setColour (th::line.withAlpha (0.6f));
+    theme::drawWell (g, box, 5.0f);
+    g.setColour (theme::line.withAlpha (0.6f));
     g.drawRoundedRectangle (box.reduced (2.5f), 3.5f, 1.0f);
-    g.setColour (th::cyan);
+    g.setColour (theme::cyan);
     for (int i = 0; i < text.length(); ++i)
         segChar (g, { box.getX() + 7.0f + 8.0f * (float) i, box.getY() + 13.0f, 6.0f, 9.0f }, text[i], 1.0f, 0.11f);
     for (int i = 0; i < digits.length(); ++i)
@@ -759,19 +759,19 @@ void drawLedDisplay (Graphics& g, Rectangle<float> box, const String& text, cons
 void drawNamePlate (Graphics& g, Rectangle<float> area, const String& name, bool stacked)
 {
     const float h = area.getHeight();
-    fw::drawMark (g, area.withWidth (h), false, false);
+    flatwater::drawMark (g, area.withWidth (h), false, false);
     const auto text = area.withTrimmedLeft (h + 6.0f);
     if (! stacked)
     {
-        g.setColour (th::text);
+        g.setColour (theme::text);
         g.setFont (font (h * 0.56f, true));
         g.drawText (name, text, Justification::centredLeft);
         return;
     }
-    g.setColour (th::textDim);
+    g.setColour (theme::textDim);
     g.setFont (font (h * 0.36f, false));
     g.drawText (name.upToFirstOccurrenceOf (" ", false, false), text.withHeight (h * 0.42f), Justification::bottomLeft);
-    g.setColour (th::text);
+    g.setColour (theme::text);
     g.setFont (font (h * 0.56f, true));
     g.drawText (name.fromFirstOccurrenceOf (" ", false, false), text.withTrimmedTop (h * 0.40f), Justification::centredLeft);
 }

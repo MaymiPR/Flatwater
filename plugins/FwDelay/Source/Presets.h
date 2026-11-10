@@ -5,11 +5,11 @@
 // these as able to run away (Feedback over 100). Presets leave Mix alone, as the reference does.
 #include "shared/Presets.h"
 
-namespace fwdelay
+namespace de
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Default", { { "sync", 1.0f }, { "bpm", 123.0f }, { "delay", 365.85f }, { "delayNote", 11.0f }, { "mix", 100.0f }, { "feedback", 60.0f }, { "phaseL", 0.0f }, { "phaseR", 0.0f }, { "pingPong", 0.0f }, { "output", 0.0f }, { "lopass", 20100.0f }, { "hipass", 19.0f }, { "depth", 0.0f }, { "rate", 0.1f }, { "lofi", 0.0f }, { "analog", 2.0f } } },
     { "Essentials", "Live Sound Start", { { "sync", 2.0f }, { "bpm", 123.0f }, { "delay", 505.0f }, { "delayNote", 13.0f }, { "mix", 100.0f }, { "feedback", 50.0f }, { "phaseL", 0.0f }, { "phaseR", 0.0f }, { "pingPong", 0.0f }, { "output", 0.0f }, { "lopass", 15000.0f }, { "hipass", 100.0f }, { "depth", 0.0f }, { "rate", 0.5f }, { "lofi", 0.0f }, { "analog", 0.0f } } },
     { "Essentials", "Side to Side", { { "sync", 2.0f }, { "bpm", 120.0f }, { "delay", 231.0f }, { "delayNote", 10.0f }, { "mix", 100.0f }, { "feedback", 65.0f }, { "phaseL", 0.0f }, { "phaseR", 0.0f }, { "pingPong", 1.0f }, { "output", 0.0f }, { "lopass", 2620.0f }, { "hipass", 250.0f }, { "depth", 0.69f }, { "rate", 0.1f }, { "lofi", 0.0f }, { "analog", 3.0f } } },

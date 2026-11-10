@@ -24,7 +24,7 @@
 //                   afresh at once, ungated), as is (still
 //                   sounding) a rise over S by a threshold (Sensitivity); it ends when it stays 38 dB under its peak, and
 //                   the gain glides to the Idle value at 32 dB/s, held where it is while an ignored note sounds
-namespace fwbassleveler
+namespace bl
 {
 struct RideSettings
 {

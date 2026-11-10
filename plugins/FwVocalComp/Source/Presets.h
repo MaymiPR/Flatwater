@@ -3,11 +3,11 @@
 // Setting values carried over from the reference's presets; names are Flatwater's own.
 #include "shared/Presets.h"
 
-namespace fwvocalcomp
+namespace vc
 {
-inline const std::vector<fw::FactoryPreset>& factoryPresets()
+inline const std::vector<flatwater::FactoryPreset>& factoryPresets()
 {
-    static const std::vector<fw::FactoryPreset> list {
+    static const std::vector<flatwater::FactoryPreset> list {
     { "Essentials", "Heavy Squash Ungated", { { "comp", -11.0f }, { "gate", -80.0f }, { "gateRel", 130.0f }, { "gain", 0.0f } } },
     { "Essentials", "Noisy Lecture Cleanup", { { "comp", -11.0f }, { "gate", -8.0f }, { "gateRel", 130.0f }, { "gain", 0.0f } } },
     { "Essentials", "Outdoor Reporter", { { "comp", -16.0f }, { "gate", -20.0f }, { "gateRel", 130.0f }, { "gain", 0.0f } } },

@@ -36,10 +36,10 @@ fw_tool_output(CoRender)
 
 if(WIN32)
     # renders Flatwater Comp's VU dial alone at a given needle angle, for the comparison with the filmed reference
-    # (VuRender.cpp in this folder's tools/)
-    juce_add_console_app(VuRender PRODUCT_NAME "VuRender")
-    target_sources(VuRender PRIVATE ${CO_DIR}/tools/VuRender.cpp)
-    target_link_libraries(VuRender PRIVATE FwCommon juce::juce_recommended_config_flags)
+    # (CoVuRender.cpp in this folder's tools/)
+    juce_add_console_app(CoVuRender PRODUCT_NAME "CoVuRender")
+    target_sources(CoVuRender PRIVATE ${CO_DIR}/tools/CoVuRender.cpp)
+    target_link_libraries(CoVuRender PRIVATE FwCommon juce::juce_recommended_config_flags)
 endif()
 
 # What CI builds (the ci_targets aggregate of the root CMake file); the snapshot tool on Windows only.

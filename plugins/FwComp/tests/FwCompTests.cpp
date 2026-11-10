@@ -6,7 +6,7 @@
 #include "dsp/Engine.h"
 #include "dsp/Analog.h"
 #include "PluginProcessor.h"
-#include "ui/Needle.h"
+#include "ui/Controls.h"
 #include "shared/ui/FlatUI.h"
 
 static int failures = 0, checks = 0;
@@ -14,7 +14,7 @@ static int failures = 0, checks = 0;
 #define CHECK_NEAR(a, b, tol) do { ++checks; const double va = (a), vb = (b); if (! (std::fabs (va - vb) <= (tol))) { ++failures; std::printf ("FAIL %s:%d  %s = %g, expected %g +- %g\n", __FILE__, __LINE__, #a, va, vb, (double) (tol)); } } while (0)
 
 static const double kPi = 3.14159265358979323846;
-using Settings = fwcomp::Compressor::Settings;
+using Settings = co::Compressor::Settings;
 
 static std::vector<float> tone (double f, double secs, double db, double fs = 48000.0)
 {
@@ -27,7 +27,7 @@ static std::vector<float> tone (double f, double secs, double db, double fs = 48
 static std::vector<std::vector<float>> run (std::vector<std::vector<float>> x, const Settings& s, int block = 512, double fs = 48000.0,
                                             bool learned = true)
 {
-    fwcomp::Compressor c;
+    co::Compressor c;
     c.learned = learned;
     c.prepare (fs, (int) x.size());
     c.setSettings (s);
@@ -59,7 +59,7 @@ static double maxDiff (const std::vector<float>& a, const std::vector<float>& b)
 
 static void testLatency()
 {
-    fwcomp::Compressor c;
+    co::Compressor c;
     c.prepare (44100.0, 2); CHECK (c.latency() == 64);
     c.prepare (48000.0, 2); CHECK (c.latency() == 64);
     c.prepare (96000.0, 2); CHECK (c.latency() == 128);
@@ -76,7 +76,7 @@ static void testIdentity()
     // ratio 1: the same
     Settings r; r.ratio = 1.0f; r.thresholdDb = -40.0f;
     y = run ({ x, x }, r);
-    CHECK_NEAR (db (rms (y[0], 4800)) - db (rms (x, 4800)), fwcomp::Compressor::makeupDb (-40.0, 1.0) * fwcomp::Compressor::makeupScale (100.0), 0.01);
+    CHECK_NEAR (db (rms (y[0], 4800)) - db (rms (x, 4800)), co::Compressor::makeupDb (-40.0, 1.0) * co::Compressor::makeupScale (100.0), 0.01);
 }
 
 static void testStatic()
@@ -86,14 +86,14 @@ static void testStatic()
     auto x = tone (1000.0, 2.0, -10.0);
     auto y = run ({ x, x }, s);
     const double gain = db (rms (y[0], 72000)) - db (rms (x, 72000));
-    const double makeup = fwcomp::Compressor::makeupDb (-30.0, 4.0) * fwcomp::Compressor::makeupScale (100.0);
+    const double makeup = co::Compressor::makeupDb (-30.0, 4.0) * co::Compressor::makeupScale (100.0);
     const double xx = 0.75 * (20.0 * std::log10 (std::pow (10.0, -0.5) + 0.001) + 30.0);
     // h is within 0.6 dB of x (the knee); the release ripple adds a little
     CHECK (gain - makeup < -xx + 0.8 && gain - makeup > -xx - 0.3);
 }
 
 // the learned correction leaves steady high tones (which the analytical model nulls) within 0.1 dB and corrects a low
-// note under a long attack toward the reference (filmed on H-Comp: 55 Hz -6 dBFS, threshold -24, ratio 4, attack 30:
+// note under a long attack toward the reference (filmed on the reference: 55 Hz -6 dBFS, threshold -24, ratio 4, attack 30:
 // the gain -4.79 dB against the analytical model's -6.11)
 static void testLearned()
 {
@@ -154,22 +154,22 @@ static void testMix()
 
 static void testSync()
 {
-    CHECK_NEAR (fwcomp::syncedReleaseMs (5, 120.0), 93.75, 1e-3);          // 1/32D at 120
-    CHECK_NEAR (fwcomp::syncedReleaseMs (13, 0.0), 500.0, 1e-3);           // 1/4, no tempo: 120
-    CHECK_NEAR (fwcomp::syncedReleaseMs (19, 122.0), 8.0 * 60000.0 / 122.0, 1e-2);   // 2 bars allowed at 122
-    CHECK_NEAR (fwcomp::syncedReleaseMs (19, 120.0), 2000.0, 1e-3);        // ... not at 120: 1 bar
-    CHECK_NEAR (fwcomp::syncedReleaseMs (18, 72.0), 4.0 * 60000.0 / 72.0, 1e-2);     // 1 bar at 72
-    CHECK_NEAR (fwcomp::syncedReleaseMs (18, 70.0), 3.0 * 60000.0 / 70.0, 1e-2);     // ... at 70: 1/2D
-    CHECK_NEAR (fwcomp::syncedReleaseMs (17, 50.0), 2400.0, 1e-2);         // 1/2D at 50: 1/2
-    CHECK_NEAR (fwcomp::syncedReleaseMs (16, 35.0), 1.5 * 60000.0 / 35.0, 1e-2);     // 1/2 at 35: 1/4D
-    CHECK_NEAR (fwcomp::syncedReleaseMs (15, 30.0), 4.0 / 3.0 * 2000.0, 1e-2);       // triplets are not too long
+    CHECK_NEAR (co::syncedReleaseMs (5, 120.0), 93.75, 1e-3);          // 1/32D at 120
+    CHECK_NEAR (co::syncedReleaseMs (13, 0.0), 500.0, 1e-3);           // 1/4, no tempo: 120
+    CHECK_NEAR (co::syncedReleaseMs (19, 122.0), 8.0 * 60000.0 / 122.0, 1e-2);   // 2 bars allowed at 122
+    CHECK_NEAR (co::syncedReleaseMs (19, 120.0), 2000.0, 1e-3);        // ... not at 120: 1 bar
+    CHECK_NEAR (co::syncedReleaseMs (18, 72.0), 4.0 * 60000.0 / 72.0, 1e-2);     // 1 bar at 72
+    CHECK_NEAR (co::syncedReleaseMs (18, 70.0), 3.0 * 60000.0 / 70.0, 1e-2);     // ... at 70: 1/2D
+    CHECK_NEAR (co::syncedReleaseMs (17, 50.0), 2400.0, 1e-2);         // 1/2D at 50: 1/2
+    CHECK_NEAR (co::syncedReleaseMs (16, 35.0), 1.5 * 60000.0 / 35.0, 1e-2);     // 1/2 at 35: 1/4D
+    CHECK_NEAR (co::syncedReleaseMs (15, 30.0), 4.0 / 3.0 * 2000.0, 1e-2);       // triplets are not too long
 }
 
 static void testAnalog()
 {
     // Off: an identity
     {
-        fwcomp::Analog a; a.prepare (48000.0, 2); a.setMode (0);
+        co::Analog a; a.prepare (48000.0, 2); a.setMode (0);
         auto x = tone (1000.0, 0.2, -20.0), y = x;
         float* ch[1] = { y.data() };
         a.process (ch, (int) y.size());
@@ -179,7 +179,7 @@ static void testAnalog()
     const double expected[] = { -101.7, -82.7, -101.2, -108.8 };
     for (int m = 1; m <= 4; ++m)
     {
-        fwcomp::Analog a; a.prepare (48000.0, 2); a.setMode (m);
+        co::Analog a; a.prepare (48000.0, 2); a.setMode (m);
         std::vector<float> l ((size_t) 96000, 0.0f), r (l);
         float* ch[2] = { l.data(), r.data() };
         a.process (ch, (int) l.size());
@@ -190,7 +190,7 @@ static void testAnalog()
     }
     // mode 4: the crossover offset (about 0.001) on a quiet tone, little change on a loud one
     {
-        fwcomp::Analog a; a.prepare (48000.0, 1); a.setMode (4);
+        co::Analog a; a.prepare (48000.0, 1); a.setMode (4);
         auto x = tone (100.0, 0.5, -20.0), y = x;
         float* ch[1] = { y.data() };
         a.process (ch, (int) y.size());
@@ -210,7 +210,7 @@ static void testProcessor()
     proc.prepareToPlay (48000.0, 512);
     CHECK (proc.getLatencySamples() == 64);
     auto set = [&proc] (const char* id, float v) { auto* p = proc.apvts.getParameter (id); p->setValueNotifyingHost (p->convertTo0to1 (v)); };
-    set (fwcomp::analog, 0.0f); set (fwcomp::threshold, -30.0f); set (fwcomp::ratio, 4.0f);
+    set (co::analog, 0.0f); set (co::threshold, -30.0f); set (co::ratio, 4.0f);
 
     // the side-chain bus is ignored: the same output with or without it fed
     auto x = tone (300.0, 0.5, -10.0);
@@ -238,11 +238,11 @@ static void testProcessor()
     juce::MemoryBlock mb;
     proc.getStateInformation (mb);
     FwCompProcessor other; other.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (other.apvts.getRawParameterValue (fwcomp::threshold)->load(), -30.0, 1e-4);
-    CHECK_NEAR (other.apvts.getRawParameterValue (fwcomp::ratio)->load(), 4.0, 0.02);
+    CHECK_NEAR (other.apvts.getRawParameterValue (co::threshold)->load(), -30.0, 1e-4);
+    CHECK_NEAR (other.apvts.getRawParameterValue (co::ratio)->load(), 4.0, 0.02);
 
     // Mode Mono: the channels are compressed independently (a loud left leaves the quiet right alone)
-    set (fwcomp::mode, 1.0f);
+    set (co::mode, 1.0f);
     proc.prepareToPlay (48000.0, 512);
     auto loud = tone (100.0, 0.5, -6.0), quiet = tone (1000.0, 0.5, -40.0);
     juce::AudioBuffer<float> b (4, 512);
@@ -254,7 +254,7 @@ static void testProcessor()
         proc.processBlock (b, midi);
         right.insert (right.end(), b.getReadPointer (1), b.getReadPointer (1) + 512);
     }
-    const double makeup = fwcomp::Compressor::makeupDb (-30.0, 4.0) * fwcomp::Compressor::makeupScale (100.25);
+    const double makeup = co::Compressor::makeupDb (-30.0, 4.0) * co::Compressor::makeupScale (100.25);
     CHECK_NEAR (db (rms (right, 12000)) - db (rms (quiet, 12000)), makeup, 0.1);
 }
 
@@ -264,8 +264,8 @@ static void testValueEntry()
     juce::Slider thr, out;
     thr.setRange (-48.0, 0.0, 0.1); out.setRange (-18.0, 18.0, 0.1);
     const auto fmt = [] (double v) { return juce::String (v, 1); };
-    fw::flat::applyFormat (thr, fmt, thr.getMaximum() <= 0.0);
-    fw::flat::applyFormat (out, fmt, out.getMaximum() <= 0.0);
+    flatwater::flat::applyFormat (thr, fmt, thr.getMaximum() <= 0.0);
+    flatwater::flat::applyFormat (out, fmt, out.getMaximum() <= 0.0);
     CHECK_NEAR (thr.getValueFromText ("18"), -18.0, 1e-9);
     CHECK_NEAR (thr.getValueFromText ("-18"), -18.0, 1e-9);
     CHECK_NEAR (out.getValueFromText ("5"), 5.0, 1e-9);
@@ -276,29 +276,29 @@ static void testPresets()
 {
     // every factory preset loads through the host's program list; Mix stays where the user left it
     FwCompProcessor proc;
-    const auto& list = fwcomp::factoryPresets();
+    const auto& list = co::factoryPresets();
     CHECK (list.size() == 26);
     CHECK (proc.getNumPrograms() == 27);
-    auto* mix = proc.apvts.getParameter (fwcomp::mix);
+    auto* mix = proc.apvts.getParameter (co::mix);
     mix->setValueNotifyingHost (mix->convertTo0to1 (37.0f));
     for (int i = 0; i < (int) list.size(); ++i)
     {
         proc.setCurrentProgram (i + 1);
         for (const auto& v : list[(size_t) i].values)
         {
-            if (std::string (v.id) == fwcomp::mix) continue;
+            if (std::string (v.id) == co::mix) continue;
             auto* prm = proc.apvts.getParameter (v.id);
             CHECK (prm != nullptr);
             if (prm != nullptr) CHECK_NEAR (prm->convertFrom0to1 (prm->getValue()), v.value, 0.02 + 0.001 * std::abs (v.value));
         }
-        CHECK_NEAR (proc.apvts.getRawParameterValue (fwcomp::mix)->load(), 37.0, 0.05);
+        CHECK_NEAR (proc.apvts.getRawParameterValue (co::mix)->load(), 37.0, 0.05);
     }
 }
 
 // the needle laws against the filmed reference (MEASUREMENTS.md "Flatwater Comp needle"; frames at about 60 Hz)
 static void testNeedle()
 {
-    using namespace fwcomp::needle;
+    using namespace co::needle;
     const double dt = 1.0 / 60.0;
     const double m6 = std::pow (10.0, -6.0 / 20.0), m12 = std::pow (10.0, -12.0 / 20.0), m18 = std::pow (10.0, -18.0 / 20.0),
                  m24 = std::pow (10.0, -24.0 / 20.0);
@@ -375,17 +375,17 @@ static void testMath()
     for (int i = -3000; i <= 3000; ++i)
     {
         const double x = i * 0.0237;                                  // -71 .. 71
-        worstExp = std::max (worstExp, std::fabs (fw::math::exp (x) / std::exp (x) - 1.0));
+        worstExp = std::max (worstExp, std::fabs (flatwater::math::exp (x) / std::exp (x) - 1.0));
         const double y = std::exp (i * 0.0131);                       // 1e-17 .. 1e17
-        worstLog = std::max (worstLog, std::fabs (fw::math::log (y) - std::log (y)) / std::max (1.0, std::fabs (std::log (y))));
+        worstLog = std::max (worstLog, std::fabs (flatwater::math::log (y) - std::log (y)) / std::max (1.0, std::fabs (std::log (y))));
         const double db = i * 0.04;                                   // -120 .. 120 dB
-        worstPow = std::max (worstPow, std::fabs (fw::math::pow10 (db / 20.0) / std::pow (10.0, db / 20.0) - 1.0));
+        worstPow = std::max (worstPow, std::fabs (flatwater::math::pow10 (db / 20.0) / std::pow (10.0, db / 20.0) - 1.0));
     }
     CHECK (worstExp < 1.0e-14);
     CHECK (worstLog < 1.0e-14);
     CHECK (worstPow < 1.0e-14);
-    CHECK (fw::math::exp (0.0) == 1.0 && fw::math::log (1.0) == 0.0);
-    CHECK_NEAR (fw::math::tanhf (0.5f), std::tanh (0.5f), 1.0e-6);
+    CHECK (flatwater::math::exp (0.0) == 1.0 && flatwater::math::log (1.0) == 0.0);
+    CHECK_NEAR (flatwater::math::tanhf (0.5f), std::tanh (0.5f), 1.0e-6);
 }
 
 int main()

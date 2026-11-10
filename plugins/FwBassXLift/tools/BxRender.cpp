@@ -12,7 +12,7 @@ int main (int argc, char** argv)
     if (argc < 5) { std::fprintf (stderr, "usage: BxRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
-    fwbassxlift::Processor proc;
+    bx::Processor proc;
     int block = 512;
     proc.setHarmonicsDb (-100.0);
     for (int i = 5; i < argc; ++i)

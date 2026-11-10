@@ -33,16 +33,16 @@ int main (int argc, char** argv)
         if (k == "block") block = std::max (1, (int) v);
         else if (k == "preset")
         {
-            const auto& list = fwvocalleveler::factoryPresets();
-            if ((int) v >= 0 && (int) v < (int) list.size()) { fw::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (fwvocalleveler::mode)); p.readExactIdle(); }
+            const auto& list = vl::factoryPresets();
+            if ((int) v >= 0 && (int) v < (int) list.size()) { flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::mode)); p.readExactIdle(); }
         }
         else if (k == "idle") { idleDbValue = v; idleGiven = true; }
         else set (k.c_str(), v);
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked
     {
-        const float lo = p.get (fwvocalleveler::rangeMin), hi = p.get (fwvocalleveler::rangeMax);
-        set (fwvocalleveler::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
+        const float lo = p.get (vl::rangeMin), hi = p.get (vl::rangeMax);
+        set (vl::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }

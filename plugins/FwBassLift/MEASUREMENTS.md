@@ -121,7 +121,7 @@ the plug-in, plays a test signal through it in real time, records its output, an
 second; `scripts/nulltest/read_meter_frames.py` turns the frames into bar heights (numbers in
 [measurements/FwBassLift/meters](../../measurements/FwBassLift/meters); the screenshots stay out of the repository).
 Signals: tone bursts and level steps at 25 / 50 / 300 / 1000 Hz, 5 / 20 / 100 ms bursts (`scripts/nulltest/render_meter_probe.py`),
-a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Meter.h`).
+a bass line and kicks. The same law drives every Flatwater meter (`shared/ui/Widgets.h`).
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|

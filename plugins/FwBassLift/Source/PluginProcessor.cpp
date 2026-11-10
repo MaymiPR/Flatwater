@@ -26,19 +26,19 @@ AudioProcessorValueTreeState::ParameterLayout FwBassLiftProcessor::layout()
         [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); },
         [] (float, float, float v) { return std::round (v); });
 
-    addF (fwbasslift::inGain, "Input", { -30.0f, 0.0f, 0.1f }, 0.0f, false, "dB", 1);
-    addF (fwbasslift::freq, "Freq", freqRange, 80.0f, true, "Hz", 0);
-    addF (fwbasslift::response, "Response", { 0.0f, 30.0f, 0.1f }, 30.0f, false, "ms", 1);
-    addF (fwbasslift::ratio, "Ratio", { 0.25f, 1.0f, 0.01f }, 0.63f, false, "", 2);
-    addF (fwbasslift::intensity, "Intensity", { -24.0f, 24.0f, 0.1f }, 0.0f, true, "dB", 1);
-    addB (fwbasslift::origBass, "Original Bass", true, true, { "Out", "In" });
-    addF (fwbasslift::gain, "Gain", { -30.0f, 0.0f, 0.1f }, 0.0f, true, "dB", 1);
-    addF (fwbasslift::decay, "Decay", { 0.0f, 1.0f, 0.1f }, 1.0f, false, "", 1);
-    addF (fwbasslift::smoothTc, "SmoothTc", { 0.0f, 1000.0f, 0.1f }, 20.0f, false, "", 1);
-    addF (fwbasslift::tc, "Tc", { 0.0f, 2000.0f, 0.1f }, 20.0f, false, "ms", 1);
-    addF (fwbasslift::xfadeTc, "XFadeTc", { 0.0f, 5000.0f, 0.1f }, 10.0f, false, "", 1);
-    addB (fwbasslift::smooth, "Smooth", true, false, { "Off", "On" });
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { fwbasslift::mode, 1 }, "Mode", StringArray { "Stereo", "Mono" }, 0));
+    addF (bf::inGain, "Input", { -30.0f, 0.0f, 0.1f }, 0.0f, false, "dB", 1);
+    addF (bf::freq, "Freq", freqRange, 80.0f, true, "Hz", 0);
+    addF (bf::response, "Response", { 0.0f, 30.0f, 0.1f }, 30.0f, false, "ms", 1);
+    addF (bf::ratio, "Ratio", { 0.25f, 1.0f, 0.01f }, 0.63f, false, "", 2);
+    addF (bf::intensity, "Intensity", { -24.0f, 24.0f, 0.1f }, 0.0f, true, "dB", 1);
+    addB (bf::origBass, "Original Bass", true, true, { "Out", "In" });
+    addF (bf::gain, "Gain", { -30.0f, 0.0f, 0.1f }, 0.0f, true, "dB", 1);
+    addF (bf::decay, "Decay", { 0.0f, 1.0f, 0.1f }, 1.0f, false, "", 1);
+    addF (bf::smoothTc, "SmoothTc", { 0.0f, 1000.0f, 0.1f }, 20.0f, false, "", 1);
+    addF (bf::tc, "Tc", { 0.0f, 2000.0f, 0.1f }, 20.0f, false, "ms", 1);
+    addF (bf::xfadeTc, "XFadeTc", { 0.0f, 5000.0f, 0.1f }, 10.0f, false, "", 1);
+    addB (bf::smooth, "Smooth", true, false, { "Off", "On" });
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bf::mode, 1 }, "Mode", StringArray { "Stereo", "Mono" }, 0));
     return l;
 }
 
@@ -65,11 +65,11 @@ void FwBassLiftProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     ScopedNoDenormals nd;
     const int n = b.getNumSamples(), ch = jmin (2, b.getNumChannels());
     auto get = [this] (const char* id) { return apvts.getRawParameterValue (id)->load(); };
-    dsp.setFreq (get (fwbasslift::freq));
-    dsp.setIntensityDb (get (fwbasslift::intensity));
-    dsp.setOriginalBass (get (fwbasslift::origBass) > 0.5f);
-    dsp.setGainDb (get (fwbasslift::gain));
-    dsp.setDecay (get (fwbasslift::decay));
+    dsp.setFreq (get (bf::freq));
+    dsp.setIntensityDb (get (bf::intensity));
+    dsp.setOriginalBass (get (bf::origBass) > 0.5f);
+    dsp.setGainDb (get (bf::gain));
+    dsp.setDecay (get (bf::decay));
     dsp.process (b.getArrayOfWritePointers(), ch, n);
 
     auto toDb = [] (float v) { return v > 1.0e-4f ? Decibels::gainToDecibels (v) : -80.0f; };

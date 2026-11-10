@@ -12,7 +12,7 @@ int main (int argc, char** argv)
     if (argc < 9) { std::fprintf (stderr, "usage: BfRender in.f32 out.f32 channels fs freq intensityDb gainDb origIn [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
-    fwbasslift::Processor proc;
+    bf::Processor proc;
     double decay = 1.0;
     for (int i = 9; i < argc; ++i)
     {

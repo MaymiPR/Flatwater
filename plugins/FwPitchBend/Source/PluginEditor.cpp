@@ -1,11 +1,11 @@
 #include "PluginEditor.h"
 #include "shared/ui/Theme.h"
-#include "shared/ui/Logo.h"
+#include "shared/ui/Widgets.h"
 
 using namespace juce;
-using namespace fwpitchbend;
-using namespace fwpitchbend::ui;
-namespace th = fw::theme;
+using namespace pb;
+using namespace pb::ui;
+namespace theme = flatwater::theme;
 
 namespace
 {
@@ -64,18 +64,18 @@ public:
     void paint (Graphics& g) override
     {
         if (auto* k = dynamic_cast<ModKnob*> (ed.ui.selected); k != nullptr && k->kind != ModKnob::Big && k->isVisible())
-            th::drawValueBox (g, valueBox (*k).toFloat(), k->valueText(), k->kind == ModKnob::Medium ? 13.0f : 11.0f);
+            theme::drawValueBox (g, valueBox (*k).toFloat(), k->valueText(), k->kind == ModKnob::Medium ? 13.0f : 11.0f);
         if (ed.readoutText.isNotEmpty())
-            th::drawValueBox (g, Rectangle<float> (84.0f, 18.0f).withCentre (ed.readoutArea.getCentre().toFloat())
+            theme::drawValueBox (g, Rectangle<float> (84.0f, 18.0f).withCentre (ed.readoutArea.getCentre().toFloat())
                                      .withY ((float) ed.readoutArea.getY() - 20.0f), ed.readoutText, 11.0f);
         if (ed.ui.dragging != None)
         {
             const auto r = Rectangle<float> (40.0f, 20.0f).withCentre (badgeAt);
-            g.setColour (th::raised);
+            g.setColour (theme::raised);
             g.fillRoundedRectangle (r, 10.0f);
             g.setColour (sourceColour (ed.ui.dragging));
             g.drawRoundedRectangle (r.reduced (0.5f), 10.0f, 1.5f);
-            g.setFont (th::font (12.0f, true));
+            g.setFont (theme::font (12.0f, true));
             g.drawText (sourceName (ed.ui.dragging), r, Justification::centred);
         }
     }
@@ -85,14 +85,14 @@ public:
 
 //==============================================================================
 FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwpitchbend::mode), "Flatwater Pitch Bend", JucePlugin_VersionString, W,
-              (bool) p.apvts.state.getProperty (fwpitchbend::expandedId, false) ? HOpen : HClosed,
-              fw::Toolbar::Style::Hybrid, fwpitchbend::modeNames()),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (pb::mode), "Flatwater Pitch Bend", JucePlugin_VersionString, W,
+              (bool) p.apvts.state.getProperty (pb::expandedId, false) ? HOpen : HClosed,
+              flatwater::Toolbar::Style::Hybrid, pb::modeNames()),
       proc (p), ui { p }
 {
     ui.changed = [this] { content().repaint(); };
     ui.menuLook = &menuLook;
-    setFactoryPresets (fwpitchbend::factoryPresets());
+    setFactoryPresets (pb::factoryPresets());
     onDefaultPreset ([this] { proc.resetExtras(); });
     ui.enter = [this] (ModKnob& k) { openEntry (k); };
     ui.readout = [this] (const String& t, Rectangle<int> r) { readoutText = t; readoutArea = r; if (overlay) overlay->repaint(); };
@@ -101,10 +101,10 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         return proc.fine() ? String (roundToInt (v * 100.0)) + " cents" : String (roundToInt (v)) + " semitones";
     };
-    pitch = &knob (ModKnob::Big, 0, fwpitchbend::pitch, "PITCH", kPitch);
-    formant = &knob (ModKnob::Big, 1, fwpitchbend::formant, "FORMANT", kFormant);
+    pitch = &knob (ModKnob::Big, 0, pb::pitch, "PITCH", kPitch);
+    formant = &knob (ModKnob::Big, 1, pb::formant, "FORMANT", kFormant);
     pitch->format = formant->format = semis;
-    mix = &knob (ModKnob::Medium, 2, fwpitchbend::mix, "MIX", kMix);
+    mix = &knob (ModKnob::Medium, 2, pb::mix, "MIX", kMix);
     mix->format = [] (double v) { return fixed (v, 1); };
     mix->wheelStep = 0.013;
 
@@ -115,11 +115,11 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         const auto c = Point<float> (20.5f, 20.5f);
         const auto disc = Rectangle<float> (36.0f, 36.0f).withCentre (c);
-        g.setGradientFill (ColourGradient (th::raisedTop, 0.0f, disc.getY(), th::raised, 0.0f, disc.getBottom(), false));
+        g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised, 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
         g.setColour (Colours::black);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
-        g.setColour (th::textDim);                                   // a chain: two links
+        g.setColour (theme::textDim);                                   // a chain: two links
         g.drawRoundedRectangle (Rectangle<float> (14.0f, 8.0f).withCentre (c.translated (-4.0f, 0.0f)), 4.0f, 1.8f);
         g.drawRoundedRectangle (Rectangle<float> (14.0f, 8.0f).withCentre (c.translated (4.0f, 0.0f)), 4.0f, 1.8f);
     };
@@ -180,9 +180,9 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         content().repaint();
     });
     addToContent (fine, kFine);
-    auto& flattenLamp = make<Toggle> (ui, "", [this] { return proc.get (fwpitchbend::flatten) > 0.5f; }, [this]
+    auto& flattenLamp = make<Toggle> (ui, "", [this] { return proc.get (pb::flatten) > 0.5f; }, [this]
     {
-        auto& pr = param (fwpitchbend::flatten);
+        auto& pr = param (pb::flatten);
         pr.beginChangeGesture();
         pr.setValueNotifyingHost (pr.getValue() > 0.5f ? 0.0f : 1.0f);
         pr.endChangeGesture();
@@ -196,7 +196,7 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     addToContent (note, kNote);
     auto setNote = [this] (int i)
     {
-        auto& pr = param (fwpitchbend::flattenNote);
+        auto& pr = param (pb::flattenNote);
         pr.beginChangeGesture();
         pr.setValueNotifyingHost (pr.convertTo0to1 ((float) jlimit (0, 23, i)));
         pr.endChangeGesture();
@@ -205,31 +205,31 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         const auto r = note.getLocalBounds().toFloat().reduced (0.5f);
         const bool hot = noteHot || press == Press::Note;
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.fillRoundedRectangle (r, 2.0f);
-        g.setColour (hot ? th::cyan.withAlpha (0.8f) : th::line);
+        g.setColour (hot ? theme::cyan.withAlpha (0.8f) : theme::line);
         g.drawRoundedRectangle (r, 2.0f, 1.0f);
-        g.setColour (proc.get (fwpitchbend::flatten) > 0.5f ? th::text : th::textDim);
-        g.setFont (th::font (14.0f, true));
-        g.drawText (noteNames()[roundToInt (proc.get (fwpitchbend::flattenNote))], r.withTrimmedRight (16.0f), Justification::centred);
-        g.setColour (th::line);
+        g.setColour (proc.get (pb::flatten) > 0.5f ? theme::text : theme::textDim);
+        g.setFont (theme::font (14.0f, true));
+        g.drawText (noteNames()[roundToInt (proc.get (pb::flattenNote))], r.withTrimmedRight (16.0f), Justification::centred);
+        g.setColour (theme::line);
         g.fillRect (r.getRight() - 16.0f, r.getY() + 3.0f, 1.0f, r.getHeight() - 6.0f);
         Path tri;
         const Point<float> c (r.getRight() - 8.0f, r.getCentreY());
         tri.addTriangle (c.x - 3.0f, c.y - 1.5f, c.x + 3.0f, c.y - 1.5f, c.x, c.y + 2.0f);
-        g.setColour (hot ? th::cyan : th::textDim);
+        g.setColour (hot ? theme::cyan : theme::textDim);
         g.fillPath (tri);
     };
     note.down = [this, setNote] (const MouseEvent& e)
     {
         if (e.mods.isAltDown())
         {
-            setNote (roundToInt (param (fwpitchbend::flattenNote).convertFrom0to1 (param (fwpitchbend::flattenNote).getDefaultValue())));
+            setNote (roundToInt (param (pb::flattenNote).convertFrom0to1 (param (pb::flattenNote).getDefaultValue())));
             press = Press::None;
             return;
         }
         press = Press::Note;
-        pressStart = roundToInt (proc.get (fwpitchbend::flattenNote));
+        pressStart = roundToInt (proc.get (pb::flattenNote));
         pressAt = e.position;
     };
     note.drag = [this, setNote] (const MouseEvent& e)
@@ -246,13 +246,13 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         PopupMenu m;
         m.setLookAndFeel (&menuLook);
         m.addSectionHeader ("Flatten to");
-        const int cur = roundToInt (proc.get (fwpitchbend::flattenNote));
+        const int cur = roundToInt (proc.get (pb::flattenNote));
         for (int i = 0; i < 24; ++i) m.addItem (i + 1, noteNames()[i], true, i == cur);
         m.showMenuAsync (PopupMenu::Options().withTargetComponent (&note).withMinimumWidth (note.getWidth()).withStandardItemHeight (18),
                          [setNote] (int r) { if (r > 0) setNote (r - 1); });
     };
     note.hover = [this, &note] (bool in) { noteHot = in; note.repaint(); };
-    note.wheel = [this, setNote] (int dir) { setNote (roundToInt (proc.get (fwpitchbend::flattenNote)) + dir); };
+    note.wheel = [this, setNote] (int dir) { setNote (roundToInt (proc.get (pb::flattenNote)) + dir); };
 
     // the modulators' panel: M1 and M2 (each its own knobs), AM, PT
     auto& scr = make<Screen> (ui);
@@ -266,11 +266,11 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
 
     for (int m = 0; m < 2; ++m)
     {
-        const auto& d = fwpitchbend::mod[m];
+        const auto& d = pb::mod[m];
         const int t0 = 3 + 4 * m;                                    // m?Rate, Warp, Phase, Level in targets[]
-        auto& type = make<Toggle> (ui, "LFO|SEQ", [this, m] { return proc.get (fwpitchbend::mod[m].type) > 0.5f; }, [this, m]
+        auto& type = make<Toggle> (ui, "LFO|SEQ", [this, m] { return proc.get (pb::mod[m].type) > 0.5f; }, [this, m]
         {
-            auto& pr = param (fwpitchbend::mod[m].type);
+            auto& pr = param (pb::mod[m].type);
             pr.beginChangeGesture();
             pr.setValueNotifyingHost (pr.getValue() > 0.5f ? 0.0f : 1.0f);
             pr.endChangeGesture();
@@ -287,9 +287,9 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         synced.format = [] (double v) { return syncedRates()[roundToInt (v)]; };
         rateHz[m] = &hz;
         rateSynced[m] = &synced;
-        auto& sync = make<Toggle> (ui, "", [this, m] { return proc.get (fwpitchbend::mod[m].sync) < 0.5f; }, [this, m]
+        auto& sync = make<Toggle> (ui, "", [this, m] { return proc.get (pb::mod[m].sync) < 0.5f; }, [this, m]
         {
-            auto& pr = param (fwpitchbend::mod[m].sync);
+            auto& pr = param (pb::mod[m].sync);
             pr.beginChangeGesture();
             pr.setValueNotifyingHost (pr.getValue() > 0.5f ? 0.0f : 1.0f);
             pr.endChangeGesture();
@@ -328,7 +328,7 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         const int m = tab();
         auto t = getTable (proc.apvts.state, m);
-        if (proc.get (fwpitchbend::mod[m].type) > 0.5f) for (int i = 0; i < maxSteps; ++i) t[(size_t) (seqFirst + i)] = 0.0f;
+        if (proc.get (pb::mod[m].type) > 0.5f) for (int i = 0; i < maxSteps; ++i) t[(size_t) (seqFirst + i)] = 0.0f;
         else for (int i = 0; i < lfoPoints; ++i) t[(size_t) i] = 0.0f;
         proc.undo.beginNewTransaction();
         setTable (proc.apvts.state, m, t, &proc.undo);
@@ -337,15 +337,15 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     browseTool = &tool ("browse", { 17, 393, 31, 31 }, [this] { return library->isVisible(); }, [this]
     {
         if (library->isVisible()) library->setVisible (false);
-        else library->open (tab(), proc.get (fwpitchbend::mod[tab()].type) > 0.5f);
+        else library->open (tab(), proc.get (pb::mod[tab()].type) > 0.5f);
         content().repaint();
     });
     deleteTool = &tool ("delete", { 9, 429, 25, 28 }, [this] { return library->deleteMode; }, [this] { library->deleteMode = ! library->deleteMode; library->repaint(); });
     saveTool = &tool ("save", { 32, 433, 19, 19 }, [] { return false; }, [this] { library->saveCurrent(); });
 
     // AM and PT
-    const char* organic[2][3] { { fwpitchbend::amAttack, fwpitchbend::amRelease, fwpitchbend::amLevel },
-                                { fwpitchbend::ptSmooth, fwpitchbend::ptOffset, fwpitchbend::ptLevel } };
+    const char* organic[2][3] { { pb::amAttack, pb::amRelease, pb::amLevel },
+                                { pb::ptSmooth, pb::ptOffset, pb::ptLevel } };
     const char* organicLabels[2][3] { { "ATTACK", "RELEASE", "LEVEL" }, { "SMOOTH", "OFFSET", "LEVEL" } };
     const int organicTargets[2][3] { { 11, 12, 13 }, { 14, -1, 15 } };
     for (int o = 0; o < 2; ++o)
@@ -366,14 +366,14 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     steps.draw = [this] (Graphics& g)
     {
         const int m = jmin (1, tab());
-        g.setColour (th::textDim);
-        g.setFont (th::font (8.5f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (8.5f, true));
         g.drawText ("STEPS", Rectangle<int> (0, 0, 32, 16), Justification::centredLeft);
-        th::drawValueBox (g, Rectangle<float> (32.0f, 0.5f, 42.0f, 15.0f), String (roundToInt (proc.get (fwpitchbend::mod[m].steps))), 11.0f);
+        theme::drawValueBox (g, Rectangle<float> (32.0f, 0.5f, 42.0f, 15.0f), String (roundToInt (proc.get (pb::mod[m].steps))), 11.0f);
     };
     auto setSteps = [this] (int n)
     {
-        auto& pr = param (fwpitchbend::mod[jmin (1, tab())].steps);
+        auto& pr = param (pb::mod[jmin (1, tab())].steps);
         pr.beginChangeGesture();
         pr.setValueNotifyingHost (pr.convertTo0to1 ((float) jlimit (2, 16, n)));
         pr.endChangeGesture();
@@ -383,12 +383,12 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         if (e.mods.isAltDown()) { setSteps (16); return; }
         press = Press::Steps;
-        pressStart = roundToInt (proc.get (fwpitchbend::mod[jmin (1, tab())].steps));
+        pressStart = roundToInt (proc.get (pb::mod[jmin (1, tab())].steps));
         pressAt = e.position;
     };
     steps.drag = [this, setSteps] (const MouseEvent& e) { if (press == Press::Steps) setSteps (pressStart + roundToInt ((pressAt.y - e.position.y) / 40.0f)); };
     steps.up = [this] (const MouseEvent&) { press = Press::None; };
-    steps.wheel = [this, setSteps] (int dir) { setSteps (roundToInt (proc.get (fwpitchbend::mod[jmin (1, tab())].steps)) + dir); };
+    steps.wheel = [this, setSteps] (int dir) { setSteps (roundToInt (proc.get (pb::mod[jmin (1, tab())].steps)) + dir); };
     for (int m = 0; m < 2; ++m) panel[m].push_back (&steps);
 
     overlay = &make<Overlay> (*this);
@@ -467,10 +467,10 @@ void FwPitchBendEditor::showTab (int t)
         if (t < 2)
         {
             for (auto* c : modTools) c->setVisible (c != saveTool && c != deleteTool);
-            const bool synced = proc.get (fwpitchbend::mod[t].sync) < 0.5f;
+            const bool synced = proc.get (pb::mod[t].sync) < 0.5f;
             rateHz[t]->setVisible (! synced);
             rateSynced[t]->setVisible (synced);
-            const bool seq = proc.get (fwpitchbend::mod[t].type) > 0.5f;
+            const bool seq = proc.get (pb::mod[t].type) > 0.5f;
             for (auto* c : content().getChildren())
                 if (auto* h = dynamic_cast<Hotspot*> (c); h != nullptr && h->getBounds() == kSteps) h->setVisible (seq);
             drawTool->setVisible (! seq);
@@ -499,8 +499,8 @@ void FwPitchBendEditor::tick()
         const int t = tab();
         if (expanded() && t < 2)                                    // Sync or Type changed from the host
         {
-            const bool synced = proc.get (fwpitchbend::mod[t].sync) < 0.5f;
-            const bool seq = proc.get (fwpitchbend::mod[t].type) > 0.5f;
+            const bool synced = proc.get (pb::mod[t].sync) < 0.5f;
+            const bool seq = proc.get (pb::mod[t].type) > 0.5f;
             bool stepsShown = false;
             for (auto* c : content().getChildren())
                 if (auto* h = dynamic_cast<Hotspot*> (c); h != nullptr && h->getBounds() == kSteps) stepsShown = h->isVisible();
@@ -512,30 +512,30 @@ void FwPitchBendEditor::tick()
 //==============================================================================
 void FwPitchBendEditor::paintContent (Graphics& g)
 {
-    g.fillAll (th::bg);
-    th::drawCard (g, Rectangle<float> (2.0f, 23.0f, (float) W - 4.0f, (float) kPlateBottom - 25.0f), 8.0f);
+    g.fillAll (theme::bg);
+    theme::drawCard (g, Rectangle<float> (2.0f, 23.0f, (float) W - 4.0f, (float) kPlateBottom - 25.0f), 8.0f);
 
     // our mark and name where the original prints its own
-    fw::drawMark (g, { 500.0f, 30.0f, 30.0f, 26.0f }, false, false);
-    g.setColour (th::text);
-    g.setFont (th::font (14.0f, true));
+    flatwater::drawMark (g, { 500.0f, 30.0f, 30.0f, 26.0f }, false, false);
+    g.setColour (theme::text);
+    g.setFont (theme::font (14.0f, true));
     g.drawText ("PITCH BEND", Rectangle<float> (473.0f, 56.0f, 84.0f, 18.0f), Justification::centred);
 
     // the names (a value takes its name's place while it shows)
-    g.setColour (th::textDim);
-    g.setFont (th::font (15.0f, true));
+    g.setColour (theme::textDim);
+    g.setFont (theme::font (15.0f, true));
     for (int i = 0; i < 2; ++i)
         if (! (ui.selected == (i == 0 ? pitch : formant) || linkShown))
             g.drawText (i == 0 ? "PITCH" : "FORMANT", kPill[i], Justification::centred);
-    g.setFont (th::font (13.0f, true));
+    g.setFont (theme::font (13.0f, true));
     if (ui.selected != mix) g.drawText ("MIX", Rectangle<int> (64, 18).withCentre ({ kMix.getCentreX(), kMix.getY() - 7 }), Justification::centred);
-    g.setFont (th::font (12.0f, true));
+    g.setFont (theme::font (12.0f, true));
     g.drawText ("FLATTEN", Rectangle<int> (90, 16).withCentre ({ 51, 131 }), Justification::centred);
 
     // the scales' ends: -12 / 12, or -1200 / 1200 with Fine
     const bool fine = proc.fine();
-    g.setColour (th::textFaint);
-    g.setFont (th::font (11.0f));
+    g.setColour (theme::textFaint);
+    g.setFont (theme::font (11.0f));
     for (auto* k : { pitch, formant })
     {
         const auto c = k->getBounds().toFloat().getCentre();
@@ -548,7 +548,7 @@ void FwPitchBendEditor::paintContent (Graphics& g)
     for (int i = 0; i < 2; ++i)
     {
         auto* k = i == 0 ? pitch : formant;
-        if (ui.selected == k || linkShown) th::drawValueBox (g, kPill[i].toFloat(), k->valueText(), 14.0f);
+        if (ui.selected == k || linkShown) theme::drawValueBox (g, kPill[i].toFloat(), k->valueText(), 14.0f);
     }
 
     // the tabs (each a modulator to drag onto a control) and the panel's open / close
@@ -557,12 +557,12 @@ void FwPitchBendEditor::paintContent (Graphics& g)
     {
         const auto r = tabRect (t).toFloat();
         const bool on = expanded() && t == active;
-        g.setColour (on ? th::raisedTop : th::raised);
+        g.setColour (on ? theme::raisedTop : theme::raised);
         g.fillRoundedRectangle (r, 13.0f);
-        g.setColour (on ? th::amber : th::line);
+        g.setColour (on ? theme::amber : theme::line);
         g.drawRoundedRectangle (r.reduced (0.5f), 13.0f, 1.0f);
-        g.setColour (on ? th::amber : sourceColour (t + 1));
-        g.setFont (th::font (14.0f, true));
+        g.setColour (on ? theme::amber : sourceColour (t + 1));
+        g.setFont (theme::font (14.0f, true));
         g.drawText (kTabNames[t], r, Justification::centred);
     }
     {
@@ -570,28 +570,28 @@ void FwPitchBendEditor::paintContent (Graphics& g)
         Path tri;
         if (expanded()) tri.addTriangle (r.getX(), r.getY(), r.getRight(), r.getY(), r.getCentreX(), r.getBottom());
         else tri.addTriangle (r.getX(), r.getBottom(), r.getRight(), r.getBottom(), r.getCentreX(), r.getY());
-        g.setColour (th::textDim);
+        g.setColour (theme::textDim);
         g.fillPath (tri);
     }
 
     if (! expanded()) return;
-    th::drawCard (g, Rectangle<float> (2.0f, 292.0f, (float) W - 4.0f, (float) HOpen - 294.0f), 8.0f);
-    g.setColour (th::textFaint);
-    g.setFont (th::font (8.0f));
+    theme::drawCard (g, Rectangle<float> (2.0f, 292.0f, (float) W - 4.0f, (float) HOpen - 294.0f), 8.0f);
+    g.setColour (theme::textFaint);
+    g.setFont (theme::font (8.0f));
     if (active < 2)
     {
-        const bool seq = proc.get (fwpitchbend::mod[active].type) > 0.5f;
+        const bool seq = proc.get (pb::mod[active].type) > 0.5f;
         const char* labels[3] { seq ? "24" : "1", "0", seq ? "-24" : "-1" };
         for (int i = 0; i < 3; ++i)
             g.drawText (labels[i], Rectangle<int> (kScale.getX(), kScale.getY() + i * 50, kScale.getWidth() + 6, 12), Justification::centredLeft);
     }
     else
     {
-        g.setColour (th::textDim);
-        g.setFont (th::font (11.0f, true));
+        g.setColour (theme::textDim);
+        g.setFont (theme::font (11.0f, true));
         g.drawText (active == 2 ? "AMPLITUDE" : "PITCH", Rectangle<int> (38, 304, 150, 16), Justification::centredLeft);
-        g.setColour (th::textFaint);
-        g.setFont (th::font (8.0f));
+        g.setColour (theme::textFaint);
+        g.setFont (theme::font (8.0f));
         const char* labels[3] { active == 2 ? "1" : "C5", active == 2 ? "" : "C3", active == 2 ? "0" : "C1" };
         for (int i = 0; i < 3; ++i)
             g.drawText (labels[i], Rectangle<int> (277, 321 + i * 50, 22, 12), Justification::centredLeft);
@@ -653,11 +653,11 @@ void FwPitchBendEditor::openEntry (ModKnob& k)
     entryFor = &k;
     entry = std::make_unique<TextEditor>();
     entry->setJustification (Justification::centred);
-    entry->setFont (th::font (12.0f));
-    entry->setColour (TextEditor::backgroundColourId, th::well);
-    entry->setColour (TextEditor::textColourId, th::text);
-    entry->setColour (TextEditor::outlineColourId, th::amber);
-    entry->setColour (TextEditor::focusedOutlineColourId, th::amber);
+    entry->setFont (theme::font (12.0f));
+    entry->setColour (TextEditor::backgroundColourId, theme::well);
+    entry->setColour (TextEditor::textColourId, theme::text);
+    entry->setColour (TextEditor::outlineColourId, theme::amber);
+    entry->setColour (TextEditor::focusedOutlineColourId, theme::amber);
     const bool big = k.kind == ModKnob::Big;
     const auto r = big ? kPill[&k == pitch ? 0 : 1] : valueBox (k);
     String text = big ? String (roundToInt (k.getValue() * (proc.fine() ? 100.0 : 1.0))) : k.valueText().upToFirstOccurrenceOf (" ", false, false);

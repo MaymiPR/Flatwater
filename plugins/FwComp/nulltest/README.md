@@ -78,7 +78,7 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 
 | File | What it does |
 |---|---|
-| `compare_needle.py` | Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/VuRender) with the reference's filmed needle at the same strip positions (needle_set_<face>.npz) |
+| `compare_needle.py` | Pixel comparison of Flatwater Comp's VU needle (plugins/FwComp/tools/CoVuRender) with the reference's filmed needle at the same strip positions (needle_set_<face>.npz) |
 | `compare_rivet.py` | The reference's needle tip and rivet against Flatwater Comp's (needle_set_io.npz / needle_set_wc.npz): patches in needle coordinates (s along, n across, 0.1 px) |
 
 ## Reading

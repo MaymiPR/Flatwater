@@ -32,7 +32,7 @@
  #define FWBASSXLIFT_SIMD_NEON 1
 #endif
 
-namespace fwbassxlift
+namespace bx
 {
 inline constexpr double pi = 3.14159265358979323846;
 
@@ -278,4 +278,4 @@ private:
         step48 = 48000.0 / fs;
     }
 };
-} // namespace fwbassxlift
+} // namespace bx

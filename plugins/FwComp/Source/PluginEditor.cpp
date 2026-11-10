@@ -2,8 +2,8 @@
 #include "shared/ui/Theme.h"
 
 using namespace juce;
-using namespace fw::hybrid;
-namespace th = fw::theme;
+using namespace flatwater::hybrid;
+namespace theme = flatwater::theme;
 
 namespace
 {
@@ -24,8 +24,8 @@ float refToJuce (float deg) { return rad (deg + 180.0f); }
 }
 
 FwCompEditor::FwCompEditor (FwCompProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (fwcomp::mode), "Flatwater Comp", JucePlugin_VersionString, W, H,
-              fw::Toolbar::Style::Hybrid),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (co::mode), "Flatwater Comp", JucePlugin_VersionString, W, H,
+              flatwater::Toolbar::Style::Hybrid),
       proc (p),
       analog (make<Knob> (Knob::Small, 39.0f, 321.0f)), output (make<Knob> (Knob::Small, 39.0f, 321.0f)),
       ratio (make<Knob> (Knob::Large, 40.0f, 320.0f)), mix (make<Knob> (Knob::Large, 40.0f, 320.0f)),
@@ -37,8 +37,8 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
     setAuxLook (std::make_unique<HybridLook>());
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (fwcomp::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (fwcomp::mix) });        // presets leave Mix alone, as the reference
+    setFactoryPresets (co::factoryPresets());
+    setKeepOnPresetLoad ({ p.apvts.getParameter (co::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, Rectangle<int> valueArea,
                          std::function<String (double)> fmt)
@@ -53,21 +53,21 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
         k.format = std::move (fmt); k.selection = &selection;
         attachSlider (k, id, b, reset);
         // a knob whose range is never positive (Threshold) takes "18" as -18, as the reference reads it
-        if (k.format) fw::flat::applyFormat (k, k.format, k.getMaximum() <= 0.0);
+        if (k.format) flatwater::flat::applyFormat (k, k.format, k.getMaximum() <= 0.0);
     };
     analog.steps = 5;
     for (auto& px : analog.feel.stepPx) px = 50.0f;           // measured: a step per 50 px at any speed, Ctrl or not
-    place (analog, fwcomp::analog, { 39, 30, 97, 107 }, kAnalog, 2.0, {}, {});
-    place (output, fwcomp::output, { 505, 30, 97, 107 }, kOutput, 0.0, { 599, 85, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (ratio, fwcomp::ratio, { 6, 142, 161, 143 }, kRatio, 3.0, { 68, 213, 37, 13 }, [] (double v) { return String (v, 2); });
-    place (mix, fwcomp::mix, { 473, 142, 161, 143 }, kMix, 100.0, { 534, 213, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (threshold, fwcomp::threshold, { 238, 249, 169, 180 }, kThreshold, -18.0, { 302, 330, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (punch, fwcomp::punch, { 9, 294, 97, 107 }, kPunch, 1.0, { 39, 396, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (attack, fwcomp::attack, { 114, 295, 96, 106 }, kAttack, 7.0, { 143, 396, 37, 13 },
-           [] (double v) { return fwcomp::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (release, fwcomp::release, { 431, 294, 97, 107 }, kRelease, 100.25, { 462, 398, 37, 13 },
-           [] (double v) { return fwcomp::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (releaseNote, fwcomp::releaseNote, { 431, 294, 97, 107 }, kRelease, 5.0, { 462, 398, 37, 13 }, {});
+    place (analog, co::analog, { 39, 30, 97, 107 }, kAnalog, 2.0, {}, {});
+    place (output, co::output, { 505, 30, 97, 107 }, kOutput, 0.0, { 599, 85, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (ratio, co::ratio, { 6, 142, 161, 143 }, kRatio, 3.0, { 68, 213, 37, 13 }, [] (double v) { return String (v, 2); });
+    place (mix, co::mix, { 473, 142, 161, 143 }, kMix, 100.0, { 534, 213, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (threshold, co::threshold, { 238, 249, 169, 180 }, kThreshold, -18.0, { 302, 330, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (punch, co::punch, { 9, 294, 97, 107 }, kPunch, 1.0, { 39, 396, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (attack, co::attack, { 114, 295, 96, 106 }, kAttack, 7.0, { 143, 396, 37, 13 },
+           [] (double v) { return co::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
+    place (release, co::release, { 431, 294, 97, 107 }, kRelease, 100.25, { 462, 398, 37, 13 },
+           [] (double v) { return co::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
+    place (releaseNote, co::releaseNote, { 431, 294, 97, 107 }, kRelease, 5.0, { 462, 398, 37, 13 }, {});
     releaseNote.textFromValueFunction = [] (double v) { static const char* n[] = { "1/64T", "1/64", "1/64D", "1/32T", "1/32", "1/32D", "1/16T",
         "1/16", "1/16D", "1/8T", "1/8", "1/8D", "1/4T", "1/4", "1/4D", "1/2T", "1/2", "1/2D", "1 Bar", "2 Bar" }; return String (n[jlimit (0, 19, roundToInt (v))]); };
     releaseNote.steps = 20;
@@ -76,18 +76,18 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
         std::copy (px, px + 4, releaseNote.feel.stepPx);
     }
 
-    auto& meterSel = make<ButtonGroup> (*p.apvts.getParameter (fwcomp::meter), &p.undo, StringArray { "IN", "GR", "OUT" }, false);
+    auto& meterSel = make<ButtonGroup> (*p.apvts.getParameter (co::meter), &p.undo, StringArray { "IN", "GR", "OUT" }, false);
     addToContent (meterSel, Rectangle<int> (245, 27, 151, 21).expanded (4));
-    auto& lim = make<ButtonGroup> (*p.apvts.getParameter (fwcomp::limiter), &p.undo, StringArray { "LIMITER" }, false, true);
+    auto& lim = make<ButtonGroup> (*p.apvts.getParameter (co::limiter), &p.undo, StringArray { "LIMITER" }, false, true);
     addToContent (lim, Rectangle<int> (417, 27, 52, 21).expanded (4));
-    auto& sync = make<ButtonGroup> (*p.apvts.getParameter (fwcomp::sync), &p.undo, StringArray { "BPM", "HOST", "MS" }, true);
+    auto& sync = make<ButtonGroup> (*p.apvts.getParameter (co::sync), &p.undo, StringArray { "BPM", "HOST", "MS" }, true);
     addToContent (sync, Rectangle<int> (547, 315, 50, 61).expanded (4));
 
     // the BPM display takes drags and typed values in BPM mode (an invisible slider over it)
     bpmField.setSliderStyle (Slider::LinearBarVertical);
     bpmField.setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
     bpmField.setAlpha (0.0f);
-    attachSlider (bpmField, fwcomp::bpm, kLed.toNearestInt(), 120.0);
+    attachSlider (bpmField, co::bpm, kLed.toNearestInt(), 120.0);
     bpmField.setMouseDragSensitivity (270);
     vu.pivot = kVuPivot - kDial.getPosition().toFloat();
     addToContent (vu, kDial);
@@ -98,8 +98,8 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
 // the selected meter's face and needle
 void FwCompEditor::showMeter()
 {
-    using namespace fwcomp::needle;
-    const int m = roundToInt (value (fwcomp::meter));
+    using namespace co::needle;
+    const int m = roundToInt (value (co::meter));
     vu.setFace (m == 1 ? VuMeter::Face::gr : VuMeter::Face::io);
     vu.setNeedle (angle (m == 1 ? frame (grNeedle.x2) : frame (ioValue (m == 0 ? inNeedle.shown : outNeedle.shown))));
 }
@@ -108,7 +108,7 @@ float FwCompEditor::value (const char* id) const { return proc.apvts.getRawParam
 
 void FwCompEditor::updateReleaseKnob()
 {
-    const int s = roundToInt (value (fwcomp::sync));
+    const int s = roundToInt (value (co::sync));
     if (s == lastSync) return;
     lastSync = s;
     release.setVisible (s == 2);                     // ms
@@ -126,7 +126,7 @@ void FwCompEditor::tick()
     const double dt = lastTick > 0.0 ? jlimit (0.0, 0.1, now - lastTick) : 1.0 / 60.0;
     lastTick = now;
 
-    // the needle and the lamp move by the measured laws (ui/Needle.h). They move only while audio is processed (the
+    // the needle and the lamp move by the measured laws (ui/Controls.h). They move only while audio is processed (the
     // reference's needle stays put without it); the time between blocks counts when the next one arrives
     const float gr = proc.grDb.take(), lim = proc.limDb.take();
     const float in = jmax (proc.inLDb.take(), proc.inRDb.take()), out = jmax (proc.outLDb.take(), proc.outRDb.take());
@@ -154,21 +154,21 @@ void FwCompEditor::tick()
 void FwCompEditor::paintContent (Graphics& g)
 {
     drawPanel (g, { 0, 19, W, H - 19 });
-    th::drawCard (g, { 3.0f, 22.0f, (float) W - 6.0f, (float) H - 25.0f });
+    theme::drawCard (g, { 3.0f, 22.0f, (float) W - 6.0f, (float) H - 25.0f });
     drawVuHousing (g, kHousing, kArchCentre, kArch);
     // the limiter lamp in the housing's corner (measured: a dome of radius 8.6 at (444.5, 75.5) in a bezel to 11.2): dark
     // until the limiter acts, then lit in cyan, fading as it lets go
     {
         const auto c = kLimLamp;
-        g.setGradientFill (ColourGradient (th::raisedTop.brighter (0.2f), c.x, c.y - 11.2f, th::raised.darker (0.3f), c.x, c.y + 11.2f, false));
+        g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.2f), c.x, c.y - 11.2f, theme::raised.darker (0.3f), c.x, c.y + 11.2f, false));
         g.fillEllipse (c.x - 11.2f, c.y - 11.2f, 22.4f, 22.4f);
-        g.setColour (th::line);
+        g.setColour (theme::line);
         g.drawEllipse (c.x - 11.2f, c.y - 11.2f, 22.4f, 22.4f, 0.8f);
-        g.setColour (th::well);
+        g.setColour (theme::well);
         g.fillEllipse (c.x - 8.6f, c.y - 8.6f, 17.2f, 17.2f);
         if (lampLevel > 0.0)
         {
-            ColourGradient glow (th::cyan.brighter (0.3f), c.x, c.y, th::cyan.withAlpha (0.25f), c.x + 8.6f, c.y, true);
+            ColourGradient glow (theme::cyan.brighter (0.3f), c.x, c.y, theme::cyan.withAlpha (0.25f), c.x + 8.6f, c.y, true);
             g.setGradientFill (glow);
             g.setOpacity ((float) lampLevel);
             g.fillEllipse (c.x - 8.6f, c.y - 8.6f, 17.2f, 17.2f);
@@ -196,8 +196,8 @@ void FwCompEditor::paintContent (Graphics& g)
     ticks ({ 320.7f, 332.9f }, 19, refToJuce (54.0f), refToJuce (306.0f), 72.2f, 80.4f, 1.7f);
 
     // the labels and numbers, each centred at its measured place
-    auto label = [&] (const char* t, float x, float y) { g.setColour (th::textDim); printText (g, t, { x, y }, 10.75f, 1.1f, true); };
-    auto num = [&] (const char* t, float x, float y, float em = 8.6f) { g.setColour (th::textFaint.brighter (0.35f)); printText (g, t, { x, y }, em, 1.05f, false); };
+    auto label = [&] (const char* t, float x, float y) { g.setColour (theme::textDim); printText (g, t, { x, y }, 10.75f, 1.1f, true); };
+    auto num = [&] (const char* t, float x, float y, float em = 8.6f) { g.setColour (theme::textFaint.brighter (0.35f)); printText (g, t, { x, y }, em, 1.05f, false); };
     label ("ANALOG", 88.5f, 125.9f); label ("OUTPUT", 554.6f, 126.0f);
     label ("RATIO", 88.25f, 282.1f); label ("MIX", 552.0f, 282.0f);
     label ("PUNCH", 58.1f, 389.1f); label ("ATTACK", 162.0f, 389.25f);
@@ -227,10 +227,10 @@ void FwCompEditor::paintContent (Graphics& g)
             const float a = rad (deg);
             printText (g, t, { kThreshold.x + r * std::sin (a), kThreshold.y - r * std::cos (a) }, 12.0f, 1.0f, bold, a - MathConstants<float>::pi);
         };
-        g.setColour (th::textFaint.brighter (0.35f));
+        g.setColour (theme::textFaint.brighter (0.35f));
         onArc ("0", 234.35f, 83.2f, false);
         onArc ("-48", 129.0f, 84.0f, false);
-        g.setColour (th::amber);
+        g.setColour (theme::amber);
         static const float ang[] = { 214.85f, 205.8f, 197.05f, 189.25f, 181.25f, 172.7f, 163.6f, 155.65f, 147.35f };
         for (int i = 0; i < 9; ++i) onArc (String::charToString (String ("THRESHOLD")[i]), ang[i], 85.0f, true);
     }
@@ -242,12 +242,12 @@ void FwCompEditor::paintContent (Graphics& g)
         link.lineTo (478.75f, 406.25f);
         link.quadraticTo (478.75f, 409.25f, 481.75f, 409.25f);
         link.lineTo (502.5f, 409.25f);
-        g.setColour (th::textFaint);
+        g.setColour (theme::textFaint);
         g.strokePath (link, PathStrokeType (1.5f));
     }
-    const int sync = roundToInt (value (fwcomp::sync));
+    const int sync = roundToInt (value (co::sync));
     if (sync == 2) drawLedDisplay (g, kLed, "BPM OFF");
-    else drawLedDisplay (g, kLed, "BPM", sync == 0 ? String (roundToInt (value (fwcomp::bpm)))
+    else drawLedDisplay (g, kLed, "BPM", sync == 0 ? String (roundToInt (value (co::bpm)))
                                                     : proc.hostBpm.load() > 0.0 ? String (roundToInt (proc.hostBpm.load())) : String ("---"));
     drawNamePlate (g, { 16.0f, 407.0f, 210.0f, 30.0f }, "Flatwater Comp");
 }

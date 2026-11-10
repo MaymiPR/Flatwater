@@ -14,7 +14,7 @@
 #include <vector>
 #include "Tables.h"
 
-namespace fwcomp
+namespace co
 {
 class Analog
 {
@@ -29,7 +29,7 @@ public:
         setMode (mode);
     }
 
-    // the four modes' tables (H-Comp's by default; Flatwater Delay gives H-Delay's, whose modes 1-3 differ)
+    // the four modes' tables (the compressor reference's by default; Flatwater Delay gives its own reference's, whose modes 1-3 differ)
     const tables::AnalogMode* modes = tables::analog;
 
     // 0: Off (an identity), 1 .. 4

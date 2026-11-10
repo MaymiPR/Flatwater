@@ -1,14 +1,14 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
-#include "shared/ui/Meter.h"
+#include "shared/ui/Widgets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "dsp/Analog.h"
 
 // Parameters follow the reference's parameter list (its order, ranges, tapers and defaults; see RESEARCH.md,
 // Flatwater Comp); the DSP is in dsp/Engine.h.
-namespace fwcomp
+namespace co
 {
 inline constexpr const char* threshold = "threshold";  // 0 .. -48 dB, default -18
 inline constexpr const char* ratio = "ratio";          // 1 .. 50 (the reference's ratio taper), default 3
@@ -51,20 +51,20 @@ public:
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
-    int getNumPrograms() override { return 1 + (int) fwcomp::factoryPresets().size(); }
+    int getNumPrograms() override { return 1 + (int) co::factoryPresets().size(); }
     int getCurrentProgram() override { return currentProgram; }
     void setCurrentProgram (int index) override
     {
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
-        static const fw::FactoryPreset defaults { "", "Default", {} };
-        fw::applyPreset (apvts, index == 0 ? defaults : fwcomp::factoryPresets()[(size_t) index - 1], apvts.getParameter (fwcomp::mode),
-                           { apvts.getParameter (fwcomp::mix) });           // presets leave Mix alone, as the reference
+        static const flatwater::FactoryPreset defaults { "", "Default", {} };
+        flatwater::applyPreset (apvts, index == 0 ? defaults : co::factoryPresets()[(size_t) index - 1], apvts.getParameter (co::mode),
+                           { apvts.getParameter (co::mix) });           // presets leave Mix alone, as the reference
     }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
-        const auto& p = fwcomp::factoryPresets()[(size_t) index - 1];
+        const auto& p = co::factoryPresets()[(size_t) index - 1];
         return juce::String (p.group) + ": " + p.name;
     }
     void changeProgramName (int, const juce::String&) override {}
@@ -76,7 +76,7 @@ public:
 
     // meters (dB, highest peak since the editor last read them): input, output; the compressor's and the limiter's
     // gain reduction (positive dB)
-    fw::PeakTap inLDb, inRDb, outLDb, outRDb, grDb, limDb;
+    flatwater::PeakTap inLDb, inRDb, outLDb, outRDb, grDb, limDb;
     std::atomic<int> blocks { 0 };
     std::atomic<double> hostBpm { 0.0 };                  // 0: the host gives no tempo
 
@@ -84,10 +84,10 @@ private:
     static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void configure();
-    fwcomp::Compressor::Settings settings() const;
+    co::Compressor::Settings settings() const;
     int currentProgram = 0;
-    fwcomp::Compressor comps[2];
-    fwcomp::Analog analogStage;
+    co::Compressor comps[2];
+    co::Analog analogStage;
     double sr = 44100.0;
     bool prepared = false, layoutDual = false;
 };

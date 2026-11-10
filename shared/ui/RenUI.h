@@ -5,20 +5,19 @@
 // Flatwater's own look (shared/ui/Theme.h). The layouts keep the measured positions and sizes.
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <functional>
-#include "shared/ui/Toolbar.h"
+#include "shared/ui/Widgets.h"
 #include "shared/ui/Theme.h"
-#include "shared/ui/Wheel.h"
 
-namespace fw::ren
+namespace flatwater::ren
 {
 // the kit's colours, from the theme: frames and grid lines in the line colour, labels light grey, scales faint,
 // values light, meters and the reduction window cyan, the faders' rings raised with amber index lines
-inline const juce::Colour kFrameLine (fw::theme::line), kPanel (fw::theme::panel), kOuterFill (fw::theme::raised),
-    kOuterLine (fw::theme::line), kInnerLine (fw::theme::line.brighter (0.4f)), kInnerFill (fw::theme::well), kWindow (fw::theme::well),
-    kGrid (fw::theme::line), kLabel (fw::theme::textDim), kScale (fw::theme::textFaint), kScaleInner (fw::theme::textFaint),
-    kMeterBg (fw::theme::well), kMeterFg (fw::theme::cyan), kGrRed (0x5940d6f0), kGrRedLine (fw::theme::cyan),
-    kValue (fw::theme::text), kReadout (fw::theme::text), kRing (fw::theme::amber), kRingActive (fw::theme::amberLight),
-    kTrack (fw::theme::line);
+inline const juce::Colour kFrameLine (flatwater::theme::line), kPanel (flatwater::theme::panel), kOuterFill (flatwater::theme::raised),
+    kOuterLine (flatwater::theme::line), kInnerLine (flatwater::theme::line.brighter (0.4f)), kInnerFill (flatwater::theme::well), kWindow (flatwater::theme::well),
+    kGrid (flatwater::theme::line), kLabel (flatwater::theme::textDim), kScale (flatwater::theme::textFaint), kScaleInner (flatwater::theme::textFaint),
+    kMeterBg (flatwater::theme::well), kMeterFg (flatwater::theme::cyan), kGrRed (0x5940d6f0), kGrRedLine (flatwater::theme::cyan),
+    kValue (flatwater::theme::text), kReadout (flatwater::theme::text), kRing (flatwater::theme::amber), kRingActive (flatwater::theme::amberLight),
+    kTrack (flatwater::theme::line);
 
 juce::Font arial (float h, bool bold = false);
 juce::String dbText (float v, bool infAtMinus80 = false);
@@ -41,11 +40,11 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override;
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { wavesWheel (*this, e, w, wheelAcc, false, wheelScale); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fineWheel (*this, e, w, wheelAcc, false, wheelScale); }
     bool hitTest (int x, int y) override;
     juce::Rectangle<int> valueTextBounds() const;
     double wheelAcc = 0.0, wheelScale = 1.0;
-    // the drag (measured on RVox / RBass): the thumb follows the mouse (times plainScale); with Ctrl it moves ctrlFast of
+    // the drag (measured on the references of Flatwater Vocal Comp and Bass Lift): the thumb follows the mouse (times plainScale); with Ctrl it moves ctrlFast of
     // that on mouse steps of 3 px and more, ctrlSlow on smaller ones
     float plainScale = 1.0f, ctrlFast = 0.19f, ctrlSlow = 0.037f;
     juce::Point<float> virt, last;
@@ -82,7 +81,7 @@ class Editor : public juce::AudioProcessorEditor, private juce::Timer
 public:
     Editor (juce::AudioProcessor&, juce::AudioProcessorValueTreeState&, juce::UndoManager&,
             juce::RangedAudioParameter* modeParam, const juce::String& product, const juce::String& version,
-            int designW, int designH, fw::Toolbar::Style toolbarStyle = fw::Toolbar::Style::Renaissance,
+            int designW, int designH, flatwater::Toolbar::Style toolbarStyle = flatwater::Toolbar::Style::TwoRow,
             const juce::StringArray& modes = { "Stereo", "Mono" });
     ~Editor() override;
     void resized() override;
@@ -103,7 +102,7 @@ protected:
     void attach (juce::Button&, const char* paramID, juce::Rectangle<int> bounds);
     juce::Component& content();
     bool isMono() const;
-    void setFactoryPresets (const std::vector<fw::FactoryPreset>& list) { toolbar->setFactoryPresets (&list); }
+    void setFactoryPresets (const std::vector<flatwater::FactoryPreset>& list) { toolbar->setFactoryPresets (&list); }
     void setKeepOnPresetLoad (std::vector<juce::AudioProcessorParameter*> list) { toolbar->setKeepOnPresetLoad (std::move (list)); }
     void onDefaultPreset (std::function<void()> f) { toolbar->onLoadDefault = std::move (f); }   // state that is not a parameter
 
@@ -146,7 +145,7 @@ private:
     Look look;
     std::unique_ptr<juce::LookAndFeel> auxLook;           // destroyed after the widgets that use it (declared first)
     std::unique_ptr<Content> contentComp;
-    std::unique_ptr<fw::Toolbar> toolbar;
+    std::unique_ptr<flatwater::Toolbar> toolbar;
     juce::RangedAudioParameter* modeParam;
     juce::ComponentBoundsConstrainer constrainer;
     std::vector<std::unique_ptr<juce::SliderParameterAttachment>> sliderAtts;

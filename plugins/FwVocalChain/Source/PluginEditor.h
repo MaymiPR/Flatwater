@@ -7,7 +7,7 @@
 // (the toolbar's strip included), its measured positions and sizes kept, everything drawn in code. The static art
 // (cards, side cheeks, the grille, the stages' window, slots, scales, screws, labels, the name plate and the mark) is
 // rendered once per window scale and component; the controls draw themselves.
-namespace fwvocalchain::ui
+namespace ch::ui
 {
 // the selection as filmed on the reference (MeterCapture gl=1 click / hover / drag scripts, RESEARCH.md): hovering
 // shows nothing; a click on a control (a fader's cap, a colour's push button, the Balance knob) marks it (yellow) until
@@ -89,7 +89,7 @@ public:
     bool mono = false;
     float shown[2] { -80.0f, -80.0f };
     bool clip[2] { false, false };
-    fw::MeterBallistics ballistics[2];
+    flatwater::MeterBallistics ballistics[2];
 
 private:
     Marks& marks;
@@ -138,17 +138,17 @@ public:
     void mouseDrag (const juce::MouseEvent& e) override { feel.drag (*this, e, nullptr); }
     void mouseUp (const juce::MouseEvent& e) override { feel.up (*this, e, e.mouseDownPosition, nullptr); }
     void mouseDoubleClick (const juce::MouseEvent&) override { if (marks.enter) marks.enter (this); }
-    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { fw::wavesWheel (*this, e, w, wheelAcc, false); }
+    void mouseWheelMove (const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override { flatwater::fineWheel (*this, e, w, wheelAcc, false); }
     bool dragging() const { return feel.active; }
 
 private:
     Marks& marks;
-    fw::flat::WavesDrag feel { fw::flat::WavesDrag::Rotary };
+    flatwater::flat::FineDrag feel { flatwater::flat::FineDrag::Rotary };
     double wheelAcc = 0.0;
 };
 }
 
-class FwVocalChainEditor : public fw::ren::Editor
+class FwVocalChainEditor : public flatwater::ren::Editor
 {
 public:
     explicit FwVocalChainEditor (FwVocalChainProcessor&);
@@ -158,7 +158,7 @@ public:
     // the value box under a control (a raised box in an amber frame), shown while the marked control is under the
     // mouse or being dragged
     juce::Rectangle<int> valueBox (const juce::Slider*) const;
-    fwvocalchain::ui::Marks marks;
+    ch::ui::Marks marks;
 
 protected:
     void paintContent (juce::Graphics&) override;
@@ -168,16 +168,16 @@ protected:
 private:
     void showEntry (juce::Slider*);
     void layoutForMode();
-    void linkFaders (fwvocalchain::ui::Fader& mine, fwvocalchain::ui::Fader& other);
+    void linkFaders (ch::ui::Fader& mine, ch::ui::Fader& other);
 
     FwVocalChainProcessor& proc;
-    std::vector<fwvocalchain::ui::Fader*> faders;                      // Sensitivity, the six stages, Output
-    std::vector<fwvocalchain::ui::ColourSelector*> colours;
-    fwvocalchain::ui::Meter& inMeter;
-    fwvocalchain::ui::Meter& outMeter;
-    fwvocalchain::ui::SensLed& led;
-    fwvocalchain::ui::BalanceKnob& balance;
-    fwvocalchain::ui::LinkButton& linkButton;
+    std::vector<ch::ui::Fader*> faders;                      // Sensitivity, the six stages, Output
+    std::vector<ch::ui::ColourSelector*> colours;
+    ch::ui::Meter& inMeter;
+    ch::ui::Meter& outMeter;
+    ch::ui::SensLed& led;
+    ch::ui::BalanceKnob& balance;
+    ch::ui::LinkButton& linkButton;
     std::unique_ptr<juce::TextEditor> entry;
     juce::Slider* entryFor = nullptr;
     juce::Image background;
