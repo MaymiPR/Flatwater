@@ -8,7 +8,7 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 | Item | Value |
 |---|---|
 | Reference | H-Delay (Waves), the H-Delay Stereo, Mono and Mono/Stereo components, from a licensed install |
-| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/hd.py`); `nulltest/measure_hdelay.py` writes `measurements/FwDelay/results.json` and the echo kernels (`kernel_*.csv`); 48 kHz unless noted |
+| Host | `tools/RefRender` offline (`plugins/FwDelay/nulltest/hd.py`); the measured values are in `measurements/FwDelay/results.json` and the measured echo kernels in `measurements/FwDelay/kernel_*.csv`; 48 kHz unless noted |
 | Defaults of the probes | Analog Off, Feedback 0, Mix 100, Delay 375 ms, small impulses (0.001) |
 | Pre-roll | the reference shows but does not process values set before its first block, so RefRender renders a silent pre-roll (`preroll=`) and sets the values after its first block; both sides get the same pre-roll in whole blocks (a 3 s pre-roll is 144 384 samples, not 144 000, which matters while a glide or the LFO runs) |
 | First block | the reference's first block runs at its defaults, Analog mode 2 included, and puts that noise into its delay line; cases start with Feedback 0 and set the case's Feedback at the input's start |

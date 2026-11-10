@@ -15,7 +15,7 @@ with the scripts.
 | Signals | 1 kHz sine bursts (steady state read from the last 0.4 s), 12 kHz sine for sub-millisecond envelopes, step signals, square and noise, impulses, DC level steps, isolated sample patterns |
 | Latency compensation | pedalboard removes the reported latency, so impulse offsets are 0 by construction; the number compared is the reported latency |
 | Host defect | about 12 % of renders return with a block of silence or shifted by up to 0.8 s (a buffer dropped between the host and the reference); `refhost.render` detects silence where the input is not silent and renders again, after which 120 repeats of one setting agree to the 0.01 dB printed (without the re-render the first static sweep had random dips of up to 300 dB) |
-| Reproduce | `python -I nulltest/measure_rvox.py` (Python 3.12 or newer with the packages in `requirements.txt`); identification scripts `nulltest/ident_*.py`, `nulltest/fit_*.py`, `plugins/FwVocalComp/nulltest/fit_smoothing.py` |
+| Identification scripts | `plugins/FwVocalComp/nulltest/probe_*.py` (probes) and `plugins/FwVocalComp/nulltest/fit_*.py` (fits), Python 3.12 or newer with the packages in `requirements.txt` |
 
 ## 1. Latency, parameter maps and fixed gain
 
@@ -30,7 +30,7 @@ with the scripts.
 | Ceiling | none: at Compression 0, +12 dBFS in gives +11.91 dBFS out at every Gain setting, and a 2.0 impulse train comes out at 1.98 | over-full-scale tones and impulses | exact (the manual's limiter ceiling is not found) |
 | Parameter smoothing | Compression and Gain changes take effect within one 0.167 ms envelope window of the block boundary (no ramp); a Gate change glides in about 1.3 ms (10 % at 0.3 ms, 99 % at 1.3 ms) | a 12 kHz sine, the parameter stepped between blocks | exact |
 
-Method notes: `nulltest/measure_rvox.py` renders every item; the 12 kHz sine gives a 0.167 ms envelope resolution.
+Method notes: every item is rendered through `refhost.render`; the 12 kHz sine gives a 0.167 ms envelope resolution.
 
 ## 2. Detector model
 
@@ -41,7 +41,7 @@ Method notes: `nulltest/measure_rvox.py` renders every item; the 12 kHz sine giv
 | RMS-like readings on dense signals | a square wave and a sine of equal RMS get gains of 15.8 and 16.0 dB; of equal peak 13.9 against 16.0 dB; noise of the same RMS gets 10.1 dB (a 13 dB crest factor) | square, sine and noise at Compression -24 | measured; explained by the true-peak read plus the slow path of section 5 |
 | Stereo | one gain for both channels, driven by the louder one: L -40 dB with R -10 dB gives +8.80 dB on each, L alone +22.71 dB; the Mono and Stereo components give the same gain on identical input; checked with unequal and alternating channels | unequal channels | exact |
 
-Method notes: `plugins/FwVocalComp/nulltest/probe_kernel.py` fits the detector on raw sample patterns; the stereo checks are in `measure_rvox.py`.
+Method notes: `plugins/FwVocalComp/nulltest/probe_kernel.py` fits the detector on raw sample patterns; the stereo checks render unequal and alternating channels through `refhost.render`.
 
 ## 3. Look-ahead
 
@@ -66,7 +66,7 @@ Method notes: the look-ahead reads as an attack 0.3 ms before the step because t
 | Frequency response | flat, +-0.0 dB, 20 Hz ... 20 kHz at Compression 0; at Compression -24 the gain is 0.04 dB higher at 20 Hz at -50 dB and 0.28 dB higher at 20 Hz at -20 dB (the detector follows the waveform at very low frequency) | sine sweeps at two levels | measured |
 | THD | below -147 dB for 1 kHz at -40 ... 0 dBFS in all four settings tried (the numerical noise floor; the gain is applied smoothly) | 1 kHz tones | measured |
 
-Method notes: the closed form replaces an interpolated table of `static_gain.csv`; the grid is rendered by `measure_rvox.py` and fitted in `fit_*.py`.
+Method notes: the closed form replaces an interpolated table of `static_gain.csv`; the grid is rendered through `refhost.render` and the closed form is fitted to it.
 
 ## 5. Slow path
 

@@ -10,7 +10,7 @@ G is the generated part, what the Harmonics monitor plays.
 | Item | Value |
 |---|---|
 | Reference | MaxxBass (Waves), the MaxxBass Stereo and MaxxBass Mono components, from a licensed install |
-| Host | pedalboard loading the reference's VST3, 512-sample buffers, 48 kHz; every control is a VST3 parameter, so `scripts/nulltest/refhost.py` `render_mb` sets them all (the rest at their defaults) and no state writing is needed; `python -I nulltest/measure_maxxbass.py` reproduces the first battery |
+| Host | pedalboard loading the reference's VST3, 512-sample buffers, 48 kHz; every control is a VST3 parameter, so `scripts/nulltest/refhost.py` `render_mb` sets them all (the rest at their defaults) and no state writing is needed |
 | Analysis | sine tones by synchronous detection over whole periods; level steps by the Hilbert envelope; the linear path by impulse responses |
 | Identification scripts | `plugins/FwBassXLift/nulltest/measure_linear.py` (small-signal response), `plugins/FwBassXLift/nulltest/measure_k2.py` (two-tone kernels), `plugins/FwBassXLift/nulltest/extract_g2.py` / `plugins/FwBassXLift/nulltest/extract_g3.py` (the gain over time), `plugins/FwBassXLift/nulltest/model.py` (the Python model), `plugins/FwBassXLift/nulltest/render_trainset_extract.py`, `plugins/FwBassXLift/nulltest/train_net.py` |
 | Data files | `g_small_signal.json`, `k_out_table.json`, `static_gain_50hz.json`, `harmonics.csv`, `level.csv`, `level_ratio.png`, `dynamics_steps.png`, `recovery_F80.json` and others in `measurements/FwBassXLift/` |

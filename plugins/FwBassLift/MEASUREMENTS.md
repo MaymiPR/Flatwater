@@ -9,10 +9,10 @@ with the method and the residual or confidence of each. The data and plots are i
 | Item | Value |
 |---|---|
 | Reference | Renaissance Bass (Waves), the RBass Stereo and RBass Mono components, from a licensed install |
-| Host | pedalboard loading the reference's VST3 (`scripts/nulltest/refhost.py`, `render_rbass`), 512-sample buffers, 48 kHz; `python -I nulltest/measure_rbass.py` reproduces the first battery |
-| Hidden parameters | the parameters the VST3 does not expose (Original Bass In / Out, Response, Ratio, Decay and the rest) are written into the reference's saved state, which holds all its parameter values (`nulltest/wavesstate.py`); the reference ignores some otherwise valid states depending on the payload size, so every write is padded and verified by reading it back; Freq, Intensity and Gain are set as normal parameters; Input (the first in the original's parameter order) stays at 0 when written this way and is not measured |
+| Host | pedalboard loading the reference's VST3 (`scripts/nulltest/refhost.py`, `render_rbass`), 512-sample buffers, 48 kHz |
+| Hidden parameters | the parameters the VST3 does not expose (Original Bass In / Out, Response, Ratio, Decay and the rest) are written into the reference's saved state, which holds all its parameter values (`scripts/nulltest/refstate.py`); the reference ignores some otherwise valid states depending on the payload size, so every write is padded and verified by reading it back; Freq, Intensity and Gain are set as normal parameters; Input (the first in the original's parameter order) stays at 0 when written this way and is not measured |
 | Signals | sine tones (component amplitudes and phases by synchronous detection over whole periods), level steps, DC-free parameter sweeps, two-tone kernels, AM and beating tones, kicks, bass notes and a riff |
-| Identification scripts | `nulltest/ident_rbass_linear.py`, `plugins/FwBassLift/nulltest/measure_generator.py`, `plugins/FwBassLift/nulltest/measure_sweep.py`, `plugins/FwBassLift/nulltest/measure_k2.py`, `plugins/FwBassLift/nulltest/render_fitdata.py`, `plugins/FwBassLift/nulltest/model.py` (the Python model) |
+| Identification scripts | `plugins/FwBassLift/nulltest/measure_generator.py`, `plugins/FwBassLift/nulltest/measure_sweep.py`, `plugins/FwBassLift/nulltest/measure_k2.py`, `plugins/FwBassLift/nulltest/render_fitdata.py`, `plugins/FwBassLift/nulltest/model.py` (the Python model) |
 | Data files | `linear_paths.json`, `k2_grid6.json`, `levels_decay0.json`, `cs_vs_f0.json`, `am70.json`, `beat70.json`, `dyn_env70.json` and others in `measurements/FwBassLift/` |
 | Generated part | Intensity is an exact gain on the generated path, so a second render at another Intensity splits the generated part off the reference's output in every null test |
 
@@ -29,7 +29,7 @@ with the method and the residual or confidence of each. The data and plots are i
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Original Bass Out | a third-order Butterworth high-pass at F; with Freq 80: -24.5 dB at 20 Hz, -10 at 30 Hz, -2.2 at 40 Hz at Intensity 0, and -34.8 / -25.9 / -22.3 dB at Intensity -24 (about 24 dB per octave below Freq once the generated signal is turned down) | tones, `ident_rbass_linear.py` | -60 to -75 dB against a bilinear HP3 on the renders; a small extra low-frequency gain difference, below -57 dB, is not explained |
+| Original Bass Out | a third-order Butterworth high-pass at F; with Freq 80: -24.5 dB at 20 Hz, -10 at 30 Hz, -2.2 at 40 Hz at Intensity 0, and -34.8 / -25.9 / -22.3 dB at Intensity -24 (about 24 dB per octave below Freq once the generated signal is turned down) | tones, fitted against bilinear Butterworth sections (`linear_paths.json`) | -60 to -75 dB against a bilinear HP3 on the renders; a small extra low-frequency gain difference, below -57 dB, is not explained |
 | Original Bass In | LP3(F) + HP3(F), a second-order all-pass: the low end passes, with a small dip just below Freq (-3 dB at 30 Hz with Freq 80) where the generated band and the original overlap | tones | as above |
 
 ## 3. The generated path
