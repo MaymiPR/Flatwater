@@ -35,7 +35,7 @@
       [
        "No shift (every control at 0): the delayed voice",
        "sung and spoken takes, vowels",
-       "−67 dB on the sung take; −57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4)"
+       "-67 dB on the sung take; -57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4)"
       ],
       [
        "The modulators (M1, M2, AM, PT; their laws, timing and modulation of each other), read through Mix",
@@ -55,7 +55,7 @@
       [
        "Sample nulls with a shift, a steady vowel",
        "Formant 0.01 … ±6",
-       "−27 dB at a time scale of 1 (−31 at 200 Hz), −13 … −19 dB at Formant +0.5 … +2"
+       "-27 dB at a time scale of 1 (-31 at 200 Hz), -13 … -19 dB at Formant +0.5 … +2"
       ],
       [
        "Sample nulls with a shift, a voice",
@@ -485,9 +485,9 @@
       ],
       [
        "M4 no-shift residual on voice (dB)",
-       "−57 … −68",
-       "−57.9 worst (−82 … −92 sung)",
-       "< −55",
+       "-57 … -68",
+       "-57.9 worst (-82 … -92 sung)",
+       "< -55",
        "pass"
       ],
       [
@@ -512,7 +512,7 @@
        "37 off"
       ],
       [
-       "M5 noise level against −0.6 dB / centroid against F + β",
+       "M5 noise level against -0.6 dB / centroid against F + β",
        "n/a",
        "0.5 dB / 0.08 st",
        "±1 / ±0.5",
@@ -527,9 +527,9 @@
       ],
       [
        "M7 gate / SNR",
-       "−50 dBFS / 10 dB",
-       "−51 dBFS / 10 dB",
-       "−51 ± 3 / ≤ 10",
+       "-50 dBFS / 10 dB",
+       "-51 dBFS / 10 dB",
+       "-51 ± 3 / ≤ 10",
        "pass"
       ]
      ]
@@ -571,38 +571,38 @@
      "rows": [
       [
        "Formant +0.01",
-       "−27.2",
-       "−46.9"
+       "-27.2",
+       "-46.9"
       ],
       [
        "Formant +0.5",
-       "−14.4",
-       "−31.7"
+       "-14.4",
+       "-31.7"
       ],
       [
        "Formant +1",
-       "−12.9",
-       "−25.5"
+       "-12.9",
+       "-25.5"
       ],
       [
-       "Formant −1",
-       "−14.6",
-       "−26.7"
+       "Formant -1",
+       "-14.6",
+       "-26.7"
       ],
       [
-       "Formant −3",
-       "−6.6",
-       "−13.7"
+       "Formant -3",
+       "-6.6",
+       "-13.7"
       ],
       [
-       "Formant −6",
-       "−9.4",
-       "−16.1"
+       "Formant -6",
+       "-9.4",
+       "-16.1"
       ],
       [
        "Pitch +5",
-       "−0.6",
-       "−9.4"
+       "-0.6",
+       "-9.4"
       ]
      ]
     },
@@ -610,7 +610,7 @@
      "lines": [
       "On a sung take, even at Formant +0.01, the reference's output against its own input, delayed, is +0.3 dB: it",
       "rebuilds a moving voice grain by grain from its own pitch-period estimates, so no recreation that does not share its",
-      "detector's exact estimates nulls it; ours reaches about −7 dB per 100 ms window at best alignment."
+      "detector's exact estimates nulls it; ours reaches about -7 dB per 100 ms window at best alignment."
      ]
     }
    ]

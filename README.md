@@ -45,13 +45,21 @@ VST3, CLAP, AU and standalone apps for Windows, macOS and Linux.
 ## How it was built
 
 Flatwater is made with Claude (Anthropic's AI): the code, the measurements behind it and this documentation. The
-originals are the reference for every behaviour; each plug-in's measurements say what was measured and how
-([Flatwater Vocal Comp](plugins/FwVocalComp/MEASUREMENTS.md), [Flatwater Bass Lift](plugins/FwBassLift/MEASUREMENTS.md),
-[Flatwater BassX Lift](plugins/FwBassXLift/MEASUREMENTS.md), [Flatwater Comp](plugins/FwComp/MEASUREMENTS.md),
-[Flatwater Delay](plugins/FwDelay/MEASUREMENTS.md), [Flatwater Bass Leveler](plugins/FwBassLeveler/MEASUREMENTS.md),
-[Flatwater Vocal Leveler](plugins/FwVocalLeveler/MEASUREMENTS.md), [Flatwater Vocal Chain](plugins/FwVocalChain/MEASUREMENTS.md),
-[Flatwater Pitch Bend](plugins/FwPitchBend/MEASUREMENTS.md)), with the data in
-[measurements/](measurements).
+originals are the reference for every behaviour. Each plug-in has four documents: its page (README), what the
+original documents and shows (RESEARCH), what was measured and identified, with its validation (MEASUREMENTS), and
+every null-test case (NULLTESTS, generated). The measurement data is in [measurements/](measurements).
+
+| Plug-in | Documents |
+|---|---|
+| Flatwater Vocal Comp | [README](plugins/FwVocalComp/README.md), [RESEARCH](plugins/FwVocalComp/RESEARCH.md), [MEASUREMENTS](plugins/FwVocalComp/MEASUREMENTS.md), [NULLTESTS](plugins/FwVocalComp/NULLTESTS.md) |
+| Flatwater Bass Lift | [README](plugins/FwBassLift/README.md), [RESEARCH](plugins/FwBassLift/RESEARCH.md), [MEASUREMENTS](plugins/FwBassLift/MEASUREMENTS.md), [NULLTESTS](plugins/FwBassLift/NULLTESTS.md) |
+| Flatwater BassX Lift | [README](plugins/FwBassXLift/README.md), [RESEARCH](plugins/FwBassXLift/RESEARCH.md), [MEASUREMENTS](plugins/FwBassXLift/MEASUREMENTS.md), [NULLTESTS](plugins/FwBassXLift/NULLTESTS.md) |
+| Flatwater Comp | [README](plugins/FwComp/README.md), [RESEARCH](plugins/FwComp/RESEARCH.md), [MEASUREMENTS](plugins/FwComp/MEASUREMENTS.md), [NULLTESTS](plugins/FwComp/NULLTESTS.md) |
+| Flatwater Delay | [README](plugins/FwDelay/README.md), [RESEARCH](plugins/FwDelay/RESEARCH.md), [MEASUREMENTS](plugins/FwDelay/MEASUREMENTS.md), [NULLTESTS](plugins/FwDelay/NULLTESTS.md) |
+| Flatwater Bass Leveler | [README](plugins/FwBassLeveler/README.md), [RESEARCH](plugins/FwBassLeveler/RESEARCH.md), [MEASUREMENTS](plugins/FwBassLeveler/MEASUREMENTS.md), [NULLTESTS](plugins/FwBassLeveler/NULLTESTS.md) |
+| Flatwater Vocal Leveler | [README](plugins/FwVocalLeveler/README.md), [RESEARCH](plugins/FwVocalLeveler/RESEARCH.md), [MEASUREMENTS](plugins/FwVocalLeveler/MEASUREMENTS.md), [NULLTESTS](plugins/FwVocalLeveler/NULLTESTS.md) |
+| Flatwater Vocal Chain | [README](plugins/FwVocalChain/README.md), [RESEARCH](plugins/FwVocalChain/RESEARCH.md), [MEASUREMENTS](plugins/FwVocalChain/MEASUREMENTS.md), [NULLTESTS](plugins/FwVocalChain/NULLTESTS.md) |
+| Flatwater Pitch Bend | [README](plugins/FwPitchBend/README.md), [RESEARCH](plugins/FwPitchBend/RESEARCH.md), [MEASUREMENTS](plugins/FwPitchBend/MEASUREMENTS.md), [NULLTESTS](plugins/FwPitchBend/NULLTESTS.md) |
 
 ## Features
 
@@ -116,21 +124,22 @@ Each plug-in's page covers its controls: [Flatwater Vocal Comp](plugins/FwVocalC
 ## How close
 
 The residual is the difference between the original's output and ours, in dB below the original's level. Lower is
-better: −60 dB is inaudible in practice, 0 dB is no match.
+better: -60 dB is inaudible in practice, 0 dB is no match.
 
 | Plug-in | Real material | Synthetic signals | Best parts | Weakest part |
 |---|---|---|---|---|
-| [Flatwater Vocal Comp](plugins/FwVocalComp/NULLTESTS.md) | not measured | a grid of 672 settings: median −70 dB, worst −23 dB | steady tones at any setting: −95 to −120 dB | dense noise at heavy compression: −24 to −33 dB |
-| [Flatwater Bass Lift](plugins/FwBassLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median −36.8 dB | tones at or above Freq, sweeps, white noise: −43 to −49 dB | very low input at Freq 160 with Original Bass Out (kicks −9 dB) |
-| [Flatwater BassX Lift](plugins/FwBassXLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median −48.5 dB; 120 random settings: median −35.2 dB | white noise and quiet tones: −49 to −59 dB (the created harmonics) | kick-like transients (−19 dB), and extreme settings where the original's own feedback goes unstable |
-| [Flatwater Comp](plugins/FwComp/NULLTESTS.md) | not measured | 14 signals × 12 settings: median −48.7 dB, worst −22.1 dB; 26 factory presets: median −44.0 dB | tones and sweeps at the default: −84 dB; Analog mode 4: −82 to −100 dB | low notes under long attacks: −15 to −20 dB on a bass line |
-| [Flatwater Delay](plugins/FwDelay/NULLTESTS.md) | not measured | 88 factory presets on drums, bass and voice: median −53.2 dB | the delay path (times, filters, Ping Pong, Feedback to 200 %): −84 to −104 dB | Analog mode 3 (about −41 dB), and a loop that self-oscillates above 100 % Feedback |
-| [Flatwater Bass Leveler](plugins/FwBassLeveler/NULLTESTS.md) | real bass parts held out from the fit: median −22 to −26 dB | a bass line at nearly every setting: −30 dB; 17 factory presets: median −24.8 dB | steady tones and level steps: −48 to −49 dB | Response Fast at Sensitivity 100 (worst parts −10 to −17 dB) |
-| [Flatwater Vocal Leveler](plugins/FwVocalLeveler/NULLTESTS.md) | vocal parts held out from the identification: −47 to −66 dB | level steps: −74 dB; 13 factory presets: median −60.9 dB | level steps: −74 dB | Attack Fast at word onsets: about −50 dB |
-| [Flatwater Vocal Chain](plugins/FwVocalChain/NULLTESTS.md) | held-out vocal parts, the whole chain: median −33.2 dB with the doubler clear, −36.0 dB on Stereo; 43 factory presets: median −30.1 dB | not measured | the Bass, Treble and Reverb stages: median −75.7 dB | the Wide and Spreader doublers, matched in level, spectrum and delay but not sample for sample (medians −9 to −24 dB) |
-| [Flatwater Pitch Bend](plugins/FwPitchBend/NULLTESTS.md) | with no shift: −67 dB on a sung take; shifted, matched by what is heard: 62 of 80 factory preset and take pairs within the level, pitch and tone targets | the modulators through Mix: 38 of 38 within 0.003 to 0.01 of the range | no shift, and the modulators' laws (to 0.0001 rms) | any shift on a real voice: its own shifter, so no sample null (a steady vowel cancels to −13 to −27 dB with small Formant moves) |
+| [Flatwater Vocal Comp](plugins/FwVocalComp/NULLTESTS.md) | not measured | a grid of 672 settings: median -70 dB, worst -23 dB | steady tones at any setting: -95 to -120 dB | dense noise at heavy compression: -24 to -33 dB |
+| [Flatwater Bass Lift](plugins/FwBassLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median -36.8 dB | tones at or above Freq, sweeps, white noise: -43 to -49 dB | very low input at Freq 160 with Original Bass Out (kicks -9 dB) |
+| [Flatwater BassX Lift](plugins/FwBassXLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median -48.5 dB; 120 random settings: median -35.2 dB | white noise and quiet tones: -49 to -59 dB (the created harmonics) | kick-like transients (-19 dB), and extreme settings where the original's own feedback goes unstable |
+| [Flatwater Comp](plugins/FwComp/NULLTESTS.md) | not measured | 14 signals × 12 settings: median -48.7 dB, worst -22.1 dB; 26 factory presets: median -44.0 dB | tones and sweeps at the default: -84 dB; Analog mode 4: -82 to -100 dB | low notes under long attacks: -15 to -20 dB on a bass line |
+| [Flatwater Delay](plugins/FwDelay/NULLTESTS.md) | not measured | 88 factory presets on drums, bass and voice: median -53.2 dB | the delay path (times, filters, Ping Pong, Feedback to 200 %): -84 to -104 dB | Analog mode 3 (about -41 dB), and a loop that self-oscillates above 100 % Feedback |
+| [Flatwater Bass Leveler](plugins/FwBassLeveler/NULLTESTS.md) | real bass parts held out from the fit: median -22 to -26 dB | a bass line at nearly every setting: -30 dB; 17 factory presets: median -24.8 dB | steady tones and level steps: -48 to -49 dB | Response Fast at Sensitivity 100 (worst parts -10 to -17 dB) |
+| [Flatwater Vocal Leveler](plugins/FwVocalLeveler/NULLTESTS.md) | vocal parts held out from the identification: -47 to -66 dB | level steps: -74 dB; 13 factory presets: median -60.9 dB | level steps: -74 dB | Attack Fast at word onsets: about -50 dB |
+| [Flatwater Vocal Chain](plugins/FwVocalChain/NULLTESTS.md) | held-out vocal parts, the whole chain: median -33.2 dB with the doubler clear, -36.0 dB on Stereo; 43 factory presets: median -30.1 dB | not measured | the Bass, Treble and Reverb stages: median -75.7 dB | the Wide and Spreader doublers, matched in level, spectrum and delay but not sample for sample (medians -9 to -24 dB) |
+| [Flatwater Pitch Bend](plugins/FwPitchBend/NULLTESTS.md) | with no shift: -67 dB on a sung take; shifted, matched by what is heard: 62 of 80 factory preset and take pairs within the level, pitch and tone targets | the modulators through Mix: 38 of 38 within 0.003 to 0.01 of the range | no shift, and the modulators' laws (to 0.0001 rms) | any shift on a real voice: its own shifter, so no sample null (a steady vowel cancels to -13 to -27 dB with small Formant moves) |
 
-Each plug-in's name links to every case in its NULLTESTS.md; [docs/results.md](docs/results.md) explains each result and how each model was found.
+Each plug-in's name links to every case in its NULLTESTS.md; the Null-test results section of its MEASUREMENTS.md
+explains each result and how each model was found.
 
 ## Building from source
 
@@ -142,8 +151,8 @@ requirements, the commands per platform and where the plug-ins land are in the [
 Found a bug or a difference from the original? Open an
 [issue](https://github.com/MaymiPR/Flatwater/issues/new/choose) and attach the settings or a preset that shows it.
 To change the code, read [CONTRIBUTING.md](CONTRIBUTING.md) for the tests, the null tests against the originals and
-the release steps. Changes per version are in [CHANGELOG.md](CHANGELOG.md); open items per plug-in are in
-[docs/improvements.md](docs/improvements.md).
+the release steps. Changes per version are in [CHANGELOG.md](CHANGELOG.md); open items are
+[issues](https://github.com/MaymiPR/Flatwater/issues).
 
 ## Security
 

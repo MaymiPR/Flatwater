@@ -12,11 +12,11 @@ laws, are null-tested through the Mix control. How each part was identified is i
 
 | part | cases | result |
 |---|---:|---|
-| No shift (every control at 0): the delayed voice | sung and spoken takes, vowels | −67 dB on the sung take; −57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4) |
+| No shift (every control at 0): the delayed voice | sung and spoken takes, vowels | -67 dB on the sung take; -57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4) |
 | The modulators (M1, M2, AM, PT; their laws, timing and modulation of each other), read through Mix | 38 judged, 1 reported | 38 of 38 within their targets (0.003 rms for an exact law away from jumps, 0.01 for a fitted one) |
 | The shifter's scorecard: pitch accuracy, formant envelope, level, onsets and jumps, noise, Flatten, the gate | 12 judged measures (one more reported) | 11 of 12 within their thresholds (the miss: a few level cells where the reference's own level varies by more than 1 dB within one setting) |
 | The 40 factory presets on a sung and a spoken take: level, pitch track and tone | 80 pairs | 62 of 80 meet every target (67 with the reference's own LFO tables loaded into ours) |
-| Sample nulls with a shift, a steady vowel | Formant 0.01 … ±6 | −27 dB at a time scale of 1 (−31 at 200 Hz), −13 … −19 dB at Formant +0.5 … +2 |
+| Sample nulls with a shift, a steady vowel | Formant 0.01 … ±6 | -27 dB at a time scale of 1 (-31 at 200 Hz), -13 … -19 dB at Formant +0.5 … +2 |
 | Sample nulls with a shift, a voice | sung take | no cancellation (the reference resynthesises the voice from its own period estimates) |
 
 ### The modulators
@@ -83,13 +83,13 @@ falling, creaky end of a phrase), which neither reproduces from the other.
 | M2 envelope against F + β: worst error (st) / envelope error against the reference (dB) | 0.34 / n/a | 0.24 / +0.34 | ≤ 0.5 / ≤ +1 | pass |
 | M3 level cells within ±1 dB | 143 cells | 139 of 143 (worst +1.35) | all | **miss** |
 | M4 no-shift delay error (samples) | n/a | 0.0002 | ±0.05 | pass |
-| M4 no-shift residual on voice (dB) | −57 … −68 | −57.9 worst (−82 … −92 sung) | < −55 | pass |
+| M4 no-shift residual on voice (dB) | -57 … -68 | -57.9 worst (-82 … -92 sung) | < -55 | pass |
 | M4 onset settle, worst against the reference | n/a | +4 ms | ≤ +10 | pass |
 | M4 jump settle, worst against the reference | n/a | +5 ms | ≤ +10 | pass |
 | M4 onset delay (report only, samples) | 69 … 131 | 105 … 106 | ±20 | 37 off |
-| M5 noise level against −0.6 dB / centroid against F + β | n/a | 0.5 dB / 0.08 st | ±1 / ±0.5 | pass |
+| M5 noise level against -0.6 dB / centroid against F + β | n/a | 0.5 dB / 0.08 st | ±1 / ±0.5 | pass |
 | M6 Flatten steady / vibrato p90 / lock | 0.16 c / 8.5 c / 54 ms | 0.23 c / 6.5 c / 45 ms | ≤ 1 / ≤ 10 / ≤ 60 | pass |
-| M7 gate / SNR | −50 dBFS / 10 dB | −51 dBFS / 10 dB | −51 ± 3 / ≤ 10 | pass |
+| M7 gate / SNR | -50 dBFS / 10 dB | -51 dBFS / 10 dB | -51 ± 3 / ≤ 10 | pass |
 
 ### The factory presets
 
@@ -105,17 +105,17 @@ steady 150 Hz vowel the residual (raw, then with ours moved by a fraction of a s
 
 | setting | raw (dB) | lined up (dB) |
 |---|---:|---:|
-| Formant +0.01 | −27.2 | −46.9 |
-| Formant +0.5 | −14.4 | −31.7 |
-| Formant +1 | −12.9 | −25.5 |
-| Formant −1 | −14.6 | −26.7 |
-| Formant −3 | −6.6 | −13.7 |
-| Formant −6 | −9.4 | −16.1 |
-| Pitch +5 | −0.6 | −9.4 |
+| Formant +0.01 | -27.2 | -46.9 |
+| Formant +0.5 | -14.4 | -31.7 |
+| Formant +1 | -12.9 | -25.5 |
+| Formant -1 | -14.6 | -26.7 |
+| Formant -3 | -6.6 | -13.7 |
+| Formant -6 | -9.4 | -16.1 |
+| Pitch +5 | -0.6 | -9.4 |
 
 On a sung take, even at Formant +0.01, the reference's output against its own input, delayed, is +0.3 dB: it
 rebuilds a moving voice grain by grain from its own pitch-period estimates, so no recreation that does not share its
-detector's exact estimates nulls it; ours reaches about −7 dB per 100 ms window at best alignment.
+detector's exact estimates nulls it; ours reaches about -7 dB per 100 ms window at best alignment.
 
 ## Presets
 
