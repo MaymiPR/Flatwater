@@ -32,7 +32,7 @@ FS = 48000
 BPM = 120
 SKIP = FS // 10
 OUT_JSON = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwPitchBend', 'presets_null.json')
-HEADER = os.path.join(HERE, '..', '..', '..', 'plugins', 'FwPitchBend', 'Source', 'Presets.h')
+HEADER = next(p for p in (os.path.join(HERE, '..', 'Source', n) for n in ('PresetTable.h', 'Presets.h')) if os.path.exists(p))   # the generated table
 TARGETS = dict(level=1.5, pitch=15.0, gross=0.10, tone=3.0)
 
 

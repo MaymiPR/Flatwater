@@ -18,8 +18,9 @@ ROOT = os.path.join(HERE, '..', '..', '..')
 
 
 def presets():
-    """(group, name, {id: value}) from plugins/FwDelay/Source/Presets.h (the plug-in's own table)"""
-    src = open(os.path.join(ROOT, 'plugins', 'FwDelay', 'Source', 'Presets.h'), encoding='utf-8').read()
+    """(group, name, {id: value}) from the plug-in's generated table (Source/PresetTable.h, or Presets.h)"""
+    src = open(next(p for p in (os.path.join(ROOT, 'plugins', 'FwDelay', 'Source', n) for n in ('PresetTable.h', 'Presets.h'))
+                    if os.path.exists(p)), encoding='utf-8').read()     # the generated table
     out = []
     for g, n, body in re.findall(r'\{ "([^"]+)", "([^"]+)", \{ (.*?) \} \},', src):
         out.append((g, n, {k: float(v) for k, v in re.findall(r'\{ "(\w+)", ([-0-9.e]+)f \}', body)}))
