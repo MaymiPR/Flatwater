@@ -23,6 +23,9 @@
   state saved by 1.0.0 with the same parameter texts.
 - **Host keys:** every editor hands the host's keys back after a click (`shared/ui/HostFocus`), so the space bar
   and the host's shortcuts keep working in FL Studio after a knob is touched.
+- **Documents:** each plug-in's MEASUREMENTS.md holds its null-test results in brief and its validation (the suite
+  pages and the root indexes are gone); the root README links every plug-in's README, RESEARCH, MEASUREMENTS and
+  NULLTESTS; code, scripts and the names of local data files carry no vendor word.
 
 ## 1.0.0 (2026-11-04)
 
