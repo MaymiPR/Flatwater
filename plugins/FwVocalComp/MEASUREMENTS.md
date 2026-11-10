@@ -88,7 +88,7 @@ two differ the reference compresses more than the fitted slow path: on dense noi
 almost constant gain 2 to 3 dB below even the fast ratio (the gain of the larger peaks over a long window); on a 100 Hz
 tone it holds the fast ratio's value at the waveform peak with 0.02 dB ripple, where the fitted path sits 0.5 dB too
 high. A plain peak hold of the fast ratio fits the low tone but loses 10 to 20 dB elsewhere, so the slow path is left
-to a small learned block (the procedure: [docs/learned-blocks.md](../../docs/learned-blocks.md)). It is a learned model
+to a small learned block. It is a learned model
 of the reference's slow path, not an identification of it.
 
 | Item | Value |
@@ -125,9 +125,9 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_gate.py` fits the gate on DC s
 - The gain-reduction meter's ballistics and the Energy and Output meter values: the VST3 exposes only Bypass,
   Compression, Gate, Gain (plus generic MIDI controllers), no meter parameters, so the meters are compared on the
   editor, not through a host (the meter laws: [Flatwater Bass Lift's MEASUREMENTS.md, section
-  10](../FwBassLift/MEASUREMENTS.md#10-meters); the comparison: [docs/validation.md](../../docs/validation.md)).
+  10](../FwBassLift/MEASUREMENTS.md#10-meters); the comparison: [Validation](#validation)).
 - Transients with the compressor and the limiter engaged together: only steady tones were driven through both.
-- Real dry vocal stems: every voice signal in the null tests is synthetic ([docs/improvements.md](../../docs/improvements.md)).
+- Real dry vocal stems: every voice signal in the null tests is synthetic.
 
 ## 9. Differences from the product documentation
 
@@ -135,6 +135,46 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_gate.py` fits the gate on DC s
    Compression 0.
 2. The manual and the product page call the gate knee soft; measured, it is a hard-knee 2:1 expander on the peak
    level of the signal.
+
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwVocalComp/nulltest/vc_ref.py`:
+
+| Set | Result |
+|---|---|
+| Steady tones, any setting (Compression, Gate, Gain, input level, 44.1 to 192 kHz, mono and stereo) | -95 to -120 dB (a null) |
+| Compression 0 with any Gate and Gain | -120 dB and below (a null) |
+| Level steps, sweeps, speech-like material | -30 to -65 dB, worse at heavy compression |
+| Dense noise at heavy compression | -24 to -33 dB (-10 to -25 dB without the learned slow path) |
+| The 672-case settings grid | median -70 dB, worst -23 dB |
+
+The compressor's slow path is the fitted model plus a small learned correction (trained on renders of the reference,
+guarded so steady signals stay exact). Every case: [NULLTESTS.md, Grid](NULLTESTS.md#grid),
+[NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 39 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | not recorded |
+| Render regression cases | 4 |
+| CPU per 60 s of stereo at 48 kHz | about 2.1 s (3.5 % of one core, the learned slow path on) |
+| The learned slow path, C++ against PyTorch on the null-test signals | -70 dB or lower |
+| The learned slow path at 44.1 / 96 kHz (5 signals x 3 settings) | the same gains as at 48 kHz; steady tones unchanged |
+| Meters (`tools/MeterCapture`, bass line and kicks, Compression -12 dB) | Energy, Output and Gain reduction within 2.0 / 2.3 / 2.0 px on 90 % of frames |
+| Unit tests cover | latency, static law, gate, gate and compressor together, attack and release, finite output on extreme input, block-size invariance, stereo link, processor parameters, state round trip, Mono mode, factory presets, the learned slow path leaving steady tones and Compression 0 exactly as without it |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
 
 ## CPU
 

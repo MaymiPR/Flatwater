@@ -187,6 +187,60 @@ mouse steps of 1 to 30 px, 12 ms apart, and the wheel (`drag=x,y,n,0,wheel`, n n
 | Selection | hovering shows nothing; a click selects a control (a thin yellow ring, colour (222, 222, 6), on the knob's cap at radius 21 for the small knobs) and shows its value in a dark box (fill (65, 49, 36), a light 1 px frame) on the value slot under the small knobs or on the cap of the large ones; a double-click opens the white entry box there; Alt-click resets |
 | Result | Flatwater Comp gives the reference's values on every one of these scripts (the wheel within the display's last digit) |
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwComp/nulltest/co_ref.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
+output limiter, the four Analog modes): median -48.7 dB, worst -22.1 dB; the reference's 26 factory presets (each on
+voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
+
+- At the default settings: tones and sweeps -84 dB (a null), voice-like -61 dB, bass line -57 dB, white noise -43 dB,
+  drums -33 dB, pink noise -32 dB.
+- Weakest: low notes under long attacks (30 ... 60 ms: -15 ... -20 dB on a bass line), a long release on voice (300 ms
+  at threshold -24: -22 dB), fast attacks on drums (about -23 dB), the output limiter on voice (-24.5 ... -28 dB), and
+  a few presets on drums (Hard Squash -20.8 dB, Light Kit -26.4, Parallel Blend, Heavy Drums and Pumping Kit -29 ...
+  -30).
+- The learned correction: the null test from -41.4 dB median (worst -16.8) without it to -47.0 (worst -24.5) over 168
+  cases (-37.2 / -9.6 before the CMA-ES refit of the release law), 70 cases better and one worse by more than 1 dB;
+  the presets from -35.6 to -43.7 dB median (Analog Off, from 0.5 s, a fresh reference per preset), 82 better and 4
+  worse by more than 1 dB (all still -58 ... -72).
+- Analog modes: mode 4 nulls at -82 ... -100 dB on loud material; modes 1 to 3 add random noise as the reference does,
+  which no null can remove (mode 2, the default, is limited to about -54 ... -69 dB by its noise alone).
+- How: the detector, static curve, makeup, attack, smoothing, mix, limiter, tempo sync and the Analog stage were
+  identified on the reference; the program-dependent release is a fitted two-state law (its tables found by CMA-ES on
+  1034 measured cases), not the reference's algorithm, and a small learned correction (a GRU over Flatwater Comp's own
+  states, trained on 4300 renders of the reference) fixes most of what that structure misses: low notes under long
+  attacks, long releases, deep compression. Two reference quirks: a slow start-up after a reset (modelled) and a
+  hidden synced release time that survives switching Sync back to ms (not copied: reload the reference before nulling
+  after a synced preset). The VU needle and limiter lamp follow the reference's, filmed from its editor's OpenGL
+  frames.
+- Every case: [NULLTESTS.md](NULLTESTS.md), [NULLTESTS.md, Presets](NULLTESTS.md#presets).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 66 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | identical (worst -85.8 dB over 30 cases) |
+| Render regression cases | 5 |
+| CPU per 60 s of stereo at 48 kHz | 1.99 s (1.39 s without the learned correction) |
+| The Analog stage, C++ against the fitted model | the difference is the added noise alone (-82.9 ... -109.3 dBFS) |
+| The learned correction on 200 unseen cases (random settings and signals, `plugins/FwComp/nulltest/train_net.py` TEST) | the weak cases (worse than -35 dB without it) -25.8 to -36.6 dB, all -48.3 to -52.6; 106 better, 15 worse by more than 1 dB (the worst -96.3 to -73.4) |
+| Sample rates: the quick null test at 44.1 / 48 / 96 kHz (5 settings x 7 signals) | median -43.1 / -42.9 / -41.8 dB with the learned correction (-40.4 / -40.2 / -38.6 without); at 96 kHz the correction improves 14 cases by more than 1 dB and worsens none |
+| Knob feel (`tools/MeterCapture` drag and wheel scripts on every knob, plain and Ctrl, mouse steps 1 ... 30 px) | the reference's values on every script (the wheel within the display's last digit) |
+| VU needle (both filmed with MeterCapture with the same probe: the reference from its OpenGL frames, ours by screen grab; threshold -30, ratio 4) | GR mean reading drums 11.5 / 11.5 dB, voice 5.6 / 5.9, tones and bursts 5.3 / 5.4; In: mean frame within 1.4 of 70, 90 % of frames within 1.5 steps; the laws alone against the films: 97 % (GR) and 97.5 % (In / Out) of frames within one step |
+| Unit tests cover | the learned correction leaving steady high tones within 0.1 dB and moving a low note under a long attack toward the reference; the needle laws against filmed values; the 26 factory presets loading and leaving Mix alone; typed Threshold values read as negative; latency at 44.1 ... 192 kHz, idle identity, static curve and makeup, block-size invariance, stereo link, limiter Off / On ceiling, Mix 0, tempo sync and the long-note fallback, Analog Off identity, Analog noise levels and independent channels, Analog 4 crossover offset; the processor ignoring the side-chain, state round trip, Mode Mono |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## CPU
 
 | Configuration | Cost |

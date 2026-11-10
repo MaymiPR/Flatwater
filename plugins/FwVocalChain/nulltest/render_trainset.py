@@ -1,4 +1,4 @@
-"""Training renders for Flatwater Vocal Chain's learned Compress correction (the learned-block procedure, docs/improvements.md):
+"""Training renders for Flatwater Vocal Chain's learned Compress correction (the learned-block procedure):
 the reference with every colour clear but Compress, at each colour (Push, Spank, Wall) and fader step -10 .. +10.
 
 Each example is a 4 s mono signal (the same on both sides): vocal phrases from the corpus' training parts (0 .. 23) at

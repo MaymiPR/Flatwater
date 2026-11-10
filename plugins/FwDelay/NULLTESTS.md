@@ -91,7 +91,7 @@ Notes:
   values exactly (Depth 0.69, Rate 281.7: set by a knob they would act as 1 and 282), and nine presets store LoPass
   20 139, which the reference shows as Off but runs as a filter at 20.1 kHz. Flatwater Delay does both.
 - Analog 1 to 3 add random noise as the reference does (-103 / -86 / -106 dBFS), which no null removes. Mode 3's model
-  is the weakest part left (about -41 dB on every material; docs/improvements.md).
+  is the weakest part left (about -41 dB on every material).
 - Quick Alarm (1 ms, Feedback 150, HiPass and LoPass on) self-oscillates chaotically: a 1e-6 change of the input grows
   to -4 dB within 3 s in either plug-in, so it nulls only for its first fraction of a second.
 

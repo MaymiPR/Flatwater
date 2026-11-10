@@ -140,6 +140,48 @@ The Comp reference's knob law is in [plugins/FwComp/MEASUREMENTS.md](../FwComp/M
 | Ctrl pressed or released during a drag | on all four references the rate switches at once, both ways (the Comp reference's Threshold -30.0, the Vocal Comp reference -14.0, the BassX Lift reference's Ratio 1.41); a host that keeps the keyboard focus (as FL Studio does) sends the plug-in no key messages, and JUCE refreshes its modifier keys only from key messages and mouse buttons, so the controls read the key itself during a drag (`ctrlHeldNow` in `shared/ui/Widgets.h`); reproduced in `MeterCapture hostwin=1` (the editor in a plain Win32 window that keeps the focus); Flatwater Comp, Flatwater Vocal Comp, Flatwater Bass Lift and Flatwater BassX Lift give the reference's values in both modes (Flatwater Comp -30.0, Flatwater Vocal Comp -14.3, Flatwater BassX Lift 1.41); scripts `scripts/feel/midctrl_feel.sh`, modes `midctrl` / `ctrlup` (the drag starts plain, Ctrl goes down or up halfway, 10 px steps) |
 | The cursor during a fader drag | hidden while dragging, and put back where it was grabbed, moved as far as the thumb moved (the Vocal Comp reference's Gain: a 100 px drag ends on 235, a 60 px Ctrl drag on 223; the Bass Lift reference's Freq: 234 and 268); Flatwater Vocal Comp 238 and 223 (the 3 px from its Gain taper, -24.0 dB where the reference reads -23.4); Flatwater Bass Lift 233 and 268; MeterCapture prints where the cursor is after the release |
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwBassXLift/nulltest/nulltest.py`, 12 signals x 8 settings (Freq, Ratio, Response, Decay, High-pass, the Original
+Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on the created harmonics alone.
+
+- Per signal (created harmonics, median over the settings): white noise and quiet tones -49 to -59 dB; tones, sweeps
+  and pink noise -40 to -49 dB; level steps -34 dB; bass notes -27 dB; kick-like transients -19 dB.
+- Over 120 random settings of every control with the hardest signals (bass notes, kicks, a loud tone, pink noise):
+  median -35.2 dB on the whole output, -29.2 dB on the harmonics (`plugins/FwBassXLift/nulltest/null_grid.py`; 480 cases).
+- Worst cases: loud material at extreme settings (Freq 256 with Ratio 4 and Decay -12, or Decay -9), where the
+  reference's own harmonic feedback goes unstable.
+- How: the filters, the harmonic generator with its Decay feedback, the faders, monitors and clip were identified
+  exactly; the harmonics compressor (Ratio, Response) is a small recurrent network (48 units, about 7 % of one core)
+  trained on renders of the reference, so it is a learned model of that part, not its algorithm.
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 26 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | not recorded |
+| Render regression cases | 4 |
+| CPU per 60 s of stereo at 48 kHz | the learned block about 4.2 s (7 %) |
+| The learned level control, C++ against PyTorch | -71 ... -117 dB on most examples (-43 dB on a kick) |
+| Null at 96 kHz against 48 kHz (24 cases) | within 1.8 dB |
+| Value entry (MeterCapture double-click and type on a knob, a fader and Freq; single click on the value; Ctrl- and Alt-click) | the same parameter values after every step; entry boxes match to the pixel |
+| Output meters (MeterCapture, -6 / -20 dBFS bursts) | bar height within 1 px on 88 % of frames, 3 px on 93 %; steady levels and the silence dot exact |
+| Factory presets (22): 16 converted by the reference itself, the other 6 by the same scales, which reproduce all 16 exactly; Input untouched on preset load | unit tests pass |
+| Unit tests cover | the identified structure against the reference's own measurements (generated part at rest, 4 settings, 48 / 44.1 / 96 kHz, within 0.15 dB; Decay feedback h2 / h3 within 0.3 / 0.6 dB), original path and its all-pass, Original Bass monitor pre-fader, Input trim stopping at 0 dB, Audio = original + Harmonics x G, Harmonics capped at +10.96 dB, Decay on the even harmonics, High-pass on the generated part, output clip, block-size invariance, channels independent, 96 kHz, processor and state round trip |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## CPU
 
 | Configuration | Cost |

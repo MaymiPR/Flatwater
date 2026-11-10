@@ -1,4 +1,4 @@
-"""Learned Compress correction for Flatwater Vocal Chain (gray-box, the learned-block procedure in docs/improvements.md): the fitted
+"""Learned Compress correction for Flatwater Vocal Chain (gray-box, the learned-block procedure): the fitted
 compressor (Compress.c, the plug-in's Compressor) stays exact; a small GRU per colour scales its output.
 
     out = D(H(u * exp(c)))      c = CMAX tanh(GRU), one step per 4 samples at 48 kHz (12 kHz), each sample taking the

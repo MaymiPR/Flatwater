@@ -143,6 +143,44 @@ signals; bar heights in [measurements/FwVocalComp/meters](../../measurements/FwV
 | Not matched | after a steady test tone that stops or steps down, the reference's output bar sometimes snaps down at once instead of easing (as the Original Bass meter above); no rule tried in `plugins/FwVocalComp/nulltest/fit_meter_output.py` (a falling line with several hold rules, updates only on change) explains it; it does not show on the bass line | frames | open |
 | Flatwater Vocal Comp on the bass line | Energy, Output and Gain reduction within 2.0, 2.3 and 2.0 px on 90 % of the frames | the bass-line capture | measured |
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwBassLift/nulltest/bf_ref.py`, 12 signals x 8 settings (Freq, Intensity, Gain, Original Bass In / Out): median
+-36.8 dB on the whole output and -31.5 dB on the created harmonics alone.
+
+- Per signal (median over the settings): tones at or above Freq, sweeps, white noise -43 to -49 dB; bass notes, level
+  steps, pink noise and tones below Freq -31 to -40 dB; kick-like transients -28 dB.
+- Worst cases: Freq 160 with Original Bass Out on very low input (30 Hz tone -4 dB, kicks -9 dB, 60 Hz tone -16 dB):
+  the output is then only the created bass, and its level is off there.
+- How: the filters and the harmonic generator were identified exactly; the gain control of the created bass is a small
+  recurrent network (32 units, about 6 % of one core) trained on renders of the reference, so it is a learned model of
+  that part, not its algorithm. Meters move like the reference's (measured from its editor).
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 28 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | not recorded |
+| Render regression cases | 3 |
+| CPU per 60 s of stereo at 48 kHz | the learned block about 3.6 s (6 %) |
+| The learned gain block, C++ against PyTorch on held-out renders | -74 ... -91 dB |
+| Null at 44.1 / 96 kHz against 48 kHz (5 signals) | within 0.2 dB |
+| Meters (`tools/MeterCapture`, bass line and kicks) | Original Bass within 3.5 px (0.7 dB) on 90 % of frames; output and harmonics within 8 px, the rest being the generated level |
+| Unit tests cover | original path In and Out, latency 0, Intensity exact on the generated part, low-level generated gain, Decay switching the harmonic product, output clip, Gain trim, block-size invariance, silence, stereo, processor parameters and state round trip |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## CPU
 
 | Configuration | Cost |

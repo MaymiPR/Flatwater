@@ -169,7 +169,7 @@ samples).
 
 Compress keeps its fitted model exact; a small GRU per colour scales the compressor's output (after its limiter,
 before the colour's filter), so the compressor's state never sees it and everything after it is linear (the
-de-esser's gain held). The procedure is [docs/learned-blocks.md](../../docs/learned-blocks.md).
+de-esser's gain held).
 
 | Item | Value |
 |---|---|
@@ -258,6 +258,47 @@ presets carry the same values under Flatwater names (`scripts/make_presets.py`, 
 Sensitivity, Output and the In/Out link alone. `plugins/FwVocalChain/nulltest/null_presets.py` sets the reference from its preset
 values as host parameters against ours loading the preset, on three held-out vocals:
 [the presets null test](NULLTESTS.md#presets).
+
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwVocalChain/nulltest/nulltest.py`, held-out vocal parts at -6 dBFS peaks, the Noise off in both:
+
+- Bass, Treble and Reverb stages with the others cleared (55 cases): median -75.7 dB at 48 kHz, worst -67.9 dB;
+  -77.7 dB at 44.1 kHz and -71.0 dB at 96 kHz.
+- The whole chain at the defaults, factory presets and random settings: median -33.2 dB at 48 kHz with the doubler
+  (the Pitch stage) clear, -32.1 dB at 44.1 kHz and -35.5 dB at 96 kHz. With the doubler on its default Stereo
+  colour: -36.0 dB at 48 kHz, -35.6 dB at 44.1 kHz, -18.1 dB at 96 kHz.
+- The doubler's Wide and Spreader colours are pitch shifters that pick their splice points from the signal, so a
+  voice parts from the reference wherever the two pick different steps: medians -9 to -24 dB with them on, worst
+  -3.4. They are compared in behaviour instead: level within 0.05 dB, third-octave spectrum within 0.12 dB, and
+  similar delay ranges and movement cycles.
+- Compress uses a small learned correction on top of the identified compressor; it is the weakest of the other
+  stages, about -24 dB on the most extreme presets.
+- The reference's own 43 presets, loaded into it, against Flatwater Vocal Chain's (Flatwater names): median -30.1 dB,
+  -31.2 dB with the Pitch stage cleared ([NULLTESTS.md, Presets](NULLTESTS.md#presets)).
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 37 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | not recorded |
+| Render regression cases | 19 |
+| CPU per 60 s of stereo at 48 kHz | Compress alone 3.75 s with its two nets per colour (1.81 s without) |
+| The Compress nets, C++ against PyTorch (`plugins/FwVocalChain/nulltest/check_compress_net.py`) | -107 ... -133 dB |
+| The editor's marks, value box and values against the reference's (MeterCapture click, hover and drag scripts) | frame for frame |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
 
 ## CPU
 
