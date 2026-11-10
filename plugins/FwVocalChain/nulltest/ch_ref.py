@@ -31,7 +31,7 @@ _base = None
 def plugin():
     global _plugin, _base
     if _plugin is None:
-        _plugin = pb.load_plugin(R.WAVESHELL, plugin_name=NAME)
+        _plugin = pb.load_plugin(R.REF_SHELL, plugin_name=NAME)
         _base = _plugin.raw_state
     return _plugin
 

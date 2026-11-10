@@ -184,6 +184,52 @@ measurement the redrawn editor uses, not a copied pixel.
 | Idle | dragging the arrow shows its value in a box fixed at the left edge (3, 323); the host's text for Idle maps it over a fixed +-12 dB (0.5 shows 0.0 whatever the range), while the arrow sits at its place in the current range |
 | Lasso | a background drag draws a 1 px white rectangle and selects the controls it touches (in the order Spill, Rider, Range Max, Range Min, Output, Sensitivity, Target, Idle, Response, Artifacts): the first yellow, the others blue; clicking a member makes it the yellow one; dragging a member moves nothing; with the mouse on the yellow one every member's value shows |
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwBassLeveler/nulltest/nulltest.py`. The level read, the gain law, the 42 ms look-ahead, the smoothing and the hold
+null at -48 ... -49 dB on steady tones and level steps; a bass line at -30 dB at nearly every Sensitivity x Response
+setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
+
+| Set | Result |
+|---|---|
+| Sample rates (the bass line) | 44.1 kHz -30.2 dB, 96 kHz -30.0 dB |
+| Components | Live Mono -26.0 dB (Spill -25: -21.2, Spill -15: -24.2), Stereo (different bass on L and R) -27.7, Live Stereo -26.8 |
+| Real bass parts held out from the fit | median -22 ... -26 dB per setting, the worst parts -10 ... -17 dB |
+| The reference's own 17 presets, set on both (bass line and two corpus parts) | median -24.8 dB (-25.2 in [NULLTESTS.md, Presets](NULLTESTS.md#presets)'s set); Live components -26 dB, Stereo -27 dB |
+
+- Nearly all of the error on real bass parts (a DAW's own bass samples played as bass lines) is a note ridden afresh
+  by one side and not the other, after which the two hold 1 ... 4 dB apart until the next note; in a mix that is one
+  note slightly louder or quieter than with the reference, not an artefact. It is weakest at Response Fast and
+  Sensitivity 100.
+- How: the reference's note detector (a windowed note level by pitch band, slow and long envelopes, follow and hold,
+  release and re-attack rules, the Idle glide) was identified from about 1,200 probe signals and its riding on a
+  corpus of 36 bass parts; its constants are fitted, and some rules (which notes are ridden afresh at Fast) are
+  matched to what the probes show rather than known.
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 69 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | identical / identical |
+| Render regression cases | 3 |
+| CPU per 60 s of stereo at 48 kHz | about 0.42 s (0.7 %) |
+| The C++ ride against the fitted model (`plugins/FwBassLeveler/nulltest/check_port.py`, 7 cases) | within 0.09 dB at 99 % |
+| Listening | good in FL Studio |
+| Unit tests cover | the parameters as the reference's (ranges, defaults, texts, the Idle arrow's place in the range), the components' latency (42 / 5 ms), the audio path, the ride against the reference's measured law, look-ahead, hold, glide and stereo mid, the Idle value before and after notes, the state, the editor and its selection, the 17 factory presets and Target left alone |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## Scripts that replace earlier ones
 
 Every script named on this page by its current name; the earlier names stay in the history.

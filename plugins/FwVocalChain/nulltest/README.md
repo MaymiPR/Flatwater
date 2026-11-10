@@ -49,14 +49,14 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 
 | File | What it does |
 |---|---|
-| `train_compress.py` | Learned Compress correction for Flatwater Vocal Chain (gray-box, the learned-block procedure in docs/improvements.md): the fitted compressor (Compress.c |
+| `train_compress.py` | Learned Compress correction for Flatwater Vocal Chain (gray-box, the learned-block procedure): the fitted compressor (Compress.c |
 
 ## Renders
 
 | File | What it does |
 |---|---|
 | `render_compress_cache.py` | The learned Compress correction's training cache (train_compress.py): every example of render_trainset.py, and the Phase 4 fit cases (fit_compress.py: the tone ladders |
-| `render_trainset.py` | Training renders for Flatwater Vocal Chain's learned Compress correction (the learned-block procedure, docs/improvements.md) |
+| `render_trainset.py` | Training renders for Flatwater Vocal Chain's learned Compress correction (the learned-block procedure) |
 
 ## Null tests
 

@@ -225,6 +225,47 @@ otherwise comes back a hair over and runs a whole 8-sample tick short, which fai
 render regression has 20 cases (`tests/regress/FwPitchBend/jobs.txt`: no shift, Pitch and Formant, Fine, Mix,
 Flatten, noise, each modulator on a control, three presets, 44.1 and 96 kHz), run on Linux, Windows and macOS.
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwPitchBend/nulltest/null_presets.py`, `plugins/FwPitchBend/nulltest/null_mods.py`, `plugins/FwPitchBend/nulltest/check_shifter.py`:
+
+- With every control at 0 both pass the voice through with the same delay: -67 dB on a sung take, the delay within
+  0.0002 samples.
+- Once anything shifts, Flatwater Pitch Bend is its own pitch shifter (a pitch detector and overlap-added grains), so
+  it is judged by what is heard: the shifter meets all but one of its scorecard measures against the reference's
+  numbers (pitch accuracy 0.4 cents on vowels, 6.3 on sung phrases against the reference's 6.0; the formant envelope;
+  onsets and jumps within 5 ms; Flatten; the gate); the miss is a few level cells where the reference's own level
+  varies by more than 1 dB within one setting.
+- The modulators (LFOs, sequencers, the AM and PT followers, and modulation of each other's controls), read through
+  Mix: 38 of 38 cases within 0.003 to 0.01 of the control's range.
+- The reference's 40 presets against ours (Flatwater names), on a sung and a spoken take: 62 of 80 pairs within the
+  level, pitch and tone targets; the misses are mostly speech, where two pitch detectors part on rough voice, blends
+  at about 35 % Mix, and presets that use the original's drawn LFO shapes, which are not shipped.
+- Sample nulls with a shift: on a steady vowel the grains sit where the reference's do (-13 to -27 dB with small
+  Formant moves); on a real voice the reference rebuilds the sound from its own period estimates, so no recreation
+  nulls it sample for sample.
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 118 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | identical (-282 dB) / not recorded |
+| Render regression cases | 20 |
+| CPU per 60 s of stereo at 48 kHz | about 0.6 s (1 %) |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## CPU
 
 | Configuration | Cost |

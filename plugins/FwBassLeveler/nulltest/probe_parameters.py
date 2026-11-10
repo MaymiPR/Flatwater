@@ -14,7 +14,7 @@ import refhost as R
 
 
 def main():
-    names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
+    names = pb.VST3Plugin.get_plugin_names_for_file(R.REF_SHELL)
     br = [n for n in names if "Bass Rider" in n]
     print("the reference's components in the shell:", br)
     for name in br:

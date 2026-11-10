@@ -1,5 +1,5 @@
 """Scores a trained Flatwater Vocal Comp slow-path network (plugins/FwVocalComp/nulltest/train_net.py) on the standard null-test signals
-(null_fwvocalcomp.signals) against the reference, before it is ported to C++. Gate off, Gain 0.
+(vc_ref.signals) against the reference, before it is ported to C++. Gate off, Gain 0.
 
     python -I check_net.py render                                  (reference renders, needs pedalboard)
     python check_net.py build/fwvocalcompnet/fwvocalcompnet_h48r3.pt 48          (scores, PyTorch environment)

@@ -86,6 +86,48 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 | A debounced vocal detector with every constant fitted by CMA-ES | -22 dB on the probes, -12 dB on the corpus: the reference rises much more slowly on real vocals than on tones; replaced by the per-sample detector of section 2 with the hidden values |
 | Single nudges of the hidden values (section 3, Method notes) | every nudge makes Attack Fast worse |
 
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwVocalLeveler/nulltest/nulltest.py`: -74 dB on level steps and -47 ... -66 dB on vocal parts held out from the
+identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idle values, Stereo, and at 44.1 and
+96 kHz. Attack Fast is the weakest (about -50 dB), at word onsets.
+
+| Set | Result |
+|---|---|
+| Sample rates (held-out vocal parts) | 44.1 kHz -63.5 dB, 96 kHz (Fast) -53.2 dB |
+| Components | Stereo -60.3 dB, Live -60.4 / -46.6 dB (Slow / Fast) |
+| The reference's own 13 presets, loaded into it, against ours (three held-out vocal parts) | median -60.9 dB, worst -37.9 ([NULLTESTS.md, Presets](NULLTESTS.md#presets)) |
+
+- How: the reference's riding was identified from probes and a corpus of 36 vocal parts (a DAW's own vocal phrases).
+  It rides only on the samples its vocal detector passes, which is why it rises slowly on a real voice; every
+  constant is the reference's own hidden value, none is fitted.
+- Not covered: the Music side-chain (Music Sensitivity). The reference uses the music only when its host reports the
+  side-chain active, which no offline host here does; Flatwater Vocal Leveler rides without it.
+- Every case: [NULLTESTS.md](NULLTESTS.md).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 65 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | identical / identical |
+| Render regression cases | 3 |
+| CPU per 60 s of stereo at 48 kHz | about 0.36 s (0.6 %) |
+| The C++ ride against the model (`plugins/FwVocalLeveler/nulltest/check_port.py`, 25 cases) | identical (0.0000 dB) |
+| Listening | the Music side-chain is untested: the reference uses it in no offline host; it needs FL Studio or another host with a real side-chain send |
+| Unit tests cover | the parameters as the reference's, the buses (a side-chain), no latency, the audio path, Automation Read and Write, the editor's Studio and Live layouts and the Music knob's disabled look, the 13 factory presets (their values, Attack, Automation Off in Default, an Idle of 0 or 1 kept exactly), and the riding against the reference's measured values: the start, the law, the rise after 12 and 4 dB drops, the hold and glide to Idle at Slow and Fast, Spill on Live and off at -48 |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
+
 ## CPU
 
 | Configuration | Cost |

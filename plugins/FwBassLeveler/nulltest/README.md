@@ -13,7 +13,7 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 
 | File | What it does |
 |---|---|
-| `nulltest.py` | Flatwater Bass Leveler (its own processor, run offline by build/.../BlRender.exe) against the reference Bass Rider (rendered through pedalboard) at 48 kHz |
+| `nulltest.py` | Flatwater Bass Leveler (its own processor, run offline by build/.../BlRender.exe) against the reference (rendered through pedalboard) at 48 kHz |
 | `first_null.py` | The first null test of Flatwater Bass Leveler: proves the harness, the hosts and the build before any measurement |
 | `bl_ref.py` | Harness of Flatwater Bass Leveler's null tests and measurements (nulltest/bl_ref.py): the reference through the suite's host |
 | `nulltest_lib.py` | Generic null-test and measurement helpers for the house null-test harnesses |

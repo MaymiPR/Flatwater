@@ -13,7 +13,7 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 
 | File | What it does |
 |---|---|
-| `nulltest.py` | Flatwater Vocal Leveler (its own processor, run offline by build/.../VlRender.exe) against the reference Vocal Rider (rendered through pedalboard |
+| `nulltest.py` | Flatwater Vocal Leveler (its own processor, run offline by build/.../VlRender.exe) against the reference (rendered through pedalboard |
 | `first_null.py` | The first null test of Flatwater Vocal Leveler: proves the harness, the hosts and the build before any measurement |
 | `vl_ref.py` | Harness of Flatwater Vocal Leveler's null tests and measurements (nulltest/vl_ref.py): the reference through the suite's host |
 | `nulltest_lib.py` | Generic null-test and measurement helpers for the house null-test harnesses |

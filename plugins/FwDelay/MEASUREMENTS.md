@@ -121,12 +121,12 @@ method and the residual or confidence of each. The data is in [measurements/FwDe
 | Glide offset 15.5 or 16.5 samples | 30 dB lost on a falling glide |
 | Double- or float-precision variants of the glide update | do not reproduce the reference's 1/32 phase steps in a glide's slow tail |
 | The filters on the line's input | do not null with a moving delay |
-| A correction EQ for Analog mode 3 | cannot fix it: the mismatch is non-linear at low level, not a smooth filter; mode 3 needs a different structure ([docs/improvements.md](../../docs/improvements.md)) |
+| A correction EQ for Analog mode 3 | cannot fix it: the mismatch is non-linear at low level, not a smooth filter; mode 3 needs a different structure |
 
 ## 12. The editor
 
 Measured with `tools/MeterCapture` screenshots, films and drag, click and wheel scripts on the reference editor
-(screenshots in the git-ignored `reference/hdelay/`, including `reference/hdelay/ppdual`). Every value is a
+(screenshots in the git-ignored `reference/fwdelay/`, including `reference/fwdelay/ppdual`). Every value is a
 measurement the redrawn editor uses, not a copied pixel.
 
 | Quantity | Value |
@@ -152,6 +152,48 @@ measurement the redrawn editor uses, not a copied pixel.
 | Link wheel | moves both filters by the same share of their range, with the knobs' law, as far as the one nearer its end allows (HiPass 154 -> 77 Hz and LoPass Off -> 10.0 kHz for 50 px fast down; three notches 77 -> 103 Hz, 10.0 -> 13.3 kHz; ours 13.4) |
 | Script artefact | the drag script moves the mouse out of the editor after each drag; the next drag then loses part of its travel on both sides (Rate 0.10 -> 0.12 instead of 0.17 Hz); `away=0` keeps the mouse over the editor; some scripted drags on the reference do nothing at random, so laws are read from fresh instances |
 | Not matched | the text's hinting (the reference's glyphs sit on whole pixels; JUCE draws outlines), the toolbar's own content (ours), the knobs' fine texture |
+
+## Null-test results
+
+The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
+`20 log10(rms(ours - reference) / rms(reference))` in dB.
+
+`plugins/FwDelay/nulltest/nulltest.py`. The delay path nulls: defaults, ms and synced times, the filters, Ping Pong from
+either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -81 dB; glides inside the input
+-60 ... -83 dB.
+
+| Set | Result |
+|---|---|
+| Sample rates | 44.1 kHz as 48 kHz; 96 kHz below 20 kHz -46 ... -61 dB on the delay path (the band round the 24 kHz kernel cutoff differs) |
+| The reference's own 88 presets, loaded as it loads them (drums, bass and voice-like, each with its own Analog mode) | median -53.2 dB; Analog Off -78.1, mode 3 -41.2; Quick Alarm chaotic (self-oscillation through the filters) |
+
+- Analog modes: mode 4 nulls at -80 ... -90 dB; modes 1 to 3 add random noise as the reference does, which no null can
+  remove (-53 / -51 / -40 dB with their noise), and mode 3's model is the weakest part (about -41 dB).
+- Limits: the slow tail of a glide (-40 ... -80 dB while it settles), LoFi (-70 dB), and Feedback above 100 % with the
+  filters on, where the loop self-oscillates chaotically (the preset Quick Alarm): such a loop nulls only for its first
+  fraction of a second, in any model short of a bit-exact one.
+- How: the reference's interpolator (a 32-phase Kaiser sinc), its tape glide, the gain stage in the loop, its float
+  triangle LFO, the filters, Ping Pong's routing and every parameter's resolution were identified on the reference by
+  nulling; the Analog modes are fitted models (mode 4 is Flatwater Comp's).
+- Every case: [NULLTESTS.md](NULLTESTS.md), [NULLTESTS.md, Presets](NULLTESTS.md#presets).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| CHECK sites | 69 |
+| `ctest` | pass |
+| pluginval at strictness 10 | pass |
+| FocusCheck | pass |
+| VST3 equals renderer (48 / 96 kHz) | identical (-400 dB) / identical |
+| Render regression cases | 3 |
+| CPU per 60 s of stereo at 48 kHz | about 0.96 s (1.6 %, Feedback 60, Analog 2) |
+| Unit tests cover | a preset's exact values reaching the DSP until the parameter is moved and surviving a project reload; the parameter texts and tapers, Rate at its shown resolution, the display's note and Dual / Ping Pong layouts and clicks, the DSP laws (interpolator, glide, gain stage, LFO, filters, Ping Pong, Phase), an impulse through the processor at the default 1/8D, the 88 factory presets loading and leaving Mix alone, state round trip |
+
+The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the
+release workflow runs it; `FocusCheck <plug-in>.vst3`; `python nulltest/nulltest.py --vst3` (the built VST3 against
+the offline renderer); `python scripts/render_regress.py --build build`; CPU: the offline renderer on 60 s of stereo
+at 48 kHz.
 
 ## CPU
 

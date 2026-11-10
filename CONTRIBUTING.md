@@ -40,7 +40,7 @@ renderer, and on Windows its snapshot tool.
 
 | Test | What it does | Command |
 |---|---|---|
-| `<Id>Tests` (one per plug-in) | the plug-in's parameters (ranges, defaults, texts), its DSP laws against the reference's measured values, latency, presets, state and editor; [docs/validation.md](docs/validation.md) lists what each covers | `ctest --test-dir build -C Release --output-on-failure` |
+| `<Id>Tests` (one per plug-in) | the plug-in's parameters (ranges, defaults, texts), its DSP laws against the reference's measured values, latency, presets, state and editor; the Validation section of each plug-in's MEASUREMENTS.md lists what each covers | `ctest --test-dir build -C Release --output-on-failure` |
 | `<Id>HostTest` (one per plug-in) | the built VST3 hosted as a DAW hosts it: the parameter list, save and reload, the editor, a sample-rate change, offline rendering, and every saved state of a release in `plugins/<Id>/tests/data/` (`state-1.0.0.bin` with the texts each parameter showed) loading with the same texts | `ctest --test-dir build -C Release --output-on-failure` |
 | Render regression | the cases in `tests/regress/<Id>/jobs.txt` (every plug-in has cases) through that plug-in's offline renderer against the committed goldens; our output does not change unless intended (`--update` after an intended DSP change, committed with it) | `python scripts/render_regress.py --build build` |
 | Null tests | the same signals through the original and through ours; the residual in dB | [Null tests](#null-tests) |
@@ -67,8 +67,6 @@ prints one `CHECK` line with the counts. Switches: `-SkipBuild`, `-SkipTests`, `
 5. Squash merge; the branch is deleted on both sides at merge.
 6. Add the line to `CHANGELOG.md` under `## Unreleased` (New, Improved, Fixed or Known issues, with before and
    after numbers in dB for a sound change).
-7. After a new section in a plug-in's MEASUREMENTS.md or RESEARCH.md, `python scripts/doc_index.py` rewrites the
-   root indexes.
 
 ## Making a release
 
@@ -106,14 +104,14 @@ administrator rights.
 
 | Path | What it holds |
 |---|---|
-| `plugins/<Id>/` | one plug-in: `plugin.cmake`; `Source/` (`Params.h`, `PluginProcessor`, `PluginEditor`, `Presets.h/.cpp` with the generated `PresetTable.h`, `dsp/` with `Engine` and the other DSP and generated headers, `ui/` with the plug-in's own `Controls`); `tests/<Id>Tests.cpp` and `tests/data/` (the saved-state fixtures); `tools/<Ab>Render.cpp`; `scripts/` (its Python: exports, fits, preset tables, UI measurements); `nulltest/` (its null tests, measurements and fits, with a README); `resources/` where it has binary resources (FwVocalChain's measured responses); and its documents: README (the page users read), RESEARCH (what the original documents), MEASUREMENTS (what was measured and identified), NULLTESTS.md and `NULLTESTS-<topic>.md` (the null reports) |
+| `plugins/<Id>/` | one plug-in: `plugin.cmake`; `Source/` (`Params.h`, `PluginProcessor`, `PluginEditor`, `Presets.h/.cpp` with the generated `PresetTable.h`, `dsp/` with `Engine` and the other DSP and generated headers, `ui/` with the plug-in's own `Controls`); `tests/<Id>Tests.cpp` and `tests/data/` (the saved-state fixtures); `tools/<Ab>Render.cpp`; `scripts/` (its Python: exports, fits, preset tables, UI measurements); `nulltest/` (its null tests, measurements and fits, with a README); `resources/` where it has binary resources (FwVocalChain's measured responses); and its documents: README (the page users read), RESEARCH (what the original documents), MEASUREMENTS (what was measured and identified), NULLTESTS.md (the null report, generated) |
 | `shared/` | code shared by the plug-ins (`shared.cmake` builds it as the static library FlatwaterShared): `ui/` (`Widgets` with the toolbar, meters, wheel, menu look, mark and settings; the editor styles FlatUI, HybridUI and RenUI; `Theme.h`; `HostFocus`, the host's keys after a click), `dsp/Math.h` (the unfused math), `Presets.h` |
 | `tests/regress/` | the render regression's cases and goldens, per plug-in |
 | `tools/` | the C++ hosts for the reference plug-ins (RefRender, ParamDump, RefCapture, MeterCapture, OggDecode), FocusCheck, `HostTest.cpp` (every plug-in's host test) and `Snapshot.cpp`, the editor snapshot every plug-in but FwVocalComp builds |
-| `scripts/` | `bump_version.py`, `release_notes.py`, `render_regress.py`, `make_site.py`, `check_repo.py`, `check.ps1`, `check.sh`, `doc_index.py` (the root MEASUREMENTS.md and RESEARCH.md indexes), `make_presets.py` (the preset tables of eight plug-ins), `nulltest/` (the modules every plug-in's null tests import: `local.yaml`, the reference hosts, the corpora, the meter readers; [scripts/nulltest/README.md](scripts/nulltest/README.md)) and `feel/` (the control-feel scripts) |
+| `scripts/` | `bump_version.py`, `release_notes.py`, `render_regress.py`, `make_site.py`, `check_repo.py`, `check.ps1`, `check.sh`, `build_native.py` (builds every `plugins/<Id>/nulltest/native/` helper into `build/native/`), `make_presets.py` (the preset tables of eight plug-ins), `nulltest/` (the modules every plug-in's null tests import: `local.yaml`, the reference hosts, the corpora, the meter readers; [scripts/nulltest/README.md](scripts/nulltest/README.md)) and `feel/` (the control-feel scripts) |
 | `measurements/<Id>/` | the measurement data behind each plug-in's MEASUREMENTS.md (published) |
 | `packaging/` | the installers; `plugins.txt` lists the plug-ins they hold |
-| `docs/` | [docs/README.md](docs/README.md) indexes it: the build guide, results.md (every plug-in's null tests in one page), validation.md, improvements.md, learned-blocks.md, `branding/` (banners, icon, social preview, `colours.json`) and `screenshots/` |
+| `docs/` | the build guide (`BUILDING.md`), `branding/` (banners, icon, social preview, `colours.json`) and `screenshots/`; everything about one plug-in is in its own documents |
 | `.github/` | `workflows/` (Lint, CI, Build and release, Release checklist, Landing page), the issue forms, the pull request template, `RELEASE_CHECKLIST.md`, `dependabot.yml`, CODEOWNERS |
 | `local.example.yaml` | the keys of `local.yaml` (git-ignored): the reference's VST3 and names, the interpreters, the tool folders, and in its `# Suite keys:` block the keys this suite's scripts add ([scripts/nulltest/README.md](scripts/nulltest/README.md)) |
 
@@ -123,12 +121,13 @@ Reference renders and anything taken from the original plug-ins stay out of the 
 
 Each plug-in's `nulltest/` renders the same signals through the original and through ours and reports the residual.
 It needs Windows, Python 3.12 or newer with the packages in `requirements.txt` (`requirements-train.txt` adds torch for
-the learned blocks), the original plug-ins installed and named in `local.yaml`, and the tools built. The entry point
-is `plugins/<Id>/nulltest/nulltest.py` (every case for that plug-in; `--out` writes the report); the presets null is
-`null_presets.py` beside it where the plug-in has presets of the original's, and Flatwater Pitch Bend also has
-`first_null.py`. The folder's README lists every script by role. They write `plugins/<Id>/NULLTESTS.md` and
-`NULLTESTS-<topic>.md`, summarised in [docs/results.md](docs/results.md). None of this runs in CI, which has no
-originals.
+the learned blocks), the original plug-ins installed and named in `local.yaml`, and the tools built
+(`python scripts/build_native.py` for the C helpers). The folder is flat: the harness `<ab>_ref.py` (the reference
+and our renderer behind one interface), `nulltest_lib.py`, `first_null.py` (one bypass null, the smoke test),
+`nulltest.py` (every case; `--report` writes `plugins/<Id>/NULLTESTS.md` from `measurements/<Id>/nulltests.json`,
+`--vst3` checks the built VST3 against the offline renderer), the purpose scripts (`measure_`, `probe_`, `fit_`,
+`train_`, `null_`, `render_`, `compare_`, `check_`, `read_`) and the `_lib.py` helpers; its README lists every
+script by role. None of this runs in CI, which has no originals.
 
 ## Versions
 
@@ -158,5 +157,3 @@ renamed. The values that differ from what the naming rules would give today:
 |---|---|
 | `dsp/Tuning.h` exists in FwBassLift and FwVocalComp only, the plug-ins whose renderers override constants by name; the other plug-ins keep their constants beside the DSP that uses them, and FwPitchBend has no `dsp/Engine` (its processor joins the modulators, `dsp/Mod.h`, and the shifter, `dsp/Shifter`) | moving every constant or the processor's own DSP is a DSP change, which a layout change does not make |
 | The renderers of FwBassLift, FwBassXLift, FwComp, FwDelay and FwVocalComp, and `PbShifterRender`, are plain executables of the DSP alone, without JUCE and without a `RenderDev` copy; they land in `build/<Target>_artefacts/Release/` like the others | they need no plug-in wrapper |
-| FwVocalComp, FwComp and FwBassLift keep their main null script as `null_<id>.py` beside a `nulltest.py` that runs it | another plug-in's scripts import it, and two modules named `nulltest` cannot share one process |
-| Root `MEASUREMENTS.md` and `RESEARCH.md` are indexes written by `scripts/doc_index.py`; `docs/` adds results.md, validation.md, improvements.md and learned-blocks.md | nine plug-ins share one repository |
