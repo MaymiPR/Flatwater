@@ -29,6 +29,13 @@ if(NOT FETCHCONTENT_SOURCE_DIR_JUCE)
         message(FATAL_ERROR "JUCE 9.0.5 is at ${juce_commit}, expected ${FW_JUCE_COMMIT}")
     endif()
 endif()
+# JUCE's VST3 editor ignores the keys a host offers it (FL Studio's Ctrl+Z then never reaches the plug-in): patch it
+# at configure time (idempotent; see the script).
+execute_process(COMMAND ${CMAKE_COMMAND} -DJUCE_DIR=${juce_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/PatchJuceVst3Keys.cmake
+    RESULT_VARIABLE juce_patch_result)
+if(NOT juce_patch_result EQUAL 0)
+    message(FATAL_ERROR "cmake/PatchJuceVst3Keys.cmake failed")
+endif()
 
 # CLAP through clap-juce-extensions (MIT; brings the CLAP SDK).
 option(FW_CLAP "Build CLAP plugins" ON)

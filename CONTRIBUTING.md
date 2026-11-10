@@ -141,7 +141,6 @@ plug-in raises the middle number, a fix the last. Tags are `vx.y.z`; `vx.y.z-rc.
 | One `tools/Snapshot.cpp` serves the snapshot tool of every plug-in but FwVocalComp, which has its own (`plugins/FwVocalComp/tools/Snapshot.cpp`) | the same program renders any editor |
 | `Source/` has no `Params.h`, `Presets.cpp` or `dsp/Tuning.h`: the parameter ids are in `PluginProcessor.h`, the presets are generated headers, and FwBassLift and FwVocalComp keep their `Tuning` struct in `dsp/Engine.h` | the plug-ins predate the starter's files; moving the declarations is no layout change |
 | The renderers of FwBassLift, FwBassXLift, FwComp, FwDelay and FwVocalComp, and `PbShifterRender`, are plain executables of the DSP alone, without JUCE and without a `RenderDev` copy; they land in `build/<Target>_artefacts/Release/` like the others | they need no plug-in wrapper |
-| No `cmake/PatchJuceVst3Keys.cmake` | it changes how the VST3 editors take keys in FL Studio and needs an FL test before it is added |
 | No tools option: the renderers and snapshot tools are always built, the Windows hosts on Windows | the render regression and the snapshots need them on every build |
 | Every VST3 is also copied to `build/plugins/<Product name>.vst3` after it builds | a plug-in folder of the host on the development machine points there |
 | FwVocalComp, FwComp and FwBassLift keep their main null script as `null_<id>.py` beside a `nulltest.py` that runs it | another plug-in's scripts import it, and two modules named `nulltest` cannot share one process |
