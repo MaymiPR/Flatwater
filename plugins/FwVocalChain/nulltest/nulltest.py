@@ -158,7 +158,7 @@ def write_md(res):
     import datetime
     med = lambda v: float(np.median(v)) if v else float('nan')
     L = ['# Flatwater Vocal Chain: null tests', '',
-         'Residuals of Flatwater Vocal Chain against the reference CLA Vocals (Stereo), lower is better: the energy of the',
+         'Residuals of Flatwater Vocal Chain against the reference (its Stereo component), lower is better: the energy of the',
          "difference under the reference output's, in dB. Written by `plugins/FwVocalChain/nulltest/nulltest.py report` from",
          '`measurements/FwVocalChain/nulls.json` (%s); our processor through `ChRender`, the reference through'
          % datetime.date.today().isoformat(),

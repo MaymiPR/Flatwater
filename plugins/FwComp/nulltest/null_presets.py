@@ -67,7 +67,7 @@ def main():
     if save:
         import report_lib as RL
         with RL.Part('FwComp', 'presets', 'Presets') as f:
-            f.write('# Flatwater Comp factory presets: null test\n\nEach preset against the reference H-Comp with the same settings (48 kHz, residual after 0.5 s, '
+            f.write('# Flatwater Comp factory presets: null test\n\nEach preset against the reference with the same settings (48 kHz, residual after 0.5 s, '
                     'dB re the reference output). "Analog Off" shows the compressor alone; the second set uses the preset\'s Analog mode '
                     '(modes 1-3 add random noise, which no null can remove). Produced by `plugins/FwComp/nulltest/null_presets.py`.\n\n')
             f.write('| preset | ' + ' | '.join('%s (Off)' % s_ for s_ in SIGNALS) + ' | Analog | ' + ' | '.join(SIGNALS) + ' |\n')

@@ -16,7 +16,7 @@ import refhost as R
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
     br = [n for n in names if "Bass Rider" in n]
-    print("shell components with 'Bass Rider':", br)
+    print("the reference's components in the shell:", br)
     for name in br:
         R.fresh(name); p = R.load(name)
         print("\n==", name, "latency (reported)", getattr(p, "reported_latency_samples", "?"))

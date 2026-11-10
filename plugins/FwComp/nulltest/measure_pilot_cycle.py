@@ -14,7 +14,7 @@ tag = sys.argv[1]; f, db = float(sys.argv[2]), float(sys.argv[3]); st = [float(v
 t = np.arange(int(2.5 * fs)) / fs
 x = (10 ** (db / 20) * np.sin(2 * np.pi * f * t) + 0.01 * np.sin(2 * np.pi * F0 * t)).astype(np.float32); xs = np.stack([x, x])
 R.fresh('H-Comp Stereo')
-outs = {'H-Comp': N.theirs(xs, fs, *st, 100.0, 0.0, 'Off')[0], 'Flatwater Comp': N.ours(xs, fs, *st, 100.0, 0.0, 'Off')[0]}
+outs = {'reference': N.theirs(xs, fs, *st, 100.0, 0.0, 'Off')[0], 'Flatwater Comp': N.ours(xs, fs, *st, 100.0, 0.0, 'Off')[0]}
 ph = np.exp(-2j * np.pi * F0 * t)
 def lp(v):
     V = np.fft.rfft(v); fr = np.fft.rfftfreq(len(v), 1 / fs); V[fr > 1500] = 0; return np.fft.irfft(V, len(v))

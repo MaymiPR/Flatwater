@@ -17,7 +17,7 @@ UIDS = ('CLA Vocals Stereo@1510537014', 'CLA Vocals Mono/Stereo@1511767094')
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
     cv = [n for n in names if "CLA Vocals" in n]
-    print("shell components with 'CLA Vocals':", cv)
+    print("the reference's components in the shell:", cv)
     for name in cv:
         if "Mono" in name: continue                        # (pedalboard cannot host 1 in / 2 out: RefRender below)
         R.fresh(name); p = R.load(name)

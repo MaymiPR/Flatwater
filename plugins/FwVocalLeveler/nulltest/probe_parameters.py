@@ -23,7 +23,7 @@ def buzz(t, f0=180.0, n=20):
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.WAVESHELL)
     vr = [n for n in names if "Vocal Rider" in n]
-    print("shell components with 'Vocal Rider':", vr)
+    print("the reference's components in the shell:", vr)
     for name in vr:
         R.fresh(name); p = R.load(name)
         print("\n==", name, "latency (reported)", getattr(p, "reported_latency_samples", "?"))
