@@ -1,6 +1,6 @@
 # Flatwater Bass Lift: null tests
 
-Flatwater Bass Lift against Renaissance Bass, case by case (written by `plugins/FwBassLift/nulltest/bf_ref.py`; the JSON beside this file holds the same rows).
+Flatwater Bass Lift against the reference, case by case (written by `plugins/FwBassLift/nulltest/bf_ref.py`; `measurements/FwBassLift/nulltests-settings.json` holds the same rows).
 
 ## Settings
 

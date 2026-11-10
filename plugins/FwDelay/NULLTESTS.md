@@ -1,6 +1,6 @@
 # Flatwater Delay: null test against the reference
 
-`plugins/FwDelay/nulltest/nulltest.py`: Flatwater Delay's DSP (`plugins/FwDelay/tools/DeRender`, the plug-in's own code) against the reference H-Delay,
+`plugins/FwDelay/nulltest/nulltest.py`: Flatwater Delay's DSP (`plugins/FwDelay/tools/DeRender`, the plug-in's own code) against the reference,
 rendered through `tools/RefRender`. Residual = 20 log10(rms(ours - reference) / rms(reference)) in dB, over 4 s of each
 signal after a 3 s silent pre-roll. Columns: a drum loop, a bass line, a voice-like signal (left, and 0.8 of it on the
 right). 48 kHz; Analog Off unless a case names a mode. The cases set Feedback at the input's start (see MEASUREMENTS.md,
@@ -67,7 +67,7 @@ interpolators' transition bands around 24 kHz differ, which dominates a full-ban
 
 ## Presets
 
-`plugins/FwDelay/nulltest/null_presets.py`: each of H-Delay's 88 factory presets loaded into the reference as the
+`plugins/FwDelay/nulltest/null_presets.py`: each of the reference's 88 factory presets loaded into the reference as the
 reference loads it (the preset array from its preset file in the licensed install, written into its state; RefRender
 `state=`), against Flatwater Delay's DSP (`plugins/FwDelay/tools/DeRender`) with the matching Flatwater Delay preset (Flatwater names), its values as
 stored, as Flatwater Delay uses a preset's values (MEASUREMENTS.md section 6: the two parameter paths). Drum loop, bass

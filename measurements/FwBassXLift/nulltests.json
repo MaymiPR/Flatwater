@@ -3,7 +3,7 @@
  "intro": [
   {
    "lines": [
-    "Flatwater BassX Lift against MaxxBass, case by case (written by `plugins/FwBassXLift/nulltest/nulltest.py`; the JSON beside this file holds the same rows)."
+    "Flatwater BassX Lift against the reference, case by case (written by `plugins/FwBassXLift/nulltest/nulltest.py`; `measurements/FwBassXLift/nulltests-settings.json` holds the same rows)."
    ]
   }
  ],

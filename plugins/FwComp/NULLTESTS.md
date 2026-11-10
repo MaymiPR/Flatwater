@@ -179,7 +179,7 @@ median -48.7 dB, best -99.2, worst -22.1
 
 ## Presets
 
-Each preset against the reference H-Comp with the same settings (48 kHz, residual after 0.5 s, dB re the reference output). "Analog Off" shows the compressor alone; the second set uses the preset's Analog mode (modes 1-3 add random noise, which no null can remove). Produced by `plugins/FwComp/nulltest/null_presets.py`.
+Each preset against the reference with the same settings (48 kHz, residual after 0.5 s, dB re the reference output). "Analog Off" shows the compressor alone; the second set uses the preset's Analog mode (modes 1-3 add random noise, which no null can remove). Produced by `plugins/FwComp/nulltest/null_presets.py`.
 
 | preset | voice-like (Off) | drum loop (Off) | bass line (Off) | pink noise -20 rms (Off) | Analog | voice-like | drum loop | bass line | pink noise -20 rms |
 |---|---:|---:|---:|---:|---|---:|---:|---:|---:|
