@@ -67,7 +67,7 @@ struct Tuning
         if (key == "limT") { limT = v; return true; }
         if (key == "limRel") { limRel = v; return true; }
         if (key == "gainGlideMs") { gainGlideMs = v; return true; }
-        if (key == "learned") { learned = v != 0.0; return true; }
+        if (key == "learned") { learned = v < 0.0 || v > 0.0; return true; }
         if (key == "ceiling") { ceiling = v; return true; }
         return false;
     }

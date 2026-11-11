@@ -64,7 +64,7 @@ struct Tuning
         if (key == "attackScale") { attackScale = v; return true; }
         if (key == "attackMinMs") { attackMinMs = v; return true; }
         if (key == "releaseMinS") { releaseMinS = v; return true; }
-        if (key == "learned") { learned = v != 0.0; return true; }
+        if (key == "learned") { learned = v < 0.0 || v > 0.0; return true; }
         if (key == "netStep") { netStep = (int) v; return true; }
         if (key == "guardFlatDb") { guardFlatDb = v; return true; }
         if (key == "guardRampDb") { guardRampDb = v; return true; }

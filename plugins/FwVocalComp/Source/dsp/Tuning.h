@@ -46,7 +46,7 @@ struct Tuning
         if (key == "tr2") { tr2 = (float) v; return true; }
         if (key == "gateRelMs") { gateRelMs = (float) v; return true; }
         if (key == "fixedGain") { fixedGain = (float) v; return true; }
-        if (key == "learned") { learned = v != 0.0; return true; }
+        if (key == "learned") { learned = v < 0.0 || v > 0.0; return true; }
         return false;
     }
 
