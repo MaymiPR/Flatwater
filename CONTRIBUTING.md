@@ -156,3 +156,4 @@ renamed. The values that differ from what the naming rules would give today:
 | Deviation | Reason |
 |---|---|
 | The renderers of FwBassLift, FwBassXLift, FwComp, FwDelay and FwVocalComp, and `PbShifterRender`, are plain executables of the DSP alone, without JUCE and without a `RenderDev` copy; they land in `build/<Target>_artefacts/Release/` like the others | they need no plug-in wrapper |
+| Every renderer takes one case on its command line, `<Ab>Render in.f32 out.f32 channels fs [key=value ...]`, instead of RefRender's jobs file; each `tests/regress/<Id>/jobs.txt` names the form in its `@call` line (decided 2026-11-11) | the plain renderers parse no job file, and one form serves all nine |

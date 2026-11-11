@@ -1,7 +1,7 @@
 // Records a plug-in editor's meters while audio plays (Windows), to measure meter ballistics the host cannot read.
 //   MeterCapture <plugin.vst3> "<sub-plugin name>[@uid]" <out.raw> [paramName=value ...] [in=<mono float32 48 kHz file>]
 //   ... [design=<width>] drag=x,y,dx,dy[,ctrl|shift|alt|wheel|wheelctrl|midctrl|ctrlup] ...   (drag script instead of the capture, see DragScript)
-//   ... gl=1 [crop=x0,y0,x1,y1]   (read the editor's OpenGL frames back instead of grabbing the screen, see GlCapture)
+//   ... gl=1 [crop=x0,y0,x1,y1]   (read the editor's OpenGL frames back instead of grabbing the screen, see glcapture)
 //   ... hostwin=1   (the editor inside a plain Win32 window that keeps the keyboard focus, as FL hosts it)
 //   ... away=0   (the drag script leaves the mouse over the editor between drags; with in=..., audio plays meanwhile)
 //   ... sc=<mono float32 48 kHz file>   (the side-chain bus enabled in stereo and fed with it, next to in=)
@@ -143,7 +143,7 @@ public:
         if (! sizeWritten) { File (out.getFullPathName() + ".txt").replaceWithText (String (w) + " " + String (h)); sizeWritten = true; }
     }
     Component& editor; Feeder& feeder; File out; std::unique_ptr<FileOutputStream> stream; bool sizeWritten = false;
-    bool gl = false;     // GlCapture writes the frames; this only ends the run
+    bool gl = false;     // glcapture writes the frames; this only ends the run
 };
 
 // Reads a reference editor's frames back from OpenGL: outside FL its frames never reach the window (it stays white, in
@@ -151,7 +151,7 @@ public:
 // that reads the back buffer (crop, in editor pixels from the top left) just before the swap. out.raw: per frame two
 // doubles (the audio time processed so far and the wall time since the schedule started, s), then the crop's
 // width * height * 3 bytes (RGB, top row first); out.raw.txt holds the crop's width and height.
-namespace GlCapture
+namespace glcapture
 {
     using SwapFn = BOOL (WINAPI*) (HDC);
     using ReadPixelsFn = void (WINAPI*) (int, int, int, int, unsigned, unsigned, void*);
@@ -307,7 +307,7 @@ public:
     void event (const String& what)
     {
         if (shots == File()) return;
-        const double now = Time::getMillisecondCounterHiRes() * 0.001 - GlCapture::scriptStart;
+        const double now = Time::getMillisecondCounterHiRes() * 0.001 - glcapture::scriptStart;
         shots.getSiblingFile (shots.getFileNameWithoutExtension() + ".events.txt").appendText (String (now, 4) + " " + what + "\n");
     }
     // the cursor's image now (on white and on black, so its transparency can be told), and whether it is the arrow
@@ -356,24 +356,24 @@ public:
         {
             if (shots == File()) return;
             const auto f = shots.getSiblingFile (shots.getFileNameWithoutExtension() + "_" + String (n) + "_" + when + ".png");
-            if (! GlCapture::keepLast) { grabPng (editor, f); return; }
+            if (! glcapture::keepLast) { grabPng (editor, f); return; }
             {
                 MessageManagerLock mml;                          // a redraw, so the newest state is read back
                 editor.repaint();
                 for (auto* c : editor.getChildren()) c->repaint();
             }
-            const int before = GlCapture::frames.load();
-            for (int i = 0; i < 40 && GlCapture::frames.load() == before; ++i) sleep (10);
+            const int before = glcapture::frames.load();
+            for (int i = 0; i < 40 && glcapture::frames.load() == before; ++i) sleep (10);
             sleep (60);
-            std::lock_guard<std::mutex> g (GlCapture::lock);
-            if (GlCapture::lastW <= 0) return;
-            Image img (Image::RGB, GlCapture::lastW, GlCapture::lastH, false);
+            std::lock_guard<std::mutex> g (glcapture::lock);
+            if (glcapture::lastW <= 0) return;
+            Image img (Image::RGB, glcapture::lastW, glcapture::lastH, false);
             {
                 Image::BitmapData bd (img, Image::BitmapData::writeOnly);
-                for (int row = 0; row < GlCapture::lastH; ++row)
-                    for (int col = 0; col < GlCapture::lastW; ++col)
+                for (int row = 0; row < glcapture::lastH; ++row)
+                    for (int col = 0; col < glcapture::lastW; ++col)
                     {
-                        const uint8* q = GlCapture::last.data() + ((size_t) row * (size_t) GlCapture::lastW + (size_t) col) * 3;
+                        const uint8* q = glcapture::last.data() + ((size_t) row * (size_t) glcapture::lastW + (size_t) col) * 3;
                         bd.setPixelColour (col, row, Colour (q[0], q[1], q[2]));
                     }
             }
@@ -604,9 +604,9 @@ public:
                 if (a.startsWith ("crop="))
                 {
                     auto c = StringArray::fromTokens (a.substring (5), ",", "");
-                    for (int k = 0; k < 4; ++k) GlCapture::crop[k] = c[k].getIntValue();
+                    for (int k = 0; k < 4; ++k) glcapture::crop[k] = c[k].getIntValue();
                 }
-            std::printf ("SwapBuffers imports patched: %d\n", GlCapture::install());
+            std::printf ("SwapBuffers imports patched: %d\n", glcapture::install());
         }
         if (args.contains ("hostwin=1"))
         {
@@ -644,13 +644,13 @@ public:
         }
         if (! drags.isEmpty())
         {
-            GlCapture::keepLast = gl;                    // the script's screenshots from the OpenGL frames
+            glcapture::keepLast = gl;                    // the script's screenshots from the OpenGL frames
             if (gl)                                      // and every frame streamed, for animations (.events.txt: the actions)
             {
-                std::lock_guard<std::mutex> g (GlCapture::lock);
-                GlCapture::out = File (args[2]); GlCapture::out.deleteFile();
-                GlCapture::stream = GlCapture::out.createOutputStream();
-                GlCapture::scriptStart = Time::getMillisecondCounterHiRes() * 0.001;
+                std::lock_guard<std::mutex> g (glcapture::lock);
+                glcapture::out = File (args[2]); glcapture::out.deleteFile();
+                glcapture::stream = glcapture::out.createOutputStream();
+                glcapture::scriptStart = Time::getMillisecondCounterHiRes() * 0.001;
                 File (args[2]).getSiblingFile (File (args[2]).getFileNameWithoutExtension() + ".events.txt").deleteFile();
             }
             dragScript = std::make_unique<DragScript> (*plugin, *editorComp, drags, design, File (args[2]));
@@ -682,11 +682,11 @@ public:
         capture->gl = gl;
         if (gl)
         {
-            std::lock_guard<std::mutex> g (GlCapture::lock);
+            std::lock_guard<std::mutex> g (glcapture::lock);
             capture->stream.reset();
-            GlCapture::out = File (args[2]); GlCapture::out.deleteFile();
-            GlCapture::stream = GlCapture::out.createOutputStream();
-            GlCapture::feeder = feeder.get();
+            glcapture::out = File (args[2]); glcapture::out.deleteFile();
+            glcapture::stream = glcapture::out.createOutputStream();
+            glcapture::feeder = feeder.get();
         }
         feeder->startThread (Thread::Priority::high);
         capture->startTimer (25);
@@ -699,11 +699,11 @@ public:
         {
             const File out (getCommandLineParameterArray()[2]);
             File (out.getFullPathName() + ".pcm").replaceWithData (feeder->recorded.data(), feeder->recorded.size() * sizeof (float));
-            File (out.getFullPathName() + ".start.txt").replaceWithText (String (feeder->startTime.load() - GlCapture::scriptStart, 4));
+            File (out.getFullPathName() + ".start.txt").replaceWithText (String (feeder->startTime.load() - glcapture::scriptStart, 4));
         }
         {
-            std::lock_guard<std::mutex> g (GlCapture::lock);
-            GlCapture::feeder = nullptr; GlCapture::stream.reset();
+            std::lock_guard<std::mutex> g (glcapture::lock);
+            glcapture::feeder = nullptr; glcapture::stream.reset();
         }
         capture.reset();
         feeder.reset();                                  // before the plug-in: it clears the play head it set
