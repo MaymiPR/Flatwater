@@ -12,10 +12,11 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy import signal, optimize
 import refhost as R
+import local_config_lib as L
 
 FS = 48000
-NAME = "Vocal Rider Mono"
-LIVE = "Vocal Rider Live Mono"
+NAME = L.ref_component('FwVocalLeveler', 'Mono', required=False)
+LIVE = L.ref_component('FwVocalLeveler', 'Live Mono', required=False)
 
 
 def render(x, name=NAME, **params):
@@ -191,7 +192,7 @@ def stereo():
     x = seg(1000.0, [-24.0], [3.0]); z = np.zeros_like(x)
     cases = {'L=R': (x, x), 'L only': (x, z), 'R only': (z, x), 'anti-phase': (x, -x), 'L, R -6 dB': (x, 0.5 * x)}
     for k, (l, r) in cases.items():
-        y = render(np.stack([l, r]), name="Vocal Rider Stereo", range_max=12.0, range_min=-12.0)
+        y = render(np.stack([l, r]), name=L.ref_component('FwVocalLeveler'), range_max=12.0, range_min=-12.0)
         gl = at(gtrace(l, y[0], win=0.02), 2.0, 2.9) if np.any(l) else float('nan')
         gr = at(gtrace(r, y[1], win=0.02), 2.0, 2.9) if np.any(r) else float('nan')
         g = gl if np.isfinite(gl) else gr

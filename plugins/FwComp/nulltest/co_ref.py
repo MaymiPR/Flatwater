@@ -107,7 +107,7 @@ if __name__ == '__main__':
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
 PLUGIN, PRODUCT = 'FwComp', 'Flatwater Comp'
-REF_NAME = L.get('FwComp.ref_name', required=False) or 'H-Comp Stereo'      # the reference's stereo component in the shell
+REF_NAME = L.ref_component(PLUGIN, required=False)      # the reference's stereo component in the shell
 _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'CoRender_artefacts', 'Release', 'CoRender.exe')

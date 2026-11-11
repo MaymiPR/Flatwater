@@ -11,8 +11,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
+import local_config_lib as L
 
-NAMES = {"Stereo": "H-Delay Stereo@1849387175", "Mono": "H-Delay Mono@1847911073", "Mono/Stereo": "H-Delay Mono/Stereo@1850617249"}
+NAMES = {k: L.ref_component('FwDelay', k, required=False) for k in ('Stereo', 'Mono', 'Mono/Stereo')}   # local.yaml
 NOTES = ["1/64T", "1/64", "1/64D", "1/32T", "1/32", "1/32D", "1/16T", "1/16", "1/16D", "1/8T", "1/8", "1/8D", "1/4T",
          "1/4", "1/4D", "1/2T", "1/2", "1/2D", "1B", "2B"]
 CHOICE = {  # short name: (VST3 name, the choices in order)
@@ -48,9 +49,8 @@ def render(x, fs=48000, comp="Stereo", preroll=1.0, host_bpm=120.0, changes=(), 
     return y
 
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
-import local_config_lib as L
 PLUGIN, PRODUCT = 'FwDelay', 'Flatwater Delay'
-REF_NAME = L.get('FwDelay.ref_name', required=False) or NAMES['Stereo']      # the reference's stereo component in the shell
+REF_NAME = NAMES['Stereo']      # the reference's stereo component in the shell
 _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'DeRender_artefacts', 'Release', 'DeRender.exe')

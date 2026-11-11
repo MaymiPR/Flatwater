@@ -20,7 +20,7 @@ for name, (idx, vals) in sweeps.items():
         row = []
         for sn, x in sig.items():
             xs = np.stack([x, x]).astype(np.float32)
-            R.fresh('H-Comp Stereo')
+            R.fresh(N.REF_NAME)
             a = N.ours(xs, fs, *st, 100.0, 0.0, 'Off'); b = N.theirs(xs, fs, *st, 100.0, 0.0, 'Off')
             row.append(NV.residual_db(a[0], b[0], int(0.5 * fs)))
         print('  %-9s %7g:  voice %6.1f  drums %6.1f  bass %6.1f  noise %6.1f' % (name, v, *row), flush=True)

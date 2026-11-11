@@ -22,9 +22,10 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 from scipy import signal, optimize
 import refhost as R
+import local_config_lib as L
 
 FS = 48000
-NAME = "Bass Rider Mono"
+NAME = L.ref_component('FwBassLeveler', 'Mono', required=False)
 HELD = -14 + 6.99 + 0.68            # the gain of a -6 dBFS note at 200 Hz (weighting -0.99 dB there), held
 
 
@@ -200,14 +201,14 @@ def idle():
 
 
 def live():
-    name = 'Bass Rider Live Mono'
+    name = L.ref_component('FwBassLeveler', 'Live Mono')
     x = seg(1000.0, [-30, -16], [1.0, 1.0]); g = gtrace(x, render(x, name=name))
     print('%s: legato step -30 -> -16 at 1 s, the gain at ms from the step:' % name)
     print('  ' + ' '.join('%d:%+.2f' % (ms, g[int(1.0 * FS) + int(ms * FS / 1000)]) for ms in range(-10, 32, 2)))
 
 
 def stereo():
-    name = 'Bass Rider Stereo'
+    name = L.ref_component('FwBassLeveler')
     xl = seg(1000.0, [-6.0], [2.0])
     for label, xr in (('R -30 dBFS', seg(1000.0, [-30.0], [2.0])), ('R = L', xl), ('R = -L', -xl), ('R a 1.2 kHz tone at -6', seg(1200.0, [-6.0], [2.0]))):
         y = render(np.stack([xl, xr]), name=name)

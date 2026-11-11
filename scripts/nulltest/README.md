@@ -14,10 +14,9 @@ renders go to the git-ignored `renders/`, `build/` and `reference/` folders.
 | Key | Read by | Value |
 |---|---|---|
 | `ref_vst3` | `refhost.py` and every harness | the shell VST3 that holds every reference |
-| `<Id>.ref_name` | each plug-in's harness `<ab>_ref.py` | the reference's stereo component in the shell; the harness has a default for every plug-in but Flatwater BassX Lift, whose key is required |
-| `FwVocalComp.ref_mono_name` | `plugins/FwVocalComp/nulltest/vc_ref.py` | the reference's mono component (a default otherwise) |
-| `ref_presets_dir` | `read_ref_presets.py`, `plugins/FwPitchBend/nulltest/read_ref_presets.py` | the vendor's shared preset folder |
-| `<Id>.ref_presets` | `read_ref_presets.py` in the `nulltest/` of FwBassLeveler, FwComp, FwDelay, FwBassXLift and FwVocalLeveler, `plugins/FwDelay/nulltest/null_presets.py`, `plugins/FwVocalChain/nulltest/measure_campaign.py`, `scripts/make_presets.py` | the reference's factory preset file for that plug-in |
+| `<Id>.ref_name` | each plug-in's harness `<ab>_ref.py` and every script that hosts the reference, through `local_config_lib.ref_component` | the reference's stereo component in the shell ("Name" or "Name@uid"); required wherever the reference is hosted, so no tracked file names the reference's products |
+| `<Id>.ref_mono_name`, `<Id>.ref_live_stereo_name`, `<Id>.ref_live_mono_name`, `<Id>.ref_mono_stereo_name` | the same, for the other components a script uses | the reference's other components; when empty, the stereo name with the kind in place of "Stereo" (without the uid) |
+| `<Id>.ref_presets` | `read_ref_presets.py` (this folder's, for FwBassLift and FwVocalComp, and the one in the `nulltest/` of FwBassLeveler, FwComp, FwDelay, FwBassXLift, FwPitchBend and FwVocalLeveler), `plugins/FwDelay/nulltest/null_presets.py`, `plugins/FwVocalChain/nulltest/measure_campaign.py`, `scripts/make_presets.py` | the reference's factory presets: its preset file, or its preset folder for FwBassLift, FwVocalComp and FwPitchBend |
 | `fl_packs` | `bass_corpus_lib.py`, `vocal_corpus_lib.py` | FL Studio's sample packs folder (decoded once into a git-ignored cache) |
 | `gpu_python` | the `train_*.py` scripts | the interpreter of the CUDA virtual environment |
 
@@ -25,7 +24,7 @@ renders go to the git-ignored `renders/`, `build/` and `reference/` folders.
 
 | Module | What it does |
 |---|---|
-| `local_config_lib.py` | reads `local.yaml`: `get(key)` returns a value or stops with the key's name; `local_file(path)` finds a local data file under its earlier name while only that one exists (`renamed_local_files.txt`) |
+| `local_config_lib.py` | reads `local.yaml`: `get(key)` returns a value or stops with the key's name; `ref_component(id, kind)` and `ref_base(id)` give a reference's component and product names from the `<Id>.ref_name` keys; `local_file(path)` finds a local data file under its earlier name while only that one exists (`renamed_local_files.txt`) |
 | `refhost.py` | the reference host: fresh pedalboard instances with dropout retries, `tools/RefRender` on the shell or on one of our built VST3 bundles, our offline renderers, the VST3-equals-renderer check |
 | `ref_state_lib.py` | reads and writes the parameter array inside a reference's saved VST3 state |
 | `renamed_local_files.txt` | the local data files renamed in 1.1 (no vendor word names a file a script reads), each with its earlier name |

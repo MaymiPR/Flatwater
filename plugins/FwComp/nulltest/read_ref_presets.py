@@ -21,7 +21,7 @@ def num(t):
 
 
 t = open(SRC, encoding="utf-8").read()
-p = R.load("H-Comp Stereo")
+p = R.load(L.ref_component('FwComp'))
 base = p.raw_state
 inner0 = W.get_inner(base).decode("latin-1")
 assert re.search(r'<Parameters Type="RealWorld">', inner0), inner0[:400]

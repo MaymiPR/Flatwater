@@ -210,7 +210,7 @@ static void testEditor()
 
 // the behaviour checklist on our editor (RESEARCH.md, "The editor"), by mouse events sent to its parts at the
 // reference's measured places (design px); the editor is never on screen, so no real cursor moves
-namespace mouse
+namespace pb::mouse
 {
 juce::MouseEvent ev (juce::Component& c, juce::Point<float> local, juce::ModifierKeys mods)
 {
@@ -251,39 +251,39 @@ static void testBehaviour()
     if (const auto dir = juce::SystemStats::getEnvironmentVariable ("FWPITCHBEND_SNAPSHOTS", {}); dir.isNotEmpty())
     {
         const auto down = juce::ModifierKeys (juce::ModifierKeys::leftButtonModifier);
-        content.mouseDown (mouse::ev (content, tabM1, down));
-        content.mouseDrag (mouse::ev (content, { 300.0f, 200.0f }, down));
-        content.mouseDrag (mouse::ev (content, mixAt, down));
+        content.mouseDown (pb::mouse::ev (content, tabM1, down));
+        content.mouseDrag (pb::mouse::ev (content, { 300.0f, 200.0f }, down));
+        content.mouseDrag (pb::mouse::ev (content, mixAt, down));
         auto img = ed->createComponentSnapshot (ed->getLocalBounds(), true, 1.0f);
         juce::File f (juce::File (dir).getChildFile ("pb_dragging.png"));
         f.deleteFile();
         juce::FileOutputStream os (f);
         juce::PNGImageFormat().writeImageToStream (img, os);
-        content.mouseUp (mouse::ev (content, { 40.0f, 240.0f }, {}));       // dropped on the plate: nothing
+        content.mouseUp (pb::mouse::ev (content, { 40.0f, 240.0f }, {}));       // dropped on the plate: nothing
     }
     // a tab dragged onto Mix fills its first slot at depth 0; dropped on the plate, nothing
-    mouse::drag (content, tabM1, { { 300.0f, 200.0f }, mixAt });
+    pb::mouse::drag (content, tabM1, { { 300.0f, 200.0f }, mixAt });
     CHECK (getSlot (st, 2, 0).source == M1);
     CHECK_NEAR (getSlot (st, 2, 0).depth, 0.0, 1e-6);
-    mouse::drag (content, tabAM, { { 300.0f, 200.0f }, plate });
+    pb::mouse::drag (content, tabAM, { { 300.0f, 200.0f }, plate });
     CHECK (getSlot (st, 2, 1).source == None);
     // a source already on a control is refused there (M1 on Mix again); all four on Pitch, each once
-    mouse::drag (content, tabM1, { { 300.0f, 200.0f }, mixAt });
+    pb::mouse::drag (content, tabM1, { { 300.0f, 200.0f }, mixAt });
     CHECK (getSlot (st, 2, 1).source == None);
-    for (auto tabAt : { tabM1, tabM2, tabAM, tabPT }) mouse::drag (content, tabAt, { { 250.0f, 200.0f }, pitchAt });
+    for (auto tabAt : { tabM1, tabM2, tabAM, tabPT }) pb::mouse::drag (content, tabAt, { { 250.0f, 200.0f }, pitchAt });
     CHECK (getSlot (st, 0, 0).source == M1 && getSlot (st, 0, 1).source == M2 && getSlot (st, 0, 2).source == AM && getSlot (st, 0, 3).source == PT);
-    mouse::drag (content, tabAM, { { 250.0f, 200.0f }, pitchAt });
+    pb::mouse::drag (content, tabAM, { { 250.0f, 200.0f }, pitchAt });
     int am = 0;
     for (int s = 0; s < 4; ++s) am += getSlot (st, 0, s).source == AM ? 1 : 0;
     CHECK (am == 1);
 
     // a slot's depth: 0.2 per px upwards (250 px: 50), clamped at 100; Alt-click 0, the source kept
     const juce::Point<float> mixSlot0 { 481.0f, 198.0f };
-    mouse::drag (content, mixSlot0, { { 481.0f, 148.0f }, { 481.0f, -52.0f } });
+    pb::mouse::drag (content, mixSlot0, { { 481.0f, 148.0f }, { 481.0f, -52.0f } });
     CHECK_NEAR (getSlot (st, 2, 0).depth, 50.0, 1e-6);
-    mouse::drag (content, mixSlot0, { { 481.0f, -500.0f } });
+    pb::mouse::drag (content, mixSlot0, { { 481.0f, -500.0f } });
     CHECK_NEAR (getSlot (st, 2, 0).depth, 100.0, 1e-6);
-    mouse::drag (content, mixSlot0, {}, juce::ModifierKeys::altModifier);
+    pb::mouse::drag (content, mixSlot0, {}, juce::ModifierKeys::altModifier);
     CHECK_NEAR (getSlot (st, 2, 0).depth, 0.0, 1e-6);
     CHECK (getSlot (st, 2, 0).source == M1);
 
@@ -296,22 +296,22 @@ static void testBehaviour()
     {
         auto* c = content.getComponentAt (linkAt.roundToInt());
         const auto down = juce::ModifierKeys (juce::ModifierKeys::leftButtonModifier);
-        c->mouseDown (mouse::ev (*c, c->getLocalPoint (&content, linkAt), down));
-        for (auto q : up) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, q), down));
-        c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, up.back()), {}));
+        c->mouseDown (pb::mouse::ev (*c, c->getLocalPoint (&content, linkAt), down));
+        for (auto q : up) c->mouseDrag (pb::mouse::ev (*c, c->getLocalPoint (&content, q), down));
+        c->mouseUp (pb::mouse::ev (*c, c->getLocalPoint (&content, up.back()), {}));
     }
     CHECK_NEAR (p.get (pb::pitch), 12.0, 1e-4);
     CHECK_NEAR (p.get (pb::formant), 7.0, 1e-4);
-    mouse::drag (content, linkAt, {}, juce::ModifierKeys::altModifier);
+    pb::mouse::drag (content, linkAt, {}, juce::ModifierKeys::altModifier);
     CHECK_NEAR (p.get (pb::pitch), 0.0, 1e-4);
     CHECK_NEAR (p.get (pb::formant), 0.0, 1e-4);
 
     // knobs: Alt-click the default; the wheel moves Pitch a whole semitone; a slow drag on Mix: 0.001 of the range per px
     set (p, pb::mix, 40.0f);
-    mouse::drag (content, mixAt, {}, juce::ModifierKeys::altModifier);
+    pb::mouse::drag (content, mixAt, {}, juce::ModifierKeys::altModifier);
     CHECK_NEAR (p.get (pb::mix), 100.0, 1e-4);
     set (p, pb::pitch, 2.4f);
-    mouse::wheel (content, pitchAt, 1.0f);
+    pb::mouse::wheel (content, pitchAt, 1.0f);
     CHECK_NEAR (p.get (pb::pitch), 3.0, 1e-4);
     set (p, pb::mix, 50.0f);
     std::vector<juce::Point<float>> slow;
@@ -319,9 +319,9 @@ static void testBehaviour()
     {
         auto* c = content.getComponentAt (mixAt.roundToInt());
         const auto down = juce::ModifierKeys (juce::ModifierKeys::leftButtonModifier);
-        c->mouseDown (mouse::ev (*c, c->getLocalPoint (&content, mixAt), down));
-        for (auto q : slow) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, q), down));
-        c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, slow.back()), {}));
+        c->mouseDown (pb::mouse::ev (*c, c->getLocalPoint (&content, mixAt), down));
+        for (auto q : slow) c->mouseDrag (pb::mouse::ev (*c, c->getLocalPoint (&content, q), down));
+        c->mouseUp (pb::mouse::ev (*c, c->getLocalPoint (&content, slow.back()), {}));
     }
     CHECK_NEAR (p.get (pb::mix), 54.0, 1e-3);
 
@@ -331,9 +331,9 @@ static void testBehaviour()
     {
         auto* c = content.getComponentAt (at.roundToInt());
         const auto down = juce::ModifierKeys (juce::ModifierKeys::leftButtonModifier);
-        c->mouseDown (mouse::ev (*c, c->getLocalPoint (&content, at), down));
-        for (int i = 1; i <= px; ++i) c->mouseDrag (mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -i)), down));
-        c->mouseUp (mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -px)), {}));
+        c->mouseDown (pb::mouse::ev (*c, c->getLocalPoint (&content, at), down));
+        for (int i = 1; i <= px; ++i) c->mouseDrag (pb::mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -i)), down));
+        c->mouseUp (pb::mouse::ev (*c, c->getLocalPoint (&content, at.translated (0.0f, (float) -px)), {}));
     };
     set (p, pb::pitch, 0.0f);
     slowDrag (pitchAt, 20);
@@ -343,7 +343,7 @@ static void testBehaviour()
     p.apvts.state.setProperty (pb::fineId, true, nullptr);
     slowDrag (pitchAt, 20);
     CHECK_NEAR (p.get (pb::pitch), 1.2, 1e-3);
-    mouse::wheel (content, pitchAt, 1.0f);                               // Fine: 32 cents per notch
+    pb::mouse::wheel (content, pitchAt, 1.0f);                               // Fine: 32 cents per notch
     CHECK_NEAR (p.get (pb::pitch), 1.52, 1e-3);
     p.apvts.state.setProperty (pb::fineId, false, nullptr);
     set (p, pb::pitch, 0.0f);
@@ -354,16 +354,16 @@ static void testBehaviour()
     set (p, pb::formant, 0.0f);
 
     // Fine: a click turns it on (undoable)
-    mouse::drag (content, { 278.0f, 200.0f }, {});
+    pb::mouse::drag (content, { 278.0f, 200.0f }, {});
     CHECK (p.fine());
     // the Flatten lamp and note: a click on the lamp turns Flatten on; a drag up on the note, a semitone per 10 px
-    mouse::drag (content, { 19.0f, 159.0f }, {});
+    pb::mouse::drag (content, { 19.0f, 159.0f }, {});
     CHECK (p.get (pb::flatten) > 0.5f);
-    mouse::drag (content, { 60.0f, 158.0f }, { { 60.0f, 148.0f }, { 60.0f, 138.0f } });
+    pb::mouse::drag (content, { 60.0f, 158.0f }, { { 60.0f, 148.0f }, { 60.0f, 138.0f } });
     CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 14);
-    mouse::drag (content, { 50.0f, 158.0f }, {});                      // a click on the box: the next key
+    pb::mouse::drag (content, { 50.0f, 158.0f }, {});                      // a click on the box: the next key
     CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 15);
-    mouse::drag (content, { 50.0f, 158.0f }, {}, juce::ModifierKeys::altModifier);   // Alt-click: C3
+    pb::mouse::drag (content, { 50.0f, 158.0f }, {}, juce::ModifierKeys::altModifier);   // Alt-click: C3
     CHECK (juce::roundToInt (p.get (pb::flattenNote)) == 12);
 }
 

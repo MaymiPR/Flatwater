@@ -10,13 +10,14 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 import pedalboard as pb
 import refhost as R
+import local_config_lib as L
 
-UIDS = ('CLA Vocals Stereo@1510537014', 'CLA Vocals Mono/Stereo@1511767094')
+UIDS = (L.ref_component('FwVocalChain', required=False), L.ref_component('FwVocalChain', 'Mono/Stereo', required=False))
 
 
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.REF_SHELL)
-    cv = [n for n in names if "CLA Vocals" in n]
+    cv = [n for n in names if L.ref_base('FwVocalChain') in n]
     print("the reference's components in the shell:", cv)
     for name in cv:
         if "Mono" in name: continue                        # (pedalboard cannot host 1 in / 2 out: RefRender below)

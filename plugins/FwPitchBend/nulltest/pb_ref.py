@@ -20,7 +20,7 @@ REFRENDER = os.path.join(BUILD, 'RefRender_artefacts', 'Release', 'RefRender.exe
 RENDER = os.path.join(BUILD, 'PbRender_artefacts', 'Release', 'PbRender.exe')
 VST3 = os.path.join(BUILD, 'plugins', 'Flatwater Pitch Bend.vst3')
 REF_SHELL = L.get('ref_vst3')
-COMPONENTS = {2: 'Vocal Bender Stereo@185582434', 1: 'Vocal Bender Mono@184106338'}
+COMPONENTS = {2: L.ref_component('FwPitchBend', 'Stereo', required=False), 1: L.ref_component('FwPitchBend', 'Mono', required=False)}
 TMP = os.path.join(HERE, 'renders'); os.makedirs(TMP, exist_ok=True)
 
 
@@ -52,7 +52,10 @@ def _refrender(plugin, name, x, fs, params, block, extra):
 def render_ref(x, fs, params=None, block=512, extra=('preroll=1',), log=False):
     """The reference (its Mono component for a mono input); preroll=1: its parameters are set after a first block"""
     x = _f32(x)
-    y, out = _refrender(REF_SHELL, COMPONENTS[x.shape[0]], x, fs, params, block, extra)
+    name = COMPONENTS[x.shape[0]]
+    if not name:
+        raise SystemExit('local.yaml: set FwPitchBend.ref_name (scripts/nulltest/README.md lists the keys)')
+    y, out = _refrender(REF_SHELL, name, x, fs, params, block, extra)
     return (y, out) if log else y
 
 

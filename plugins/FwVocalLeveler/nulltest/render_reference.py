@@ -10,22 +10,24 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import numpy as np
 import refhost as R
+import local_config_lib as L
 import vocal_corpus_lib as V
 from measure_reference import seg, with_pilot, FS
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'reference', 'fwvocalleveler', 'renders')
+MONO, LIVE_MONO = L.ref_component('FwVocalLeveler', 'Mono', required=False), L.ref_component('FwVocalLeveler', 'Live Mono', required=False)   # local.yaml
 # settings: name -> (component, host parameters)
 SETTINGS = {
-    'default': ('Vocal Rider Mono', {}),
-    'fast': ('Vocal Rider Mono', dict(attack='Fast ')),
-    'vs+6': ('Vocal Rider Mono', dict(vocal_sensitivity=6.0)),
-    'vs-6': ('Vocal Rider Mono', dict(vocal_sensitivity=-6.0)),
-    'tgt-30': ('Vocal Rider Mono', dict(target=-30.0)),
-    'tgt-12': ('Vocal Rider Mono', dict(target=-12.0)),
-    'range12': ('Vocal Rider Mono', dict(range_min=-12.0, range_max=12.0)),
-    'range-3+9': ('Vocal Rider Mono', dict(range_min=-3.0, range_max=9.0, idle=4.0)),
-    'fast12': ('Vocal Rider Mono', dict(attack='Fast ', range_min=-12.0, range_max=12.0, idle=-4.0)),
-    'live-30': ('Vocal Rider Live Mono', dict(spill=-30.0)),
+    'default': (MONO, {}),
+    'fast': (MONO, dict(attack='Fast ')),
+    'vs+6': (MONO, dict(vocal_sensitivity=6.0)),
+    'vs-6': (MONO, dict(vocal_sensitivity=-6.0)),
+    'tgt-30': (MONO, dict(target=-30.0)),
+    'tgt-12': (MONO, dict(target=-12.0)),
+    'range12': (MONO, dict(range_min=-12.0, range_max=12.0)),
+    'range-3+9': (MONO, dict(range_min=-3.0, range_max=9.0, idle=4.0)),
+    'fast12': (MONO, dict(attack='Fast ', range_min=-12.0, range_max=12.0, idle=-4.0)),
+    'live-30': (LIVE_MONO, dict(spill=-30.0)),
 }
 
 

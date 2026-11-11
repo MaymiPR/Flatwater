@@ -11,11 +11,12 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 import pedalboard as pb
 import refhost as R
+import local_config_lib as L
 
 
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.REF_SHELL)
-    br = [n for n in names if "Bass Rider" in n]
+    br = [n for n in names if L.ref_base('FwBassLeveler') in n]
     print("the reference's components in the shell:", br)
     for name in br:
         R.fresh(name); p = R.load(name)

@@ -1,6 +1,7 @@
 """Harness of Flatwater Bass Leveler's null tests and measurements (nulltest/bl_ref.py): the reference through the suite's host
 (scripts/nulltest/refhost.py) with pedalboard or tools/RefRender, our build and our renderer (BlRender); the components (Stereo, Mono, Live Stereo, Live Mono) under COMPONENTS.
-The reference's component names come from local.yaml (FwBassLeveler.ref_name, its stereo component) or the defaults below.
+The reference's component names come from local.yaml (FwBassLeveler.ref_name, its stereo component, and the kinds
+local_config_lib.ref_component derives from it).
 
     import bl_ref as H
     y = H.render_vst3(x); y = H.render_model(x)          # our built VST3, our renderer, at the defaults
@@ -16,7 +17,7 @@ import refhost as R
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
 PLUGIN, PRODUCT = 'FwBassLeveler', 'Flatwater Bass Leveler'
-REF_NAME = L.get('FwBassLeveler.ref_name', required=False) or 'Bass Rider Stereo'      # the reference's stereo component in the shell
+REF_NAME = L.ref_component(PLUGIN, required=False)      # the reference's stereo component in the shell
 _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'BlRender_artefacts', 'Release', 'BlRender.exe')
@@ -37,8 +38,7 @@ def render_model(x, fs=48000, **keys):
     return R.render_exe(RENDER, x, fs, **keys)
 
 
-_BASE = REF_NAME.rsplit(' ', 1)[0]
-COMPONENTS = {k: _BASE + ' ' + k for k in ('Stereo', 'Mono', 'Live Stereo', 'Live Mono')}
+COMPONENTS = {k: L.ref_component(PLUGIN, k, required=False) for k in ('Stereo', 'Mono', 'Live Stereo', 'Live Mono')}
 
 
 def load(kind='Stereo'):

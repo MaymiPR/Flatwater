@@ -139,7 +139,7 @@ if __name__ == "__main__":
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
 PLUGIN, PRODUCT = 'FwVocalComp', 'Flatwater Vocal Comp'
-REF_NAME = L.get('FwVocalComp.ref_name', required=False) or 'RVox Stereo'      # the reference's stereo component in the shell
+REF_NAME = L.ref_component(PLUGIN, required=False)      # the reference's stereo component in the shell
 _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'VcRender_artefacts', 'Release', 'VcRender.exe')
@@ -161,7 +161,7 @@ def render_model(x, fs=48000, **keys):
 
 
 # ---- the reference through pedalboard --------------------------------------------------------------------------------
-MONO_NAME = L.get('FwVocalComp.ref_mono_name', required=False) or 'RVox Mono'      # its mono component
+MONO_NAME = L.ref_component(PLUGIN, 'Mono', required=False)      # its mono component
 
 
 def set_ref(p, comp=0.0, gate=None, gain=0.0):

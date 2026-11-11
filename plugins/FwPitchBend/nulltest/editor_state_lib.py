@@ -47,7 +47,8 @@ def slot(target, s, source, depth, k=0):
 _base = {}
 
 
-def base(component='Vocal Bender Stereo'):
+def base(component=None):
+    component = component or H.REF_NAME.split('@')[0]
     if component not in _base:
         p = R.load(component)
         _base[component] = (p, p.raw_state)
@@ -86,7 +87,7 @@ def with_values(raw, changes, shapes=None):
     return W.set_inner(raw, chunk)
 
 
-def state_file(changes, tag, component='Vocal Bender Stereo', check=True, shapes=None):
+def state_file(changes, tag, component=None, check=True, shapes=None):
     """a state file with the changes (and shape tables); check: load it, process a block and read the values back"""
     import numpy as np
     p, raw = base(component)

@@ -14,7 +14,8 @@ import pedalboard as pb
 import ref_state_lib as W
 import refhost as R
 
-NAME = 'CLA Vocals Stereo'
+import local_config_lib as L
+NAME = L.ref_component('FwVocalChain', required=False)      # the reference's stereo component (local.yaml)
 # the preset array (RESEARCH.md, Flatwater Vocal Chain)
 SENS, DRY_OUT, WET_IN, WET_OUT, OUTPUT = 0, 1, 2, 3, 4
 DRY_MS, MAIN_MUTE, LEFT_PAN = 19, 20, 21
@@ -31,7 +32,7 @@ _base = None
 def plugin():
     global _plugin, _base
     if _plugin is None:
-        _plugin = pb.load_plugin(R.REF_SHELL, plugin_name=NAME)
+        _plugin = pb.load_plugin(R.REF_SHELL, plugin_name=R._named(NAME))
         _base = _plugin.raw_state
     return _plugin
 
@@ -93,9 +94,8 @@ def tf(x, y, fs, nfft=8192):
     return f, 20 * np.log10(np.abs(h) + 1e-12), np.angle(h)
 
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
-import local_config_lib as L
 PLUGIN, PRODUCT = 'FwVocalChain', 'Flatwater Vocal Chain'
-REF_NAME = L.get('FwVocalChain.ref_name', required=False) or NAME      # the reference's stereo component in the shell
+REF_NAME = NAME
 _BUILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'build')
 VST3 = os.path.join(_BUILD, PLUGIN + '_artefacts', 'Release', 'VST3', PRODUCT + '.vst3')
 RENDER = os.path.join(_BUILD, 'ChRender_artefacts', 'Release', 'ChRender.exe')
