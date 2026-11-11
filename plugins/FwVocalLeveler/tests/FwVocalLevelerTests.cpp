@@ -230,9 +230,27 @@ static void testPresets()
     CHECK_NEAR (p.idleDb(), 0.0, 0.01);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalLevelerProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == vl::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), vl::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == vl::allIds[i]) ++same;
+    CHECK (same == vl::numParams);
+    int preset = 0;
+    for (auto* pid : vl::presetIds)
+        for (auto* all : vl::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != vl::id::mode) ++preset;
+    CHECK (preset == vl::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testParameters();
     testBuses();
     testPathAndRead();

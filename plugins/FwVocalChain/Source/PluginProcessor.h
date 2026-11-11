@@ -65,7 +65,6 @@ public:
 
 private:
     void timerCallback() override { syncLink(); }
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     double sr = 48000.0;
     ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)
     ch::dsp::Chain chain;

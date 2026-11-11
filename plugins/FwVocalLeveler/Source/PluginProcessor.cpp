@@ -3,42 +3,11 @@
 
 using namespace juce;
 
-AudioProcessorValueTreeState::ParameterLayout FwVocalLevelerProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text,
-                     bool automatable = true)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); })
-                                                .withAutomatable (automatable);
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto db1 = [] (float v) { return String (v, 1) + " dB"; };
-    // in the reference's parameter order
-    addF (vl::id::target, "Target", { -42.0f, 0.0f, 0.1f }, -21.0f, db1);
-    addF (vl::id::vocalSensitivity, "Vocal Sensitivity", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    addF (vl::id::musicSensitivity, "Music Sensitivity", { -12.1f, 12.0f, 0.1f }, 0.0f,
-          [] (float v) { return vl::musicOff (v) ? String ("Off") : String (v, 1) + " dB"; });
-    addF (vl::id::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 6.0f, db1);
-    // the Idle arrow is stored as its place in the range (as the reference's preset arrays); the host sees it in dB
-    // over a fixed +-12 dB (as the reference's: its text stays 0.0 at 0.5 whatever the range)
-    addF (vl::id::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (vl::idleDb (v, -12.0f, 12.0f), 1); });
-    addF (vl::id::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -6.0f, db1);
-    addF (vl::id::rider, "Rider Fader", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    addF (vl::id::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::id::attack, 1 }, "Attack", StringArray { "Slow", "Fast" }, 0));
-    addF (vl::id::spill, "Spill", { -48.0f, -12.0f, 0.1f }, -48.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::id::automation, 1 }, "Automation", StringArray { "Off", "Write", "Read" }, 0,
-                                                   AudioParameterChoiceAttributes().withAutomatable (false)));
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vl::id::mode, 1 }, "Mode", vl::modeNames(), 0));
-    return l;
-}
-
 FwVocalLevelerProcessor::FwVocalLevelerProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                                        .withInput ("Sidechain", AudioChannelSet::stereo(), false)),
-      apvts (*this, &undo, "FwVocalLeveler", layout())
+      apvts (*this, &undo, "FwVocalLeveler", vl::createLayout())
 {
     startTimerHz (30);
 }

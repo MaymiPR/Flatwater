@@ -61,7 +61,6 @@ public:
 
 private:
     int currentProgram = 0;
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void configure();
     double sr = 48000.0;
     int delaySamples = 0, writePos = 0, configuredMode = -1;

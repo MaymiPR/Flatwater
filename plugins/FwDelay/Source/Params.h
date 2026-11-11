@@ -53,6 +53,70 @@ float delayFromNorm (float n);
 float delayToNorm (float ms);
 juce::String freqText (float hz, bool hiPass);
 // a parameter's value as the reference uses it (rounded to its resolution)
-float atResolution (const char* id, float value);
+float atResolution (const char* pid, float value);
 juce::String rateText (float hz);
+
+inline constexpr int numParams = 21;
+// every parameter in the layout's order (createLayout below, the order hosts list them in)
+inline constexpr const char* const allIds[numParams] {
+    id::sync, id::bpm, id::delay, id::delayNote, id::mix, id::feedback, id::phaseL, id::phaseR, id::pingPong,
+    id::output, id::lopass, id::hipass, id::depth, id::rate, id::lofi, id::analog, id::pingPongStart, id::delayR,
+    id::delayNoteR, id::dual, id::mode };
+// what a factory preset sets: every parameter but Mode, which a preset leaves as it is (flatwater::applyPreset)
+inline constexpr const char* const presetIds[numParams - 1] {
+    id::sync, id::bpm, id::delay, id::delayNote, id::mix, id::feedback, id::phaseL, id::phaseR, id::pingPong,
+    id::output, id::lopass, id::hipass, id::depth, id::rate, id::lofi, id::analog, id::pingPongStart, id::delayR,
+    id::delayNoteR, id::dual };
+
+// the host parameters: the reference's names, ranges, tapers, defaults and display texts, in its order
+inline juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
+{
+    using namespace juce;
+    AudioProcessorValueTreeState::ParameterLayout l;
+    auto addF = [&] (const char* pid, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text)
+    {
+        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
+        l.add (std::make_unique<AudioParameterFloat> (ParameterID { pid, 1 }, name, r, def, a));
+    };
+    auto addC = [&] (const char* pid, const char* name, StringArray items, int def)
+    {
+        l.add (std::make_unique<AudioParameterChoice> (ParameterID { pid, 1 }, name, items, def));
+    };
+    auto logRange = [] (float lo, float hi)
+    {
+        return NormalisableRange<float> (lo, hi,
+            [] (float s, float e, float n) { return s * std::pow (e / s, n); },
+            [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); });
+    };
+    const NormalisableRange<float> delayRange (1.0f, 3500.0f,
+        [] (float, float, float n) { return de::delayFromNorm (n); },
+        [] (float, float, float v) { return de::delayToNorm (v); });
+    auto ms = [] (float v) { return String (roundToInt (v)) + " ms"; };
+    const auto& notes = de::noteNames();
+    // continuous values, as the reference keeps them (its presets store fractions; a slow Ctrl drag moves less than the
+    // display's last digit per mouse step); only the texts are rounded
+
+    addC (de::id::sync, "Sync", { "BPM", "Host", "ms" }, 1);
+    addF (de::id::bpm, "BPM", { 30.0f, 300.0f }, 120.0f, [] (float v) { return String (roundToInt (v)) + " BPM"; });
+    addF (de::id::delay, "Delay", delayRange, 375.0f, ms);
+    addC (de::id::delayNote, "Delay Note", notes, 11);
+    addF (de::id::mix, "Mix", { 0.0f, 100.0f }, 100.0f, [] (float v) { return String (roundToInt (v)); });
+    addF (de::id::feedback, "Feedback", { 0.0f, 200.0f }, 60.0f, [] (float v) { return String (roundToInt (v)); });
+    addC (de::id::phaseL, "Phase L", { "+", "-" }, 0);
+    addC (de::id::phaseR, "Phase R", { "+", "-" }, 0);
+    addC (de::id::pingPong, "Ping Pong", { "Stereo", "PingPong" }, 0);
+    addF (de::id::output, "Output", { -18.0f, 18.0f }, 0.0f, [] (float v) { return String (v, 1) + " dB"; });
+    addF (de::id::lopass, "LoPass", logRange (19.0f, 20138.77f), 20138.77f, [] (float v) { return de::freqText (v, false); });
+    addF (de::id::hipass, "HiPass", logRange (19.0f, 20138.77f), 19.0f, [] (float v) { return de::freqText (v, true); });
+    addF (de::id::depth, "Depth", { 0.0f, 100.0f }, 0.0f, [] (float v) { return String (roundToInt (v)) + " %"; });
+    addF (de::id::rate, "Rate", logRange (0.1f, 6000.0f), 0.1f, [] (float v) { return de::rateText (v); });
+    addC (de::id::lofi, "LoFi", { "HiFi", "LoFi" }, 0);
+    addC (de::id::analog, "Analog", { "Off", "1", "2", "3", "4" }, 2);
+    addC (de::id::pingPongStart, "Ping Pong Start", { "Left", "Right" }, 0);
+    addF (de::id::delayR, "Delay R", delayRange, 375.0f, ms);
+    addC (de::id::delayNoteR, "Delay Note R", notes, 11);
+    addC (de::id::dual, "Dual", { "Off", "On" }, 0);
+    addC (de::id::mode, "Mode", { "Stereo", "Mono", "M>S" }, 0);
+    return l;
+}
 }

@@ -210,9 +210,27 @@ static void testFactoryPresets()
             CHECK (std::abs (rp->getValue() - rp->getDefaultValue()) < 1.0e-6f);   // program 0 = defaults
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwBassLiftProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == bf::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), bf::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == bf::allIds[i]) ++same;
+    CHECK (same == bf::numParams);
+    int preset = 0;
+    for (auto* pid : bf::presetIds)
+        for (auto* all : bf::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != bf::id::mode) ++preset;
+    CHECK (preset == bf::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testOriginalPath();
     testGeneratedPath();
     testOutput();

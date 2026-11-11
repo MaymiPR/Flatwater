@@ -4,44 +4,10 @@
 
 using namespace juce;
 
-AudioProcessorValueTreeState::ParameterLayout FwBassXLiftProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto addC = [&] (const char* id, const char* name, StringArray items, int def)
-    {
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { id, 1 }, name, items, def));
-    };
-    auto logRange = [] (float lo, float hi, float step)
-    {
-        return NormalisableRange<float> (lo, hi,
-            [] (float s, float e, float n) { return s * std::pow (e / s, n); },
-            [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); },
-            [step] (float, float, float v) { return std::round (v / step) * step; });
-    };
-    auto db = [] (float v) { return flatwater::flat::gainText (v) + " dB"; };
-
-    addF (bx::id::input, "Input", flatwater::flat::gainRange (0.0f), 0.0f, db);
-    addF (bx::id::freq, "Frequency", logRange (32.0f, 256.0f, 1.0f), 80.0f, [] (float v) { return String (roundToInt (v)) + " Hz"; });
-    addF (bx::id::decay, "Decay", { -24.0f, -9.0f, 0.1f }, -15.0f, [] (float v) { return String (v, 1) + " dB"; });
-    addF (bx::id::response, "Response", { 10.0f, 30.0f, 0.1f }, 20.0f, [] (float v) { return String (v, 1) + " ms"; });
-    addF (bx::id::ratio, "Ratio", logRange (1.0f, 4.0f, 0.01f), 1.0f, [] (float v) { return String (v, 2) + ":1"; });
-    addC (bx::id::monitor, "Monitor", { "Audio", "Harmonics", "Original Bass" }, 0);
-    addC (bx::id::highpass, "High Pass", { "6 dB/oct", "12 dB/oct", "24 dB/oct" }, 1);
-    addF (bx::id::origBass, "Original Bass", flatwater::flat::gainRange (12.0f), 0.0f, db);
-    addF (bx::id::harmonics, "Harmonics", flatwater::flat::gainRange (12.0f), -100.0f, db);
-    addC (bx::id::mode, "Mode", { "Stereo", "Mono" }, 0);
-    return l;
-}
-
 FwBassXLiftProcessor::FwBassXLiftProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassXLift", layout())
+      apvts (*this, &undo, "FwBassXLift", bx::createLayout())
 {
 }
 

@@ -3,37 +3,10 @@
 
 using namespace juce;
 
-AudioProcessorValueTreeState::ParameterLayout FwVocalChainProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto text1 = [] (float v) { return String (v, 1); };
-    auto addF = [&] (const char* id, const char* name, float lo, float hi, std::function<String (float)> text, const char* unit = "")
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); }).withLabel (unit);
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, NormalisableRange<float> (lo, hi, 0.1f), 0.0f, a));
-    };
-    // in the reference's host order: Sensitivity, then each fader and its colour, Output, Balance
-    addF (ch::id::sensitivity, "Sensitivity", -10.0f, 10.0f, text1, "dB");
-    const char* names[6][2] = { { "Bass", "Bass Color" }, { "Treble", "Treble Color" }, { "Compress", "Compress Color" },
-                                { "Reverb", "Reverb Color" }, { "Delay", "Delay Color" }, { "Pitch", "Pitch Color" } };
-    for (size_t i = 0; i < 6; ++i)
-    {
-        const auto& s = ch::stages()[i];
-        addF (s.fader, names[i][0], -10.0f, 10.0f, text1);
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { s.colour, 1 }, names[i][1],
-                                                       StringArray { s.names[0], s.names[1], s.names[2], s.names[3] }, 1));
-    }
-    addF (ch::id::output, "Output", -10.0f, 10.0f, text1, "dB");
-    addF (ch::id::balance, "Balance", -6.0f, 6.0f, text1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { ch::id::mode, 1 }, "Mode", ch::modeNames(), 0));
-    l.add (std::make_unique<AudioParameterBool> (ParameterID { ch::id::link, 1 }, "Link In/Out", false));
-    return l;
-}
-
 FwVocalChainProcessor::FwVocalChainProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwVocalChain", layout())
+      apvts (*this, &undo, "FwVocalChain", ch::createLayout())
 {
     chain.setReverb (&reverb);
     setLatencySamples (ch::latencySamples (48000.0));

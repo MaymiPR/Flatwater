@@ -53,7 +53,6 @@ public:
     std::atomic<bool> clipped { false };
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     int currentProgram = 0;
     bf::dsp::Processor dsp;
 };

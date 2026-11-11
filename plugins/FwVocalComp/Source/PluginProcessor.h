@@ -52,7 +52,6 @@ public:
     flatwater::PeakTap energyDb, attnDepth, outLDb, outRDb;
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     int currentProgram = 0;
     void configure();
 

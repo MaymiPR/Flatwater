@@ -53,7 +53,6 @@ public:
     std::atomic<int> blocks { 0 };          // counts processed blocks (the meters show their floor dot only while audio runs)
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     bx::dsp::Processor dsp;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     int currentProgram = 0;

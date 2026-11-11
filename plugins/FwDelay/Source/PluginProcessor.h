@@ -61,7 +61,6 @@ public:
     de::dsp::Settings settings (double sampleRate) const;
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void configure();
     de::dsp::Delay delays[2];                 // one linked delay, or two mono ones (Mode Mono on a stereo bus)
     co::dsp::Analog analogStage;

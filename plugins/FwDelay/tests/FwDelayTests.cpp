@@ -311,9 +311,27 @@ static void testDsp()
     }
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwDelayProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == de::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), de::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == de::allIds[i]) ++same;
+    CHECK (same == de::numParams);
+    int preset = 0;
+    for (auto* pid : de::presetIds)
+        for (auto* all : de::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != de::id::mode) ++preset;
+    CHECK (preset == de::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testDelayTaper();
     testNotes();
     testTexts();

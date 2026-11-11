@@ -63,7 +63,6 @@ public:
 
 private:
     void ensureState();                                          // the state tree's parts, with their defaults
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void refreshModel();                                         // the tree's settings -> the audio thread's copy
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override { refreshModel(); }
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& child) override;

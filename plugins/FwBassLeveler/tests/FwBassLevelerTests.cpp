@@ -255,9 +255,27 @@ static void testPresets()
     CHECK_NEAR (p.apvts.getRawParameterValue (bl::id::spill)->load(), -30.0, 0.05);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwBassLevelerProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == bl::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), bl::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == bl::allIds[i]) ++same;
+    CHECK (same == bl::numParams);
+    int preset = 0;
+    for (auto* pid : bl::presetIds)
+        for (auto* all : bl::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != bl::id::mode) ++preset;
+    CHECK (preset == bl::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testParameters();
     testLatencyAndPath();
     testRideLaw();

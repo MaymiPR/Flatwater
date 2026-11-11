@@ -261,9 +261,27 @@ static void testLearnedGuards()
     CHECK (maxDiff (a, b, (size_t) (fs * 0.2)) > 1.0e-4);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalCompProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == vc::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), vc::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == vc::allIds[i]) ++same;
+    CHECK (same == vc::numParams);
+    int preset = 0;
+    for (auto* pid : vc::presetIds)
+        for (auto* all : vc::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != vc::id::mode) ++preset;
+    CHECK (preset == vc::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testLatency();
     testStaticLaw();
     testGate();

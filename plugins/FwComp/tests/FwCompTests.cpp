@@ -388,9 +388,27 @@ static void testMath()
     CHECK_NEAR (flatwater::math::tanhf (0.5f), std::tanh (0.5f), 1.0e-6);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwCompProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == co::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), co::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == co::allIds[i]) ++same;
+    CHECK (same == co::numParams);
+    int preset = 0;
+    for (auto* pid : co::presetIds)
+        for (auto* all : co::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != co::id::mode) ++preset;
+    CHECK (preset == co::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testMath();
     testLatency();
     testIdentity();

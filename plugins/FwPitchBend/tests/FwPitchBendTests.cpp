@@ -508,6 +508,23 @@ static void testShifterLatch()
     CHECK (r < -60.0);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwPitchBendProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == pb::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), pb::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == pb::allIds[i]) ++same;
+    CHECK (same == pb::numParams);
+    int preset = 0;
+    for (auto* pid : pb::presetIds)
+        for (auto* all : pb::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != pb::id::mode) ++preset;
+    CHECK (preset == pb::numParams - 1);
+}
+
 // the DSP's ranges of the modulatable controls (dsp/Model.h targets) convert as their host parameters do, to the bit
 static void testTargetRanges()
 {
@@ -533,6 +550,7 @@ static void testTargetRanges()
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testTargetRanges();
     testParameters();
     testBuses();

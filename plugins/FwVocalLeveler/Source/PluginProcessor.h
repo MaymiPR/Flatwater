@@ -71,7 +71,6 @@ public:
     void readExactIdle();                                       // (after a preset: also called by the timer)
 
 private:
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void timerCallback() override;                              // Automation Write: the ride to the host; the preset's Idle
     std::atomic<float> exactIdle { -1.0f };
     double sr = 48000.0;

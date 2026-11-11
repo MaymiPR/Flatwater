@@ -178,9 +178,27 @@ static void testEditor()
     CHECK (img.getHeight() == FwVocalChainEditor::H);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalChainProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == ch::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), ch::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == ch::allIds[i]) ++same;
+    CHECK (same == ch::numParams);
+    int preset = 0;
+    for (auto* pid : ch::presetIds)
+        for (auto* all : ch::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != ch::id::mode) ++preset;
+    CHECK (preset == ch::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testParameters();
     testBusesAndLatency();
     testPath();

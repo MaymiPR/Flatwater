@@ -56,4 +56,74 @@ inline const juce::StringArray& noteNames()
     }();
     return n;
 }
+
+inline constexpr int numParams = 30;
+// every parameter in the layout's order (createLayout below, the order hosts list them in)
+inline constexpr const char* const allIds[numParams] {
+    mod[0].warp, mod[0].level, mod[0].rateSynced, mod[0].rate, mod[0].sync, mod[0].phase, mod[0].type, mod[0].smooth,
+    mod[0].steps, mod[1].warp, mod[1].level, mod[1].rateSynced, mod[1].rate, mod[1].sync, mod[1].phase, mod[1].type,
+    mod[1].smooth, mod[1].steps, id::amAttack, id::amRelease, id::amLevel, id::ptSmooth, id::ptOffset, id::ptLevel,
+    id::pitch, id::formant, id::mix, id::flattenNote, id::flatten, id::mode };
+// what a factory preset sets: every parameter but Mode, which a preset leaves as it is (flatwater::applyPreset)
+inline constexpr const char* const presetIds[numParams - 1] {
+    mod[0].warp, mod[0].level, mod[0].rateSynced, mod[0].rate, mod[0].sync, mod[0].phase, mod[0].type, mod[0].smooth,
+    mod[0].steps, mod[1].warp, mod[1].level, mod[1].rateSynced, mod[1].rate, mod[1].sync, mod[1].phase, mod[1].type,
+    mod[1].smooth, mod[1].steps, id::amAttack, id::amRelease, id::amLevel, id::ptSmooth, id::ptOffset, id::ptLevel,
+    id::pitch, id::formant, id::mix, id::flattenNote, id::flatten };
+
+// a host parameter's range from the DSP's (dsp/Model.h Range): linear, or the reference's exponential taper
+inline juce::NormalisableRange<float> hostRange (const dsp::Range& r)
+{
+    if (! r.exponential) return { r.start, r.end };
+    return { r.start, r.end,
+             [] (float a, float b, float v) { return dsp::Range::expFrom0to1 (a, b, v); },
+             [] (float a, float b, float x) { return dsp::Range::expTo0to1 (a, b, x); } };
+}
+
+// the host parameters: the reference's names, ranges, tapers, defaults and display texts, in its order
+inline juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
+{
+    using namespace juce;
+    AudioProcessorValueTreeState::ParameterLayout l;
+    auto addF = [&] (const char* pid, const String& name, NormalisableRange<float> r, float def, std::function<String (float)> text)
+    {
+        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
+        l.add (std::make_unique<AudioParameterFloat> (ParameterID { pid, 1 }, name, r, def, a));
+    };
+    auto addC = [&] (const char* pid, const String& name, const StringArray& items, int def)
+    {
+        l.add (std::make_unique<AudioParameterChoice> (ParameterID { pid, 1 }, name, items, def));
+    };
+    auto fix = [] (int digits) { return [digits] (float v) { return String (v, digits); }; };
+    auto ms = [] (float v) { return String (v, 1) + " ms"; };
+    // in the reference's parameter order
+    for (int m = 0; m < 2; ++m)
+    {
+        const auto& d = pb::mod[m];
+        const String p = "Mod" + String (m + 1) + " ";
+        addF (d.warp, p + "Warp", hostRange (dsp::ranges::warp), 1.0f, fix (2));
+        addF (d.level, p + "Level", hostRange (dsp::ranges::unit), 1.0f, fix (2));
+        addC (d.rateSynced, p + "Rate Synced", pb::syncedRates(), 5);
+        addF (d.rate, p + "Rate", hostRange (dsp::ranges::rate), 0.5f, [] (float v) { return String (v, 3) + " Hz"; });
+        addC (d.sync, p + "Sync On/Off", StringArray { "Note", "ms" }, 0);
+        addF (d.phase, p + "Phase", hostRange (dsp::ranges::unit), 0.0f, fix (3));
+        addC (d.type, p + "Type", StringArray { "LFO", "Seq" }, 0);
+        addF (d.smooth, p + "Smooth", hostRange (dsp::ranges::smooth), 1.5f, fix (1));
+        addF (d.steps, p + "Steps", { 2.0f, 16.0f, 1.0f }, 16.0f, fix (0));
+    }
+    addF (pb::id::amAttack, "AM Attack", hostRange (dsp::ranges::amTime), 10.0f, ms);
+    addF (pb::id::amRelease, "AM Release", hostRange (dsp::ranges::amTime), 100.0f, ms);
+    addF (pb::id::amLevel, "AM Level", hostRange (dsp::ranges::twice), 1.0f, fix (2));
+    addF (pb::id::ptSmooth, "PT Smooth", hostRange (dsp::ranges::smooth), 10.0f, fix (1));
+    addF (pb::id::ptOffset, "PT Offset", hostRange (dsp::ranges::offset), 0.0f, fix (2));
+    addF (pb::id::ptLevel, "PT Level", hostRange (dsp::ranges::twice), 1.0f, fix (2));
+    auto semis = [] (float v) { return String (roundToInt (v)) + " semitones"; };
+    addF (pb::id::pitch, "Pitch", hostRange (dsp::ranges::semitones), 0.0f, semis);
+    addF (pb::id::formant, "Formant", hostRange (dsp::ranges::semitones), 0.0f, semis);
+    addF (pb::id::mix, "Mix", hostRange (dsp::ranges::mix), 100.0f, fix (1));
+    addC (pb::id::flattenNote, "Flatten Note", pb::noteNames(), 12);
+    addC (pb::id::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
+    addC (pb::id::mode, "Mode", pb::modeNames(), 0);
+    return l;
+}
 }

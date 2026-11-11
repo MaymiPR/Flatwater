@@ -37,6 +37,8 @@
   their ranges from the DSP (the host parameters are built from the same ranges) and its state-tree helpers are
   `Source/ModulationState.h`; FwVocalChain's reverb convolution is `Source/ReverbConvolution`, which the processor
   hands to the chain. No sound or saved state changes (renders and saved states are byte-identical).
+- **Parameter lists:** every `Params.h` holds `numParams`, `allIds` (the layout's order, checked by each plug-in's
+  tests), `presetIds` and `createLayout`; parameter ids, order, ranges, names and defaults are unchanged.
 
 ## 1.0.0 (2026-11-04)
 

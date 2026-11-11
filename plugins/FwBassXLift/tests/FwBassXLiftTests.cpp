@@ -228,9 +228,27 @@ static void testAgainstReference()
     }
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwBassXLiftProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == bx::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), bx::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == bx::allIds[i]) ++same;
+    CHECK (same == bx::numParams);
+    int preset = 0;
+    for (auto* pid : bx::presetIds)
+        for (auto* all : bx::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != bx::id::mode) ++preset;
+    CHECK (preset == bx::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testOriginalPath();
     testInput();
     testHarmonicsFader();

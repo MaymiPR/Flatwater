@@ -54,7 +54,6 @@ public:
     std::atomic<double> hostBpm { 0.0 };                  // 0: the host gives no tempo
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void configure();
     co::dsp::Compressor::Settings settings() const;

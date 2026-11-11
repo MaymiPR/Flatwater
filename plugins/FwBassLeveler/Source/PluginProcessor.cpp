@@ -3,35 +3,10 @@
 
 using namespace juce;
 
-AudioProcessorValueTreeState::ParameterLayout FwBassLevelerProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto db1 = [] (float v) { return String (v, 1) + " dB"; };
-    auto plain1 = [] (float v) { return String (v, 1); };
-    addF (bl::id::target, "Target", { -42.0f, 0.0f, 0.1f }, -14.0f, db1);
-    addF (bl::id::sensitivity, "Sensitivity", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bl::id::response, 1 }, "Response", StringArray { "Slow", "Fast" }, 0));
-    addF (bl::id::spill, "Spill", { -50.0f, -3.0f, 0.1f }, -40.0f, db1);
-    addF (bl::id::artifacts, "Artifacts", { 0.0f, 100.0f, 0.1f }, 50.0f, plain1);
-    addF (bl::id::rangeMax, "Range Max", { -11.0f, 12.0f, 0.1f }, 12.0f, db1);
-    addF (bl::id::rangeMin, "Range Min", { -12.0f, 11.0f, 0.1f }, -12.0f, db1);
-    // the Idle arrow is stored as its place in the range (as the reference's preset arrays); the host sees it in dB
-    // over a fixed +-12 dB (as the reference's: its text stays 0.0 at 0.5 whatever the range)
-    addF (bl::id::idle, "Idle", { 0.02f, 0.98f, 0.01f }, 0.5f, [] (float v) { return String (bl::idleDb (v, -12.0f, 12.0f), 1); });
-    addF (bl::id::output, "Output", { -12.0f, 12.0f, 0.1f }, 0.0f, db1);
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bl::id::mode, 1 }, "Mode", bl::modeNames(), 0));
-    return l;
-}
-
 FwBassLevelerProcessor::FwBassLevelerProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassLeveler", layout())
+      apvts (*this, &undo, "FwBassLeveler", bl::createLayout())
 {
     setLatencySamples (roundToInt (bl::latencyMs (0) * 0.001 * sr));
 }
