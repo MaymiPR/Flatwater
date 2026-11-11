@@ -61,18 +61,18 @@ int main (int argc, char** argv)
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && pb::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && pb::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! pb::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! pb::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
             }
         }
     }
-    pb::Shifter s;
+    pb::dsp::Shifter s;
     s.prepare (fs, block, ch);
     std::vector<std::vector<float>> buf ((size_t) ch, std::vector<float> ((size_t) block));
     std::vector<float*> ptr ((size_t) ch);

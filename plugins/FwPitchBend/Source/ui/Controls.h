@@ -16,7 +16,7 @@ struct Ui
 {
     FwPitchBendProcessor& proc;
     juce::Component* selected = nullptr;                          // the control clicked last (marked in amber)
-    int dragging = None;                                         // a source being dragged onto a control
+    int dragging = dsp::None;                                    // a source being dragged onto a control
     ModKnob* dropTarget = nullptr;                               // the control under it
     std::function<void()> changed {};                            // repaint the editor's overlays
     std::function<void (ModKnob&)> enter {};                     // a double-click: type a value
@@ -123,7 +123,7 @@ public:
     std::function<void()> closed;
 
 private:
-    struct Tile { juce::String name; Table table; juce::File file; };
+    struct Tile { juce::String name; dsp::Table table; juce::File file; };
     void rebuild();
     juce::Rectangle<float> tileRect (int i) const;
     Ui& ui;

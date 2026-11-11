@@ -2,7 +2,7 @@
 
 using namespace juce;
 
-namespace pb
+namespace pb::dsp
 {
 void Engine::prepare (double sampleRate, int maxBlock, int channels)
 {
@@ -210,7 +210,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
 
     applySlots (value);
     // the wet path, then Mix (per sample, with its modulation)
-    const float flattenHz = prm.flatten > 0.5f ? t.flattenRefHz * (float) pbmath::exp2 (std::round (prm.flattenNote) / 12.0) : 0.0f;
+    const float flattenHz = prm.flatten > 0.5f ? t.flattenRefHz * (float) flatwater::math::exp2 (std::round (prm.flattenNote) / 12.0) : 0.0f;
     // the modulated totals set the pitch and the formant, followed in steps of 16 samples (measured: a stepped Pitch
     // lands about 2 ms after the step wherever it falls in the host's block, at blocks of 64 and 512); the knobs' own
     // values (rounded as they act) set the envelope's share of Pitch, which level table applies and whether noise is

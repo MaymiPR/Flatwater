@@ -16,13 +16,13 @@ AudioProcessorValueTreeState::ParameterLayout FwVocalCompProcessor::layout()
              .withAutomatable (visible);
         l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
     };
-    add (vc::comp, "Comp", { -36.0f, 0.0f, 0.1f }, 0.0f);
-    add (vc::gate, "Gate", { -80.0f, 0.0f, 0.1f }, -80.0f);
-    add (vc::gain, "Gain", { -36.0f, 0.0f, 0.1f }, 0.0f);
-    l.add (std::make_unique<AudioParameterFloat> (ParameterID { vc::gateRel, 1 }, "Gate Release",
+    add (vc::id::comp, "Comp", { -36.0f, 0.0f, 0.1f }, 0.0f);
+    add (vc::id::gate, "Gate", { -80.0f, 0.0f, 0.1f }, -80.0f);
+    add (vc::id::gain, "Gain", { -36.0f, 0.0f, 0.1f }, 0.0f);
+    l.add (std::make_unique<AudioParameterFloat> (ParameterID { vc::id::gateRel, 1 }, "Gate Release",
                                                   NormalisableRange<float> { 10.0f, 250.0f, 0.1f }, 130.0f,
                                                   AudioParameterFloatAttributes().withAutomatable (false)));
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vc::mode, 1 }, "Mode", StringArray { "Stereo", "Mono" }, 0));
+    l.add (std::make_unique<AudioParameterChoice> (ParameterID { vc::id::mode, 1 }, "Mode", StringArray { "Stereo", "Mono" }, 0));
     return l;
 }
 
@@ -31,10 +31,10 @@ FwVocalCompProcessor::FwVocalCompProcessor()
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
       apvts (*this, &undo, "FwVocalComp", layout())
 {
-    pComp = apvts.getRawParameterValue (vc::comp);
-    pGate = apvts.getRawParameterValue (vc::gate);
-    pGain = apvts.getRawParameterValue (vc::gain);
-    pMode = apvts.getRawParameterValue (vc::mode);
+    pComp = apvts.getRawParameterValue (vc::id::comp);
+    pGate = apvts.getRawParameterValue (vc::id::gate);
+    pGain = apvts.getRawParameterValue (vc::id::gain);
+    pMode = apvts.getRawParameterValue (vc::id::mode);
 }
 
 bool FwVocalCompProcessor::isBusesLayoutSupported (const BusesLayout& l) const
@@ -74,7 +74,7 @@ void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     float inPeak = 0.0f;
     for (int c = 0; c < ch; ++c) inPeak = jmax (inPeak, b.getMagnitude (c, 0, n));
 
-    vc::Processor::Params p;
+    vc::dsp::Processor::Params p;
     p.compDb = pComp->load(); p.gateDb = pGate->load(); p.gainDb = pGain->load();
     float* const* w = b.getArrayOfWritePointers();
     if (! layoutDual)

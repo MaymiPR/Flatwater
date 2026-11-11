@@ -6,6 +6,8 @@
 // Parameters follow the reference's parameter list (its order, ranges and defaults; see RESEARCH.md, Flatwater Bass Lift).
 namespace bf
 {
+namespace id
+{
 inline constexpr const char* inGain = "inGain";        // -30..0 dB, hidden, default 0
 inline constexpr const char* freq = "freq";            // 32..256 Hz, logarithmic, default 80
 inline constexpr const char* response = "response";    // 0..30 ms, hidden, default 30
@@ -19,4 +21,5 @@ inline constexpr const char* tc = "tc";                // 0..2000 ms, hidden, de
 inline constexpr const char* xfadeTc = "xfadeTc";      // 0..5000, hidden, default 10
 inline constexpr const char* smooth = "smooth";        // on / off, hidden, default on
 inline constexpr const char* mode = "mode";            // 0 Stereo, 1 Mono
+}
 }

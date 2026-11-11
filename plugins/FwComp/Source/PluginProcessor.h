@@ -31,8 +31,8 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : co::factoryPresets()[(size_t) index - 1], apvts.getParameter (co::mode),
-                           { apvts.getParameter (co::mix) });           // presets leave Mix alone, as the reference
+        flatwater::applyPreset (apvts, index == 0 ? defaults : co::factoryPresets()[(size_t) index - 1], apvts.getParameter (co::id::mode),
+                           { apvts.getParameter (co::id::mix) });           // presets leave Mix alone, as the reference
     }
     const juce::String getProgramName (int index) override
     {
@@ -57,10 +57,10 @@ private:
     static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void configure();
-    co::Compressor::Settings settings() const;
+    co::dsp::Compressor::Settings settings() const;
     int currentProgram = 0;
-    co::Compressor comps[2];
-    co::Analog analogStage;
+    co::dsp::Compressor comps[2];
+    co::dsp::Analog analogStage;
     double sr = 44100.0;
     bool prepared = false, layoutDual = false;
 };

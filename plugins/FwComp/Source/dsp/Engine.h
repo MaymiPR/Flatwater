@@ -22,7 +22,7 @@
 #include "shared/dsp/Math.h"
 #include "Net.h"
 
-namespace co
+namespace co::dsp
 {
 // the learned gain correction: one GRU step (PyTorch layout) per call; returns the correction in dB
 class GainNet

@@ -373,7 +373,7 @@ void Delays::prepare (double sampleRate, int block, const Tuning& t)
 {
     fs = sampleRate;
     tune = t;
-    analog.modes = de::tables::analog;
+    analog.modes = de::dsp::tables::analog;
     analog.prepare (fs, 2);
     analog.setMode (4);
     line.prepare (fs);

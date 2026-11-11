@@ -32,7 +32,7 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : vl::factoryPresets()[(size_t) index - 1], apvts.getParameter (vl::mode));
+        flatwater::applyPreset (apvts, index == 0 ? defaults : vl::factoryPresets()[(size_t) index - 1], apvts.getParameter (vl::id::mode));
         readExactIdle();
     }
     const juce::String getProgramName (int index) override
@@ -58,16 +58,16 @@ public:
     std::atomic<float> userRideDb { 0.0f };
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    int modeIndex() const { return juce::roundToInt (get (vl::mode)); }
-    int automationMode() const { return juce::roundToInt (get (vl::automation)); }
+    int modeIndex() const { return juce::roundToInt (get (vl::id::mode)); }
+    int automationMode() const { return juce::roundToInt (get (vl::id::automation)); }
     // the Idle arrow's place: a factory preset's own value (presets use 0 and 1, outside the arrow's 0.02 .. 0.98) while
     // the arrow stays where the preset put it, else the parameter's
     float idleFraction() const
     {
-        const float v = get (vl::idle), e = exactIdle.load();
+        const float v = get (vl::id::idle), e = exactIdle.load();
         return (e >= 0.0f && std::abs (v - juce::jlimit (0.02f, 0.98f, e)) < 1.0e-4f) ? e : v;
     }
-    float idleDb() const { return vl::idleDb (idleFraction(), get (vl::rangeMin), get (vl::rangeMax)); }
+    float idleDb() const { return vl::idleDb (idleFraction(), get (vl::id::rangeMin), get (vl::id::rangeMax)); }
     void readExactIdle();                                       // (after a preset: also called by the timer)
 
 private:
@@ -75,7 +75,7 @@ private:
     void timerCallback() override;                              // Automation Write: the ride to the host; the preset's Idle
     std::atomic<float> exactIdle { -1.0f };
     double sr = 48000.0;
-    vl::Ride ride;
+    vl::dsp::Ride ride;
     double outGain = 1.0, heldDb = 0.0, smooth5 = 0.0;          // the Output gain and a held Rider, each smoothed over 5 ms
     double musicLevel = 1.0e-10;
     bool wasHeld = false, returning = false, writing = false;

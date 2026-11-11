@@ -4,14 +4,14 @@ using namespace juce;
 using namespace flatwater::ren;
 
 FwVocalCompEditor::FwVocalCompEditor (FwVocalCompProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (vc::mode), "Flatwater Vocal Comp", JucePlugin_VersionString, W, H), proc (p),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (vc::id::mode), "Flatwater Vocal Comp", JucePlugin_VersionString, W, H), proc (p),
       comp (makeFader (Fader::Big)), gate (makeFader (Fader::Small, 4)), gain (makeFader (Fader::Small, 5))
 {
     setFactoryPresets (vc::factoryPresets());
     gate.format = [] (double v) { return dbText ((float) v, true); };
-    attach (comp, vc::comp, { 135, 99, 102, 207 }, 0.0);
-    attach (gate, vc::gate, { 37, 89, 42, 211 }, -80.0);
-    attach (gain, vc::gain, { 292, 89, 42, 211 }, 0.0);
+    attach (comp, vc::id::comp, { 135, 99, 102, 207 }, 0.0);
+    attach (gate, vc::id::gate, { 37, 89, 42, 211 }, -80.0);
+    attach (gain, vc::id::gain, { 292, 89, 42, 211 }, 0.0);
 }
 
 Rectangle<int> FwVocalCompEditor::vuRect (bool right) const { return { isMono() ? 311 : (right ? 315 : 307), 122, 5, 155 }; }

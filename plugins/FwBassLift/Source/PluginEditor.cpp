@@ -11,7 +11,7 @@ const Rectangle<int> kClip (302, 103, 23, 13), kHarmText (143, 287, 82, 25), kOr
 }
 
 FwBassLiftEditor::FwBassLiftEditor (FwBassLiftProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bf::mode), "Flatwater Bass Lift", JucePlugin_VersionString, W, H), proc (p),
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bf::id::mode), "Flatwater Bass Lift", JucePlugin_VersionString, W, H), proc (p),
       intensity (makeFader (Fader::Big)), gain (makeFader (Fader::Small, 5)), freq (makeFader (Fader::Horizontal)),
       origBass (makeSwitch())
 {
@@ -25,10 +25,10 @@ FwBassLiftEditor::FwBassLiftEditor (FwBassLiftProcessor& p)
     freq.plainScale = 1.53f; freq.ctrlFast = 0.283f; freq.ctrlSlow = 0.038f;
     freq.wheelScale = 1.25;                         // and its wheel 1.25 times the share of the range
     gain.trackTop = 20;
-    attach (intensity, bf::intensity, { 135, 99, 102, 207 }, 0.0);
-    attach (gain, bf::gain, { 292, 85, 42, 215 }, 0.0);
-    attach (freq, bf::freq, { 120, 334, 171, 41 }, 80.0);
-    attach (origBass, bf::origBass, { 41, 88, 33, 38 });
+    attach (intensity, bf::id::intensity, { 135, 99, 102, 207 }, 0.0);
+    attach (gain, bf::id::gain, { 292, 85, 42, 215 }, 0.0);
+    attach (freq, bf::id::freq, { 120, 334, 171, 41 }, 80.0);
+    attach (origBass, bf::id::origBass, { 41, 88, 33, 38 });
 }
 
 Rectangle<int> FwBassLiftEditor::vuRect (bool right) const { return { isMono() ? 311 : (right ? 315 : 307), 122, 5, 155 }; }

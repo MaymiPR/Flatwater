@@ -1,12 +1,12 @@
 #include "Shifter.h"
-#include "Math.h"
+#include "shared/dsp/Math.h"
 #include <algorithm>
 #include <cmath>
 
 // Flatwater Pitch Bend's shifter (the header has the method). Numbers marked "measured" come from
 // measurements/FwPitchBend/shifter/SUMMARY.md; the rest are our own choices, tuned on its scorecard
 // (plugins/FwPitchBend/nulltest/check_shifter.py).
-namespace pb
+namespace pb::dsp
 {
 namespace
 {
@@ -105,7 +105,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
             const double x = (firBase + k) - delay;
             const double xr = x / (T / 2.0);
             const double w = besselI0 (beta * std::sqrt (std::max (0.0, 1.0 - xr * xr))) / i0b;
-            h[(size_t) k] = (std::abs (x) < 1e-12 ? 1.0 : pbmath::sin (pi * x) / (pi * x)) * w;
+            h[(size_t) k] = (std::abs (x) < 1e-12 ? 1.0 : flatwater::math::sin (pi * x) / (pi * x)) * w;
             sum += h[(size_t) k];
         }
         for (int k = 0; k < T; ++k) fir[(size_t) k] = (float) (h[(size_t) k] / sum);
@@ -113,7 +113,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
 
     // the detector's low-pass: 4th-order Butterworth (two biquads)
     const double qs[2] = { 0.54119610, 1.30656296 };
-    const double w0 = 2.0 * pi * tune.lowpassHz / sr, cw = pbmath::cos (w0), sw = pbmath::sin (w0);
+    const double w0 = 2.0 * pi * tune.lowpassHz / sr, cw = flatwater::math::cos (w0), sw = flatwater::math::sin (w0);
     for (int b = 0; b < 2; ++b)
     {
         const double al = sw / (2.0 * qs[b]), a0 = 1.0 + al;
@@ -129,7 +129,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
     winS = (int) std::lround (tune.winShortS * fd);
     winL = (int) std::lround (tune.winLongS * fd);
     evalEvery = std::max (1, (int) std::lround (tune.evalS * fd));
-    smoothA = 1.0 - pbmath::exp (-evalEvery / (tune.smoothS * fd));
+    smoothA = 1.0 - flatwater::math::exp (-evalEvery / (tune.smoothS * fd));
     const int cl = nextPow2 (winL + tmax + 8);
     coarse.assign ((size_t) cl, 0.0f);
     coarseMask = cl - 1;
@@ -139,13 +139,13 @@ void Shifter::prepare (double sampleRate, int, int ch)
     gateLen = (int) std::lround (0.020 * sr);
     slopeLen = (int) std::lround (0.010 * sr);
 
-    levelA = 1.0 - pbmath::exp (-1.0 / (tune.levelS * sr));
+    levelA = 1.0 - flatwater::math::exp (-1.0 / (tune.levelS * sr));
     // (measured: the run 1029 .. 1030 samples at 48 kHz, 976 .. 980 at 44.1, 2101 .. 2400 at 96; the delay 39 samples
     // at 44.1 and 48 kHz, 78 at 96)
     flatRun = (int) std::lround (1024.0 * sr / 48000.0);
     flatDelay = 39 * std::max (1, (int) std::lround (sr / 48000.0));
     fadeTab.assign (1026, 0.0f);
-    for (int i = 0; i <= 1025; ++i) fadeTab[(size_t) i] = (float) (0.5 - 0.5 * pbmath::cos (pi * std::min (1024, i) / 1024.0));
+    for (int i = 0; i <= 1025; ++i) fadeTab[(size_t) i] = (float) (0.5 - 0.5 * flatwater::math::cos (pi * std::min (1024, i) / 1024.0));
     reset();
 }
 
@@ -352,11 +352,11 @@ void Shifter::evaluate()
         else
         {
             offCount = 0;
-            const double c = 1200.0 * pbmath::log2 (pr / period);
+            const double c = 1200.0 * flatwater::math::log2 (pr / period);
             if (std::abs (c) < 60.0) { period += smoothA * (pr - period); jumpCount = 0; }
             else
             {
-                if (jumpCount > 0 && std::abs (1200.0 * pbmath::log2 (pr / jumpRef)) < 40.0) ++jumpCount;
+                if (jumpCount > 0 && std::abs (1200.0 * flatwater::math::log2 (pr / jumpRef)) < 40.0) ++jumpCount;
                 else { jumpCount = 1; jumpRef = pr; }
                 const bool octave = std::abs (std::abs (c) - 1200.0) < 100.0;
                 if (jumpCount >= (octave ? 12 : 3))
@@ -612,11 +612,11 @@ void Shifter::schedule (double ratio, double scale, double flattenHz)
             // level: the measured level per setting (levelTarget), reached by comparing the voiced grains' own
             // level with the input's over the last 80 ms (the level does not depend on the input's)
             // (the target follows the shift this grain makes: under Flatten it is not the Pitch setting)
-            const double peff = 12.0 * pbmath::log2 (pin / pout);
+            const double peff = 12.0 * flatwater::math::log2 (pin / pout);
             if (std::abs (peff - lastPeff) > 0.02)
             {
                 lastPeff = peff;
-                levelTarget = pbmath::pow10 (levelTableDb (peff, lastPc, lastF, lastBeta, levelMode, &levelSlope) / 20.0);
+                levelTarget = flatwater::math::pow10 (levelTableDb (peff, lastPc, lastF, lastBeta, levelMode, &levelSlope) / 20.0);
             }
             // (and the voice's peakiness: the kurtosis of the last 20 ms, a peakier waveform coming out quieter; not
             // while those 20 ms reach back to before the gate opened, where the onset itself reads as peaky; within
@@ -624,9 +624,9 @@ void Shifter::schedule (double ratio, double scale, double flattenHz)
             if (gateSum > 1e-30 && now - gateOpenSince >= gateLen)
             {
                 const double ms = gateSum / gateLen, k = std::max (0.0, quartSum) / gateLen / (ms * ms);
-                lnKurt += 0.25 * (pbmath::log (std::max (1.5, std::min (9.5, k))) - lnKurt);
+                lnKurt += 0.25 * (flatwater::math::log (std::max (1.5, std::min (9.5, k))) - lnKurt);
             }
-            const double kc = pbmath::pow10 (levelSlope * (lnKurt - tune.kurtRef) / 20.0);
+            const double kc = flatwater::math::pow10 (levelSlope * (lnKurt - tune.kurtRef) / 20.0);
             float gv = (float) (levelTarget * kc);
             // (not until 20 ms are measured since the gate opened: a voice's first grain, its fade-in short, reads
             // as quiet and the correction overshot)
@@ -695,7 +695,7 @@ double Shifter::levelTableDb (double Peff, double Pc, double F, double beta, int
     *slope = 0.0;
     // (towards no shift the level falls to the input's: measured on a vowel at +-0.02 .. +-1 semitone, 0.27 of the
     // level at +-1 by 0.1 semitone, 0.86 by 0.5)
-    if (mode == kLevelFree) return interp (ux, uy, 18, Peff) * pbmath::tanh (std::abs (Peff) / 0.36);
+    if (mode == kLevelFree) return interp (ux, uy, 18, Peff) * flatwater::math::tanh (std::abs (Peff) / 0.36);
     const double pc = std::max (-12.0, std::min (12.0, Peff)), fc = std::max (-12.0, std::min (12.0, F));
     if (mode == kLevelFlatten)
     {
@@ -725,10 +725,10 @@ void Shifter::process (float* const* data, int ch, int n, float pitchSt, float f
     const double Pc = std::isnan (pitchControlSt) ? P : (double) pitchControlSt;
     const double Fc = std::isnan (formantControlSt) ? F : (double) formantControlSt;
     const bool pSet = std::abs (Pc) > 1e-6, fSet = std::abs (Fc) > 1e-6 || std::abs (F) > 1e-6, flat = flattenHz > 0.0f;
-    const double ratio = pbmath::exp2 (P / 12.0);
+    const double ratio = flatwater::math::exp2 (P / 12.0);
     const double beta = std::max (-2.51, std::min (2.51, 0.418 * Pc));    // measured
     // measured: the grain time scale stops at +-12 semitones (Pitch +12 with Formant +12 moves the envelope by 12)
-    const double scale = pbmath::exp2 (std::max (-12.0, std::min (12.0, F + beta)) / 12.0);
+    const double scale = flatwater::math::exp2 (std::max (-12.0, std::min (12.0, F + beta)) / 12.0);
     lastBeta = beta;
     regranulate = pSet || fSet;
     const int mode = flat ? kLevelFlatten : (pSet || fSet ? kLevelSet : kLevelFree);

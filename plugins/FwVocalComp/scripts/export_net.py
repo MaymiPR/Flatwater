@@ -22,7 +22,7 @@ with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned correction of the Flatwater Vocal Comp slow path (GRU, %d hidden units), trained on renders of the reference by\n"
             "// plugins/FwVocalComp/nulltest/train_net.py and written by plugins/FwVocalComp/scripts/export_net.py from %s. Do not edit by hand.\n"
             "// Inputs per 12 kHz step: see vc::SlowNet in Engine.h. Output: ln correction of the slow ratio.\n"
-            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace vc::slownet\n{\n" % (H, os.path.basename(sys.argv[1])))
+            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace vc::dsp::slownet\n{\n" % (H, os.path.basename(sys.argv[1])))
     f.write("inline constexpr int hidden = %d, inputs = %d;\n" % (H, I))
     f.write(arr("Wih", sd["gru.weight_ih_l0"]))
     f.write(arr("Whh", sd["gru.weight_hh_l0"]))

@@ -8,6 +8,8 @@
 // Flatwater Comp); the DSP is in dsp/Engine.h.
 namespace co
 {
+namespace id
+{
 inline constexpr const char* threshold = "threshold";  // 0 .. -48 dB, default -18
 inline constexpr const char* ratio = "ratio";          // 1 .. 50 (the reference's ratio taper), default 3
 inline constexpr const char* punch = "punch";          // 0 .. 30, default 1
@@ -22,6 +24,7 @@ inline constexpr const char* analog = "analog";        // Off / 1 .. 4, default 
 inline constexpr const char* limiter = "limiter";      // Off (clipper) / On (limiter), default Off
 inline constexpr const char* meter = "meter";          // In / GR / Out, default GR
 inline constexpr const char* mode = "mode";            // 0 Stereo, 1 Mono
+}
 
 // the reference's ratio taper (measured, RESEARCH.md): ln(ratio) = 4.40703 v - 0.494827 v^2
 float ratioFromNorm (float v);

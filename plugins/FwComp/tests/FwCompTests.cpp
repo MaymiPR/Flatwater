@@ -14,7 +14,7 @@ static int failures = 0, checks = 0;
 #define CHECK_NEAR(a, b, tol) do { ++checks; const double va = (a), vb = (b); if (! (std::fabs (va - vb) <= (tol))) { ++failures; std::printf ("FAIL %s:%d  %s = %g, expected %g +- %g\n", __FILE__, __LINE__, #a, va, vb, (double) (tol)); } } while (0)
 
 static const double kPi = 3.14159265358979323846;
-using Settings = co::Compressor::Settings;
+using Settings = co::dsp::Compressor::Settings;
 
 static std::vector<float> tone (double f, double secs, double db, double fs = 48000.0)
 {
@@ -27,7 +27,7 @@ static std::vector<float> tone (double f, double secs, double db, double fs = 48
 static std::vector<std::vector<float>> run (std::vector<std::vector<float>> x, const Settings& s, int block = 512, double fs = 48000.0,
                                             bool learned = true)
 {
-    co::Compressor c;
+    co::dsp::Compressor c;
     c.t.learned = learned;
     c.prepare (fs, (int) x.size());
     c.setSettings (s);
@@ -59,7 +59,7 @@ static double maxDiff (const std::vector<float>& a, const std::vector<float>& b)
 
 static void testLatency()
 {
-    co::Compressor c;
+    co::dsp::Compressor c;
     c.prepare (44100.0, 2); CHECK (c.latency() == 64);
     c.prepare (48000.0, 2); CHECK (c.latency() == 64);
     c.prepare (96000.0, 2); CHECK (c.latency() == 128);
@@ -76,7 +76,7 @@ static void testIdentity()
     // ratio 1: the same
     Settings r; r.ratio = 1.0f; r.thresholdDb = -40.0f;
     y = run ({ x, x }, r);
-    CHECK_NEAR (db (rms (y[0], 4800)) - db (rms (x, 4800)), co::Compressor::makeupDb (-40.0, 1.0) * co::Compressor::makeupScale (100.0), 0.01);
+    CHECK_NEAR (db (rms (y[0], 4800)) - db (rms (x, 4800)), co::dsp::Compressor::makeupDb (-40.0, 1.0) * co::dsp::Compressor::makeupScale (100.0), 0.01);
 }
 
 static void testStatic()
@@ -86,7 +86,7 @@ static void testStatic()
     auto x = tone (1000.0, 2.0, -10.0);
     auto y = run ({ x, x }, s);
     const double gain = db (rms (y[0], 72000)) - db (rms (x, 72000));
-    const double makeup = co::Compressor::makeupDb (-30.0, 4.0) * co::Compressor::makeupScale (100.0);
+    const double makeup = co::dsp::Compressor::makeupDb (-30.0, 4.0) * co::dsp::Compressor::makeupScale (100.0);
     const double xx = 0.75 * (20.0 * std::log10 (std::pow (10.0, -0.5) + 0.001) + 30.0);
     // h is within 0.6 dB of x (the knee); the release ripple adds a little
     CHECK (gain - makeup < -xx + 0.8 && gain - makeup > -xx - 0.3);
@@ -169,7 +169,7 @@ static void testAnalog()
 {
     // Off: an identity
     {
-        co::Analog a; a.prepare (48000.0, 2); a.setMode (0);
+        co::dsp::Analog a; a.prepare (48000.0, 2); a.setMode (0);
         auto x = tone (1000.0, 0.2, -20.0), y = x;
         float* ch[1] = { y.data() };
         a.process (ch, (int) y.size());
@@ -179,7 +179,7 @@ static void testAnalog()
     const double expected[] = { -101.7, -82.7, -101.2, -108.8 };
     for (int m = 1; m <= 4; ++m)
     {
-        co::Analog a; a.prepare (48000.0, 2); a.setMode (m);
+        co::dsp::Analog a; a.prepare (48000.0, 2); a.setMode (m);
         std::vector<float> l ((size_t) 96000, 0.0f), r (l);
         float* ch[2] = { l.data(), r.data() };
         a.process (ch, (int) l.size());
@@ -190,7 +190,7 @@ static void testAnalog()
     }
     // mode 4: the crossover offset (about 0.001) on a quiet tone, little change on a loud one
     {
-        co::Analog a; a.prepare (48000.0, 1); a.setMode (4);
+        co::dsp::Analog a; a.prepare (48000.0, 1); a.setMode (4);
         auto x = tone (100.0, 0.5, -20.0), y = x;
         float* ch[1] = { y.data() };
         a.process (ch, (int) y.size());
@@ -210,7 +210,7 @@ static void testProcessor()
     proc.prepareToPlay (48000.0, 512);
     CHECK (proc.getLatencySamples() == 64);
     auto set = [&proc] (const char* id, float v) { auto* p = proc.apvts.getParameter (id); p->setValueNotifyingHost (p->convertTo0to1 (v)); };
-    set (co::analog, 0.0f); set (co::threshold, -30.0f); set (co::ratio, 4.0f);
+    set (co::id::analog, 0.0f); set (co::id::threshold, -30.0f); set (co::id::ratio, 4.0f);
 
     // the side-chain bus is ignored: the same output with or without it fed
     auto x = tone (300.0, 0.5, -10.0);
@@ -238,11 +238,11 @@ static void testProcessor()
     juce::MemoryBlock mb;
     proc.getStateInformation (mb);
     FwCompProcessor other; other.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (other.apvts.getRawParameterValue (co::threshold)->load(), -30.0, 1e-4);
-    CHECK_NEAR (other.apvts.getRawParameterValue (co::ratio)->load(), 4.0, 0.02);
+    CHECK_NEAR (other.apvts.getRawParameterValue (co::id::threshold)->load(), -30.0, 1e-4);
+    CHECK_NEAR (other.apvts.getRawParameterValue (co::id::ratio)->load(), 4.0, 0.02);
 
     // Mode Mono: the channels are compressed independently (a loud left leaves the quiet right alone)
-    set (co::mode, 1.0f);
+    set (co::id::mode, 1.0f);
     proc.prepareToPlay (48000.0, 512);
     auto loud = tone (100.0, 0.5, -6.0), quiet = tone (1000.0, 0.5, -40.0);
     juce::AudioBuffer<float> b (4, 512);
@@ -254,7 +254,7 @@ static void testProcessor()
         proc.processBlock (b, midi);
         right.insert (right.end(), b.getReadPointer (1), b.getReadPointer (1) + 512);
     }
-    const double makeup = co::Compressor::makeupDb (-30.0, 4.0) * co::Compressor::makeupScale (100.25);
+    const double makeup = co::dsp::Compressor::makeupDb (-30.0, 4.0) * co::dsp::Compressor::makeupScale (100.25);
     CHECK_NEAR (db (rms (right, 12000)) - db (rms (quiet, 12000)), makeup, 0.1);
 }
 
@@ -279,19 +279,19 @@ static void testPresets()
     const auto& list = co::factoryPresets();
     CHECK (list.size() == 26);
     CHECK (proc.getNumPrograms() == 27);
-    auto* mix = proc.apvts.getParameter (co::mix);
+    auto* mix = proc.apvts.getParameter (co::id::mix);
     mix->setValueNotifyingHost (mix->convertTo0to1 (37.0f));
     for (int i = 0; i < (int) list.size(); ++i)
     {
         proc.setCurrentProgram (i + 1);
         for (const auto& v : list[(size_t) i].values)
         {
-            if (std::string (v.id) == co::mix) continue;
+            if (std::string (v.id) == co::id::mix) continue;
             auto* prm = proc.apvts.getParameter (v.id);
             CHECK (prm != nullptr);
             if (prm != nullptr) CHECK_NEAR (prm->convertFrom0to1 (prm->getValue()), v.value, 0.02 + 0.001 * std::abs (v.value));
         }
-        CHECK_NEAR (proc.apvts.getRawParameterValue (co::mix)->load(), 37.0, 0.05);
+        CHECK_NEAR (proc.apvts.getRawParameterValue (co::id::mix)->load(), 37.0, 0.05);
     }
 }
 

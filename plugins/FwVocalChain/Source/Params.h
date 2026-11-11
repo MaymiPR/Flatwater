@@ -8,6 +8,8 @@
 // dsp/Engine.h's chain (Phase 4 under way).
 namespace ch
 {
+namespace id
+{
 inline constexpr const char* sensitivity = "sensitivity";
 inline constexpr const char* bass = "bass";
 inline constexpr const char* bassColor = "bassColor";
@@ -25,6 +27,7 @@ inline constexpr const char* output = "output";
 inline constexpr const char* balance = "balance";
 inline constexpr const char* mode = "mode";                        // Stereo, Mono/Stereo (the two components)
 inline constexpr const char* link = "ioLink";                      // Flatwater's own (not in the reference): Sensitivity and
+}
                                                                    // Output linked, the editor moving one against the other
 
 // the six stages: fader and colour IDs, the label under the fader, the colours' names (the host's texts, the clear
@@ -33,12 +36,12 @@ struct Stage { const char* fader; const char* colour; const char* label; const c
 inline const std::array<Stage, 6>& stages()
 {
     static const std::array<Stage, 6> s { {
-        { bass, bassColor, "BASS", { "Bypass", "Sub", "Lower", "Upper" } },
-        { treble, trebleColor, "TREBLE", { "Bypass", "Bite", "Top", "Roof" } },
-        { compress, compressColor, "COMPRESS", { "Bypass", "Push", "Spank", "Wall" } },
-        { reverb, reverbColor, "REVERB", { "Mute", "Tight", "Large", "Chamber" } },
-        { delay, delayColor, "DELAY", { "Mute", "Slap", "Eight", "Quarter" } },
-        { pitch, pitchColor, "PITCH", { "Mute", "Stereo", "Wide", "Spreader" } } } };
+        { id::bass, id::bassColor, "BASS", { "Bypass", "Sub", "Lower", "Upper" } },
+        { id::treble, id::trebleColor, "TREBLE", { "Bypass", "Bite", "Top", "Roof" } },
+        { id::compress, id::compressColor, "COMPRESS", { "Bypass", "Push", "Spank", "Wall" } },
+        { id::reverb, id::reverbColor, "REVERB", { "Mute", "Tight", "Large", "Chamber" } },
+        { id::delay, id::delayColor, "DELAY", { "Mute", "Slap", "Eight", "Quarter" } },
+        { id::pitch, id::pitchColor, "PITCH", { "Mute", "Stereo", "Wide", "Spreader" } } } };
     return s;
 }
 inline const juce::StringArray& modeNames() { static const juce::StringArray m { "Stereo", "Mono/Stereo" }; return m; }

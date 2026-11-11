@@ -23,11 +23,11 @@ int main (int argc, char** argv)
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && bl::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && bl::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! bl::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! bl::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
@@ -51,8 +51,8 @@ int main (int argc, char** argv)
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked
     {
-        const float lo = p.get (bl::rangeMin), hi = p.get (bl::rangeMax);
-        set (bl::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
+        const float lo = p.get (bl::id::rangeMin), hi = p.get (bl::id::rangeMax);
+        set (bl::id::idle, hi > lo ? (idleDbValue - lo) / (hi - lo) : 0.5f);
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }

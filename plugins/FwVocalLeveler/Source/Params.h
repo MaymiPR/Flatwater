@@ -9,6 +9,8 @@
 // steer it yet (the reference's use of it could not be measured outside a host that activates its side-chain).
 namespace vl
 {
+namespace id
+{
 inline constexpr const char* target = "target";                    // -42 .. 0 dB, default -21 (the Target slider)
 inline constexpr const char* vocalSensitivity = "vocalSensitivity"; // -12 .. +12 dB, default 0
 inline constexpr const char* musicSensitivity = "musicSensitivity"; // -12.1 (Off) .. +12 dB, default 0
@@ -21,6 +23,7 @@ inline constexpr const char* attack = "attack";                    // Slow / Fas
 inline constexpr const char* spill = "spill";                      // -48 .. -12 dB, default -48 (Live components)
 inline constexpr const char* automation = "automation";            // Off / Write / Read
 inline constexpr const char* mode = "mode";                        // Stereo, Mono, Live Stereo, Live Mono (the four components)
+}
 
 inline const juce::StringArray& modeNames() { static const juce::StringArray m { "Stereo", "Mono", "Live Stereo", "Live Mono" }; return m; }
 inline bool isLive (int modeIndex) { return modeIndex >= 2; }

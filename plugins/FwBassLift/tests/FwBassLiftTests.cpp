@@ -25,7 +25,7 @@ struct Settings { double freq = 80, intensity = 0, gain = 0, decay = 1; bool ori
 
 static std::vector<float> run (const std::vector<float>& x, Settings s, int block = 512)
 {
-    bf::Processor p;
+    bf::dsp::Processor p;
     p.setFreq (s.freq); p.setIntensityDb (s.intensity); p.setGainDb (s.gain); p.setDecay (s.decay); p.setOriginalBass (s.origIn);
     p.prepare (fs, 1);
     std::vector<float> y (x);
@@ -85,7 +85,7 @@ static void testGeneratedPath()
 
     // low-level gain of the generated fundamental at Freq: C0 |LP3(1/3) HP3(1)^2| (about +14.9 dB at Freq)
     {
-        bf::Tuning t;
+        bf::dsp::Tuning t;
         auto lo = tone (80.0, 1.5, -70);
         Settings s; s.origIn = false; s.intensity = 0;
         Settings s0 = s; s0.intensity = -400;
@@ -141,7 +141,7 @@ static void testStereo()
 {
     // identical channels give identical outputs; the generated bass comes from the channel average
     auto x = tone (45.0, 1.0, -20);
-    bf::Processor p; p.setOriginalBass (false); p.prepare (fs, 2);
+    bf::dsp::Processor p; p.setOriginalBass (false); p.prepare (fs, 2);
     std::vector<float> l (x), r (x);
     float* ch[2] = { l.data(), r.data() };
     p.process (ch, 2, (int) x.size());
@@ -155,10 +155,10 @@ static void testStereo()
 static void testProcessor()
 {
     FwBassLiftProcessor proc;
-    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::freq)->load(), 80.0, 1e-4);
-    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::ratio)->load(), 0.63, 1e-4);
-    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::decay)->load(), 1.0, 1e-4);
-    CHECK (proc.apvts.getRawParameterValue (bf::origBass)->load() > 0.5f);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::id::freq)->load(), 80.0, 1e-4);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::id::ratio)->load(), 0.63, 1e-4);
+    CHECK_NEAR (proc.apvts.getRawParameterValue (bf::id::decay)->load(), 1.0, 1e-4);
+    CHECK (proc.apvts.getRawParameterValue (bf::id::origBass)->load() > 0.5f);
     proc.setPlayConfigDetails (2, 2, 48000.0, 512);
     proc.prepareToPlay (48000.0, 512);
     juce::AudioBuffer<float> buf (2, 48000);
@@ -175,12 +175,12 @@ static void testProcessor()
     CHECK (d < 1.0e-6);
 
     // hidden parameters survive the state
-    proc.apvts.getParameter (bf::decay)->setValueNotifyingHost (0.0f);
-    proc.apvts.getParameter (bf::origBass)->setValueNotifyingHost (0.0f);
+    proc.apvts.getParameter (bf::id::decay)->setValueNotifyingHost (0.0f);
+    proc.apvts.getParameter (bf::id::origBass)->setValueNotifyingHost (0.0f);
     juce::MemoryBlock mb; proc.getStateInformation (mb);
     FwBassLiftProcessor other; other.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (other.apvts.getRawParameterValue (bf::decay)->load(), 0.0, 1e-4);
-    CHECK (other.apvts.getRawParameterValue (bf::origBass)->load() < 0.5f);
+    CHECK_NEAR (other.apvts.getRawParameterValue (bf::id::decay)->load(), 0.0, 1e-4);
+    CHECK (other.apvts.getRawParameterValue (bf::id::origBass)->load() < 0.5f);
 }
 
 static void testFactoryPresets()

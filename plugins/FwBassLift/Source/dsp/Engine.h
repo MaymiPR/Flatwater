@@ -31,7 +31,7 @@
 #include "GainNet.h"
 #include "Tuning.h"
 
-namespace bf
+namespace bf::dsp
 {
 inline constexpr double pi = 3.14159265358979323846;
 

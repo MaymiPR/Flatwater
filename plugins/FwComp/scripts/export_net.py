@@ -22,7 +22,7 @@ with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned correction of Flatwater Comp's gain (GRU, %d hidden units), trained on renders of the reference by\n"
             "// plugins/FwComp/nulltest/train_net.py and written by plugins/FwComp/scripts/export_net.py from %s. Do not edit by hand.\n"
             "// Inputs per step: see co::GainNet in Engine.h. Output: the correction in dB, 9 tanh (o / 9).\n"
-            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace co::gainnet\n{\n" % (H, os.path.basename(sys.argv[1])))
+            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace co::dsp::gainnet\n{\n" % (H, os.path.basename(sys.argv[1])))
     f.write("inline constexpr int hidden = %d, inputs = %d;\n" % (H, I))
     f.write(arr("Wih", sd["gru.weight_ih_l0"]))
     f.write(arr("Whh", sd["gru.weight_hh_l0"]))

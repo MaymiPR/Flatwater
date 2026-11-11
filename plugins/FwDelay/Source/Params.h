@@ -12,6 +12,8 @@
 // Flatwater Delay). The DSP (dsp/Engine.h) and the Analog stage as identified on the reference (MEASUREMENTS.md).
 namespace de
 {
+namespace id
+{
 inline constexpr const char* delay = "delay";          // 1 .. 3500 ms (the reference's taper), default 375
 inline constexpr const char* delayNote = "delayNote";  // 20 note values (1/64T .. 2 bars), default 1/8D
 inline constexpr const char* delayR = "delayR";        // the right side's time and note (Dual)
@@ -33,6 +35,7 @@ inline constexpr const char* pingPong = "pingPong";
 inline constexpr const char* pingPongStart = "pingPongStart";   // Left / Right
 inline constexpr const char* dual = "dual";            // separate left and right times
 inline constexpr const char* mode = "mode";            // 0 Stereo, 1 Mono, 2 mono in, stereo out
+}
 
 constexpr float kHiPassOff = 19.5f, kLoPassOff = 20100.0f;
 inline const juce::StringArray& noteNames()

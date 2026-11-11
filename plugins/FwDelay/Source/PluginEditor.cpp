@@ -67,7 +67,7 @@ void drawStartBox (Graphics& g, bool right, bool selected)
 }
 
 FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (de::mode), "Flatwater Delay", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (de::id::mode), "Flatwater Delay", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::Hybrid, { "Stereo", "Mono", "M>S" }),
       proc (p),
       delay (make<Knob> (Knob::Grand, 39.0f, 321.0f)), delayNote (make<Knob> (Knob::Grand, 39.0f, 321.0f)),
@@ -84,7 +84,7 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
     setFactoryPresets (de::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (de::mix) });        // presets leave Mix alone, as the reference
+    setKeepOnPresetLoad ({ p.apvts.getParameter (de::id::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, std::function<String (double)> fmt)
     {
@@ -101,10 +101,10 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
         if (k.format) flatwater::flat::applyFormat (k, k.format, false);
     };
     auto noteText = [] (double v) { return de::noteNames()[jlimit (0, 19, roundToInt (v))]; };
-    place (delay, de::delay, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
-    place (delayR, de::delayR, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
-    place (delayNote, de::delayNote, { 130, 27, 152, 154 }, kDelay, 11.0, {});
-    place (delayNoteR, de::delayNoteR, { 130, 27, 152, 154 }, kDelay, 11.0, {});
+    place (delay, de::id::delay, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
+    place (delayR, de::id::delayR, { 130, 27, 152, 154 }, kDelay, 375.0, [] (double v) { return String (roundToInt (v)); });
+    place (delayNote, de::id::delayNote, { 130, 27, 152, 154 }, kDelay, 11.0, {});
+    place (delayNoteR, de::id::delayNoteR, { 130, 27, 152, 154 }, kDelay, 11.0, {});
     for (auto* k : { &delayNote, &delayNoteR })
     {
         k->textFromValueFunction = noteText;
@@ -112,14 +112,14 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
         const float px[4] = { 30.0f, 20.0f, 120.0f, 200.0f / 3.0f };     // as Flatwater Comp's note knob (to be measured)
         std::copy (px, px + 4, k->feel.stepPx);
     }
-    place (feedback, de::feedback, { 442, 27, 152, 154 }, kFeedback, 60.0, [] (double v) { return String (roundToInt (v)); });
-    place (depth, de::depth, { 134, 175, 96, 106 }, kDepth, 0.0, [] (double v) { return String (roundToInt (v)); });
-    place (rate, de::rate, { 239, 175, 96, 106 }, kRate, 0.1, [] (double v) { return de::rateText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (hipass, de::hipass, { 360, 175, 96, 106 }, kHiPass, 19.0, [] (double v) { return de::freqText ((float) v, true); });
-    place (lopass, de::lopass, { 495, 175, 96, 106 }, kLoPass, 20138.77, [] (double v) { return de::freqText ((float) v, false); });
-    place (mix, de::mix, { 663, 26, 73, 76 }, kMix, 100.0, [] (double v) { return String (roundToInt (v)); });
-    place (output, de::output, { 663, 106, 73, 76 }, kOutput, 0.0, [] (double v) { return String (v, 1); });
-    place (analog, de::analog, { 663, 191, 73, 76 }, kAnalog, 2.0, {});
+    place (feedback, de::id::feedback, { 442, 27, 152, 154 }, kFeedback, 60.0, [] (double v) { return String (roundToInt (v)); });
+    place (depth, de::id::depth, { 134, 175, 96, 106 }, kDepth, 0.0, [] (double v) { return String (roundToInt (v)); });
+    place (rate, de::id::rate, { 239, 175, 96, 106 }, kRate, 0.1, [] (double v) { return de::rateText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
+    place (hipass, de::id::hipass, { 360, 175, 96, 106 }, kHiPass, 19.0, [] (double v) { return de::freqText ((float) v, true); });
+    place (lopass, de::id::lopass, { 495, 175, 96, 106 }, kLoPass, 20138.77, [] (double v) { return de::freqText ((float) v, false); });
+    place (mix, de::id::mix, { 663, 26, 73, 76 }, kMix, 100.0, [] (double v) { return String (roundToInt (v)); });
+    place (output, de::id::output, { 663, 106, 73, 76 }, kOutput, 0.0, [] (double v) { return String (v, 1); });
+    place (analog, de::id::analog, { 663, 191, 73, 76 }, kAnalog, 2.0, {});
     analog.steps = 5;
     for (auto& px : analog.feel.stepPx) px = 50.0f;           // as Flatwater Comp's Analog (to be measured)
 
@@ -131,16 +131,16 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     // the shadow 9 px under it)
     const String slash (CharPointer_UTF8 ("\xc3\x98")), slashSmall (CharPointer_UTF8 ("\xc3\xb8"));     // "Ø", "ø"
     auto around = [] (Rectangle<int> frame) { return frame.withTrimmedLeft (-4).withTrimmedTop (-4).withTrimmedRight (-4).withTrimmedBottom (-9); };
-    stereoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::phaseL), slash + "L", 20.0f },
-                                                                 { par (de::pingPong), "PING PONG", 59.0f },
-                                                                 { par (de::dual), "DUAL", 34.0f },
-                                                                 { par (de::phaseR), slash + "R", 20.0f } }, um, ButtonLook::delay);
+    stereoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::id::phaseL), slash + "L", 20.0f },
+                                                                 { par (de::id::pingPong), "PING PONG", 59.0f },
+                                                                 { par (de::id::dual), "DUAL", 34.0f },
+                                                                 { par (de::id::phaseR), slash + "R", 20.0f } }, um, ButtonLook::delay);
     addToContent (*stereoRow, around ({ 290, 38, 143, 22 }));
-    monoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::phaseL), slashSmall, 20.0f } }, um, ButtonLook::delay);
+    monoRow = &make<ToggleRow> (std::vector<ToggleRow::Item> { { par (de::id::phaseL), slashSmall, 20.0f } }, um, ButtonLook::delay);
     addToContent (*monoRow, around ({ 290, 38, 24, 22 }));
-    syncGroup = &make<ButtonGroup> (*par (de::sync), um, StringArray { "BPM", "HOST", "MS" }, false, false, ButtonLook::delay);
+    syncGroup = &make<ButtonGroup> (*par (de::id::sync), um, StringArray { "BPM", "HOST", "MS" }, false, false, ButtonLook::delay);
     addToContent (*syncGroup, around ({ 292, 146, 141, 21 }));
-    lofiButton = &make<ButtonGroup> (*par (de::lofi), um, StringArray { "LoFi" }, false, true, ButtonLook::delay);
+    lofiButton = &make<ButtonGroup> (*par (de::id::lofi), um, StringArray { "LoFi" }, false, true, ButtonLook::delay);
     addToContent (*lofiButton, around ({ 35, 188, 70, 22 }));
     // one control is selected at a time (the reference): a knob (its ring), a button group or a button (an amber line),
     // the tap pad
@@ -169,7 +169,7 @@ void FwDelayEditor::setValue (const char* id, float v)
 
 double FwDelayEditor::tempo() const
 {
-    if (roundToInt (value (de::sync)) == 0) return value (de::bpm);
+    if (roundToInt (value (de::id::sync)) == 0) return value (de::id::bpm);
     const double h = proc.hostBpm.load();
     return h > 0.0 ? h : 120.0;
 }
@@ -177,14 +177,14 @@ double FwDelayEditor::tempo() const
 // the Delay knob shows ms or note values (Sync), and in Dual the side chosen on the display
 void FwDelayEditor::updateDelayKnobs()
 {
-    const int s = roundToInt (value (de::sync)), m = modeIndex();
-    const bool dualOn = value (de::dual) > 0.5f;
-    const bool dual = dualOn && m != 1, ping = value (de::pingPong) > 0.5f && m != 1;
+    const int s = roundToInt (value (de::id::sync)), m = modeIndex();
+    const bool dualOn = value (de::id::dual) > 0.5f;
+    const bool dual = dualOn && m != 1, ping = value (de::id::pingPong) > 0.5f && m != 1;
     // as the reference: the right side starts from the left's time when Dual is switched on
     if (lastDualOn == 0 && dualOn)
     {
-        setValue (de::delayR, value (de::delay));
-        setValue (de::delayNoteR, value (de::delayNote));
+        setValue (de::id::delayR, value (de::id::delay));
+        setValue (de::id::delayNoteR, value (de::id::delayNote));
     }
     lastDualOn = (int) dualOn;
     // the right side's knob while Dual's layout shows (Ping Pong's takes over the display and shows the left)
@@ -195,13 +195,13 @@ void FwDelayEditor::updateDelayKnobs()
         const double t = tempo();
         if (s == 2)
         {
-            setValue (de::delay, (float) (de::noteBeats (roundToInt (value (de::delayNote))) * 60000.0 / t));
-            setValue (de::delayR, (float) (de::noteBeats (roundToInt (value (de::delayNoteR))) * 60000.0 / t));
+            setValue (de::id::delay, (float) (de::noteBeats (roundToInt (value (de::id::delayNote))) * 60000.0 / t));
+            setValue (de::id::delayR, (float) (de::noteBeats (roundToInt (value (de::id::delayNoteR))) * 60000.0 / t));
         }
         else if (lastSync == 2)
         {
-            setValue (de::delayNote, (float) de::nearestNote (value (de::delay), t));
-            setValue (de::delayNoteR, (float) de::nearestNote (value (de::delayR), t));
+            setValue (de::id::delayNote, (float) de::nearestNote (value (de::id::delay), t));
+            setValue (de::id::delayNoteR, (float) de::nearestNote (value (de::id::delayR), t));
         }
     }
     if (s == lastSync && m == lastMode && (int) dual == lastDual && (int) ping == lastPing && right == lastRight) return;
@@ -234,7 +234,7 @@ void FwDelayEditor::tick()
     updateDelayKnobs();
     // as the reference: a note value whose time at the tempo passes 3500 ms is not taken (2 bars at 120 BPM: it stops at
     // 1 bar); the longest one that fits instead
-    for (auto* id : { de::delayNote, de::delayNoteR })
+    for (auto* id : { de::id::delayNote, de::id::delayNoteR })
     {
         int n = roundToInt (value (id));
         const int n0 = n;
@@ -335,9 +335,9 @@ void FwDelayEditor::Display::paint (Graphics& g)
         dualNote { 6.8f, 11.2f, 1.3f, 0.8f, 0.8f, 0.21f, 8.5f },
         dualBar { 5.59f, 8.72f, 1.23f, 0.51f, 0.5f, 0.17f, 6.48f };
     g.setColour (kSeg);
-    const int s = roundToInt (ed.value (de::sync)), m = ed.modeIndex();
-    const bool ping = ed.value (de::pingPong) > 0.5f && m != 1, dual = ed.value (de::dual) > 0.5f && m != 1 && ! ping;
-    const String tempoText = String (roundToInt (s == 0 ? (double) ed.value (de::bpm) : ed.tempo()));
+    const int s = roundToInt (ed.value (de::id::sync)), m = ed.modeIndex();
+    const bool ping = ed.value (de::id::pingPong) > 0.5f && m != 1, dual = ed.value (de::id::dual) > 0.5f && m != 1 && ! ping;
+    const String tempoText = String (roundToInt (s == 0 ? (double) ed.value (de::id::bpm) : ed.tempo()));
     // digits right-aligned in a field whose first cell starts at x (the reference's 3-digit tempo, 4-digit time)
     auto field = [&] (const SegFont& f, float x, float y, const String& t, int cells)
     {
@@ -398,14 +398,14 @@ void FwDelayEditor::Display::paint (Graphics& g)
     {
         // the left half of Dual's layout (the time, or the note and the tempo) and
         // the start side's box
-        if (s == 2) drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::delay)));
+        if (s == 2) drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::id::delay)));
         else
         {
-            smallNote (roundToInt (ed.value (de::delayNote)), 0.0f);
+            smallNote (roundToInt (ed.value (de::id::delayNote)), 0.0f);
             field (dualTempo, 338.85f, 95.95f, tempoText, 3);
             drawSegmentText (g, dualLabel, 359.93f, 118.25f, "BPM");
         }
-        drawStartBox (g, ed.value (de::pingPongStart) > 0.5f, boxSelected);
+        drawStartBox (g, ed.value (de::id::pingPongStart) > 0.5f, boxSelected);
         return;
     }
     if (dual)
@@ -414,15 +414,15 @@ void FwDelayEditor::Display::paint (Graphics& g)
         drawSegmentText (g, side, 405.71f, 76.75f, "R");
         if (s == 2)
         {
-            drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::delay)));
-            drawSegmentText (g, dualMs, 369.39f, 101.92f, msText (ed.value (de::delayR)));
+            drawSegmentText (g, dualMs, 299.31f, 101.89f, msText (ed.value (de::id::delay)));
+            drawSegmentText (g, dualMs, 369.39f, 101.92f, msText (ed.value (de::id::delayR)));
             g.setColour (kSeg.withAlpha (0.37f));                                      // the divider between them
             g.fillRect (Rectangle<float> (360.0f, 80.0f, 2.0f, 50.0f));
         }
         else
         {
-            smallNote (roundToInt (ed.value (de::delayNote)), 0.0f);
-            smallNote (roundToInt (ed.value (de::delayNoteR)), 94.0f);
+            smallNote (roundToInt (ed.value (de::id::delayNote)), 0.0f);
+            smallNote (roundToInt (ed.value (de::id::delayNoteR)), 94.0f);
             field (dualTempo, 338.85f, 95.95f, tempoText, 3);
             drawSegmentText (g, dualLabel, 359.93f, 118.25f, "BPM");
         }
@@ -430,10 +430,10 @@ void FwDelayEditor::Display::paint (Graphics& g)
     }
     if (s == 2)
     {
-        drawSegmentText (g, big, 327.16f, 92.15f, msText (ed.value (de::delay)));
+        drawSegmentText (g, big, 327.16f, 92.15f, msText (ed.value (de::id::delay)));
         return;
     }
-    note (roundToInt (ed.value (de::delayNote)), 0.0f);
+    note (roundToInt (ed.value (de::id::delayNote)), 0.0f);
     field (big, 366.71f, 93.4f, tempoText, 3);
     drawSegmentText (g, label, 398.65f, 119.76f, "BPM");
 }
@@ -445,7 +445,7 @@ void FwDelayEditor::Display::mouseDown (const MouseEvent& e)
     if (h.box)
     {
         // the start side flips at each click, and the box is the selected control
-        ed.setValue (de::pingPongStart, ed.value (de::pingPongStart) > 0.5f ? 0.0f : 1.0f);
+        ed.setValue (de::id::pingPongStart, ed.value (de::id::pingPongStart) > 0.5f ? 0.0f : 1.0f);
         selectBox (true);
         return;
     }
@@ -467,8 +467,8 @@ void FwDelayEditor::Display::mouseDown (const MouseEvent& e)
 // control rectangles (its layout; the first listed takes a point two share), checked with clicks and drags on it
 FwDelayEditor::Display::Hit FwDelayEditor::Display::hit (Point<float> p) const
 {
-    const int s = roundToInt (ed.value (de::sync)), m = ed.modeIndex();
-    const bool ping = ed.value (de::pingPong) > 0.5f && m != 1, dual = ed.value (de::dual) > 0.5f && m != 1 && ! ping;
+    const int s = roundToInt (ed.value (de::id::sync)), m = ed.modeIndex();
+    const bool ping = ed.value (de::id::pingPong) > 0.5f && m != 1, dual = ed.value (de::id::dual) > 0.5f && m != 1 && ! ping;
     auto par = [this] (const char* id) { return ed.proc.apvts.getParameter (id); };
     auto in = [p] (float x, float y, float w, float h) { return Rectangle<float> (x, y, w, h).contains (p); };
     Hit h;
@@ -478,18 +478,18 @@ FwDelayEditor::Display::Hit FwDelayEditor::Display::hit (Point<float> p) const
         // the left time or note, the right one (Dual), the tempo between them (BPM)
         if (s == 2)
         {
-            if (in (293.0f, 100.0f, 66.0f, 22.0f)) { h.param = par (de::delay); h.side = 0; }
-            else if (dual && in (321.0f, 78.0f, 104.0f, 55.0f)) { h.param = par (de::delayR); h.side = 1; }
+            if (in (293.0f, 100.0f, 66.0f, 22.0f)) { h.param = par (de::id::delay); h.side = 0; }
+            else if (dual && in (321.0f, 78.0f, 104.0f, 55.0f)) { h.param = par (de::id::delayR); h.side = 1; }
         }
-        else if (in (298.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::delayNote); h.side = 0; h.note = true; }
-        else if (dual && in (392.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::delayNoteR); h.side = 1; h.note = true; }
-        else if (s == 0 && in (338.0f, 94.0f, 42.0f, 21.0f)) h.param = par (de::bpm);
+        else if (in (298.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::id::delayNote); h.side = 0; h.note = true; }
+        else if (dual && in (392.0f, 95.0f, 34.0f, 34.0f)) { h.param = par (de::id::delayNoteR); h.side = 1; h.note = true; }
+        else if (s == 0 && in (338.0f, 94.0f, 42.0f, 21.0f)) h.param = par (de::id::bpm);
         if (! dual) h.side = -1;
         return h;
     }
-    if (s == 2) { if (in (294.0f, 62.0f, 137.0f, 74.0f)) h.param = par (de::delay); }
-    else if (in (300.0f, 80.0f, 45.0f, 49.0f)) { h.param = par (de::delayNote); h.note = true; }
-    else if (s == 0 && in (292.0f, 57.0f, 137.0f, 74.0f)) h.param = par (de::bpm);
+    if (s == 2) { if (in (294.0f, 62.0f, 137.0f, 74.0f)) h.param = par (de::id::delay); }
+    else if (in (300.0f, 80.0f, 45.0f, 49.0f)) { h.param = par (de::id::delayNote); h.note = true; }
+    else if (s == 0 && in (292.0f, 57.0f, 137.0f, 74.0f)) h.param = par (de::id::bpm);
     return h;
 }
 
@@ -581,11 +581,11 @@ void FwDelayEditor::TapPad::mouseDown (const MouseEvent&)
     const double ms = now - lastTap;
     lastTap = now;
     if (ms < 1.0 || ms > 3500.0) return;                  // the first tap, or too long ago
-    const int s = roundToInt (ed.value (de::sync));
+    const int s = roundToInt (ed.value (de::id::sync));
     const bool right = ed.rightSide;
-    if (s == 2) ed.setValue (right ? de::delayR : de::delay, (float) ms);
-    else if (s == 1) ed.setValue (right ? de::delayNoteR : de::delayNote, (float) de::nearestNote (ms, ed.tempo()));
-    else ed.setValue (de::bpm, jlimit (30.0f, 300.0f, (float) (60000.0 / ms)));
+    if (s == 2) ed.setValue (right ? de::id::delayR : de::id::delay, (float) ms);
+    else if (s == 1) ed.setValue (right ? de::id::delayNoteR : de::id::delayNote, (float) de::nearestNote (ms, ed.tempo()));
+    else ed.setValue (de::id::bpm, jlimit (30.0f, 300.0f, (float) (60000.0 / ms)));
 }
 
 //==============================================================================
@@ -646,7 +646,7 @@ void FwDelayEditor::LinkWheel::mouseDown (const MouseEvent& e)
 {
     lastY = e.position.y;
     e.source.enableUnboundedMouseMovement (true, false);
-    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
+    for (auto* id : { de::id::hipass, de::id::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
 }
 
 void FwDelayEditor::LinkWheel::mouseDrag (const MouseEvent& e)
@@ -659,21 +659,21 @@ void FwDelayEditor::LinkWheel::mouseDrag (const MouseEvent& e)
 void FwDelayEditor::LinkWheel::mouseUp (const MouseEvent& e)
 {
     e.source.enableUnboundedMouseMovement (false);
-    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
+    for (auto* id : { de::id::hipass, de::id::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
 }
 
 void FwDelayEditor::LinkWheel::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& w)
 {
-    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
+    for (auto* id : { de::id::hipass, de::id::lopass }) ed.proc.apvts.getParameter (id)->beginChangeGesture();
     move (wheelNotches (w) / 72.0f);
-    for (auto* id : { de::hipass, de::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
+    for (auto* id : { de::id::hipass, de::id::lopass }) ed.proc.apvts.getParameter (id)->endChangeGesture();
 }
 
 // both filters by the same amount of their (equal) ranges, as far as the one nearer its end can go
 void FwDelayEditor::LinkWheel::move (float d)
 {
-    auto* hp = ed.proc.apvts.getParameter (de::hipass);
-    auto* lp = ed.proc.apvts.getParameter (de::lopass);
+    auto* hp = ed.proc.apvts.getParameter (de::id::hipass);
+    auto* lp = ed.proc.apvts.getParameter (de::id::lopass);
     const float a = hp->getValue(), b = lp->getValue();
     d = jlimit (-jmin (a, b), 1.0f - jmax (a, b), d);
     if (juce::exactlyEqual (d, 0.0f)) return;
@@ -763,7 +763,7 @@ void FwDelayEditor::paintContent (Graphics& g)
     label ("LINK", 474.5f, 247.0f, 7.2f, 1.1f);
     heading ("MODULATION", 231.0f, 279.0f, 10.75f, 1.1f); heading ("FILTERS", 477.0f, 279.5f, 10.75f, 1.1f);
     label ("DRY/WET", 700.5f, 97.0f, 8.6f, 1.1f); label ("OUTPUT", 700.5f, 177.0f, 8.6f, 1.1f); label ("ANALOG", 700.5f, 265.0f, 8.6f, 1.1f);
-    if (roundToInt (value (de::sync)) == 2) { num ("1", 147.5f, 162.5f); num ("3500", 258.0f, 162.5f); }
+    if (roundToInt (value (de::id::sync)) == 2) { num ("1", 147.5f, 162.5f); num ("3500", 258.0f, 162.5f); }
     else { num ("1/64T", 149.0f, 162.5f); num ("2Bar", 259.0f, 163.0f); }
     num ("0", 469.5f, 162.5f); num ("200", 568.5f, 162.5f);
     num ("0", 155.5f, 254.0f); num ("100", 212.0f, 254.0f);

@@ -11,7 +11,7 @@
 // and formant shifter (dsp/Shifter) on the wet path and Mix, per sample, with its modulation. The processor hands it
 // the controls' values once per block (Params), the slots and shapes (Setup) and the host's transport; the controls'
 // ranges come from their host parameters (setTargets), as the modulation acts on their normalised values. No latency.
-namespace pb
+namespace pb::dsp
 {
 class Engine
 {

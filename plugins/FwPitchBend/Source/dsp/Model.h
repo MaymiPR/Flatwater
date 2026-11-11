@@ -2,13 +2,13 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <array>
 #include <cmath>
-#include "Math.h"
+#include "shared/dsp/Math.h"
 
 // Flatwater Pitch Bend's settings that are not host parameters (as the reference's: RESEARCH.md, "The saved state"):
 // the modulation slots (four per modulatable control, a source and a depth), Fine, the two modulators' shape tables
 // (256 values for an LFO cycle, then 16 sequencer steps as value / 24), and the editor's own state (the panel open or
 // closed, its tab). They live in the processor's state tree, so they are saved, compared (A / B) and undone with it.
-namespace pb
+namespace pb::dsp
 {
 // what a slot can hold
 enum Source { None = 0, M1, M2, AM, PT, numSources };
@@ -98,18 +98,18 @@ inline float shapeValue (Shape s, double ph)                  // ph 0 .. 1
     const double pi = juce::MathConstants<double>::pi;
     switch (s)
     {
-        case Shape::Sine:     return (float) pbmath::sin (2.0 * pi * ph);
+        case Shape::Sine:     return (float) flatwater::math::sin (2.0 * pi * ph);
         case Shape::Triangle: return (float) (ph < 0.25 ? 4.0 * ph : ph < 0.75 ? 2.0 - 4.0 * ph : 4.0 * ph - 4.0);
         case Shape::Square:   return ph < 0.5 ? 1.0f : -1.0f;
         case Shape::SawUp:    return (float) (2.0 * ph - 1.0);
         case Shape::SawDown:  return (float) (1.0 - 2.0 * ph);
-        case Shape::Ramp:     return (float) (2.0 * (pbmath::exp (3.0 * ph) - 1.0) / (pbmath::exp (3.0) - 1.0) - 1.0);
+        case Shape::Ramp:     return (float) (2.0 * (flatwater::math::exp (3.0 * ph) - 1.0) / (flatwater::math::exp (3.0) - 1.0) - 1.0);
         case Shape::SCurve:                                    // a smooth step up over the first half, down over the second
         {
             const double x = ph < 0.5 ? 2.0 * ph : 2.0 - 2.0 * ph;
             return (float) (2.0 * x * x * (3.0 - 2.0 * x) - 1.0);
         }
-        case Shape::HalfSine: return (float) (2.0 * std::abs (pbmath::sin (pi * ph)) - 1.0);
+        case Shape::HalfSine: return (float) (2.0 * std::abs (flatwater::math::sin (pi * ph)) - 1.0);
         case Shape::Pulse25:  return ph < 0.25 ? 1.0f : -1.0f;
         case Shape::Pulse75:  return ph < 0.75 ? 1.0f : -1.0f;
         case Shape::Steps4:   return (float) (1.0 - 2.0 * std::floor (ph * 4.0) / 3.0);

@@ -9,7 +9,7 @@
 // measured come from measurements/FwPitchBend; the rest are our own choices, tuned on the shifter's scorecard
 // (nulltest/check_shifter.py). Kept in one struct so the offline renderers (tools/PbRender.cpp, tools/PbShifterRender.cpp)
 // can override any of them by name (tune:key=value); the plug-in uses the defaults. The level grid stays in Shifter.cpp.
-namespace pb
+namespace pb::dsp
 {
 struct Tuning
 {

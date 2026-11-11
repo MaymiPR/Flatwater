@@ -11,8 +11,8 @@ namespace
 NormalisableRange<float> expRange (float lo, float hi)
 {
     return { lo, hi,
-             [] (float a, float b, float v) { return (float) (std::round (a * pb::pbmath::pow (b / a, v) * 1e5) / 1e5); },
-             [] (float a, float b, float x) { return (float) (pb::pbmath::log (x / a) / pb::pbmath::log (b / a)); } };
+             [] (float a, float b, float v) { return (float) (std::round (a * flatwater::math::pow (b / a, v) * 1e5) / 1e5); },
+             [] (float a, float b, float x) { return (float) (flatwater::math::log (x / a) / flatwater::math::log (b / a)); } };
 }
 }
 
@@ -45,19 +45,19 @@ AudioProcessorValueTreeState::ParameterLayout FwPitchBendProcessor::layout()
         addF (d.smooth, p + "Smooth", expRange (1.0f, 1000.0f), 1.5f, fix (1));
         addF (d.steps, p + "Steps", { 2.0f, 16.0f, 1.0f }, 16.0f, fix (0));
     }
-    addF (pb::amAttack, "AM Attack", expRange (0.1f, 1000.0f), 10.0f, ms);
-    addF (pb::amRelease, "AM Release", expRange (0.1f, 1000.0f), 100.0f, ms);
-    addF (pb::amLevel, "AM Level", { 0.0f, 2.0f }, 1.0f, fix (2));
-    addF (pb::ptSmooth, "PT Smooth", expRange (1.0f, 1000.0f), 10.0f, fix (1));
-    addF (pb::ptOffset, "PT Offset", { -1.0f, 1.0f }, 0.0f, fix (2));
-    addF (pb::ptLevel, "PT Level", { 0.0f, 2.0f }, 1.0f, fix (2));
+    addF (pb::id::amAttack, "AM Attack", expRange (0.1f, 1000.0f), 10.0f, ms);
+    addF (pb::id::amRelease, "AM Release", expRange (0.1f, 1000.0f), 100.0f, ms);
+    addF (pb::id::amLevel, "AM Level", { 0.0f, 2.0f }, 1.0f, fix (2));
+    addF (pb::id::ptSmooth, "PT Smooth", expRange (1.0f, 1000.0f), 10.0f, fix (1));
+    addF (pb::id::ptOffset, "PT Offset", { -1.0f, 1.0f }, 0.0f, fix (2));
+    addF (pb::id::ptLevel, "PT Level", { 0.0f, 2.0f }, 1.0f, fix (2));
     auto semis = [] (float v) { return String (roundToInt (v)) + " semitones"; };
-    addF (pb::pitch, "Pitch", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (pb::formant, "Formant", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (pb::mix, "Mix", { 0.0f, 100.0f }, 100.0f, fix (1));
-    addC (pb::flattenNote, "Flatten Note", pb::noteNames(), 12);
-    addC (pb::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
-    addC (pb::mode, "Mode", pb::modeNames(), 0);
+    addF (pb::id::pitch, "Pitch", { -12.0f, 12.0f }, 0.0f, semis);
+    addF (pb::id::formant, "Formant", { -12.0f, 12.0f }, 0.0f, semis);
+    addF (pb::id::mix, "Mix", { 0.0f, 100.0f }, 100.0f, fix (1));
+    addC (pb::id::flattenNote, "Flatten Note", pb::noteNames(), 12);
+    addC (pb::id::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
+    addC (pb::id::mode, "Mode", pb::modeNames(), 0);
     return l;
 }
 
@@ -67,10 +67,10 @@ FwPitchBendProcessor::FwPitchBendProcessor()
       apvts (*this, &undo, "FwPitchBend", layout())
 {
     ensureState();
-    for (int t = 0; t < pb::numTargets; ++t)
+    for (int t = 0; t < pb::dsp::numTargets; ++t)
     {
-        targetParams[(size_t) t] = apvts.getParameter (pb::targets[t].param);
-        modulated[(size_t) t] = get (pb::targets[t].param);
+        targetParams[(size_t) t] = apvts.getParameter (pb::dsp::targets[t].param);
+        modulated[(size_t) t] = get (pb::dsp::targets[t].param);
         engine.modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     }
     engine.setTargets (targetParams);
@@ -81,6 +81,7 @@ FwPitchBendProcessor::FwPitchBendProcessor()
 void FwPitchBendProcessor::ensureState()
 {
     using namespace pb;
+    using namespace pb::dsp;
     auto& st = apvts.state;
     child (st, modsTag);
     auto shapes = child (st, shapesTag);
@@ -94,6 +95,7 @@ void FwPitchBendProcessor::ensureState()
 void FwPitchBendProcessor::refreshModel()
 {
     using namespace pb;
+    using namespace pb::dsp;
     Engine::Setup m;
     auto& st = apvts.state;
     for (int t = 0; t < numTargets; ++t)
@@ -112,7 +114,7 @@ void FwPitchBendProcessor::setCurrentProgram (int index)
     if (index < 0 || index >= getNumPrograms()) return;
     currentProgram = index;
     static const flatwater::FactoryPreset defaults { "", "Default", {} };
-    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::mode));
+    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::id::mode));
 }
 
 void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
@@ -124,6 +126,7 @@ void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
 void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
 {
     using namespace pb;
+    using namespace pb::dsp;
     auto& st = apvts.state;
     st.setProperty (fineId, (bool) exact.getProperty ("fine", false), nullptr);
     for (int t = 0; t < numTargets; ++t)
@@ -163,8 +166,8 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
         if (tl.isLocked()) audio = shared;
     }
     // the controls once per block, and the transport
-    pb::Engine::Params p;
-    for (int t = 0; t < pb::numTargets; ++t) p.norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    pb::dsp::Engine::Params p;
+    for (int t = 0; t < pb::dsp::numTargets; ++t) p.norm[(size_t) t] = targetParams[(size_t) t]->getValue();
     for (int m = 0; m < 2; ++m)
     {
         const auto& d = pb::mod[m];
@@ -173,9 +176,9 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
         c.phase = get (d.phase); c.level = get (d.level); c.smooth = get (d.smooth);
         c.rateSynced = apvts.getParameter (d.rateSynced)->getValue();
     }
-    p.ptOffset = get (pb::ptOffset);
-    p.flatten = get (pb::flatten);
-    p.flattenNote = get (pb::flattenNote);
+    p.ptOffset = get (pb::id::ptOffset);
+    p.flatten = get (pb::id::flatten);
+    p.flattenNote = get (pb::id::flattenNote);
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
         {
@@ -183,7 +186,7 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
             if (auto q = pos->getPpqPosition()) { p.ppq = *q; p.havePpq = true; }
         }
     engine.process (buffer.getArrayOfWritePointers(), ch, n, p, audio);
-    for (int t = 0; t < pb::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
+    for (int t = 0; t < pb::dsp::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
     for (int m = 0; m < 2; ++m) cycle[m] = engine.cycle[m];
     amValue = engine.amValue;
     ptValue = engine.ptValue;

@@ -218,7 +218,7 @@ Every pair: [the presets null test](NULLTESTS.md#presets).
 
 The shifter decides on near-equal values (voicing, its marks, which period a grain reads), so a unit in the last place
 from a C library's exp, log or sin could move a grain on another system. Its transcendental functions and the
-modulators' come from `plugins/FwPitchBend/Source/dsp/Math.h` (on `shared/dsp/Math.h`, with sin and cos of its own), which give the
+modulators' come from `shared/dsp/Math.h` (sin and cos included), which give the
 same bits wherever doubles round to nearest. The knobs' exponential tapers (Rate, Warp, Smooth, AM's times, PT's
 Smooth) round their value to 1e-5, so a value set comes back as itself (in double precision a free rate set to 4 Hz
 otherwise comes back a hair over and runs a whole 8-sample tick short, which fails four modulator null cases). The

@@ -305,7 +305,7 @@ public:
 private:
     double fs = 48000.0;
     Tuning tune;
-    co::Analog analog;
+    co::dsp::Analog analog;
     de::dsp::Delay line;
     juce::AudioBuffer<float> work;
     std::vector<float> histL, histR;                                  // the line's output, for the second tap

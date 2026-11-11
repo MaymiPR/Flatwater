@@ -20,6 +20,8 @@ struct ModIds { const char* warp; const char* level; const char* rateSynced; con
 inline constexpr ModIds mod[2] {
     { "m1Warp", "m1Level", "m1RateSynced", "m1Rate", "m1Sync", "m1Phase", "m1Type", "m1Smooth", "m1Steps" },
     { "m2Warp", "m2Level", "m2RateSynced", "m2Rate", "m2Sync", "m2Phase", "m2Type", "m2Smooth", "m2Steps" } };
+namespace id
+{
 inline constexpr const char* amAttack = "amAttack";        // 0.1 .. 1000 ms, default 10
 inline constexpr const char* amRelease = "amRelease";      // 0.1 .. 1000 ms, default 100
 inline constexpr const char* amLevel = "amLevel";          // 0 .. 2, default 1
@@ -32,6 +34,7 @@ inline constexpr const char* mix = "mix";                  // 0 .. 100 %, defaul
 inline constexpr const char* flattenNote = "flattenNote";  // C2 .. B3, default C3
 inline constexpr const char* flatten = "flatten";          // Off / On
 inline constexpr const char* mode = "mode";                // Stereo, Mono (the two components)
+}
 
 inline const juce::StringArray& modeNames() { static const juce::StringArray m { "Stereo", "Mono" }; return m; }
 // the synced rates, slowest first (the reference's list)

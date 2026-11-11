@@ -3,7 +3,7 @@
 // order: T k fh Qh fl Ql hAtt hRel lAtt lRel slope range knee gAtt hold gRel linRel sAtt sRel share power),
 // the look-ahead in samples at 48 kHz, and the zero-phase high band's taps per rate (h[0] the
 // centre, h[k] = h[-k]). Do not edit.
-namespace ch::deesstables
+namespace ch::dsp::deesstables
 {
 inline constexpr int nParams = 21;
 inline constexpr double p[nParams] = { -16.6040112, 0.403768178, 4696.32614, 0.79000316, 1417.77437, 0.760783769, 0.49490575, 0.731939827, 43.5458163, 253.494928, 1.01706243, 48, 1.06108423, 0.0749622936, 5.11611823, 17.3793218, 0, 94.1641265, 106.870658, 0.000156277684, 0 };

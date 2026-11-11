@@ -4,6 +4,7 @@
 
 using namespace juce;
 using namespace pb;
+using namespace pb::dsp;
 using namespace pb::ui;
 namespace theme = flatwater::theme;
 
@@ -85,8 +86,8 @@ public:
 
 //==============================================================================
 FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (pb::mode), "Flatwater Pitch Bend", JucePlugin_VersionString, W,
-              (bool) p.apvts.state.getProperty (pb::expandedId, false) ? HOpen : HClosed,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (pb::id::mode), "Flatwater Pitch Bend", JucePlugin_VersionString, W,
+              (bool) p.apvts.state.getProperty (pb::dsp::expandedId, false) ? HOpen : HClosed,
               flatwater::Toolbar::Style::Hybrid, pb::modeNames()),
       proc (p), ui { p }
 {
@@ -101,10 +102,10 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         return proc.fine() ? String (roundToInt (v * 100.0)) + " cents" : String (roundToInt (v)) + " semitones";
     };
-    pitch = &knob (ModKnob::Big, 0, pb::pitch, "PITCH", kPitch);
-    formant = &knob (ModKnob::Big, 1, pb::formant, "FORMANT", kFormant);
+    pitch = &knob (ModKnob::Big, 0, pb::id::pitch, "PITCH", kPitch);
+    formant = &knob (ModKnob::Big, 1, pb::id::formant, "FORMANT", kFormant);
     pitch->format = formant->format = semis;
-    mix = &knob (ModKnob::Medium, 2, pb::mix, "MIX", kMix);
+    mix = &knob (ModKnob::Medium, 2, pb::id::mix, "MIX", kMix);
     mix->format = [] (double v) { return fixed (v, 1); };
     mix->wheelStep = 0.013;
 
@@ -180,9 +181,9 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         content().repaint();
     });
     addToContent (fine, kFine);
-    auto& flattenLamp = make<Toggle> (ui, "", [this] { return proc.get (pb::flatten) > 0.5f; }, [this]
+    auto& flattenLamp = make<Toggle> (ui, "", [this] { return proc.get (pb::id::flatten) > 0.5f; }, [this]
     {
-        auto& pr = param (pb::flatten);
+        auto& pr = param (pb::id::flatten);
         pr.beginChangeGesture();
         pr.setValueNotifyingHost (pr.getValue() > 0.5f ? 0.0f : 1.0f);
         pr.endChangeGesture();
@@ -196,7 +197,7 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     addToContent (note, kNote);
     auto setNote = [this] (int i)
     {
-        auto& pr = param (pb::flattenNote);
+        auto& pr = param (pb::id::flattenNote);
         pr.beginChangeGesture();
         pr.setValueNotifyingHost (pr.convertTo0to1 ((float) jlimit (0, 23, i)));
         pr.endChangeGesture();
@@ -209,9 +210,9 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         g.fillRoundedRectangle (r, 2.0f);
         g.setColour (hot ? theme::cyan.withAlpha (0.8f) : theme::line);
         g.drawRoundedRectangle (r, 2.0f, 1.0f);
-        g.setColour (proc.get (pb::flatten) > 0.5f ? theme::text : theme::textDim);
+        g.setColour (proc.get (pb::id::flatten) > 0.5f ? theme::text : theme::textDim);
         g.setFont (theme::font (14.0f, true));
-        g.drawText (noteNames()[roundToInt (proc.get (pb::flattenNote))], r.withTrimmedRight (16.0f), Justification::centred);
+        g.drawText (noteNames()[roundToInt (proc.get (pb::id::flattenNote))], r.withTrimmedRight (16.0f), Justification::centred);
         g.setColour (theme::line);
         g.fillRect (r.getRight() - 16.0f, r.getY() + 3.0f, 1.0f, r.getHeight() - 6.0f);
         Path tri;
@@ -224,12 +225,12 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     {
         if (e.mods.isAltDown())
         {
-            setNote (roundToInt (param (pb::flattenNote).convertFrom0to1 (param (pb::flattenNote).getDefaultValue())));
+            setNote (roundToInt (param (pb::id::flattenNote).convertFrom0to1 (param (pb::id::flattenNote).getDefaultValue())));
             press = Press::None;
             return;
         }
         press = Press::Note;
-        pressStart = roundToInt (proc.get (pb::flattenNote));
+        pressStart = roundToInt (proc.get (pb::id::flattenNote));
         pressAt = e.position;
     };
     note.drag = [this, setNote] (const MouseEvent& e)
@@ -246,13 +247,13 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         PopupMenu m;
         m.setLookAndFeel (&menuLook);
         m.addSectionHeader ("Flatten to");
-        const int cur = roundToInt (proc.get (pb::flattenNote));
+        const int cur = roundToInt (proc.get (pb::id::flattenNote));
         for (int i = 0; i < 24; ++i) m.addItem (i + 1, noteNames()[i], true, i == cur);
         m.showMenuAsync (PopupMenu::Options().withTargetComponent (&note).withMinimumWidth (note.getWidth()).withStandardItemHeight (18),
                          [setNote] (int r) { if (r > 0) setNote (r - 1); });
     };
     note.hover = [this, &note] (bool in) { noteHot = in; note.repaint(); };
-    note.wheel = [this, setNote] (int dir) { setNote (roundToInt (proc.get (pb::flattenNote)) + dir); };
+    note.wheel = [this, setNote] (int dir) { setNote (roundToInt (proc.get (pb::id::flattenNote)) + dir); };
 
     // the modulators' panel: M1 and M2 (each its own knobs), AM, PT
     auto& scr = make<Screen> (ui);
@@ -344,8 +345,8 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     saveTool = &tool ("save", { 32, 433, 19, 19 }, [] { return false; }, [this] { library->saveCurrent(); });
 
     // AM and PT
-    const char* organic[2][3] { { pb::amAttack, pb::amRelease, pb::amLevel },
-                                { pb::ptSmooth, pb::ptOffset, pb::ptLevel } };
+    const char* organic[2][3] { { pb::id::amAttack, pb::id::amRelease, pb::id::amLevel },
+                                { pb::id::ptSmooth, pb::id::ptOffset, pb::id::ptLevel } };
     const char* organicLabels[2][3] { { "ATTACK", "RELEASE", "LEVEL" }, { "SMOOTH", "OFFSET", "LEVEL" } };
     const int organicTargets[2][3] { { 11, 12, 13 }, { 14, -1, 15 } };
     for (int o = 0; o < 2; ++o)

@@ -41,7 +41,7 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    bool fine() const { return (bool) apvts.state.getProperty (pb::fineId, false); }
+    bool fine() const { return (bool) apvts.state.getProperty (pb::dsp::fineId, false); }
     // Pitch / Formant in semitones as they act: whole semitones while Fine is off, cents (0.01) while it is on
     float shiftSemitones (const char* id) const
     {
@@ -51,7 +51,7 @@ public:
 
     // editor taps: each modulatable control's value with its modulation (real units; the white dot), the two
     // modulators' place in their cycle (0 .. 1, the graph's play-head), AM's envelope and PT's pitch value (-1 .. 1)
-    std::array<std::atomic<float>, pb::numTargets> modulated;
+    std::array<std::atomic<float>, pb::dsp::numTargets> modulated;
     std::atomic<float> cycle[2] { 0.0f, 0.0f }, amValue { 0.0f }, ptValue { 0.0f };
 
     // what Default Preset resets beyond the parameters: no slots, Fine off, the default shapes, the steps at 0
@@ -72,8 +72,8 @@ private:
 
     // the copy the audio thread works on: written on the message thread under the lock, read with a try-lock
     juce::SpinLock modelLock;
-    pb::Engine::Setup shared, audio;
+    pb::dsp::Engine::Setup shared, audio;
 
-    std::array<juce::RangedAudioParameter*, pb::numTargets> targetParams {};
-    pb::Engine engine;                                           // the audio path (dsp/Engine)
+    std::array<juce::RangedAudioParameter*, pb::dsp::numTargets> targetParams {};
+    pb::dsp::Engine engine;                                           // the audio path (dsp/Engine)
 };

@@ -3,7 +3,7 @@
 // -10 .. +10 to the reference responses over the chain with every colour clear: per section a fixed frequency
 // (Hz), Q = q0 + q1 g + q2 g^2 of its gain g (dB) at that step, and the gain per step (a high-pass: Q = q0).
 // Do not edit.
-namespace ch::eq
+namespace ch::dsp::eq
 {
 enum Kind { lowShelf, peak, highShelf, highPass };
 struct Section { Kind kind; float f, q0, q1, q2; float g[21]; };

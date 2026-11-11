@@ -9,6 +9,8 @@
 // identified on the reference's audio (dsp/Ride.h; MEASUREMENTS.md, Flatwater Bass Leveler Phase 3 / 4).
 namespace bl
 {
+namespace id
+{
 inline constexpr const char* target = "target";            // -42 .. 0 dB, default -14 (the Target slider)
 inline constexpr const char* sensitivity = "sensitivity";  // 0 .. 100, default 50 (note detection)
 inline constexpr const char* response = "response";        // Slow / Fast
@@ -19,6 +21,7 @@ inline constexpr const char* rangeMin = "rangeMin";        // -12 .. +11 dB, def
 inline constexpr const char* idle = "idle";                // 0.02 .. 0.98 of the range (the Idle arrow), default 0.5
 inline constexpr const char* output = "output";            // -12 .. +12 dB, default 0
 inline constexpr const char* mode = "mode";                // Stereo, Mono, Live Stereo, Live Mono (the four components)
+}
 
 inline const juce::StringArray& modeNames() { static const juce::StringArray m { "Stereo", "Mono", "Live Stereo", "Live Mono" }; return m; }
 inline bool isLive (int modeIndex) { return modeIndex >= 2; }

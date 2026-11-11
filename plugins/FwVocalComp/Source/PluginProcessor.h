@@ -32,7 +32,7 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : vc::factoryPresets()[(size_t) index - 1], apvts.getParameter (vc::mode));
+        flatwater::applyPreset (apvts, index == 0 ? defaults : vc::factoryPresets()[(size_t) index - 1], apvts.getParameter (vc::id::mode));
     }
     const juce::String getProgramName (int index) override
     {
@@ -56,7 +56,7 @@ private:
     int currentProgram = 0;
     void configure();
 
-    vc::Processor procs[2];
+    vc::dsp::Processor procs[2];
     std::atomic<float>* pComp = nullptr; std::atomic<float>* pGate = nullptr; std::atomic<float>* pGain = nullptr; std::atomic<float>* pMode = nullptr;
     double sr = 48000.0;
     bool prepared = false, layoutDual = false;

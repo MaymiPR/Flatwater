@@ -3,6 +3,7 @@
 
 using namespace juce;
 namespace theme = flatwater::theme;
+using namespace pb::dsp;
 
 namespace pb::ui
 {

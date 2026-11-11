@@ -427,7 +427,7 @@ void AutomationButtons::mouseDown (const MouseEvent& e)
 
 //==============================================================================
 FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (vl::mode), "Flatwater Vocal Leveler", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (vl::id::mode), "Flatwater Vocal Leveler", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::TwoRow, vl::modeNames()),
       lasso (make<flatwater::flat::LassoOverlay>()),
       proc (p),
@@ -445,15 +445,15 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
     target.marks = &marks;
     attackSwitch.marks = &marks;
 
-    attachSlider (vocal, vl::vocalSensitivity, kStudio.vocal, 0.0);
-    attachSlider (music, vl::musicSensitivity, kStudio.music, 0.0);
-    attachSlider (spill, vl::spill, kLive.spill, -48.0);
-    attach (attackSwitch, vl::attack, kStudio.attack);
-    attachSlider (target, vl::target, { 59, 42, 208, 20 }, -21.0);
+    attachSlider (vocal, vl::id::vocalSensitivity, kStudio.vocal, 0.0);
+    attachSlider (music, vl::id::musicSensitivity, kStudio.music, 0.0);
+    attachSlider (spill, vl::id::spill, kLive.spill, -48.0);
+    attach (attackSwitch, vl::id::attack, kStudio.attack);
+    attachSlider (target, vl::id::target, { 59, 42, 208, 20 }, -21.0);
     // the faders' components span the column; their caps move inside
-    attachSlider (rangeMax, vl::rangeMax, { 13, 195, 82, 305 }, 6.0);
-    attachSlider (rangeMin, vl::rangeMin, { 13, 195, 82, 305 }, -6.0);
-    attachSlider (output, vl::output, { 225, 205, 72, 290 }, 0.0);
+    attachSlider (rangeMax, vl::id::rangeMax, { 13, 195, 82, 305 }, 6.0);
+    attachSlider (rangeMin, vl::id::rangeMin, { 13, 195, 82, 305 }, -6.0);
+    attachSlider (output, vl::id::output, { 225, 205, 72, 290 }, 0.0);
     // the Rider shows the ride (the processor's gain) and can be held by hand; it is the host's Rider Fader parameter
     // only through Automation (Write sends the ride, Read plays the host's back)
     rider.setRange (-12.0, 12.0, 0.1);
@@ -473,12 +473,12 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
         k->onValueChange = [this, k] { content().repaint (k->getX() - 10, k->getY() + 60, k->getWidth() + 20, 30); };
     target.onValueChange = [this] { content().repaint (266, 40, 50, 26); };
     // the Idle arrow
-    auto* idleParam = p.apvts.getParameter (vl::idle);
+    auto* idleParam = p.apvts.getParameter (vl::id::idle);
     idleColumn.marks = &marks;
     idleColumn.idleDb = [this] { return proc.idleDb(); };
     idleColumn.setIdleDb = [this, idleParam] (float db)
     {
-        const float lo = proc.get (vl::rangeMin), hi = proc.get (vl::rangeMax);
+        const float lo = proc.get (vl::id::rangeMin), hi = proc.get (vl::id::rangeMax);
         idleParam->setValueNotifyingHost (idleParam->convertTo0to1 (jlimit (0.02f, 0.98f, (jlimit (lo, hi, db) - lo) / jmax (1.0f, hi - lo))));
         content().repaint();
     };
@@ -486,7 +486,7 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
     idleColumn.reset = [this, idleParam] { idleParam->setValueNotifyingHost (idleParam->getDefaultValue()); content().repaint(); };
     addToContent (idleColumn, { 27, 224, 18, 224 });
     // the Automation buttons
-    auto* autoParam = p.apvts.getParameter (vl::automation);
+    auto* autoParam = p.apvts.getParameter (vl::id::automation);
     automation.marks = &marks;
     automation.mode = [this] { return proc.automationMode(); };
     automation.setMode = [autoParam] (int m) { autoParam->beginChangeGesture(); autoParam->setValueNotifyingHost (autoParam->convertTo0to1 ((float) m)); autoParam->endChangeGesture(); };
@@ -866,7 +866,7 @@ void FwVocalLevelerEditor::paintContent (Graphics& g)
     const auto& lay = live ? kLive : kStudio;
 
     // the Range band: between Min and Max, lit, up to the Rider's scale; the Idle line across it
-    const float lo = proc.get (vl::rangeMin), hi = proc.get (vl::rangeMax);
+    const float lo = proc.get (vl::id::rangeMin), hi = proc.get (vl::id::rangeMax);
     g.setColour (theme::cyan.withAlpha (0.10f));
     g.fillRect (Rectangle<float>::leftTopRightBottom (65.0f, scaleY (hi), 147.5f, scaleY (lo)));
     g.setColour (kIdle.withAlpha (0.8f));

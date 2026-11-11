@@ -51,10 +51,10 @@ static void testTexts()
     CHECK (de::rateText (24.5f) == "24.5 Hz");
     CHECK (de::rateText (6000.0f) == "6.00k Hz");
     // the DSP takes Rate as shown: three significant digits, at least 0.01 (measured)
-    CHECK (std::abs (de::atResolution (de::rate, 3074.0f) - 3070.0f) < 1e-3f);
-    CHECK (std::abs (de::atResolution (de::rate, 281.7f) - 282.0f) < 1e-4f);
-    CHECK (std::abs (de::atResolution (de::rate, 47.84f) - 47.8f) < 1e-4f);
-    CHECK (std::abs (de::atResolution (de::rate, 0.537f) - 0.54f) < 1e-5f);
+    CHECK (std::abs (de::atResolution (de::id::rate, 3074.0f) - 3070.0f) < 1e-3f);
+    CHECK (std::abs (de::atResolution (de::id::rate, 281.7f) - 282.0f) < 1e-4f);
+    CHECK (std::abs (de::atResolution (de::id::rate, 47.84f) - 47.8f) < 1e-4f);
+    CHECK (std::abs (de::atResolution (de::id::rate, 0.537f) - 0.54f) < 1e-5f);
 }
 
 // defaults as a fresh reference instance; an impulse through the processor comes back after 1/8D at 120 BPM
@@ -62,18 +62,18 @@ static void testProcessor()
 {
     FwDelayProcessor p;
     auto v = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
-    CHECK_NEAR (v (de::delay), 375.0, 1.0e-3);
-    CHECK_NEAR (v (de::delayNote), 11.0, 1.0e-3);
-    CHECK_NEAR (v (de::sync), 1.0, 1.0e-3);
-    CHECK_NEAR (v (de::feedback), 60.0, 1.0e-3);
-    CHECK_NEAR (v (de::mix), 100.0, 1.0e-3);
-    CHECK_NEAR (v (de::analog), 2.0, 1.0e-3);
-    CHECK_NEAR (v (de::hipass), 19.0, 1.0e-3);
-    CHECK_NEAR (v (de::lopass), 20138.77, 0.05);
+    CHECK_NEAR (v (de::id::delay), 375.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::delayNote), 11.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::sync), 1.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::feedback), 60.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::mix), 100.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::analog), 2.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::hipass), 19.0, 1.0e-3);
+    CHECK_NEAR (v (de::id::lopass), 20138.77, 0.05);
     CHECK (p.getLatencySamples() == 0);
     auto set = [&p] (const char* id, float x) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (x)); };
-    set (de::analog, 0.0f);
-    set (de::feedback, 0.0f);
+    set (de::id::analog, 0.0f);
+    set (de::id::feedback, 0.0f);
     p.setPlayConfigDetails (2, 2, 48000.0, 512);
     p.prepareToPlay (48000.0, 512);
     std::vector<float> out[2];
@@ -90,12 +90,12 @@ static void testProcessor()
     CHECK_NEAR (out[0][100 + 18000] / 0.001, 0.997395, 2.0e-5);              // the kernel's centre (measured 0.997395)
     CHECK_NEAR (out[1][100 + 18000 + 1] / 0.001, 0.031919, 2.0e-5);          // and the tap after it (0.031919)
     // the state round trip
-    p.apvts.getParameter (de::feedback)->setValueNotifyingHost (p.apvts.getParameter (de::feedback)->convertTo0to1 (137.0f));
+    p.apvts.getParameter (de::id::feedback)->setValueNotifyingHost (p.apvts.getParameter (de::id::feedback)->convertTo0to1 (137.0f));
     juce::MemoryBlock st;
     p.getStateInformation (st);
     FwDelayProcessor q;
     q.setStateInformation (st.getData(), (int) st.getSize());
-    CHECK_NEAR (q.apvts.getRawParameterValue (de::feedback)->load(), 137.0, 1.0e-3);
+    CHECK_NEAR (q.apvts.getRawParameterValue (de::id::feedback)->load(), 137.0, 1.0e-3);
 }
 
 // the editor's Side to Side and Dual behaviour, as measured on the reference: clicks and drags on the display (editor pixels)
@@ -127,38 +127,38 @@ static void testDisplayClicks()
     auto knobValue = [&] { auto* s = dynamic_cast<juce::Slider*> (ed->getComponentAt (204, 101)); return s != nullptr ? s->getValue() : -1.0; };
 
     // Ping Pong: the start box flips the start side at each click
-    set (de::pingPong, 1.0f); tick();
+    set (de::id::pingPong, 1.0f); tick();
     press (403.0f, 108.0f, 0);
-    CHECK (get (de::pingPongStart) > 0.5f);
+    CHECK (get (de::id::pingPongStart) > 0.5f);
     press (403.0f, 108.0f, 0);
-    CHECK (get (de::pingPongStart) < 0.5f);
+    CHECK (get (de::id::pingPongStart) < 0.5f);
     // a note on the display steps with a vertical drag (40 px: one value), in Ping Pong's layout as in the plain one
     press (315.0f, 112.0f, 40);
-    CHECK_NEAR (get (de::delayNote), 12.0, 1.0e-3);
-    set (de::pingPong, 0.0f); tick();
+    CHECK_NEAR (get (de::id::delayNote), 12.0, 1.0e-3);
+    set (de::id::pingPong, 0.0f); tick();
     press (320.0f, 105.0f, 40);
-    CHECK_NEAR (get (de::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delayNote), 13.0, 1.0e-3);
     // Dual: switched on, the right side starts from the left's time; a click on the right note puts the Delay knob on
     // the right side
-    set (de::dual, 1.0f); tick();
-    CHECK_NEAR (get (de::delayNoteR), 13.0, 1.0e-3);
-    set (de::delayNoteR, 15.0f); tick();
+    set (de::id::dual, 1.0f); tick();
+    CHECK_NEAR (get (de::id::delayNoteR), 13.0, 1.0e-3);
+    set (de::id::delayNoteR, 15.0f); tick();
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
     press (409.0f, 112.0f, 0);
     CHECK_NEAR (knobValue(), 15.0, 1.0e-3);
     // Ping Pong's layout shows the left side; the right side comes back when Ping Pong goes off
-    set (de::pingPong, 1.0f); tick();
+    set (de::id::pingPong, 1.0f); tick();
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
-    set (de::pingPong, 0.0f); tick();
+    set (de::id::pingPong, 0.0f); tick();
     CHECK_NEAR (knobValue(), 15.0, 1.0e-3);
     press (315.0f, 112.0f, 0);
     CHECK_NEAR (knobValue(), 13.0, 1.0e-3);
     // in MS a drag on the right time sets the right side's time
-    set (de::sync, 2.0f); tick();
-    const float r0 = get (de::delayR);
+    set (de::id::sync, 2.0f); tick();
+    const float r0 = get (de::id::delayR);
     press (395.0f, 110.0f, 20);
-    CHECK (get (de::delayR) > r0 + 5.0f);
-    CHECK_NEAR (knobValue(), get (de::delayR), 1.0e-3);
+    CHECK (get (de::id::delayR) > r0 + 5.0f);
+    CHECK_NEAR (knobValue(), get (de::id::delayR), 1.0e-3);
 }
 
 // the factory presets: the reference's 88, each name once, every value inside its parameter's range
@@ -191,7 +191,7 @@ static void testPresets()
         p.setCurrentProgram (k + 1);
         for (const auto& v : pr.values)
         {
-            if (juce::String (v.id) == de::mix) continue;
+            if (juce::String (v.id) == de::id::mix) continue;
             const float got = p.apvts.getRawParameterValue (v.id)->load();
             if (std::abs (got - v.value) > 1.0e-3f * std::max (1.0f, std::abs (v.value)))
             {
@@ -211,7 +211,7 @@ static void testPresets()
     p.setCurrentProgram (program ("Default"));
     CHECK (p.settings (48000.0).lopassHz == 0.0f);                         // stored 20 100: Off
     p.setCurrentProgram (program ("Side to Side"));
-    auto* d = p.apvts.getParameter (de::depth);
+    auto* d = p.apvts.getParameter (de::id::depth);
     d->setValueNotifyingHost (d->convertTo0to1 (0.69f) + 1.0e-4f);           // moved: the parameter at its resolution
     CHECK (std::abs (p.settings (48000.0).depth - 0.01f) < 1.0e-6f);
     {   // the preset's values survive a session's save and reload

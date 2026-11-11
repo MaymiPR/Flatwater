@@ -2,7 +2,7 @@
 #include <array>
 #include <cmath>
 #include "Model.h"
-#include "Math.h"
+#include "shared/dsp/Math.h"
 #include "Tuning.h"
 
 // Flatwater Pitch Bend's modulators, as measured on the reference (MEASUREMENTS.md, Flatwater Pitch Bend, "Phase 1, the
@@ -19,7 +19,7 @@
 //   normalised value, clipped to the control's range (Pitch's to twice its range, +-24 semitones); the controls that
 //   scale (the Rates, Warps, AM's and PT's) are multiplied by ((a + s) / (a - s))^p of the slots' sum s (oddsScale).
 // The modulators run per sample; a control other than Mix takes their value once per host block.
-namespace pb
+namespace pb::dsp
 {
 // the synced lengths in beats, in the host parameter's order (32 bars ... 1/64 triplet)
 inline double syncedBeats (int index)
@@ -80,11 +80,11 @@ struct Lfo
 inline double oddsScale (double s, double a, double p)
 {
     const double c = std::max (-0.999999 * a, std::min (0.999999 * a, s));
-    return pbmath::pow ((a + c) / (a - c), p);
+    return flatwater::math::pow ((a + c) / (a - c), p);
 }
 
 // a one-pole's coefficient per sample for a time constant in ms
-inline double poleFor (double ms, double sr) { return pbmath::exp (-1.0 / (std::max (ms, 0.01) * 0.001 * sr)); }
+inline double poleFor (double ms, double sr) { return flatwater::math::exp (-1.0 / (std::max (ms, 0.01) * 0.001 * sr)); }
 
 // AM, as measured on stepped sines (MEASUREMENTS.md, Phase 3): the input's magnitude read once every 8 samples
 // (counted from the start of processing; so a 3 kHz sine at 48 kHz, read at its zero crossings, gives nothing),
@@ -107,10 +107,10 @@ struct Follower
         reset();
     }
     void reset() { env = 0.0; quiet = 0; opening = 0; closed = true; }
-    static double attackPole (double attackMs, double sr) { return pbmath::exp (-tick / (std::max (attackMs, 0.01) * 0.001 * sr)); }
+    static double attackPole (double attackMs, double sr) { return flatwater::math::exp (-tick / (std::max (attackMs, 0.01) * 0.001 * sr)); }
     double releasePole (double attackMs, double releaseMs, double sr) const
     {
-        return pbmath::exp (-tick / (std::max (releaseMs + attackMs / releaseAttackDiv, 0.01) * 0.001 * sr));
+        return flatwater::math::exp (-tick / (std::max (releaseMs + attackMs / releaseAttackDiv, 0.01) * 0.001 * sr));
     }
     // one sample: `read` on every 8th sample; a, r: the poles per read
     double next (float in, bool read, double a, double r)
@@ -139,9 +139,9 @@ struct PitchFollower
     void reset() { value = 0.0; smoothed = 0.0; started = false; }
     double next (float hz, double smoothMs, int n, double sr)
     {
-        if (hz > 0.0f) value = pbmath::log2 (hz / refHz) / 2.0;
+        if (hz > 0.0f) value = flatwater::math::log2 (hz / refHz) / 2.0;
         if (! started) { smoothed = value; started = true; }
-        const double a = pbmath::exp (-(double) n / (std::max (smoothMs, 0.01) * 0.001 * sr));
+        const double a = flatwater::math::exp (-(double) n / (std::max (smoothMs, 0.01) * 0.001 * sr));
         smoothed = value + a * (smoothed - value);
         return smoothed;
     }

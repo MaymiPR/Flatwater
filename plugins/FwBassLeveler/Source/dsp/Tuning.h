@@ -8,7 +8,7 @@
 // Bass Leveler: Phase 3 / 4") and the note detector's fit (nulltest/fit_detector.py, measurements/FwBassLeveler/
 // detector_fit.json). Kept in one struct so the offline renderer (tools/BlRender.cpp) can override any of them by
 // name (tune:key=value); the plug-in uses the defaults. The quadrature pairs per rate stay in Engine.h (fitted tables).
-namespace bl
+namespace bl::dsp
 {
 struct Tuning
 {

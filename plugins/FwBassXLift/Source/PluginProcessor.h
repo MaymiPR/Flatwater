@@ -31,8 +31,8 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bx::factoryPresets()[(size_t) index - 1], apvts.getParameter (bx::mode),
-                           { apvts.getParameter (bx::input) });         // presets leave Input alone, as the reference
+        flatwater::applyPreset (apvts, index == 0 ? defaults : bx::factoryPresets()[(size_t) index - 1], apvts.getParameter (bx::id::mode),
+                           { apvts.getParameter (bx::id::input) });         // presets leave Input alone, as the reference
     }
     const juce::String getProgramName (int index) override
     {
@@ -54,7 +54,7 @@ public:
 
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout layout();
-    bx::Processor dsp;
+    bx::dsp::Processor dsp;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     int currentProgram = 0;
 };
