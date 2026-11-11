@@ -21,26 +21,7 @@ double besselI0 (double x)
 
 int nextPow2 (int v) { int p = 1; while (p < v) p <<= 1; return p; }
 
-// analysis
-constexpr double lowpassHz = 3000.0;          // the detector's band
-constexpr double coarseHz = 12000.0;          // its decimated rate (about)
-constexpr double fminHz = 60.0, fmaxHz = 1250.0;     // (voice 70 .. 1000 Hz, with room at both ends)
-constexpr double winShortS = 0.012, winLongS = 0.040, evalS = 0.00067;
-constexpr double gateOpenMs = 7.943e-6;       // -51 dBFS rms (measured: shifted at -50, not at -52)
-constexpr double gateCloseMs = 7.079e-6;      // -51.5
-constexpr double voicedOn = 0.30, voicedKeep = 0.45;
-constexpr double smoothS = 0.002;             // the detector period's smoothing time constant
-constexpr double maxTrend = 0.0087;           // the marks' period trend reaches at most 15 cents
-constexpr double readStepSt = 1.5;             // the Formant total (semitones) past which the grains read a period further back
-constexpr double snapScale = 0.01;            // a time scale further from 1 reads the voiced grains at the marks (as any shift)
-constexpr double periodReach = 0.03;          // a grain's period read from the marks: at most 50 cents from the newest
-constexpr double noiseTiltHz = 1500.0, noiseAperiodic = 0.78;
-
-// grains
-constexpr double passHopS = 0.005, passFadeS = 0.0025;   // unvoiced / pass-through grains: 5 ms apart, 2.5 ms fades
-constexpr double wetFadeS = 0.010;                         // the delay path <-> grains cross-fade
-constexpr float noiseGain = 1.047f;           // +0.4 dB: re-granulated noise at the measured -0.6 dB
-constexpr double levelS = 0.080;              // the voiced level's averaging time
+// the analysis' and the grains' constants: dsp/Tuning.h (the member tune)
 
 // measured (levelgrid.json, printed by plugins/FwPitchBend/nulltest/measure_level_grid.py fit): the reference's voiced level
 // (output minus input, dB) per Pitch and Formant total, with every control set, over vowels at 80 .. 300 Hz and sung
@@ -80,7 +61,6 @@ const double gridS[gridNP][gridNF] = {
     { 1.42, 0.35, 0.18, 0.79, -0.16, -0.51, -1.89, -1.78, -1.03, -2.23, -2.06 },
     { 0.92, 1.33, 0.05, 0.39, 1.03, -0.19, -0.20, -1.33, -2.15, -0.98, -2.48 }
 };
-constexpr double kurtRef = 0.83;
 double grid (const double (&t)[gridNP][gridNF], double p, double f)
 {
     int i = 0, j = 0;
@@ -97,7 +77,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
     sr = sampleRate > 1000.0 ? sampleRate : 48000.0;
     channels = std::max (1, ch);
     // measured: 105.531 samples at 48 kHz, 211.063 at 96 kHz, 120.438 at 44.1 kHz
-    delay = std::abs (sr - 44100.0) < 1.0 ? 120.4375 : 105.53125 * sr / 48000.0;
+    delay = std::abs (sr - 44100.0) < 1.0 ? tune.delay44 : tune.delay48 * sr / 48000.0;
 
     const int ringLen = nextPow2 (std::max (8192, (int) (0.17 * sr)));
     ringMask = ringLen - 1;
@@ -117,7 +97,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
         fir[(size_t) (T / 2 - 1)] = 1.0f;
     else
     {
-        const double beta = 8.0, i0b = besselI0 (beta);
+        const double beta = tune.firBeta, i0b = besselI0 (beta);
         double sum = 0.0;
         std::vector<double> h ((size_t) T);
         for (int k = 0; k < T; ++k)
@@ -133,23 +113,23 @@ void Shifter::prepare (double sampleRate, int, int ch)
 
     // the detector's low-pass: 4th-order Butterworth (two biquads)
     const double qs[2] = { 0.54119610, 1.30656296 };
-    const double w0 = 2.0 * pi * lowpassHz / sr, cw = pbmath::cos (w0), sw = pbmath::sin (w0);
+    const double w0 = 2.0 * pi * tune.lowpassHz / sr, cw = pbmath::cos (w0), sw = pbmath::sin (w0);
     for (int b = 0; b < 2; ++b)
     {
         const double al = sw / (2.0 * qs[b]), a0 = 1.0 + al;
         bq[b][0] = (1.0 - cw) / 2.0 / a0; bq[b][1] = (1.0 - cw) / a0; bq[b][2] = (1.0 - cw) / 2.0 / a0;
         bq[b][3] = -2.0 * cw / a0; bq[b][4] = (1.0 - al) / a0;
     }
-    lpDelay = 2.6131 / (2.0 * pi * lowpassHz) * sr;     // its group delay at low frequencies
+    lpDelay = 2.6131 / (2.0 * pi * tune.lowpassHz) * sr;     // its group delay at low frequencies
 
-    decim = std::max (1, (int) std::lround (sr / coarseHz));
+    decim = std::max (1, (int) std::lround (sr / tune.coarseHz));
     fd = sr / decim;
-    tmin = std::max (2, (int) std::floor (fd / fmaxHz));
-    tmax = (int) std::ceil (fd / fminHz) + 1;
-    winS = (int) std::lround (winShortS * fd);
-    winL = (int) std::lround (winLongS * fd);
-    evalEvery = std::max (1, (int) std::lround (evalS * fd));
-    smoothA = 1.0 - pbmath::exp (-evalEvery / (smoothS * fd));
+    tmin = std::max (2, (int) std::floor (fd / tune.fmaxHz));
+    tmax = (int) std::ceil (fd / tune.fminHz) + 1;
+    winS = (int) std::lround (tune.winShortS * fd);
+    winL = (int) std::lround (tune.winLongS * fd);
+    evalEvery = std::max (1, (int) std::lround (tune.evalS * fd));
+    smoothA = 1.0 - pbmath::exp (-evalEvery / (tune.smoothS * fd));
     const int cl = nextPow2 (winL + tmax + 8);
     coarse.assign ((size_t) cl, 0.0f);
     coarseMask = cl - 1;
@@ -159,7 +139,7 @@ void Shifter::prepare (double sampleRate, int, int ch)
     gateLen = (int) std::lround (0.020 * sr);
     slopeLen = (int) std::lround (0.010 * sr);
 
-    levelA = 1.0 - pbmath::exp (-1.0 / (levelS * sr));
+    levelA = 1.0 - pbmath::exp (-1.0 / (tune.levelS * sr));
     // (measured: the run 1029 .. 1030 samples at 48 kHz, 976 .. 980 at 44.1, 2101 .. 2400 at 96; the delay 39 samples
     // at 44.1 and 48 kHz, 78 at 96)
     flatRun = (int) std::lround (1024.0 * sr / 48000.0);
@@ -201,7 +181,7 @@ void Shifter::reset()
     lvIn = lvOut = 0.0;
     lvCount = 0;
     lastPeff = 1e9;
-    lnKurt = kurtRef;
+    lnKurt = tune.kurtRef;
 }
 
 float Shifter::fade (double v) const
@@ -239,8 +219,8 @@ void Shifter::analyse (float mono)
         monoRing[(size_t) i] = mono;
         lastMono = mono;
         const double ms = std::max (0.0, gateSum) / gateLen;
-        if (! gateOpen && ms >= gateOpenMs) { gateOpen = true; gateOpenSince = now; lnKurt = kurtRef; lvCount = 0; }
-        else if (gateOpen && ms < gateCloseMs) { gateOpen = false; voiced = false; chain = false; onCount = 0; }
+        if (! gateOpen && ms >= tune.gateOpenMs) { gateOpen = true; gateOpenSince = now; lnKurt = tune.kurtRef; lvCount = 0; }
+        else if (gateOpen && ms < tune.gateCloseMs) { gateOpen = false; voiced = false; chain = false; onCount = 0; }
     }
     // low-pass for the detector and the marks
     double v = mono;
@@ -299,7 +279,7 @@ void Shifter::evaluate()
         else while (t + 1 < tmax && cmS[(size_t) t + 1] < cmS[(size_t) t]) ++t;
         apShort = cmS[(size_t) t];
         if (t <= tmin || t >= tmax - 1) apShort = std::max (apShort, 0.99);
-        else if (apShort < voicedKeep)
+        else if (apShort < tune.voicedKeep)
         {
             const double a = cmS[(size_t) t - 1], b = cmS[(size_t) t], cc = cmS[(size_t) t + 1];
             const double den = a - 2.0 * b + cc;
@@ -351,12 +331,12 @@ void Shifter::evaluate()
     }
     else apLong = 1.0;
 
-    const double tilt = (2.0 * pi * noiseTiltHz / sr) * (2.0 * pi * noiseTiltHz / sr);
+    const double tilt = (2.0 * pi * tune.noiseTiltHz / sr) * (2.0 * pi * tune.noiseTiltHz / sr);
     noiseLike = gateOpen && (slopeSum > tilt * std::max (slopeE, 1e-30)
-                             || (apLong > noiseAperiodic && now - gateOpenSince > (int64_t) winL * decim));
+                             || (apLong > tune.noiseAperiodic && now - gateOpenSince > (int64_t) winL * decim));
 
     // voicing and the smoothed period
-    const bool cand = gateOpen && pr > 0.0 && apShort < voicedOn;
+    const bool cand = gateOpen && pr > 0.0 && apShort < tune.voicedOn;
     if (! voiced)
     {
         onCount = cand ? onCount + 1 : 0;
@@ -364,7 +344,7 @@ void Shifter::evaluate()
     }
     else
     {
-        const bool keep = gateOpen && pr > 0.0 && apShort < voicedKeep;
+        const bool keep = gateOpen && pr > 0.0 && apShort < tune.voicedKeep;
         if (! keep)
         {
             if (++offCount >= 3) { voiced = false; chain = false; onCount = 0; }
@@ -479,7 +459,7 @@ double Shifter::markPeriod (int last, double ahead) const
         }
         const double b = (n * sxy - sx * sy) / (n * sxx - sx * sx), a = (sy - b * sx) / n;
         // (the trend's reach is limited: a step in the pitch must not overshoot)
-        const double pk = markPer[last], lim = maxTrend * pk;
+        const double pk = markPer[last], lim = tune.maxTrend * pk;
         p = std::max (pk - lim, std::min (pk + lim, a + b * (ahead - 0.5)));
     }
     return std::abs (p / period - 1.0) < 0.15 ? p : period;
@@ -507,7 +487,7 @@ double Shifter::periodAt (int last, double t) const
         const double den = n * sxx - sx * sx;
         const double b = den > 1e-9 ? (n * sxy - sx * sy) / den : 0.0, a = (sy - b * sx) / n;
         p = a + b * std::min (t - t0, 2.0 * pk);
-        p = std::max (pk * (1.0 - periodReach), std::min (pk * (1.0 + periodReach), p));
+        p = std::max (pk * (1.0 - tune.periodReach), std::min (pk * (1.0 + tune.periodReach), p));
     }
     return std::abs (p / period - 1.0) < 0.15 ? p : period;
 }
@@ -520,8 +500,8 @@ double Shifter::readDelay (double H, double pin, double scale) const
     // +1 at both, to +2.5 at 150 Hz); at no time scale, the no-shift delay itself. Past Formant +1.5 it reads further
     // back by an amount that depends on the voice (from the vibrato lags: one input period more, and 1.2 periods per
     // unit of time scale over 1); never under what the half grain drifts (a grain reads only what has arrived)
-    if (lastF > readStepSt) return pin * (1.0 + 1.2 * (scale - 1.0));
-    if (std::abs (scale - 1.0) > snapScale) return std::max (delay - lastF / 12.0 * pin, H * std::abs (scale - 1.0) + 4.0);
+    if (lastF > tune.readStepSt) return pin * (1.0 + 1.2 * (scale - 1.0));
+    if (std::abs (scale - 1.0) > tune.snapScale) return std::max (delay - lastF / 12.0 * pin, H * std::abs (scale - 1.0) + 4.0);
     return delay;
 }
 
@@ -571,13 +551,13 @@ void Shifter::schedule (double ratio, double scale, double flattenHz)
             const double p0 = markPeriod (last, 0.5);
             if (! lastWasVoiced || chainMarks < lastChainMarks) phaseSet = false;
             lastChainMarks = chainMarks;
-            const bool snap = std::abs (scale - 1.0) > snapScale || std::abs (ratio - 1.0) > 1e-6 || flattenHz > 0.0;
+            const bool snap = std::abs (scale - 1.0) > tune.snapScale || std::abs (ratio - 1.0) > 1e-6 || flattenHz > 0.0;
             double pout = 0.0, H = 0.0, Hd = 0.0, o = 0.0, m = 0.0, fi = 0.0;
             double pin = phaseSet ? periodAt (last, lastM + 0.5 * p0) : p0;
             for (int pass = 0; pass < 2; ++pass)
             {
                 pout = flattenHz > 0.0 ? sr / (flattenHz * ratio) : pin / ratio;
-                pout = std::max (16.0, std::min (pout, 4.0 * sr / fminHz));
+                pout = std::max (16.0, std::min (pout, 4.0 * sr / tune.fminHz));
                 // (under Flatten the grains are twice as long: measured on speech flattened up an octave, the
                 // reference's output periods are as alike as ours are with grains of four periods, 0.95 median
                 // correlation of one period with the next, 0.92 with two; the octave readings of ours go from 11 % of
@@ -646,7 +626,7 @@ void Shifter::schedule (double ratio, double scale, double flattenHz)
                 const double ms = gateSum / gateLen, k = std::max (0.0, quartSum) / gateLen / (ms * ms);
                 lnKurt += 0.25 * (pbmath::log (std::max (1.5, std::min (9.5, k))) - lnKurt);
             }
-            const double kc = pbmath::pow10 (levelSlope * (lnKurt - kurtRef) / 20.0);
+            const double kc = pbmath::pow10 (levelSlope * (lnKurt - tune.kurtRef) / 20.0);
             float gv = (float) (levelTarget * kc);
             // (not until 20 ms are measured since the gate opened: a voice's first grain, its fade-in short, reads
             // as quiet and the correction overshot)
@@ -660,16 +640,16 @@ void Shifter::schedule (double ratio, double scale, double flattenHz)
         }
         else
         {
-            const double fu = passFadeS * sr;
+            const double fu = tune.passFadeS * sr;
             double start = nextStart, fi = nextFade;
             if (start < (double) now - fi + 1.0 || fi < 8.0) { start = (double) now; fi = fu; }
             rng = rng * 1664525u + 1013904223u;
-            const double h = passHopS * sr * (0.75 + 0.5 * (rng >> 8) / 16777216.0);
+            const double h = tune.passHopS * sr * (0.75 + 0.5 * (rng >> 8) / 16777216.0);
             const double fl = std::max (0.0, h - fi), fo = fu;
             const double half = 0.5 * (fi + fl + fo);
             const double sc = kind == kNoise ? scale : 1.0;
             const double du = kind == kPass ? delay : std::max (delay, half * std::abs (sc - 1.0) + 4.0);
-            Grain* g = startGrain (kind, start, fi, fl, fo, start + half - du, sc, kind == kNoise ? noiseGain : 1.0f);
+            Grain* g = startGrain (kind, start, fi, fl, fo, start + half - du, sc, kind == kNoise ? tune.noiseGain : 1.0f);
             // (unvoiced input not re-granulated is the delayed input itself: these grains read the no-shift path)
             if (g != nullptr && kind == kPass && gateOpen && noiseLike) g->exact = true;
             nextStart = start + fi + fl; nextFade = fo;
@@ -762,7 +742,7 @@ void Shifter::process (float* const* data, int ch, int n, float pitchSt, float f
     // knob or by modulation, the reference's output does not return to its pass-through for as long as it was run))
     engaged = engaged || std::abs (P) > 1e-6 || std::abs (F) > 1e-6 || flat || pSet || std::abs (Fc) > 1e-6;
     const bool shifting = engaged;
-    const double target = shifting ? 1.0 : 0.0, step = 1.0 / (wetFadeS * sr);
+    const double target = shifting ? 1.0 : 0.0, step = 1.0 / (tune.wetFadeS * sr);
     const int T = (int) fir.size();
 
     for (int i = 0; i < n; ++i)
@@ -792,7 +772,7 @@ void Shifter::process (float* const* data, int ch, int n, float pitchSt, float f
         if (! sched && wetMix > 0.0)
         {
             sched = true; lastWasVoiced = false;
-            nextStart = (double) now; nextFade = passFadeS * sr; nextCreate = (double) now;
+            nextStart = (double) now; nextFade = tune.passFadeS * sr; nextCreate = (double) now;
         }
         if (sched && wetMix <= 0.0 && target <= 0.0)
         {

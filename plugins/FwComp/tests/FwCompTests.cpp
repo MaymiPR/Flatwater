@@ -28,7 +28,7 @@ static std::vector<std::vector<float>> run (std::vector<std::vector<float>> x, c
                                             bool learned = true)
 {
     co::Compressor c;
-    c.learned = learned;
+    c.t.learned = learned;
     c.prepare (fs, (int) x.size());
     c.setSettings (s);
     const int lat = c.latency();

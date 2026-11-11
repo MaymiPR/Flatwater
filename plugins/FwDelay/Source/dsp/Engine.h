@@ -21,6 +21,7 @@
 #include <cmath>
 #include <functional>
 #include <vector>
+#include "Tuning.h"
 
 namespace de::dsp
 {
@@ -42,13 +43,13 @@ public:
     // the interpolator's taps for each read offset o = u / P - 1 (u = 1 .. P + 1: o from -(P - 1) / P to +1 / P) about
     // the tap centre b = ceil (d); cutoffHz 0: Nyquist (24 kHz above 48 kHz). Per doubling of the rate twice the taps
     // and half the phases per sample (measured at 96 kHz: the same filter in time)
-    void build (double fs, double cutoffHz)
+    void build (double fs, double cutoffHz, double beta)
     {
         factor = fs > 100000.0 ? 4 : fs > 50000.0 ? 2 : 1;
         phases = 32 / factor;
         taps = 16 * factor - 1;
         width = 2 * taps + 1;
-        const double hl = (16.0 - 1.0 / 32.0) * (double) factor, beta = 4.968;
+        const double hl = (16.0 - 1.0 / 32.0) * (double) factor;
         const double fc = cutoffHz > 0.0 ? cutoffHz / fs : 0.5 / (double) factor;
         table.assign ((size_t) (phases + 2) * (size_t) width, 0.0f);
         const double i0b = bessel0 (beta);
@@ -113,25 +114,22 @@ private:
 class Delay
 {
 public:
-    // fitted on the reference (DeRender takes them as glide= modscale= to fit them again)
-    double glideOffset = 16.0;                       // the glide's pace: (T - d) / (T + 16) per sample
-    double modScale = 0.5;                           // the target's swing at Depth 100: +-50 %
-    static constexpr double kReleaseMs = 10.0;      // the gain stage's recovery (per-sample 0.997919 at 48 kHz)
+    Tuning t = tuning();                             // dsp/Tuning.h: the defaults, or the renderer's overrides
 
     void prepare (double sampleRate)
     {
         fs = sampleRate;
-        hifi.build (fs, 0.0);
-        lofiK.build (fs, 6277.0);
+        hifi.build (fs, 0.0, t.kaiserBeta);
+        lofiK.build (fs, t.lofiCutoffHz, t.kaiserBeta);
         int size = 1;
-        while (size < (int) (fs * 5.6) + 4 * std::max (hifi.taps, lofiK.taps) + 8) size <<= 1;
+        while (size < (int) (fs * t.maxSeconds) + 4 * std::max (hifi.taps, lofiK.taps) + 8) size <<= 1;
         for (auto& l : lines) { l.buf.assign ((size_t) size, 0.0f); l.y1 = 0.0f; l.d = -1.0; l.hp.reset(); l.lp.reset(); }
         mask = size - 1;
         pos = 0;
         gain = 1.0;
         lfoValue = 0.0f;
         lfoUp = true;
-        rel = std::exp (-1.0 / (kReleaseMs * 0.001 * fs));
+        rel = std::exp (-1.0 / (t.releaseMs * 0.001 * fs));
     }
 
     // ch: the output channels (in place; the input is in them: one channel for mono, two otherwise, the second a copy of
@@ -146,11 +144,11 @@ public:
         // whole samples; above 48 kHz the reference's delay settles (factor - 1) samples short (measured at 96 kHz: an
         // echo at T - 1 + 1/16)
         const double shortBy = (double) (hifi.factor - 1);
-        const double tL = std::max (16.0, std::floor (s.timeL) - shortBy), tR = std::max (16.0, std::floor ((s.dual && ! pp) ? s.timeR : s.timeL) - shortBy);
+        const double tL = std::max (t.minDelay, std::floor (s.timeL) - shortBy), tR = std::max (t.minDelay, std::floor ((s.dual && ! pp) ? s.timeR : s.timeL) - shortBy);
         for (int i = 0; i < lineCount; ++i)
         {
-            lines[(size_t) i].hp.set (true, s.hipassHz, 0.8, fs);
-            lines[(size_t) i].lp.set (false, s.lopassHz, 0.95, fs);
+            lines[(size_t) i].hp.set (true, s.hipassHz, t.hipassQ, fs);
+            lines[(size_t) i].lp.set (false, s.lopassHz, t.lopassQ, fs);
             if (lines[(size_t) i].d < 0.0) lines[(size_t) i].d = i == 0 ? tL : tR;     // the first block: no glide
         }
         const float fb = s.feedback;
@@ -181,7 +179,7 @@ public:
             lfoValue = lfoUp ? lfoValue + step : lfoValue - step;
             if (lfoValue >= 1.0f) { lfoValue = 1.0f; lfoUp = false; }
             else if (lfoValue <= -1.0f) { lfoValue = -1.0f; lfoUp = true; }
-            const double modT = 1.0 + modScale * (double) s.depth * tri;
+            const double modT = 1.0 + t.modScale * (double) s.depth * tri;
             float y[2] = { 0.0f, 0.0f };
             for (int i = 0; i < lineCount; ++i)
             {
@@ -189,9 +187,9 @@ public:
                 l.buf[(size_t) pos] = (float) (gain * (double) w[i]);
                 // the reference keeps the delay 16 samples longer than the one heard (glideOffset): the glide and the LFO
                 // act on that one, D' = max (-1, (Tm - D) / Tm), Tm = (T + 16) (1 + 0.5 depth tri), d = D - 16
-                const double Tm = ((i == 0 || pp ? tL : tR) + glideOffset) * modT;
-                const double D = l.d + glideOffset;
-                l.d = D + std::max (-1.0, (Tm - D) / Tm) - glideOffset;
+                const double Tm = ((i == 0 || pp ? tL : tR) + t.glideOffset) * modT;
+                const double D = l.d + t.glideOffset;
+                l.d = D + std::max (-1.0, (Tm - D) / Tm) - t.glideOffset;
                 // the read: the taps round ceil (d), one phase past the delay
                 const double fl = std::floor (l.d);
                 int centre, u;
@@ -201,7 +199,7 @@ public:
                 float acc = 0.0f;
                 const int base = pos - centre;
                 // 31 taps at 48 kHz; above, 32 per doubling less one, the first one dropped (96 kHz: -30 .. +31 about a whole d)
-                for (int t = -k.taps + k.factor - 1; t <= k.taps; ++t) acc += h[t + k.taps] * l.buf[(size_t) ((base - t) & mask)];
+                for (int tap = -k.taps + k.factor - 1; tap <= k.taps; ++tap) acc += h[tap + k.taps] * l.buf[(size_t) ((base - tap) & mask)];
                 y[i] = l.lp.process (l.hp.process (acc));            // the filters on the line's output (measured
                                                                      // with a moving delay: before the line they differ)
             }

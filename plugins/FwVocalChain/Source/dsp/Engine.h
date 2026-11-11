@@ -9,6 +9,7 @@
 #include "Compress.h"
 #include "CompressNet.h"
 #include "DeEss.h"
+#include "Tuning.h"
 #include "plugins/FwDelay/Source/dsp/Engine.h"
 #include "plugins/FwComp/Source/dsp/Analog.h"
 #include "plugins/FwDelay/Source/dsp/AnalogTables.h"
@@ -82,10 +83,10 @@ inline void rbj (eq::Kind kind, double f0, double q, double gdb, double fs, doub
 class EqStage
 {
 public:
-    void prepare (double sampleRate, bool isBass)
+    void prepare (double sampleRate, bool isBass, double glideS)
     {
         fs = sampleRate; bassStage = isBass;
-        glide = std::exp (-1.0 / (0.054 * fs));
+        glide = std::exp (-1.0 / (glideS * fs));
         rate = nullptr;
         for (const auto& r : eqtables::rates) if (std::abs (r.fs - fs) < 1.0) rate = &r;
         for (auto& s : sec) s.reset();
@@ -298,11 +299,12 @@ private:
 class Delays
 {
 public:
-    void prepare (double fs, int block);
+    void prepare (double fs, int block, const Tuning&);
     void process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain, double bpm);
 
 private:
     double fs = 48000.0;
+    Tuning tune;
     co::Analog analog;
     de::dsp::Delay line;
     juce::AudioBuffer<float> work;
@@ -323,12 +325,13 @@ private:
 class Doubler
 {
 public:
-    void prepare (double fs, int chainLatency);
+    void prepare (double fs, int chainLatency, const Tuning&);
     void reset();
     void process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain);
 
 private:
     double clockOffset = 0.0;
+    Tuning tune;
     // a measured voice's state: the last delay, its direction, the extra sample and the pending turn; the pitch
     // shifter's tap offset, the next one while they crossfade and how far the crossfade is (-1: none)
     struct TriState
@@ -366,6 +369,7 @@ public:
     float levelDb() const { return level > 1.0e-14 ? (float) (10.0 * std::log10 (level)) : -144.0f; }
     // the Noise (on by default, as the reference; its own state setting, not a host parameter): off for null tests
     bool noiseOn = true;
+    Tuning t = tuning();                                               // dsp/Tuning.h: the defaults, or the renderer's overrides
 
 private:
     double fs = 48000.0;

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
+#include "Tuning.h"
 
 // Flatwater Bass Leveler's riding (Phase 4): the reference's measured stages (MEASUREMENTS.md "Flatwater Bass Leveler: Phase 3 / 4"), fitted
 // on its audio; plugins/FwBassLeveler/nulltest/native/RideModel.c is the same model, line for line, and plugins/FwBassLeveler/nulltest/fit_detector.py fits its note detector. Per
@@ -53,17 +54,17 @@ public:
         else if (fs > 70000.0)  { a = a96; b = b96; k = 7; }
         for (auto* q : { &qe, &qh }) q->set (a, b, k);
         for (int w = 0; w < 3; ++w) win[w].prepare ((int) std::lround ((1024 << w) * fs / 48000.0));
-        shelf.doubleLowShelf (fs, 30.0, -30.0);
-        lp.lowPass (fs, 1020.0, 0.60);
-        hp.highPass (fs, 2000.0, 0.7071);
-        cpa = coef (2.0); cpr = coef (100.0); cna = coef (1.0); cnr = coef (1.0); cra = coef (1.0); krr = decay (refRel);
-        csa = coef (slowAtt); ksr = decay (slowRel); csm = coef (5.0); cfa = coef (followAtt); cfr = coef (followRel);
-        glide = 32.0 / fs;
-        relN = (int) std::lround (relMs * 1.0e-3 * fs);
-        holdN = (int) std::lround (holdMs * 1.0e-3 * fs);
-        offN = (int) std::lround (offMs * 1.0e-3 * fs);
-        winN = (int) std::lround (winMs * 1.0e-3 * fs);
-        offRelN = (int) std::lround (offRelMs * 1.0e-3 * fs);
+        shelf.doubleLowShelf (fs, t.shelfHz, t.shelfDb);
+        lp.lowPass (fs, t.noteLpHz, t.noteLpQ);
+        hp.highPass (fs, t.illegalHpHz, t.illegalHpQ);
+        cpa = coef (t.levelAttMs); cpr = coef (t.levelRelMs); cna = coef (t.illegalAttMs); cnr = coef (t.illegalRelMs); cra = coef (t.refAttMs); krr = decay (t.refRel);
+        csa = coef (t.slowAtt); ksr = decay (t.slowRel); csm = coef (t.outSmoothMs); cfa = coef (t.followAtt); cfr = coef (t.followRel);
+        glide = t.idleGlideDbS / fs;
+        relN = (int) std::lround (t.relMs * 1.0e-3 * fs);
+        holdN = (int) std::lround (t.holdMs * 1.0e-3 * fs);
+        offN = (int) std::lround (t.offMs * 1.0e-3 * fs);
+        winN = (int) std::lround (t.winMs * 1.0e-3 * fs);
+        offRelN = (int) std::lround (t.offRelMs * 1.0e-3 * fs);
         reset();
     }
 
@@ -80,24 +81,24 @@ public:
     // one sample of the detector's input (the mid of the undelayed input); returns the ride in dB
     double push (double x, const RideSettings& s)
     {
-        const double spillDb = s.live ? s.spill : -40.0;   // (the Studio components keep Spill's default)
+        const double spillDb = s.live ? s.spill : t.studioSpillDb;   // (the Studio components keep Spill's default)
         idleNow = s.idleDb;
         energy = db (follow (P, qe.power (shelf.process (x)), cpa, cpr));
-        const double gt = s.target - energy + 0.68;
+        const double gt = s.target - energy + t.lawOffsetDb;
         const double xl = lp.process (x);
         // a rising zero crossing: the period since the last one, if both halves of the cycle reached within 12 dB of the
         // note level (not a filter's ringing in silence, nor a note's last part cycle)
         if (xl > 0.0) cyclePos = std::max (cyclePos, xl * xl); else cycleNeg = std::max (cycleNeg, xl * xl);
         if (prevXl <= 0.0 && xl > 0.0)
         {
-            if (lastCross >= 0 && std::min (cyclePos, cycleNeg) > 0.0631 * lastNp && (double) (now - lastCross) > 0.0004 * fs)
+            if (lastCross >= 0 && std::min (cyclePos, cycleNeg) > t.cycleShare * lastNp && (double) (now - lastCross) > t.minPeriodS * fs)
                 period = (double) (now - lastCross);
             lastCross = now; cyclePos = cycleNeg = 0.0;
         }
         prevXl = xl;
         // the window by pitch band (measured: 1024 samples over 172 Hz, 2048 over 78 Hz, 4096 under)
         const double fz = fs / period;
-        const int wsel = fz > bandHi ? 0 : (fz > bandLo ? 1 : 2);
+        const int wsel = fz > t.bandHi ? 0 : (fz > t.bandLo ? 1 : 2);
         double m[3];
         for (int w = 0; w < 3; ++w) m[w] = win[w].push (now, xl * xl);
         ++now;
@@ -114,39 +115,39 @@ public:
         const double F = db (follow (Fp, np, cfa, cfr));
         // a note starts over the Artifacts factor times the long reference plus the Spill level, summed as amplitudes
         // (measured from silence: Spill - 18.9 dB at Artifacts 0, Spill - 8.7 at 50, the same at 40 .. 200 Hz)
-        const double art = 20.0 - 0.17 * s.artifacts;
+        const double art = t.artBaseDb - t.artSlopeDb * s.artifacts;
         const double gateA = 20.0 * std::log10 (std::pow (10.0, (R - art) / 20.0) + std::pow (10.0, (spillDb - art) / 20.0));
         const bool open = H < N && N > gateA;
         bool start = false;
         // for a moment after a note ends, any legal note within 38 dB of its peak is a new note (no floor, no Artifacts
         // gate); then the gates apply again
-        if (! inNote) { start = sinceOff < winN ? (H < N && N > peakN - 38.0) : open; ++sinceOff; }
+        if (! inNote) { start = sinceOff < winN ? (H < N && N > peakN - t.noteSpanDb) : open; ++sinceOff; }
         else
         {
             peakN = std::max (peakN, N);
-            offCount = (N < peakN - 38.0 || N < floorDb - 3.0) ? offCount + 1 : 0;
+            offCount = (N < peakN - t.noteSpanDb || N < t.floorDb - t.floorHystDb) ? offCount + 1 : 0;
             if (offCount > (released ? offRelN : offN)) { inNote = false; sinceOff = 0; }   // (a released note: its own delay)
             else
             {
                 // at Response Fast (Sensitivity 50 and up), a held note just over the 4096-sample window's edge is ridden
                 // afresh once it is reRideDepth under S, released or not, legal (at Artifacts 50 and under no floor and no
                 // Artifacts gate, above them both; its slow envelope restarts)
-                const bool band = s.fast && s.sensitivity >= 37.5 && under >= holdN && fz >= reRideLo && fz <= reRideHi;
-                reRideCount = (band && (s.artifacts > 50.0 ? open : H < N) && N < S - reRideDepth) ? reRideCount + 1 : 0;
+                const bool band = s.fast && s.sensitivity >= t.reRideSensitivity && under >= holdN && fz >= t.reRideLo && fz <= t.reRideHi;
+                reRideCount = (band && (s.artifacts > 50.0 ? open : H < N) && N < S - t.reRideDepth) ? reRideCount + 1 : 0;
                 if (reRideCount >= relN) { start = true; Sl = np; reRideCount = 0; }
                 if (! released)
                 {
                     relCount = N < S - releaseDepth (s) ? relCount + 1 : 0;
                     if (relCount >= relN) { released = true; minN = N; }
                     const double thr = onThreshold (s);
-                    if (N < S + thr - hyst) below = true;
+                    if (N < S + thr - t.hyst) below = true;
                     if (! released && below && open && N > S + thr) start = true;
                 }
                 else
                 {
                     minN = std::min (minN, N);
                     const bool openB = H < N && Nb > gateA;
-                    if (openB && N > minN + bySensitivity (onRise, s.sensitivity)) start = true;
+                    if (openB && N > minN + bySensitivity (t.onRise, s.sensitivity)) start = true;
                 }
             }
         }
@@ -154,13 +155,13 @@ public:
         else if (inNote)
         {
             // (once held, the gain follows again only for a note within the gates: one under the Artifacts gate stays held)
-            if (! (under >= holdN && ! open)) under = N > F + bySensitivity (margin, s.sensitivity) ? 0 : under + 1;
+            if (! (under >= holdN && ! open)) under = N > F + bySensitivity (t.margin, s.sensitivity) ? 0 : under + 1;
             if (under < holdN) g = gt;                     // (then the gain holds where it is, whatever the level does)
         }
         if (inNote) raw = std::clamp (g, s.rangeMin, s.rangeMax);
         // silence (38 dB under the last note; before any note, the level read under -77.7 dB, once the look-ahead has
         // filled): the glide to the Idle value (the gain starts at 0 dB)
-        else if (everNote ? N < peakN - 38.0 : (now > preHold && energy < -77.7))
+        else if (everNote ? N < peakN - t.noteSpanDb : (now > preHold && energy < t.silenceDb))
             raw = raw > s.idleDb ? std::max (s.idleDb, raw - glide) : std::min (s.idleDb, raw + glide);
         // (an ignored note, within 38 dB of the last: the gain stays where it is)
         out = raw + csm * (out - raw);
@@ -170,13 +171,8 @@ public:
     double energy = -300.0;          // the level read (dB), what the Energy meter shows
     int64_t preHold = 0;             // the look-ahead in samples (set by the processor)
 
-    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; plugins/FwBassLeveler/scripts/export_detector.py)
-    double slowAtt = 9.8499, slowRel = 1351.1864, refRel = 5677.9174, hyst = 0.0043, relMs = 1.3193, holdMs = 53.7331,
-           followAtt = 10.4011, followRel = 345.0301, bandHi = 172.0, bandLo = 78.0, reRideLo = 36.7818, reRideHi = 49.2817, reRideDepth = 4.4, offMs = 26.5947, offRelMs = 6.6073, winMs = 1.1550, floorDb = -48.75;
-    // at Sensitivity 0 .. 100 by 25: the rise over S that is a new note, the margin over F that keeps the attack, and a
-    // released note's rise that is a new note
-    double onThr[5] { 1.5826, 0.3252, 1.3870, 3.2738, -0.8331 }, margin[5] { 1.2801, 1.7792, 0.3778, 0.0042, -0.9979 }, onRise[5] { 2.0745, 2.4965, 1.8808, 0.9627, 1.1710 };
-    double depthSlow[5] { 12.0000, 12.0000, 12.0000, 12.0000, 12.0000 }, depthFast[5] { 4.0000, 4.0000, 4.0000, 4.0000, 4.0000 };
+    // every constant (dsp/Tuning.h): the defaults, or the renderer's overrides when the processor was made
+    Tuning t = tuning();
 
 private:
     struct Biquad
@@ -265,12 +261,12 @@ private:
 
     static double bySensitivity (const double* d, double sensitivity)
     {
-        const double t = std::clamp (sensitivity / 25.0, 0.0, 3.999);
-        const int i = (int) t;
-        return d[i] + (d[i + 1] - d[i]) * (t - i);
+        const double u = std::clamp (sensitivity / 25.0, 0.0, 3.999);
+        const int i = (int) u;
+        return d[i] + (d[i + 1] - d[i]) * (u - i);
     }
-    double releaseDepth (const RideSettings& s) const { return bySensitivity (s.fast ? depthFast : depthSlow, s.sensitivity); }
-    double onThreshold (const RideSettings& s) const  { return bySensitivity (onThr, s.sensitivity); }
+    double releaseDepth (const RideSettings& s) const { return bySensitivity (s.fast ? t.depthFast : t.depthSlow, s.sensitivity); }
+    double onThreshold (const RideSettings& s) const  { return bySensitivity (t.onThr, s.sensitivity); }
 
     double fs = 48000.0;
     Biquad shelf, lp, hp;

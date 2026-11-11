@@ -5,6 +5,7 @@
 // place in the range as the editor's arrow), mode (0 Stereo, 1 Mono, 2 Live Stereo, 3 Live Mono), preset (a factory
 // preset's index, applied where it appears among the keys), block (samples, default 512). There is no latency; the
 // output is the same length as the input.
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -19,6 +20,21 @@ int main (int argc, char** argv)
     const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
     const double fs = std::atof (argv[4]);
     int block = 512;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && vl::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! vl::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     FwVocalLevelerProcessor p;
     auto set = [&p] (const char* id, float v) { if (auto* q = p.apvts.getParameter (id)) q->setValueNotifyingHost (q->convertTo0to1 (v)); };
     float idleDbValue = 0.0f;

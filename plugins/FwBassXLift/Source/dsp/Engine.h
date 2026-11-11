@@ -24,6 +24,7 @@
 #include <cmath>
 #include <functional>
 #include "Net.h"
+#include "Tuning.h"
 #if defined (__SSE2__) || defined (_M_X64) || (defined (_M_IX86_FP) && _M_IX86_FP >= 2)
  #include <emmintrin.h>
  #define FWBASSXLIFT_SIMD_SSE 1
@@ -166,7 +167,7 @@ private:
 class Processor
 {
 public:
-    static constexpr double harmonicsCapDb = 10.958;     // the Harmonics fader's effect stops here (measured)
+    Tuning t = tuning();                                // dsp/Tuning.h: the defaults, or the renderer's overrides
 
     void prepare (double sampleRate, int channels)
     {
@@ -192,7 +193,7 @@ public:
     void setResponseMs (double ms) { response = std::clamp (ms, 10.0, 30.0); respFeat = (float) ((response - 20.0) / 10.0); }
     void setHighPass (int mode) { mode = std::clamp (mode, 0, 2); if (mode != hpMode) { hpMode = mode; design(); } }
     void setOrigBassDb (double db) { orig = db <= -99.9 ? 0.0 : std::pow (10.0, db / 20.0); }
-    void setHarmonicsDb (double db) { harm = db <= -99.9 ? 0.0 : std::pow (10.0, std::min (db, harmonicsCapDb) / 20.0); }
+    void setHarmonicsDb (double db) { harm = db <= -99.9 ? 0.0 : std::pow (10.0, std::min (db, t.harmonicsCapDb) / 20.0); }
     void setMonitor (int m) { monitor = std::clamp (m, 0, 2); }
 
     float lastPeak[2] {};
@@ -201,7 +202,7 @@ public:
     void process (float* const* io, int numChannels, int n)
     {
         const int c = std::min (numChannels, nCh);
-        const double a = 8.0 * decay;
+        const double a = t.decayFeedback * decay;
         for (int k = 0; k < c; ++k)
         {
             auto& s = ch[k];
@@ -216,9 +217,9 @@ public:
                 const double z = kOut * s.zG2.run (s.zG1.run (lo));
                 const float fCur[net::inputs] = { feat (x), feat (lo), lnRatio, respFeat, logF, feat (z), (float) (hpMode - 1) };
                 const double tPrev = s.tNow; s.tNow += step48;
-                for (double t = std::floor (tPrev) + 1.0; t <= s.tNow; t += 1.0)
+                for (double tick = std::floor (tPrev) + 1.0; tick <= s.tNow; tick += 1.0)
                 {
-                    const float w = (float) ((t - tPrev) / step48);
+                    const float w = (float) ((tick - tPrev) / step48);
                     float in[net::inputs];
                     for (int m = 0; m < net::inputs; ++m) in[m] = s.fPrev[m] + w * (fCur[m] - s.fPrev[m]);
                     s.net.step (in);
@@ -228,12 +229,12 @@ public:
                 const double g = fixedGain >= 0.0 ? fixedGain : std::exp (s.net.lnGain());
 
                 // the Decay feedback: y = w (1 + a HP_B(y) of the previous sample), held within +-1
-                const double y = std::clamp (g * lo * (1.0 + a * s.vPrev), -1.0, 1.0);
+                const double y = std::clamp (g * lo * (1.0 + a * s.vPrev), -t.clipLevel, t.clipLevel);
                 s.vPrev = s.hpB.run (y);
                 const double G = -kOut * s.hpG2.run (s.hpG1.run (y));
 
                 double out = monitor == 1 ? G : monitor == 2 ? lo : hi + orig * lo + harm * G;
-                out = std::clamp (out, -1.0, 1.0);
+                out = std::clamp (out, -t.clipLevel, t.clipLevel);
                 d[i] = (float) out;
                 peak = std::max (peak, (float) std::abs (out));
             }
@@ -257,19 +258,19 @@ private:
     float lnRatio = 0.0f, respFeat = 0.0f, logF = 0.0f;
     int hpMode = 1, monitor = 0, nCh = 2;
 
-    static float feat (double v) { return (float) (std::abs (std::asinh (v / 1.0e-3)) / 8.0); }
+    float feat (double v) const { return (float) (std::abs (std::asinh (v / t.featureScale)) / t.featureDiv); }
 
     void design()
     {
         const double q = 0.70710678118654752;
-        const double fB = std::clamp (freq / 3.0, 20.0, 40.0);
+        const double fB = std::clamp (freq / t.decayHpRatio, t.decayHpMinHz, t.decayHpMaxHz);
         for (auto& c : ch)
         {
             c.lp.design (false, freq, fs); c.hp.design (true, freq, fs);
             designSecond (c.hpB, true, fB, fs, q);
-            if (hpMode == 0)      { designSecond (c.hpG1, true, 16.0, fs, q); designSecond (c.hpG2, true, 16.0, fs, q); }
-            else if (hpMode == 1) { designSecond (c.hpG1, true, freq, fs, q); designSecond (c.hpG2, true, 16.0, fs, q); }
-            else                  { designSecond (c.hpG1, true, 0.8 * freq, fs, q); designSecond (c.hpG2, true, 0.8 * freq, fs, q); }
+            if (hpMode == 0)      { designSecond (c.hpG1, true, t.generatedHpHz, fs, q); designSecond (c.hpG2, true, t.generatedHpHz, fs, q); }
+            else if (hpMode == 1) { designSecond (c.hpG1, true, freq, fs, q); designSecond (c.hpG2, true, t.generatedHpHz, fs, q); }
+            else                  { designSecond (c.hpG1, true, t.generatedHp24Ratio * freq, fs, q); designSecond (c.hpG2, true, t.generatedHp24Ratio * freq, fs, q); }
             auto keep = [] (Biquad& dst, const Biquad& src) { const double z1 = dst.z1, z2 = dst.z2; dst = src; dst.z1 = z1; dst.z2 = z2; };
             keep (c.zG1, c.hpG1); keep (c.zG2, c.hpG2);
         }

@@ -364,18 +364,15 @@ void DeEsser::process (const float* detL, const float* detR, float* aL, float* a
 }
 
 //==============================================================================
-// the two taps' gains (calibrated on the reference's Slap: -16.1 dB at fader 0, the send's gain stage, SuperTap's tap
-// level and its pan law together) and their delay (one sample past the line's)
-static constexpr float kTap1 = 0.1566f, kTap2 = 0.1566f, kTap2Cross = 0.995f;
-// the level the delay reference's loop works at, against the send (made up after it): its gain recovery compresses loud echoes, and
-// at this level ours does as the reference's (a held-out vocal at -6 dBFS peaks: the echoes' null -22 -> -36 dB, at
-// -20 dBFS -32 -> -35; 0.5 and 0.7 both worse)
-static constexpr float kLoopIn = 0.6f;
-static constexpr int kTapDelay = 1;
-
-void Delays::prepare (double sampleRate, int block)
+// the two taps' gains (tune.tap1, tune.tap2; calibrated on the reference's Slap: -16.1 dB at fader 0, the send's gain
+// stage, SuperTap's tap level and its pan law together) and their delay (one sample past the line's); the level the
+// delay reference's loop works at, against the send (tune.loopIn, made up after it): its gain recovery compresses loud
+// echoes, and at this level ours does as the reference's (a held-out vocal at -6 dBFS peaks: the echoes' null -22 -> -36
+// dB, at -20 dBFS -32 -> -35; 0.5 and 0.7 both worse)
+void Delays::prepare (double sampleRate, int block, const Tuning& t)
 {
     fs = sampleRate;
+    tune = t;
     analog.modes = de::tables::analog;
     analog.prepare (fs, 2);
     analog.setMode (4);
@@ -393,7 +390,7 @@ void Delays::process (const float* inL, const float* inR, float* outL, float* ou
     work.copyFrom (0, 0, inL, n); work.copyFrom (1, 0, inR, n);
     float* const ch[2] = { work.getWritePointer (0), work.getWritePointer (1) };
     analog.process (ch, n);
-    work.applyGain (0, n, kLoopIn);                                     // (the reference delay's loop sees the send 4.4 dB lower)
+    work.applyGain (0, n, tune.loopIn);                                     // (the reference delay's loop sees the send 4.4 dB lower)
     static constexpr double beats[4] = { 0.0, 0.25, 0.5, 1.0 };
     static constexpr float fb[4] = { 0.0f, 0.0f, 0.5f, 0.3f }, outDb[4] = { 0.0f, -12.0f, -9.0f, -9.0f };
     const double tempo = bpm > 0.0 ? bpm : 120.0;
@@ -402,20 +399,20 @@ void Delays::process (const float* inL, const float* inR, float* outL, float* ou
     st.feedback = fb[running];
     st.mix = 1.0f;
     st.outputDb = outDb[running];
-    st.hipassHz = 150.0f; st.lopassHz = 5000.0f;
+    st.hipassHz = tune.delayHipassHz; st.lopassHz = tune.delayLopassHz;
     st.mode = 0;
     line.process (ch, 2, n, st);
     const int len = (int) histL.size();
-    const int t2 = juce::jlimit (1, len - 1, (int) std::lround (0.004 * 4.0 * 60.0 / tempo * fs));
-    const float g = colour > 0 ? gain / kLoopIn : 0.0f;
+    const int t2 = juce::jlimit (1, len - 1, (int) std::lround (tune.tap2Bars * 4.0 * 60.0 / tempo * fs));
+    const float g = colour > 0 ? gain / tune.loopIn : 0.0f;
     for (int i = 0; i < n; ++i)
     {
         histL[(size_t) hpos] = ch[0][i]; histR[(size_t) hpos] = ch[1][i];
-        const int r1 = (hpos - kTapDelay + len) % len, r2 = (hpos - t2 + len) % len;
+        const int r1 = (hpos - tune.tapDelay + len) % len, r2 = (hpos - t2 + len) % len;
         const float al = histL[(size_t) r1], ar = histR[(size_t) r1], el = histL[(size_t) r2], er = histR[(size_t) r2];
         hpos = (hpos + 1) % len;
-        outL[i] = g * (kTap1 * (al + ar) + kTap2 * (el - kTap2Cross * er));
-        outR[i] = g * (kTap1 * (ar - al) + kTap2 * (kTap2Cross * el + er));
+        outL[i] = g * (tune.tap1 * (al + ar) + tune.tap2 * (el - tune.tap2Cross * er));
+        outR[i] = g * (tune.tap1 * (ar - al) + tune.tap2 * (tune.tap2Cross * el + er));
     }
 }
 
@@ -434,7 +431,6 @@ namespace
 // silence) (MEASUREMENTS.md, the doubler's fourth pass).
 struct TriVoice { double d0, swing, f, drift, lead, low, high; };
 struct MeasuredColour { TriVoice v[2]; double gain; bool shelves, extraSample; };
-constexpr double corrMemory = 960.0;                                    // (samples at 48 kHz)
 constexpr MeasuredColour measuredColours[4] = {
     {},
     { { { 359.0128, 0.0040442, 0.199880, -8.1534e-6, 130.0, -1.0e9, 1.0e9 },
@@ -455,7 +451,6 @@ constexpr StereoRate stereoRates[] = {
     { 48000.0, { 359.0128, 719.0065 }, { 0.199880, 0.2999246 }, { 130.0, 130.0 } },
     { 96000.0, { 719.0, 1439.0 }, { 0.200083, 0.299954 }, { 260.0, 260.0 } } };
 constexpr double stereoMs[2] = { 7.5, 15.0 };
-constexpr double halfWindow = 256.0, fadeLength = 256.0;               // (samples, at every rate)
 double latencyMultiple (double rate) { return rate > 144000.0 ? 4.0 : rate > 72000.0 ? 2.0 : 1.0; }
 
 // the integral of a unit triangle (0 at u = 0, rising to 1 at u = 1/4, period 1) from 0 to u
@@ -498,9 +493,10 @@ void Doubler::resetVoices (int colour)
     }
 }
 
-void Doubler::prepare (double sampleRate, int chainLatency)
+void Doubler::prepare (double sampleRate, int chainLatency, const Tuning& tn)
 {
     fs = sampleRate;
+    tune = tn;
     clockOffset = chainLatency;
     const double k = fs / 48000.0;
     const StereoRate* near = &stereoRates[0];
@@ -524,8 +520,8 @@ void Doubler::prepare (double sampleRate, int chainLatency)
             }
             else { r.d0 = v.d0 * latencyMultiple (fs); r.f = v.f; r.lead = v.lead * latencyMultiple (fs); }
             // (the window's edges kept in samples from the start delay, as measured at 48 kHz; Stereo's +-256)
-            r.low = c == 1 ? r.d0 - halfWindow : r.d0 - (v.d0 - v.low);
-            r.high = c == 1 ? r.d0 + halfWindow : r.d0 + (v.high - v.d0);
+            r.low = c == 1 ? r.d0 - tune.halfWindow : r.d0 - (v.d0 - v.low);
+            r.high = c == 1 ? r.d0 + tune.halfWindow : r.d0 + (v.high - v.d0);
         }
     lineL.assign ((size_t) (fs * 0.1) + 8, 0.0f); lineR.assign (lineL.size(), 0.0f);
     pos = 0; running = 1; shelvesFor = -1;
@@ -541,11 +537,11 @@ void Doubler::process (const float* inL, const float* inR, float* outL, float* o
     {
         shelvesFor = running;
         double c[5];
-        rbj (eq::lowShelf, 200.4691, 0.4996, -8.6057, fs, c); shelves[0].set (c);
-        rbj (eq::highShelf, 5539.4842, 0.5003, 4.4971, fs, c); shelves[1].set (c);
+        rbj (eq::lowShelf, tune.shelfLowHz, tune.shelfLowQ, tune.shelfLowDb, fs, c); shelves[0].set (c);
+        rbj (eq::highShelf, tune.shelfHighHz, tune.shelfHighQ, tune.shelfHighDb, fs, c); shelves[1].set (c);
     }
     const int len = (int) lineL.size();
-    const double g = colour > 0 ? gain : 0.0, fsk = fs / 48000.0, keep = std::exp (-1.0 / (corrMemory * fsk));
+    const double g = colour > 0 ? gain : 0.0, fsk = fs / 48000.0, keep = std::exp (-1.0 / (tune.corrMemory * fsk));
     int lag[20];
     for (int k = 0; k < 20; ++k) lag[k] = (int) std::lround (256.0 * std::pow (2.0, k / 20.0));
     for (int i = 0; i < n; ++i)
@@ -591,9 +587,9 @@ void Doubler::process (const float* inL, const float* inR, float* outL, float* o
             double y = tap (st.offset);
             if (st.fade >= 0)
             {
-                const double x = (st.fade + 1) / fadeLength;
+                const double x = (st.fade + 1) / tune.fadeLength;
                 y = (1.0 - x) * y + x * tap (st.next);
-                if (++st.fade >= (int) fadeLength) { st.offset = st.next; st.fade = -1; }
+                if (++st.fade >= (int) tune.fadeLength) { st.offset = st.next; st.fade = -1; }
             }
             v[k] = mc.gain * y;
         }
@@ -608,10 +604,10 @@ void Chain::prepare (double sampleRate, int maxBlock)
 {
     fs = sampleRate;
     const int k = fs > 144000.0 ? 4 : fs > 72000.0 ? 2 : 1;
-    latency = 193 * k - (k - 1);
+    latency = t.latency48 * k - (k - 1);
     compressor.prepare (fs);
     deesser.prepare (fs);
-    reverbDeesser.prepare (fs, -8.0);
+    reverbDeesser.prepare (fs, t.reverbDeessOffsetDb);
     // (the look-aheads and the de-esser's band are the rest of the latency; the reverb's de-esser's delay comes out of
     // the reverb's responses, which start later than that)
     const int inputDelay = latency - compressor.lookAhead() - deesser.delay();
@@ -624,25 +620,25 @@ void Chain::prepare (double sampleRate, int maxBlock)
     {
         fixedFilter[(size_t) i].set (best->sos[i]); fixedFilter[(size_t) i].reset();
     }
-    bass.prepare (fs, true); treble.prepare (fs, false);
+    bass.prepare (fs, true, t.eqGlideS); treble.prepare (fs, false, t.eqGlideS);
     reverb.prepare (fs, maxBlock, reverbDeesser.delay());
-    delays.prepare (fs, maxBlock);
+    delays.prepare (fs, maxBlock, t);
     {
         // the echoes measured against the reference's (noise, every delay colour alike): our delay model leaves
         // them 0.15 dB low at 60 Hz, 0.13 high at 500 Hz and 0.3 high above 3 kHz; three sections take that out
         double c[5];
-        rbj (eq::lowShelf, 132.45, 0.7071, 0.1561, fs, c); delayFix[0].set (c);
-        rbj (eq::peak, 429.81, 1.0076, -0.1509, fs, c); delayFix[1].set (c);
-        rbj (eq::highShelf, 1929.09, 0.7071, 0.3470, fs, c); delayFix[2].set (c);
+        rbj (eq::lowShelf, t.delayFixLowHz, t.delayFixLowQ, t.delayFixLowDb, fs, c); delayFix[0].set (c);
+        rbj (eq::peak, t.delayFixPeakHz, t.delayFixPeakQ, t.delayFixPeakDb, fs, c); delayFix[1].set (c);
+        rbj (eq::highShelf, t.delayFixHighHz, t.delayFixHighQ, t.delayFixHighDb, fs, c); delayFix[2].set (c);
         for (auto& f : delayFix) f.reset();
     }
-    doubler.prepare (fs, latency);
+    doubler.prepare (fs, latency, t);
     for (auto* bf : { &tap, &send, &wet, &wet2, &wet3 }) bf->setSize (2, jmax (1, maxBlock));
-    levelCoef = std::exp (-1.0 / (0.010 * fs));
+    levelCoef = std::exp (-1.0 / (t.levelS * fs));
     level = 0.0;
     // the Noise (on in the reference by default): white, uncorrelated L / R, -108.3 dBFS rms at the output with every
     // colour clear (the fixed filter adds about +0.4 dB to white noise)
-    noiseGain = std::pow (10.0, -108.7 / 20.0);
+    noiseGain = std::pow (10.0, t.noiseDb / 20.0);
 }
 
 void Chain::reset()
@@ -676,8 +672,8 @@ void Chain::process (float* l, float* r, int n, const Params& p)
         pos = (pos + 1) % len;
         xl = lineL[(size_t) pos]; xr = lineR[(size_t) pos];
         // the clear chain's own shaper (measured: x - 0.00145 x^2 + 0.00146 x^3, before the fixed filter)
-        xl = xl - 0.00144547 * xl * xl + 0.00145842 * xl * xl * xl;
-        xr = xr - 0.00144547 * xr * xr + 0.00145842 * xr * xr * xr;
+        xl = xl - t.clearShaperSq * xl * xl + t.clearShaperCube * xl * xl * xl;
+        xr = xr - t.clearShaperSq * xr * xr + t.clearShaperCube * xr * xr * xr;
         bass.run (xl, xr);
         treble.run (xl, xr);
         tap.setSample (0, i, (float) xl); tap.setSample (1, i, (float) xr);
@@ -694,18 +690,18 @@ void Chain::process (float* l, float* r, int n, const Params& p)
     reverbDeesser.process (l, r, tap.getWritePointer (0), tap.getWritePointer (1), nullptr, nullptr, n);
     // the wet stages on the tap: the reverb (1.2 dB per fader step from its measured response at 0)
     reverb.process (tap.getReadPointer (0), tap.getReadPointer (1), wet.getWritePointer (0), wet.getWritePointer (1), n,
-                    p.colour[3], (float) std::pow (10.0, 1.2 * p.fader[3] / 20.0));
+                    p.colour[3], (float) std::pow (10.0, t.faderDbPerStep * p.fader[3] / 20.0));
     // the delays and the doubler take the dry path (after the fixed filter and the de-esser)
     send.copyFrom (0, 0, l, n); send.copyFrom (1, 0, r, n);
     delays.process (send.getReadPointer (0), send.getReadPointer (1), wet2.getWritePointer (0), wet2.getWritePointer (1), n,
-                    p.colour[4], (float) std::pow (10.0, 1.2 * p.fader[4] / 20.0), p.bpm);
+                    p.colour[4], (float) std::pow (10.0, t.faderDbPerStep * p.fader[4] / 20.0), p.bpm);
     for (int ch = 0; ch < 2; ++ch)
     {
         auto* d = wet2.getWritePointer (ch);
         for (int i = 0; i < n; ++i) { double v = d[i]; for (auto& f : delayFix) v = f.run (v, ch); d[i] = (float) v; }
     }
     doubler.process (send.getReadPointer (0), send.getReadPointer (1), wet3.getWritePointer (0), wet3.getWritePointer (1), n,
-                     p.colour[5], (float) std::pow (10.0, 1.2 * p.fader[5] / 20.0));
+                     p.colour[5], (float) std::pow (10.0, t.faderDbPerStep * p.fader[5] / 20.0));
     for (int i = 0; i < n; ++i)
     {
         l[i] = (float) ((l[i] + wet.getSample (0, i) + wet2.getSample (0, i) + wet3.getSample (0, i)) * gOut);

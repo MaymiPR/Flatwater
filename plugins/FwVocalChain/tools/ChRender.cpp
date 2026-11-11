@@ -6,6 +6,7 @@
 // compressAuto (a raw float file: the Compress fader per block, set before each, as a host automates it), preset (a
 // factory preset, 1 .. 43, applied where it stands among the keys: keys after it override it). The latency
 // is removed; the output is stereo and the same length as the input.
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -21,6 +22,21 @@ int main (int argc, char** argv)
     const double fs = std::atof (argv[4]);
     int block = 512;
     std::vector<float> autoCompress;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && ch::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! ch::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     FwVocalChainProcessor p;
     auto set = [&p] (const char* id, float v) { if (auto* q = p.apvts.getParameter (id)) q->setValueNotifyingHost (q->convertTo0to1 (v)); };
     set (ch::mode, ch == 1 ? 1.0f : 0.0f);

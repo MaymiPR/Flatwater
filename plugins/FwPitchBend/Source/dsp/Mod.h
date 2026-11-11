@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Model.h"
 #include "Math.h"
+#include "Tuning.h"
 
 // Flatwater Pitch Bend's modulators, as measured on the reference (MEASUREMENTS.md, Flatwater Pitch Bend, "Phase 1, the
 // Mix and the modulators"; plugins/FwPitchBend/nulltest/measure_mods.py):
@@ -30,9 +31,6 @@ inline double syncedBeats (int index)
 
 inline double warpPhase (double p, double w) { return w * p / (1.0 + (w - 1.0) * p); }
 inline double levelGain (double level) { return level / (2.0 - level); }
-
-// the delays of the cycle's place (s): synced, free
-inline constexpr double syncedDelay = 0.0001, freeDelay = 0.0081;
 
 // a free rate as it runs: its period rounded down to whole 8-sample ticks (measured at 48 kHz: 3.7 Hz runs at 12968
 // samples, 3.7014 Hz). (A rate on a whole tick stays on it: the knob's taper brings a typed 4 Hz back a hair off, and
@@ -96,16 +94,23 @@ inline double poleFor (double ms, double sr) { return pbmath::exp (-1.0 / (std::
 struct Follower
 {
     static constexpr int tick = 8;
-    static constexpr double gateLevel = 5.5e-4, gateHold = 0.110, gateOpen = 0.00192;
+    double gateLevel = 5.5e-4, releaseAttackDiv = 85.0;          // (dsp/Tuning.h: amGateLevel, amReleaseAttackDiv)
     double env = 0.0;
     int quiet = 0, opening = 0, holdSamples = 5280, openSamples = 92;
     bool closed = true;
-    void prepare (double sr) { holdSamples = (int) std::lround (gateHold * sr); openSamples = (int) std::lround (gateOpen * sr); reset(); }
+    void prepare (double sr, const Tuning& t)
+    {
+        gateLevel = t.amGateLevel;
+        releaseAttackDiv = t.amReleaseAttackDiv;
+        holdSamples = (int) std::lround (t.amGateHoldS * sr);
+        openSamples = (int) std::lround (t.amGateOpenS * sr);
+        reset();
+    }
     void reset() { env = 0.0; quiet = 0; opening = 0; closed = true; }
     static double attackPole (double attackMs, double sr) { return pbmath::exp (-tick / (std::max (attackMs, 0.01) * 0.001 * sr)); }
-    static double releasePole (double attackMs, double releaseMs, double sr)
+    double releasePole (double attackMs, double releaseMs, double sr) const
     {
-        return pbmath::exp (-tick / (std::max (releaseMs + attackMs / 85.0, 0.01) * 0.001 * sr));
+        return pbmath::exp (-tick / (std::max (releaseMs + attackMs / releaseAttackDiv, 0.01) * 0.001 * sr));
     }
     // one sample: `read` on every 8th sample; a, r: the poles per read
     double next (float in, bool read, double a, double r)
@@ -129,12 +134,12 @@ struct Follower
 // PT: the detected pitch on the log scale about C4, smoothed; held through unvoiced parts
 struct PitchFollower
 {
-    double value = 0.0, smoothed = 0.0;
+    double value = 0.0, smoothed = 0.0, refHz = 261.6256;          // (dsp/Tuning.h: ptRefHz)
     bool started = false;
     void reset() { value = 0.0; smoothed = 0.0; started = false; }
     double next (float hz, double smoothMs, int n, double sr)
     {
-        if (hz > 0.0f) value = pbmath::log2 (hz / 261.6256) / 2.0;
+        if (hz > 0.0f) value = pbmath::log2 (hz / refHz) / 2.0;
         if (! started) { smoothed = value; started = true; }
         const double a = pbmath::exp (-(double) n / (std::max (smoothMs, 0.01) * 0.001 * sr));
         smoothed = value + a * (smoothed - value);

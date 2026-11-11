@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <tuple>
-#include "Fit.h"
+#include "Tuning.h"
 
 // Flatwater Vocal Leveler's riding (Phase 4): the reference's measured stages (MEASUREMENTS.md "Flatwater Vocal Leveler: Phase 3 / 4") with
 // its hidden values; plugins/FwVocalLeveler/nulltest/native/RideModel.c is the same model, line for line. Per input sample (the mid of the input) it
@@ -47,9 +47,9 @@ public:
             else     { b0 = g / K + 1.0; b1 = 1.0 - g / K; a0 = 1.0 / (g * K) + 1.0; a1 = 1.0 - 1.0 / (g * K); }
             s.b0 = b0 / a0; s.b1 = b1 / a0; s.a1 = a1 / a0;
         };
-        shelf (weighting[0], 100.0, -18.0 / 2.0, true); shelf (weighting[1], 100.0, -18.0 / 2.0, true);
-        shelf (weighting[2], 6500.0, -6.0 / 2.0, false); shelf (weighting[3], 6500.0, -6.0 / 2.0, false);
-        floorPower = std::pow (10.0, fit::bias / 10.0);
+        shelf (weighting[0], t.lowShelfHz, t.lowShelfDb / 2.0, true); shelf (weighting[1], t.lowShelfHz, t.lowShelfDb / 2.0, true);
+        shelf (weighting[2], t.highShelfHz, t.highShelfDb / 2.0, false); shelf (weighting[3], t.highShelfHz, t.highShelfDb / 2.0, false);
+        floorPower = std::pow (10.0, t.bias / 10.0);
         valid = false;
         reset();
     }
@@ -68,7 +68,7 @@ public:
     double push (double x, const RideSettings& s)
     {
         if (! valid || ! (s == cur)) derive (s);
-        if (! started) { v = std::clamp (fit::initialV, vlo, vhi); started = true; }
+        if (! started) { v = std::clamp (t.initialV, vlo, vhi); started = true; }
         double y = x;
         for (auto& w : weighting) y = w.run (y);
         const double pw = y * y, q = pw + floorPower;
@@ -91,6 +91,9 @@ public:
         return 20.0 * std::log10 (halfMin + v);
     }
 
+    // every constant (dsp/Tuning.h): the defaults, or the renderer's overrides when the processor was made
+    Tuning t = tuning();
+
     bool detecting() const { return voice; }                   // vocal detected (the Ride / Idle LEDs)
     double levelDb() const { return 10.0 * std::log10 (Q); }   // the vocal level read (with its floor)
 
@@ -104,22 +107,21 @@ private:
     // what the settings give (on a change only)
     void derive (const RideSettings& s)
     {
-        namespace F = fit;
         auto coef = [this] (double ms) { return std::exp (-1.0 / (fs * ms * 0.001)); };
         const double gmin = std::pow (10.0, s.rangeMin / 20.0), gmax = std::pow (10.0, s.rangeMax / 20.0);
         halfMin = 0.5 * gmin; vlo = halfMin; vhi = gmax - halfMin;
         vIdle = std::clamp (std::pow (10.0, s.idleDb / 20.0) - halfMin, vlo, vhi);
-        law = std::pow (10.0, F::c / 20.0) * std::pow (10.0, s.target / 20.0);
-        threshold = std::pow (10.0, (-s.vocalSensitivity - F::vk) / 10.0);
-        spillPower = (s.live && s.spill > -47.95) ? std::pow (10.0, (s.spill + F::spillOffset) / 10.0) : 0.0;
-        fUp = std::pow (coef (s.fast ? F::followerAttackFast : F::followerAttackSlow), -F::followerPower);
-        fDown = std::pow (coef (F::followerRelease), F::followerPower);
-        fHold = std::pow (coef (F::followerHold), F::followerPower);
-        vAtt = coef (F::vadAttack); vRel = coef (F::vadRelease);
-        rDown = std::pow (coef (s.fast ? F::rideAttackFast : F::rideAttackSlow), F::ridePower);
-        rUp = std::pow (coef (F::rideRelease), F::ridePower);
-        park = coef (F::parkTime);
-        parkHold = (long) std::floor ((s.fast ? F::parkHoldFast : F::parkHoldSlow) * 0.001 * fs + 0.5);
+        law = std::pow (10.0, t.c / 20.0) * std::pow (10.0, s.target / 20.0);
+        threshold = std::pow (10.0, (-s.vocalSensitivity - t.vk) / 10.0);
+        spillPower = (s.live && s.spill > t.spillOffDb) ? std::pow (10.0, (s.spill + t.spillOffset) / 10.0) : 0.0;
+        fUp = std::pow (coef (s.fast ? t.followerAttackFast : t.followerAttackSlow), -t.followerPower);
+        fDown = std::pow (coef (t.followerRelease), t.followerPower);
+        fHold = std::pow (coef (t.followerHold), t.followerPower);
+        vAtt = coef (t.vadAttack); vRel = coef (t.vadRelease);
+        rDown = std::pow (coef (s.fast ? t.rideAttackFast : t.rideAttackSlow), t.ridePower);
+        rUp = std::pow (coef (t.rideRelease), t.ridePower);
+        park = coef (t.parkTime);
+        parkHold = (long) std::floor ((s.fast ? t.parkHoldFast : t.parkHoldSlow) * 0.001 * fs + 0.5);
         cur = s; valid = true;
     }
 

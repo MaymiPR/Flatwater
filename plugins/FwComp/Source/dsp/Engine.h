@@ -18,7 +18,7 @@
 #include <cmath>
 #include <limits>
 #include <vector>
-#include "Tables.h"
+#include "Tuning.h"
 #include "shared/dsp/Math.h"
 #include "Net.h"
 
@@ -75,13 +75,15 @@ public:
     {
         fs = sampleRate;
         scale = fs > 100000.0 ? 4 : fs > 50000.0 ? 2 : 1;
-        la = 64 * scale;
+        la = t.lookAhead * scale;
         channels = std::max (1, std::min (2, numChannels));
-        maxPunch = (int) std::ceil (30.0 * 1e-3 * fs) + 1;
+        maxPunch = (int) std::ceil (t.punchMaxMs * 1e-3 * fs) + 1;
+        chargeBlend = t.chargeBlend;
+        memFloorS = t.memoryFloorMs * 1e-3;
         delay.assign ((size_t) channels, std::vector<float> ((size_t) la, 0.0f));
         det.assign ((size_t) (la + maxPunch + 2), 0.0f);
-        b1.assign ((size_t) (38 * scale), 1.0f); b2.assign ((size_t) (27 * scale), 1.0f);
-        lb1.assign ((size_t) (38 * scale), 1.0f); lb2.assign ((size_t) (27 * scale), 1.0f);
+        b1.assign ((size_t) (t.box1 * scale), 1.0f); b2.assign ((size_t) (t.box2 * scale), 1.0f);
+        lb1.assign ((size_t) (t.box1 * scale), 1.0f); lb2.assign ((size_t) (t.box2 * scale), 1.0f);
         lim.assign ((size_t) (la + 8 * scale + 2), 0.0f);
         reset();
     }
@@ -96,8 +98,8 @@ public:
         sum1 = (double) b1.size(); sum2 = (double) b2.size(); lsum1 = (double) lb1.size(); lsum2 = (double) lb2.size();
         i1 = i2 = li1 = li2 = 0;
         pos = 0; detPos = 0; limPos = 0;
-        startU = tables::startupMs > 0.0f ? 1.0 : 0.0;
-        R = 0.0; S = tables::hasRelease4 ? (double) tables::start4Db : 0.0; S2 = tables::hasRelease4 ? (double) tables::start4FastDb : 0.0; g1 = 1.0;
+        startU = t.startupMs > 0.0f ? 1.0 : 0.0;
+        R = 0.0; S = tables::hasRelease4 ? (double) t.start4Db : 0.0; S2 = tables::hasRelease4 ? (double) t.start4FastDb : 0.0; g1 = 1.0;
         net.reset(); netCount = 0; corrGain = 1.0; flatPos = flatFill = 0; std::fill (std::begin (flatHist), std::end (flatHist), 0.0f);
     }
 
@@ -107,14 +109,14 @@ public:
     {
         set = s;
         slope = 1.0 - 1.0 / std::max (1.0, (double) s.ratio);
-        attC = flatwater::math::exp (-1.0 / (0.99 * std::max (0.05, (double) s.attackMs) * 1e-3 * fs));
-        relS = std::max (1e-3, (double) s.releaseMs * 1e-3);
-        crestC = flatwater::math::exp (-1.0 / ((double) tables::crestMs * 1e-3 * fs));
-        startC = tables::startupMs > 0.0f ? flatwater::math::exp (-1.0 / ((double) tables::startupMs * 1e-3 * fs)) : 0.0;
+        attC = flatwater::math::exp (-1.0 / (t.attackScale * std::max (t.attackMinMs, (double) s.attackMs) * 1e-3 * fs));
+        relS = std::max (t.releaseMinS, (double) s.releaseMs * 1e-3);
+        crestC = flatwater::math::exp (-1.0 / ((double) t.crestMs * 1e-3 * fs));
+        startC = t.startupMs > 0.0f ? flatwater::math::exp (-1.0 / ((double) t.startupMs * 1e-3 * fs)) : 0.0;
         if constexpr (tables::hasRelease4)
         {
-            crest4C = flatwater::math::exp (-1.0 / ((double) tables::crest4Ms * 1e-3 * fs));
-            fast4C = flatwater::math::exp (-1.0 / ((double) tables::fast4Ms * 1e-3 * fs));
+            crest4C = flatwater::math::exp (-1.0 / ((double) t.crest4Ms * 1e-3 * fs));
+            fast4C = flatwater::math::exp (-1.0 / ((double) t.fast4Ms * 1e-3 * fs));
         }
         punchSamples = std::clamp ((int) std::lround (s.punch * 1e-3 * fs), 0, maxPunch - 1);
         makeup = flatwater::math::pow10 (makeupDb (s.thresholdDb, s.ratio) * makeupScale (s.releaseMs) / 20.0);
@@ -168,10 +170,10 @@ public:
             const double v1 = sum1 / (double) b1.size();
             sum2 += v1 - b2[(size_t) i2]; b2[(size_t) i2] = (float) v1; i2 = (i2 + 1) % (int) b2.size();
             double g = sum2 / (double) b2.size();
-            if (learned)
+            if (t.learned)
             {
                 // the steps fall on samples la, la + 16, ... after a reset, as in the training (plugins/FwComp/nulltest/render_trainset.py)
-                if (netCount >= la && (netCount - la) % (16 * scale) == 0)
+                if (netCount >= la && (netCount - la) % (t.netStep * scale) == 0)
                 {
                     const double out = -20.0 * flatwater::math::log10 (std::max (g, 1e-6));
                     const float in[gainnet::inputs] = {
@@ -189,7 +191,7 @@ public:
                         const float v = q < flatFill ? flatHist[(size_t) q] : flatHist[(size_t) ((flatPos + flatSteps - flatFill) % flatSteps)];
                         lo = std::min (lo, v); hi = std::max (hi, v);
                     }
-                    const double guard = std::clamp (R + out, 0.0, 1.0) * std::clamp ((hi - lo - 0.05) / 0.15, 0.0, 1.0);
+                    const double guard = std::clamp (R + out, 0.0, 1.0) * std::clamp ((hi - lo - t.guardFlatDb) / t.guardRampDb, 0.0, 1.0);
                     corrGain = flatwater::math::pow10 (net.step (in) * guard / 20.0);
                 }
                 if (netCount < std::numeric_limits<int>::max()) ++netCount;
@@ -204,11 +206,11 @@ public:
 
             // the output limiter sees the incoming samples at the current gain (what they will become)
             const double gTarget = flatwater::math::pow10 (-Rt / 20.0);
-            const double gEst = limEstimate == 1 ? gTarget : limEstimate == 2 ? std::max (g, gTarget) : g;
+            const double gEst = t.limEstimate == 1 ? gTarget : t.limEstimate == 2 ? std::max (g, gTarget) : g;
             const double wetGain = (1.0 - set.mix) + set.mix * gEst * makeup;
             const double wetNow = (1.0 - set.mix) + set.mix * g * makeup;
-            lim[(size_t) limPos] = (float) (limEstimate == 3 ? a : a * wetGain * outGain);
-            const double lh = limEstimate == 3 ? limiterHeld() * wetNow * outGain : limiterHeld();
+            lim[(size_t) limPos] = (float) (t.limEstimate == 3 ? a : a * wetGain * outGain);
+            const double lh = t.limEstimate == 3 ? limiterHeld() * wetNow * outGain : limiterHeld();
             const double lt = lh > 1.0 ? 1.0 / lh : 1.0;
             lsum1 += lt - lb1[(size_t) li1]; lb1[(size_t) li1] = (float) lt; li1 = (li1 + 1) % (int) lb1.size();
             const double lv = lsum1 / (double) lb1.size();
@@ -231,9 +233,8 @@ public:
     }
 
     double gainReductionDb() const { return R; }
-    bool learned = true;                               // the learned correction (GainNet); off: the analytical model alone
+    Tuning t = tuning();                               // dsp/Tuning.h: the defaults, or the renderer's overrides
     std::vector<float>* trace = nullptr;               // plugins/FwComp/tools/CoRender trace=: the model's states for plugins/FwComp/nulltest/train_net.py
-    int limEstimate = 3;                               // how the limiter estimates the output (3: the current gain times the pending peak; 0-2 tried, worse)
     // the deepest reduction of the smoothed compressor gain during the last process() call (dB, positive)
     double blockGainReductionDb() const { return minGain < 1.0 ? -20.0 * flatwater::math::log10 (std::max (minGain, 1e-6)) : 0.0; }
     // the same for the output limiter
@@ -256,7 +257,7 @@ private:
 
     double limiterHeld() const
     {
-        const int N = (int) lim.size(), span = la + (set.limiter ? 7 * scale : 0);
+        const int N = (int) lim.size(), span = la + (set.limiter ? t.limiterHold * scale : 0);
         double m = 0.0;
         for (int k = 0; k < span; ++k)
         {
@@ -270,7 +271,7 @@ private:
     double targetGr (double h) const
     {
         using namespace tables;
-        const double x = slope * std::max (0.0, 20.0 * flatwater::math::log10 (h + floorLevel) - set.thresholdDb);
+        const double x = slope * std::max (0.0, 20.0 * flatwater::math::log10 (h + t.floorLevel) - set.thresholdDb);
         if (x <= 0.0) return 0.0;
         if (x >= staticX[staticCount - 1]) return x - (staticX[staticCount - 1] - staticH[staticCount - 1]);
         // the table is uniform within three ranges; a short search is cheap enough
@@ -293,7 +294,7 @@ private:
     // the fourth / fifth form (declined, off: MEASUREMENTS.md section 5): the release time shrinks as R rises above two averages of itself,
     // a slow one (the reference's Crest detector) and a faster one, so short events release almost at once and long
     // ones at the Release time; after a reset the averages start high (the reference releases slowly at first)
-    void stepRelease4 (double t)
+    void stepRelease4 (double target)
     {
         using namespace tables;
         if constexpr (hasRelease4)
@@ -302,21 +303,21 @@ private:
             const double w = (R > S ? table (w4Knot, w4Log, w4Count, R - S) : flatwater::math::exp ((double) w4Log[0]))
                            * (R > S2 ? table (w4Knot, w4fLog, w4fCount, R - S2) : flatwater::math::exp ((double) w4fLog[0]));
             R -= (table (fs4Knot, fs4Log, fs4Count, R) / (relS * w) + table (as4Knot, as4Log, as4Count, R)) * dt;
-            R = std::max ({ R, t, 0.0 });
+            R = std::max ({ R, target, 0.0 });
             const double gt = flatwater::math::pow10 (-R / 20.0);
             S2 = -20.0 * flatwater::math::log10 (gt + fast4C * (flatwater::math::pow10 (-S2 / 20.0) - gt));
             S = -20.0 * flatwater::math::log10 (gt + crest4C * (flatwater::math::pow10 (-S / 20.0) - gt));
         }
     }
 
-    void stepRelease (double t)
+    void stepRelease (double target)
     {
         using namespace tables;
-        if constexpr (hasRelease4) { stepRelease4 (t); return; }
+        if constexpr (hasRelease4) { stepRelease4 (target); return; }
         const double dt = 1.0 / fs;
         // the slow state charges (a one-pole on the linear gain) toward the reduction the listener gets, after the
         // attack, blended with R (chargeBlend), or releases with the slow law
-        double src = std::max (R, t);
+        double src = std::max (R, target);
         if (chargeBlend < 1.0)
         {
             const double out = -20.0 * flatwater::math::log10 (g1);
@@ -327,15 +328,15 @@ private:
             const double gs = flatwater::math::pow10 (-S / 20.0), gt = flatwater::math::pow10 (-src / 20.0);
             S = std::min (src, -20.0 * flatwater::math::log10 (gt + crestC * (gs - gt)));
         }
-        else { S -= (table (fsKnot, fsLog, fsCount, S) / std::max (relS, memFloorS) + table (asKnot, asLog, asCount, S)) * dt; S = std::max (S, t); }
+        else { S -= (table (fsKnot, fsLog, fsCount, S) / std::max (relS, memFloorS) + table (asKnot, asLog, asCount, S)) * dt; S = std::max (S, target); }
         S = std::max (S, 0.0);
         double re = relS;
         if (R - S > 1e-9)
-            re = std::min ({ re, relS * table (w0Knot, w0Log, w0Count, S), relSeedMs * 1e-3 / flatwater::math::pow (R - S, (double) relSeedExp) });
+            re = std::min ({ re, relS * table (w0Knot, w0Log, w0Count, S), t.relSeedMs * 1e-3 / flatwater::math::pow (R - S, (double) t.relSeedExp) });
         if (startU > 1e-6) { re += startU * (relS - re); startU *= startC; }   // start-up: slow at first, as the reference
         R -= (table (fsKnot, fsLog, fsCount, R) / re + table (asKnot, asLog, asCount, R)) * dt;
         if constexpr (tables::rFloorAtS) R = std::max (R, S);   // otherwise the memory only slows the release
-        R = std::max ({ R, t, 0.0 });
+        R = std::max ({ R, target, 0.0 });
     }
 
     Settings set;
@@ -347,8 +348,7 @@ private:
     double sum1 = 0.0, sum2 = 0.0, lsum1 = 0.0, lsum2 = 0.0;
     int i1 = 0, i2 = 0, li1 = 0, li2 = 0, pos = 0, detPos = 0, limPos = 0;
     double startU = 0.0, startC = 0.0;
-    static constexpr double chargeBlend = tables::chargeBlend;
-    static constexpr double memFloorS = tables::memoryFloorMs * 1e-3;    // the memory's release time is at least this
+    double chargeBlend = 0.0, memFloorS = 0.0;                          // from the tuning (prepare)
     double R = 0.0, S = 0.0, S2 = 0.0, g1 = 1.0, minGain = 1.0, minLimGain = 1.0;
     GainNet net;
     static constexpr int flatSteps = 60;

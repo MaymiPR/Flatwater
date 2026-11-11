@@ -4,6 +4,7 @@
 // Keys: threshold ratio attack release punch mix (0..100) output limiter (0/1) analog (0 Off, 1..4) block
 //       learned=0: without the learned gain correction (as the training set is rendered)
 //       trace=<file>: per processed sample (the latency first) six floats: held peak, target, R, S (dB), the gains g1, g
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -16,6 +17,21 @@ int main (int argc, char** argv)
     if (argc < 5) { std::fprintf (stderr, "usage: CoRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && co::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! co::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     co::Compressor comp;
     co::Compressor::Settings s;
     co::Analog analog;
@@ -33,8 +49,8 @@ int main (int argc, char** argv)
         else if (k == "release") s.releaseMs = v; else if (k == "punch") s.punch = v; else if (k == "mix") s.mix = v / 100.0f;
         else if (k == "output") s.outputDb = v; else if (k == "limiter") s.limiter = v > 0.5f; else if (k == "block") block = (int) v;
         else if (k == "analog") analogMode = (int) v;
-        else if (k == "limest") comp.limEstimate = (int) v;
-        else if (k == "learned") comp.learned = v > 0.5f;
+        else if (k == "limest") comp.t.limEstimate = (int) v;
+        else if (k == "learned") comp.t.learned = v > 0.5f;
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }

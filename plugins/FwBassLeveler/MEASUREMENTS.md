@@ -14,7 +14,7 @@ the method and the residual or confidence of each. The data is in [measurements/
 | Traces | `plugins/FwBassLeveler/nulltest/measure_traces.py`: the reference's gain on a bass line and on synthetic parts (ghost notes at a tenth of the level, random gaps) at several settings |
 | Corpus | `scripts/nulltest/bass_corpus_lib.py`: 36 parts of 12 s from the DAW's own bass packs (acoustic, 80s pick, Ibanez, slap, Temptated, a picked 5-string, a pluck multisample; Ogg Vorbis in WAV decoded by `tools/OggDecode.cpp`, cached in the git-ignored `reference/`) and three synthetic voices (808 sub, filtered saw, slow swells); parts 0 to 23 identify the model, 24 to 35 are held out |
 | Corpus renders | `plugins/FwBassLeveler/nulltest/render_corpus.py`: the reference's gain on every part at 10 settings (default, Fast, Sensitivity 0 / 75 / 100, Fast with Sensitivity 25 / 100, Artifacts 15 / 85, Target -24); `plugins/FwBassLeveler/nulltest/compare_corpus.py` compares (`--events` and per-note tables) |
-| Model | `plugins/FwBassLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwBassLeveler/Source/dsp/Ride.h`; `plugins/FwBassLeveler/nulltest/fit_detector.py` (CMA-ES over probes, traces and the training corpus, corpus weight `CW`), `plugins/FwBassLeveler/nulltest/fit_polish.py` (each per-setting value on a grid in turn), `plugins/FwBassLeveler/scripts/export_detector.py` (writes the constants into the C++) |
+| Model | `plugins/FwBassLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwBassLeveler/Source/dsp/Engine.h` with the constants of `dsp/Tuning.h`; `plugins/FwBassLeveler/nulltest/fit_detector.py` (CMA-ES over probes, traces and the training corpus, corpus weight `CW`), `plugins/FwBassLeveler/nulltest/fit_polish.py` (each per-setting value on a grid in turn), `plugins/FwBassLeveler/scripts/export_detector.py` (writes the constants into `dsp/Tuning.h`) |
 | Editor | `tools/MeterCapture gl=1`: the OpenGL frames read back, with `drag=...,hover` and `click` scripts and `in=` audio; `plugins/FwBassLeveler/nulltest/read_film.py` reads the films |
 
 ## 1. The level read
@@ -237,7 +237,7 @@ Every script named on this page by its current name; the earlier names stay in t
 | Script | Replaces |
 |---|---|
 | `nulltest/nulltest.py --vst3` | the VST3-equals-renderer, rate, component and CPU checks (check_vst3.py) |
-| `scripts/export_detector.py` | the detector constants into the DSP header (nulltest/export_detector.py) |
+| `scripts/export_detector.py` | the detector constants into `Source/dsp/Tuning.h` |
 
 ## Provenance
 

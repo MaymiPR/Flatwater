@@ -4,6 +4,7 @@
 // (dB or 0 .. 100), response (0 Slow, 1 Fast), idle (dB, its place in the range as the editor's arrow), mode (0 Stereo,
 // 1 Mono, 2 Live Stereo, 3 Live Mono), block (samples, default 512). The output is lined up with the input (the
 // reported latency removed, as a host's compensation does), the same length.
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -18,6 +19,21 @@ int main (int argc, char** argv)
     const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
     const double fs = std::atof (argv[4]);
     int block = 512;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && bl::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! bl::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     FwBassLevelerProcessor p;
     auto set = [&p] (const char* id, float v) { if (auto* q = p.apvts.getParameter (id)) q->setValueNotifyingHost (q->convertTo0to1 (v)); };
     float idleDbValue = 0.0f;

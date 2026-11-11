@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <limits>
 #include <vector>
+#include "Tuning.h"
 
 // Flatwater Pitch Bend's pitch and formant shifter (MEASUREMENTS.md, Flatwater Pitch Bend, "the pitch and formant
 // shifter"): a monophonic voice's pitch and spectral envelope moved independently, no latency reported. Pitch moves
@@ -54,6 +55,8 @@ public:
     // read-only views of the analysis (scorecard and tests)
     float aperiodicity() const { return (float) apShort; }       // YIN dip depth of the last analysis frame
     int lastGrainKind() const { return lastKind; }               // 0 none, 1 voiced, 2 noise, 3 pass-through
+
+    Tuning tune = tuning();                                      // dsp/Tuning.h: the defaults, or the renderer's overrides
 
 private:
     enum Kind { kNone = 0, kVoiced = 1, kNoise = 2, kPass = 3 };

@@ -6,6 +6,7 @@
 // in the pre-roll). preroll=<seconds>: silence first, not written, as tools/RefRender gives the reference: its first
 // block at the reference's defaults (375 ms, or time0= in ms; the LFO at rate0=: Rate 0.1 at the host's tempo), then
 // the settings.
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -82,15 +83,30 @@ int main (int argc, char** argv)
     while ((got = std::fread (tmp, sizeof (float), 4096, f)) > 0) in.insert (in.end(), tmp, tmp + got);
     std::fclose (f);
     const long long n = (long long) (in.size() / (size_t) ch);
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && de::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! de::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     de::dsp::Delay d;
     for (auto& x : settings)                                      // the fitted constants, to fit them again
     {
-        if (x.rfind ("modscale=", 0) == 0) d.modScale = std::atof (x.c_str() + 9);
+        if (x.rfind ("modscale=", 0) == 0) d.t.modScale = std::atof (x.c_str() + 9);
     }
     d.prepare (fs);
     for (auto& x : settings)
     {
-        if (x.rfind ("glide=", 0) == 0) d.glideOffset = std::atof (x.c_str() + 6);
+        if (x.rfind ("glide=", 0) == 0) d.t.glideOffset = std::atof (x.c_str() + 6);
         if (x.rfind ("time0=", 0) == 0) s.timeL = s.timeR = std::floor (std::atof (x.c_str() + 6) * fs / 1000.0);   // the first block's time
         if (x.rfind ("rate0=", 0) == 0) s.rateHz = (float) std::atof (x.c_str() + 6);   // the first block's LFO rate
     }
