@@ -1,13 +1,12 @@
 #include "Engine.h"
+#include <algorithm>
 
-using namespace juce;
-
-namespace pb
+namespace pb::dsp
 {
-void Engine::prepare (double sampleRate, int maxBlock, int channels)
+void Engine::prepare (double sampleRate, int maxBlock, int channels, const std::array<float, numTargets>& norm)
 {
     sr = sampleRate;
-    const int block = jmax (1, maxBlock);
+    const int block = std::max (1, maxBlock);
     shifter.tune = t;
     shifter.prepare (sr, block, channels);
     dry.assign ((size_t) channels, std::vector<float> ((size_t) block, 0.0f));
@@ -19,7 +18,7 @@ void Engine::prepare (double sampleRate, int maxBlock, int channels)
     pt.refHz = t.ptRefHz;
     pt.reset();
     processed = 0;
-    for (int k = 0; k < numTargets; ++k) modNorm[(size_t) k] = targets[(size_t) k]->getValue();
+    modNorm = norm;
     modSum.fill (0.0);
     lastValue.fill (0.0);
 }
@@ -28,18 +27,17 @@ void Engine::prepare (double sampleRate, int maxBlock, int channels)
 // added on the normalised value; Pitch to +-24 semitones
 double Engine::modulatedValue (int target, const Params& p) const
 {
-    const auto* q = targets[(size_t) target];
+    const auto& q = targets[target].range;
     const double s = modSum[(size_t) target];
-    const double own = q->convertFrom0to1 (p.norm[(size_t) target]);
-    auto scaled = [&] (double a, double e) { const auto r = q->getNormalisableRange();
-                                              return jlimit ((double) r.start, (double) r.end, own * oddsScale (s, a, e)); };
+    const double own = q.from0to1 (p.norm[(size_t) target]);
+    auto scaled = [&] (double a, double e) { return std::clamp (own * oddsScale (s, a, e), (double) q.start, (double) q.end); };
     switch (target)
     {
         case 3: case 7: return scaled (t.rateOddsA, t.rateOddsP);                        // Rate (Hz)
         case 4: case 8: case 11: case 12: case 14: return scaled (1.0, 1.0);           // Warp, AM Attack / Release, PT Smooth
         case 13: case 15: return scaled (0.5, 1.0);                                    // AM Level, PT Level
         case 5: case 9: return own + s;                                                // Phase: wraps (measured: -0.25 is 0.75)
-        default: return q->convertFrom0to1 (jlimit (0.0f, 1.0f, modNorm[(size_t) target]));
+        default: return q.from0to1 (std::clamp (modNorm[(size_t) target], 0.0f, 1.0f));
     }
 }
 
@@ -64,10 +62,10 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
     std::array<float, numTargets> base = prm.norm;
     for (int k : { 0, 1 })
     {
-        const float st = targets[(size_t) k]->convertFrom0to1 (base[(size_t) k]);
-        base[(size_t) k] = targets[(size_t) k]->convertTo0to1 (audio.fine ? std::round (st * 100.0f) / 100.0f : std::round (st));
+        const float st = targets[k].range.from0to1 (base[(size_t) k]);
+        base[(size_t) k] = targets[k].range.to0to1 (audio.fine ? std::round (st * 100.0f) / 100.0f : std::round (st));
     }
-    auto real = [this] (int k, float norm) { return targets[(size_t) k]->convertFrom0to1 (jlimit (0.0f, 1.0f, norm)); };
+    auto real = [] (int k, float norm) { return targets[k].range.from0to1 (std::clamp (norm, 0.0f, 1.0f)); };
 
     // the slots: depth / 100 x the source on the control's normalised value, clipped to its range; Pitch's to twice its
     // range, +-24 semitones (measured: depth 100 of a +1 source moves it +24, Formant stops at +12)
@@ -82,7 +80,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
                 if (sl.source > None && sl.source < numSources) sum += sl.depth / 100.0 * v[sl.source];
             }
             modSum[(size_t) k] = sum;
-            modNorm[(size_t) k] = k == 0 ? jlimit (-0.5f, 1.5f, base[0] + (float) sum) : jlimit (0.0f, 1.0f, base[(size_t) k] + (float) sum);
+            modNorm[(size_t) k] = k == 0 ? std::clamp (base[0] + (float) sum, -0.5f, 1.5f) : std::clamp (base[(size_t) k] + (float) sum, 0.0f, 1.0f);
             modulated[(size_t) k] = (float) modulatedValue (k, prm);   // (the knobs show Pitch at their end past +-12)
         }
     };
@@ -109,10 +107,10 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
         auto& c = src[m];
         c.seq = d.type > 0.5f;
         c.synced = d.sync < 0.5f;
-        c.steps = jlimit (2, maxSteps, roundToInt (d.steps));
+        c.steps = std::clamp (flatwater::math::roundToInt (d.steps), 2, maxSteps);
         // a modulated Rate scales the synced rate too (measured: 1 beat at 120 bpm with x1.68 runs at 3.37 Hz), up to 30 Hz
         const double rateScale = oddsScale (modSum[(size_t) t0], t.rateOddsA, t.rateOddsP);
-        const int index = roundToInt (d.rateSynced * 23.0f);
+        const int index = flatwater::math::roundToInt (d.rateSynced * 23.0f);
         c.beats = std::max (syncedBeats (index) / rateScale, bpm / 60.0 / t.maxRateHz) * (c.seq ? c.steps : 1);
         c.baseBeats = syncedBeats (index);
         c.baseHz = freeRate (d.rate, sr);
@@ -124,7 +122,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
             c.ctlMod = c.ctlMod || audio.slots[(size_t) (t0 * numSlots + s)].source > None;
         // a free rate: its period in whole ticks first, then the modulation's scale (measured: 1 Hz x1.6845 runs at
         // 1.6843 Hz, not at the 1.6848 of a whole-tick period)
-        c.cps = jlimit (0.06, t.maxRateHz, freeRate (d.rate, sr) * rateScale) / (c.seq ? c.steps : 1);
+        c.cps = std::clamp (freeRate (d.rate, sr) * rateScale, 0.06, t.maxRateHz) / (c.seq ? c.steps : 1);
         c.warp = modulatedValue (t0 + 1, prm);
         c.phase = modulatedValue (t0 + 2, prm);
         c.gain = levelGain (modulatedValue (t0 + 3, prm));
@@ -175,11 +173,11 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
                         if (sl.source > None && sl.source < numSources) sum[k] += sl.depth / 100.0 * value[sl.source];
                     }
                 const double scale = oddsScale (sum[0], t.rateOddsA, t.rateOddsP);
-                c.cps = jlimit (0.06, t.maxRateHz, c.baseHz * scale) / (c.seq ? c.steps : 1);
+                c.cps = std::clamp (c.baseHz * scale, 0.06, t.maxRateHz) / (c.seq ? c.steps : 1);
                 c.beats = std::max (c.baseBeats / scale, bpm / 60.0 / t.maxRateHz) * (c.seq ? c.steps : 1);
-                c.warp = jlimit (0.01, 100.0, c.baseWarp * oddsScale (sum[1], 1.0, 1.0));
+                c.warp = std::clamp (c.baseWarp * oddsScale (sum[1], 1.0, 1.0), 0.01, 100.0);
                 c.phase = c.basePhase + sum[2];
-                c.gain = levelGain (jlimit (0.0, 1.0, c.baseLevel + sum[3]));
+                c.gain = levelGain (std::clamp (c.baseLevel + sum[3], 0.0, 1.0));
             }
             const double cycles = cyclesAt (m, i, lfo[m]);
             value[M1 + m] = lfo[m].next (audio.tables[m], c.seq, c.steps, cycles, c.phase, c.warp, c.gain, c.pole);
@@ -200,7 +198,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
                 const auto& sl = audio.slots[(size_t) (k * numSlots + s)];
                 if (sl.source > None && sl.source < numSources) pf[k] += sl.depth / 100.0 * value[sl.source];
             }
-        pitchPer[(size_t) i] = 24.0f * jlimit (-0.5f, 1.5f, base[0] + (float) pf[0]) - 12.0f;
+        pitchPer[(size_t) i] = 24.0f * std::clamp (base[0] + (float) pf[0], -0.5f, 1.5f) - 12.0f;
         formantPer[(size_t) i] = real (1, base[1] + (float) pf[1]);
     }
     for (int k = 0; k < numSources; ++k) lastValue[(size_t) k] = value[k];
@@ -210,7 +208,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
 
     applySlots (value);
     // the wet path, then Mix (per sample, with its modulation)
-    const float flattenHz = prm.flatten > 0.5f ? t.flattenRefHz * (float) pbmath::exp2 (std::round (prm.flattenNote) / 12.0) : 0.0f;
+    const float flattenHz = prm.flatten > 0.5f ? t.flattenRefHz * (float) flatwater::math::exp2 (std::round (prm.flattenNote) / 12.0) : 0.0f;
     // the modulated totals set the pitch and the formant, followed in steps of 16 samples (measured: a stepped Pitch
     // lands about 2 ms after the step wherever it falls in the host's block, at blocks of 64 and 512); the knobs' own
     // values (rounded as they act) set the envelope's share of Pitch, which level table applies and whether noise is
@@ -219,7 +217,7 @@ void Engine::process (float* const* io, int ch, int n, const Params& prm, const 
     for (int i0 = 0; i0 < n; i0 += t.shiftStep)
     {
         for (int c = 0; c < ch; ++c) wet[c] = io[c] + i0;
-        shifter.process (wet, ch, jmin (t.shiftStep, n - i0), pitchPer[(size_t) i0], formantPer[(size_t) i0], flattenHz,
+        shifter.process (wet, ch, std::min (t.shiftStep, n - i0), pitchPer[(size_t) i0], formantPer[(size_t) i0], flattenHz,
                          real (0, base[0]), real (1, base[1]));
     }
     for (int i = 0; i < n; ++i)

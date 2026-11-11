@@ -33,6 +33,14 @@
 - **Reference names:** the null-test and measurement scripts read the reference's component names from `local.yaml`
   (`<Id>.ref_name` and the other component keys, `<Id>.ref_presets` for the preset files and folders) and name no
   reference product; the test helpers' namespaces nest in their plug-in's.
+- **Plain C++ DSP:** every plug-in's `Source/dsp` builds without JUCE. FwPitchBend's modulatable controls take
+  their ranges from the DSP (the host parameters are built from the same ranges) and its state-tree helpers are
+  `Source/ModulationState.h`; FwVocalChain's reverb convolution is `Source/ReverbConvolution`, which the processor
+  hands to the chain. No sound or saved state changes (renders and saved states are byte-identical).
+- **Parameter lists:** every `Params.h` holds `numParams`, `allIds` (the layout's order, checked by each plug-in's
+  tests), `presetIds` and `createLayout`; parameter ids, order, ranges, names and defaults are unchanged.
+- **Screenshots:** the snapshot tool is the starter's (`--scale` resizes the editor as a host would); the editors
+  take `--click=x,y` and `--bench` as snapshot options, and `scripts/make_screenshots.py` renders `docs/screenshots`.
 
 ## 1.0.0 (2026-11-04)
 

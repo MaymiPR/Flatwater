@@ -7,7 +7,7 @@
 // Every constant of the DSP (dsp/Engine.h), from the measurements and the fits. Kept in one struct so the offline
 // renderer (tools/BfRender.cpp) can override any of them by name (tune:key=value, or its own short keys); the plug-in
 // uses the defaults.
-namespace bf
+namespace bf::dsp
 {
 struct Tuning
 {

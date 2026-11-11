@@ -24,7 +24,7 @@ float refToJuce (float deg) { return rad (deg + 180.0f); }
 }
 
 FwCompEditor::FwCompEditor (FwCompProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (co::mode), "Flatwater Comp", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (co::id::mode), "Flatwater Comp", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::Hybrid),
       proc (p),
       analog (make<Knob> (Knob::Small, 39.0f, 321.0f)), output (make<Knob> (Knob::Small, 39.0f, 321.0f)),
@@ -38,7 +38,7 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
     setFactoryPresets (co::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (co::mix) });        // presets leave Mix alone, as the reference
+    setKeepOnPresetLoad ({ p.apvts.getParameter (co::id::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, Rectangle<int> valueArea,
                          std::function<String (double)> fmt)
@@ -57,17 +57,17 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
     };
     analog.steps = 5;
     for (auto& px : analog.feel.stepPx) px = 50.0f;           // measured: a step per 50 px at any speed, Ctrl or not
-    place (analog, co::analog, { 39, 30, 97, 107 }, kAnalog, 2.0, {}, {});
-    place (output, co::output, { 505, 30, 97, 107 }, kOutput, 0.0, { 599, 85, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (ratio, co::ratio, { 6, 142, 161, 143 }, kRatio, 3.0, { 68, 213, 37, 13 }, [] (double v) { return String (v, 2); });
-    place (mix, co::mix, { 473, 142, 161, 143 }, kMix, 100.0, { 534, 213, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (threshold, co::threshold, { 238, 249, 169, 180 }, kThreshold, -18.0, { 302, 330, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (punch, co::punch, { 9, 294, 97, 107 }, kPunch, 1.0, { 39, 396, 37, 13 }, [] (double v) { return String (v, 1); });
-    place (attack, co::attack, { 114, 295, 96, 106 }, kAttack, 7.0, { 143, 396, 37, 13 },
+    place (analog, co::id::analog, { 39, 30, 97, 107 }, kAnalog, 2.0, {}, {});
+    place (output, co::id::output, { 505, 30, 97, 107 }, kOutput, 0.0, { 599, 85, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (ratio, co::id::ratio, { 6, 142, 161, 143 }, kRatio, 3.0, { 68, 213, 37, 13 }, [] (double v) { return String (v, 2); });
+    place (mix, co::id::mix, { 473, 142, 161, 143 }, kMix, 100.0, { 534, 213, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (threshold, co::id::threshold, { 238, 249, 169, 180 }, kThreshold, -18.0, { 302, 330, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (punch, co::id::punch, { 9, 294, 97, 107 }, kPunch, 1.0, { 39, 396, 37, 13 }, [] (double v) { return String (v, 1); });
+    place (attack, co::id::attack, { 114, 295, 96, 106 }, kAttack, 7.0, { 143, 396, 37, 13 },
            [] (double v) { return co::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (release, co::release, { 431, 294, 97, 107 }, kRelease, 100.25, { 462, 398, 37, 13 },
+    place (release, co::id::release, { 431, 294, 97, 107 }, kRelease, 100.25, { 462, 398, 37, 13 },
            [] (double v) { return co::timeText ((float) v).upToFirstOccurrenceOf (" ", false, false); });
-    place (releaseNote, co::releaseNote, { 431, 294, 97, 107 }, kRelease, 5.0, { 462, 398, 37, 13 }, {});
+    place (releaseNote, co::id::releaseNote, { 431, 294, 97, 107 }, kRelease, 5.0, { 462, 398, 37, 13 }, {});
     releaseNote.textFromValueFunction = [] (double v) { static const char* n[] = { "1/64T", "1/64", "1/64D", "1/32T", "1/32", "1/32D", "1/16T",
         "1/16", "1/16D", "1/8T", "1/8", "1/8D", "1/4T", "1/4", "1/4D", "1/2T", "1/2", "1/2D", "1 Bar", "2 Bar" }; return String (n[jlimit (0, 19, roundToInt (v))]); };
     releaseNote.steps = 20;
@@ -76,18 +76,18 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
         std::copy (px, px + 4, releaseNote.feel.stepPx);
     }
 
-    auto& meterSel = make<ButtonGroup> (*p.apvts.getParameter (co::meter), &p.undo, StringArray { "IN", "GR", "OUT" }, false);
+    auto& meterSel = make<ButtonGroup> (*p.apvts.getParameter (co::id::meter), &p.undo, StringArray { "IN", "GR", "OUT" }, false);
     addToContent (meterSel, Rectangle<int> (245, 27, 151, 21).expanded (4));
-    auto& lim = make<ButtonGroup> (*p.apvts.getParameter (co::limiter), &p.undo, StringArray { "LIMITER" }, false, true);
+    auto& lim = make<ButtonGroup> (*p.apvts.getParameter (co::id::limiter), &p.undo, StringArray { "LIMITER" }, false, true);
     addToContent (lim, Rectangle<int> (417, 27, 52, 21).expanded (4));
-    auto& sync = make<ButtonGroup> (*p.apvts.getParameter (co::sync), &p.undo, StringArray { "BPM", "HOST", "MS" }, true);
+    auto& sync = make<ButtonGroup> (*p.apvts.getParameter (co::id::sync), &p.undo, StringArray { "BPM", "HOST", "MS" }, true);
     addToContent (sync, Rectangle<int> (547, 315, 50, 61).expanded (4));
 
     // the BPM display takes drags and typed values in BPM mode (an invisible slider over it)
     bpmField.setSliderStyle (Slider::LinearBarVertical);
     bpmField.setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
     bpmField.setAlpha (0.0f);
-    attachSlider (bpmField, co::bpm, kLed.toNearestInt(), 120.0);
+    attachSlider (bpmField, co::id::bpm, kLed.toNearestInt(), 120.0);
     bpmField.setMouseDragSensitivity (270);
     vu.pivot = kVuPivot - kDial.getPosition().toFloat();
     addToContent (vu, kDial);
@@ -99,7 +99,7 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
 void FwCompEditor::showMeter()
 {
     using namespace co::needle;
-    const int m = roundToInt (value (co::meter));
+    const int m = roundToInt (value (co::id::meter));
     vu.setFace (m == 1 ? VuMeter::Face::gr : VuMeter::Face::io);
     vu.setNeedle (angle (m == 1 ? frame (grNeedle.x2) : frame (ioValue (m == 0 ? inNeedle.shown : outNeedle.shown))));
 }
@@ -108,7 +108,7 @@ float FwCompEditor::value (const char* id) const { return proc.apvts.getRawParam
 
 void FwCompEditor::updateReleaseKnob()
 {
-    const int s = roundToInt (value (co::sync));
+    const int s = roundToInt (value (co::id::sync));
     if (s == lastSync) return;
     lastSync = s;
     release.setVisible (s == 2);                     // ms
@@ -245,9 +245,9 @@ void FwCompEditor::paintContent (Graphics& g)
         g.setColour (theme::textFaint);
         g.strokePath (link, PathStrokeType (1.5f));
     }
-    const int sync = roundToInt (value (co::sync));
+    const int sync = roundToInt (value (co::id::sync));
     if (sync == 2) drawLedDisplay (g, kLed, "BPM OFF");
-    else drawLedDisplay (g, kLed, "BPM", sync == 0 ? String (roundToInt (value (co::bpm)))
+    else drawLedDisplay (g, kLed, "BPM", sync == 0 ? String (roundToInt (value (co::id::bpm)))
                                                     : proc.hostBpm.load() > 0.0 ? String (roundToInt (proc.hostBpm.load())) : String ("---"));
     drawNamePlate (g, { 16.0f, 407.0f, 210.0f, 30.0f }, "Flatwater Comp");
 }

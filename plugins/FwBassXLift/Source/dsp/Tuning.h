@@ -8,7 +8,7 @@
 // BassX Lift model"). Kept in one struct so the offline renderer (tools/BxRender.cpp) can override any of them by name
 // (tune:key=value); the plug-in uses the defaults. K(F) per Freq setting and the learned level control stay in
 // dsp/Net.h (generated).
-namespace bx
+namespace bx::dsp
 {
 struct Tuning
 {

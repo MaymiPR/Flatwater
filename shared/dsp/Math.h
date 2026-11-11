@@ -6,6 +6,8 @@
 // the compiler does not fuse a multiply and an add (CMakeLists.txt turns that off for GCC and Clang).
 // Accuracy: within about 2 units in the last place of the true value.
 #include <cmath>
+#include <cstdint>
+#include <cstring>
 #include <functional>
 #include <limits>
 
@@ -13,6 +15,18 @@ namespace flatwater::math
 {
 // a == b, meant exactly: through std::equal_to, so -Wfloat-equal stays quiet (juce::exactlyEqual where JUCE is in)
 template <typename T> constexpr bool exactlyEqual (T a, T b) { return std::equal_to<T>{} (a, b); }
+
+inline constexpr double pi = 3.141592653589793238;           // (the double juce::MathConstants<double>::pi holds)
+
+// the nearest whole number, as juce::roundToInt gives it (halves to the even neighbour): x + 1.5 * 2^52 leaves the
+// rounded value in the low 32 bits of the sum
+inline int roundToInt (double x)
+{
+    const double sum = x + 6755399441055744.0;
+    std::uint64_t bits = 0;
+    std::memcpy (&bits, &sum, sizeof (bits));
+    return (int) (std::uint32_t) (bits & 0xffffffffu);
+}
 
 inline constexpr double ln2Hi = 6.93147180369123816490e-01;   // ln 2 split so that k * ln2Hi is exact for |k| < 2^20
 inline constexpr double ln2Lo = 1.90821492927058770002e-10;
@@ -83,4 +97,37 @@ inline double tanh (double x)
 }
 inline float expf (float x) { return (float) exp ((double) x); }
 inline float tanhf (float x) { return (float) tanh ((double) x); }
+
+// The pitch shifter's and its modulators' (FwPitchBend): ln 2 whole, 2^x and log2, and sin and cos (a reduction by
+// 2 pi split in two parts, then the Taylor series to x^21 on [-pi/2, pi/2], the rest below 2e-17). The shifter decides
+// on near-equal values (voicing, its marks, which period a grain reads), so a unit in the last place can move a grain.
+inline constexpr double ln2 = 6.93147180559945309417e-01;
+inline constexpr double piHi = 3.14159265358979311600e+00;     // pi split so that k * twoPiHi is exact for |k| < 2^20
+inline constexpr double piLo = 1.22464679914735317723e-16;
+
+inline double log2 (double x) { return log (x) * invLn2; }
+inline double exp2 (double x) { return exp (x * ln2); }
+
+inline double sin (double x)
+{
+    if (std::isnan (x)) return x;
+    const double k = std::floor (x * (0.5 / piHi) + 0.5);
+    double r = (x - k * (2.0 * piHi)) - k * (2.0 * piLo);      // [-pi, pi]
+    if (r > 0.5 * piHi) r = (piHi - r) + piLo;                // sin (pi - r)
+    else if (r < -0.5 * piHi) r = (-piHi - r) - piLo;
+    const double z = r * r;
+    double p = -1.0 / 51090942171709440000.0;                 // -1 / 21!
+    p = 1.0 / 121645100408832000.0 + z * p;
+    p = -1.0 / 355687428096000.0 + z * p;
+    p = 1.0 / 1307674368000.0 + z * p;
+    p = -1.0 / 6227020800.0 + z * p;
+    p = 1.0 / 39916800.0 + z * p;
+    p = -1.0 / 362880.0 + z * p;
+    p = 1.0 / 5040.0 + z * p;
+    p = -1.0 / 120.0 + z * p;
+    p = 1.0 / 6.0 + z * p;
+    return r - r * z * p;
+}
+
+inline double cos (double x) { return sin (x + 0.5 * piHi); }
 }

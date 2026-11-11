@@ -32,7 +32,7 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bf::factoryPresets()[(size_t) index - 1], apvts.getParameter (bf::mode));
+        flatwater::applyPreset (apvts, index == 0 ? defaults : bf::factoryPresets()[(size_t) index - 1], apvts.getParameter (bf::id::mode));
     }
     const juce::String getProgramName (int index) override
     {
@@ -53,7 +53,6 @@ public:
     std::atomic<bool> clipped { false };
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     int currentProgram = 0;
-    bf::Processor dsp;
+    bf::dsp::Processor dsp;
 };

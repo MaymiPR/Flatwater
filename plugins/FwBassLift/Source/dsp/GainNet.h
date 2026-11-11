@@ -4,7 +4,7 @@
 // Inputs per 48 kHz step: |asinh(v / 1e-3)| / 8 for x, b, l, u, and ln(Freq / 80). Outputs: ln g_pre, ln g_post.
 // PyTorch GRU layout: rows [reset; update; new].
 
-namespace bf::gainnet
+namespace bf::dsp::gainnet
 {
 inline constexpr int hidden = 32, inputs = 5;
 inline constexpr float C0 = 278.178501f, k2 = -0.00666055363f;

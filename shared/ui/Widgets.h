@@ -38,6 +38,17 @@ inline void setDefaultWindowScale (float s)
 
 namespace flatwater
 {
+// What the snapshot tool (tools/Snapshot.cpp, one for every plug-in of the suite) may ask of an editor beyond its
+// parameters: meters frozen at given levels, and the plug-in's own options (a view, a style), each a "--name" argument
+// the tool hands over after the editor is open. An editor with meters or options derives from it; the tool finds it
+// by dynamic_cast.
+struct SnapshotHooks
+{
+    virtual ~SnapshotHooks() = default;
+    virtual void setTestLevels (float inDb, float outDb) = 0;
+    virtual bool snapshotOption (const juce::String&) { return false; }     // true when the editor took the option
+};
+
 inline const char* const repoUrl = "https://github.com/MaymiPR/Flatwater";
 
 // The Flatwater mark (docs/branding/flatwater-icon.svg): a sun half set on a dead-calm horizon, cyan into amber,

@@ -576,7 +576,7 @@ void BalanceKnob::paint (Graphics& g)
 using namespace ch::ui;
 
 FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (ch::mode), "Flatwater Vocal Chain", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (ch::id::mode), "Flatwater Vocal Chain", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::Classic, ch::modeNames()),
       proc (p),
       inMeter (make<Meter> (marks)), outMeter (make<Meter> (marks)), led (make<SensLed> (marks)), balance (make<BalanceKnob> (marks)),
@@ -585,14 +585,14 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
     setFactoryPresets (ch::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (ch::sensitivity), p.apvts.getParameter (ch::output),   // (IgnoreOnPresetLoad)
-                           p.apvts.getParameter (ch::link) });
+    setKeepOnPresetLoad ({ p.apvts.getParameter (ch::id::sensitivity), p.apvts.getParameter (ch::id::output),   // (IgnoreOnPresetLoad)
+                           p.apvts.getParameter (ch::id::link) });
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { showEntry (sl); };
 
     // the faders: the control rectangles (34 x 209 from y 210), the cap's shadow reaching 9 px right of them
-    const std::array<std::pair<const char*, int>, 8> fd { { { ch::sensitivity, 49 }, { ch::bass, 186 }, { ch::treble, 253 },
-        { ch::compress, 319 }, { ch::reverb, 386 }, { ch::delay, 452 }, { ch::pitch, 519 }, { ch::output, 655 } } };
+    const std::array<std::pair<const char*, int>, 8> fd { { { ch::id::sensitivity, 49 }, { ch::id::bass, 186 }, { ch::id::treble, 253 },
+        { ch::id::compress, 319 }, { ch::id::reverb, 386 }, { ch::id::delay, 452 }, { ch::id::pitch, 519 }, { ch::id::output, 655 } } };
     for (size_t i = 0; i < fd.size(); ++i)
     {
         auto& f = make<Fader> (i == 0, marks);
@@ -612,8 +612,8 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
     addToContent (inMeter, { 109, 227, 31, 175 });
     addToContent (outMeter, { 599, 227, 31, 175 });
     addToContent (led, { 52, 189, 28, 25 });
-    attachSlider (balance, ch::balance, { 109, 395, 30, 30 }, 0.0);
-    attach (linkButton, ch::link, { 658, 189, 28, 25 });         // (where the input's LED sits, mirrored)
+    attachSlider (balance, ch::id::balance, { 109, 395, 30, 30 }, 0.0);
+    attach (linkButton, ch::id::link, { 658, 189, 28, 25 });         // (where the input's LED sits, mirrored)
     linkButton.setTooltip ("Link Input Sens and Output: Output mirrors Input Sens (+3 in, -3 out)");
     linkButton.onClick = [this] { proc.syncLink(); };                   // (on: Output jumps to the mirror at once)
     linkFaders (*faders.front(), *faders.back());
@@ -630,7 +630,7 @@ void FwVocalChainEditor::linkFaders (ch::ui::Fader& mine, ch::ui::Fader& other)
     mine.onUserMove = [this, &other] (double, double to)
     {
         if (! proc.linked()) return;
-        auto* param = proc.apvts.getParameter (&other == faders.back() ? ch::output : ch::sensitivity);
+        auto* param = proc.apvts.getParameter (&other == faders.back() ? ch::id::output : ch::id::sensitivity);
         param->beginChangeGesture();
         param->setValueNotifyingHost (param->convertTo0to1 ((float) -to));
         param->endChangeGesture();

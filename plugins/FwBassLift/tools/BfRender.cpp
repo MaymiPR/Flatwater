@@ -17,18 +17,18 @@ int main (int argc, char** argv)
     for (int i = 9; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && bf::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && bf::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! bf::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! bf::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
             }
         }
     }
-    bf::Processor proc;
+    bf::dsp::Processor proc;
     double decay = 1.0;
     for (int i = 9; i < argc; ++i)
     {

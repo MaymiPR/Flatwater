@@ -22,7 +22,7 @@ with open(out, "w", newline="\n") as f:
     f.write("#pragma once\n// Learned gain control of the Flatwater Bass Lift generated path (GRU, %d hidden units), trained on renders of the\n"
             "// reference by plugins/FwBassLift/nulltest/train_net.py and written by plugins/FwBassLift/scripts/export_net.py. Do not edit by hand.\n"
             "// Inputs per 48 kHz step: |asinh(v / 1e-3)| / 8 for x, b, l, u, and ln(Freq / 80). Outputs: ln g_pre, ln g_post.\n"
-            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace bf::gainnet\n{\n" % H)
+            "// PyTorch GRU layout: rows [reset; update; new].\n\nnamespace bf::dsp::gainnet\n{\n" % H)
     f.write("inline constexpr int hidden = %d, inputs = 5;\n" % H)
     f.write("inline constexpr float C0 = %.9gf, k2 = %.9gf;\n" % (math.exp(sd["logC0"].item()), sd["k2"].item()))
     f.write(arr("Wih", sd["gru.weight_ih_l0"]))

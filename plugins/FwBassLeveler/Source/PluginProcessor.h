@@ -32,7 +32,7 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bl::factoryPresets()[(size_t) index - 1], apvts.getParameter (bl::mode));
+        flatwater::applyPreset (apvts, index == 0 ? defaults : bl::factoryPresets()[(size_t) index - 1], apvts.getParameter (bl::id::mode));
     }
     const juce::String getProgramName (int index) override
     {
@@ -56,17 +56,16 @@ public:
     std::atomic<float> userRideDb { 0.0f };
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    int modeIndex() const { return juce::roundToInt (get (bl::mode)); }
-    float idleDb() const { return bl::idleDb (get (bl::idle), get (bl::rangeMin), get (bl::rangeMax)); }
+    int modeIndex() const { return juce::roundToInt (get (bl::id::mode)); }
+    float idleDb() const { return bl::idleDb (get (bl::id::idle), get (bl::id::rangeMin), get (bl::id::rangeMax)); }
 
 private:
     int currentProgram = 0;
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void configure();
     double sr = 48000.0;
     int delaySamples = 0, writePos = 0, configuredMode = -1;
     std::vector<std::vector<float>> line;
-    bl::Ride ride;
+    bl::dsp::Ride ride;
     double outGain = 1.0, heldDb = 0.0, smooth5 = 0.0;      // the Output gain and a held Rider, each smoothed over 5 ms
     bool wasHeld = false, returning = false;
 };

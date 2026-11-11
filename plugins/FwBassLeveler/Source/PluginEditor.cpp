@@ -303,7 +303,7 @@ static MouseCursor dragCursor()
 
 //==============================================================================
 FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bl::mode), "Flatwater Bass Leveler", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bl::id::mode), "Flatwater Bass Leveler", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::TwoRow, bl::modeNames()),
       lasso (make<flatwater::flat::LassoOverlay>()),
       proc (p),
@@ -324,14 +324,14 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
     responseSwitch.marks = &marks;
 
     // control rectangles from the reference's layout
-    attachSlider (sensitivity, bl::sensitivity, { 24, 90, 44, 44 }, 50.0);
-    attachSlider (spill, bl::spill, { 178, 90, 44, 44 }, -40.0);
-    attachSlider (artifacts, bl::artifacts, { 253, 90, 44, 44 }, 50.0);
-    attach (responseSwitch, bl::response, { 104, 106, 37, 17 });
-    attachSlider (target, bl::target, { 59, 45, 210, 22 }, -14.0);
-    attachSlider (rangeMax, bl::rangeMax, { 36, 190, 48, 270 }, 12.0);
-    attachSlider (rangeMin, bl::rangeMin, { 36, 190, 48, 270 }, -12.0);
-    attachSlider (output, bl::output, { 235, 190, 48, 270 }, 0.0);
+    attachSlider (sensitivity, bl::id::sensitivity, { 24, 90, 44, 44 }, 50.0);
+    attachSlider (spill, bl::id::spill, { 178, 90, 44, 44 }, -40.0);
+    attachSlider (artifacts, bl::id::artifacts, { 253, 90, 44, 44 }, 50.0);
+    attach (responseSwitch, bl::id::response, { 104, 106, 37, 17 });
+    attachSlider (target, bl::id::target, { 59, 45, 210, 22 }, -14.0);
+    attachSlider (rangeMax, bl::id::rangeMax, { 36, 190, 48, 270 }, 12.0);
+    attachSlider (rangeMin, bl::id::rangeMin, { 36, 190, 48, 270 }, -12.0);
+    attachSlider (output, bl::id::output, { 235, 190, 48, 270 }, 0.0);
     // the Rider: not a parameter; it shows the processor's gain and can be held by hand
     rider.setRange (-12.0, 12.0, 0.01);
     addToContent (rider, { 128, 190, 64, 270 });
@@ -356,12 +356,12 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
         k->onValueChange = [this, k] { content().repaint (k->getX(), 150, k->getWidth() + 20, 28); };
     target.onValueChange = [this] { content().repaint (266, 42, 44, 26); };
     // the Idle arrow
-    auto* idleParam = p.apvts.getParameter (bl::idle);
+    auto* idleParam = p.apvts.getParameter (bl::id::idle);
     idleColumn.marks = &marks;
     idleColumn.idleDb = [this] { return proc.idleDb(); };
     idleColumn.setIdleDb = [this, idleParam] (float db)
     {
-        const float lo = proc.get (bl::rangeMin), hi = proc.get (bl::rangeMax);
+        const float lo = proc.get (bl::id::rangeMin), hi = proc.get (bl::id::rangeMax);
         idleParam->setValueNotifyingHost (idleParam->convertTo0to1 (jlimit (0.02f, 0.98f, (jlimit (lo, hi, db) - lo) / jmax (1.0f, hi - lo))));
         content().repaint();
     };
@@ -713,7 +713,7 @@ void FwBassLevelerEditor::paintContent (Graphics& g)
     }
 
     // the Range band: the space between Min and Max, lit, up to the Rider's scale; the Idle line across it
-    const float lo = proc.get (bl::rangeMin), hi = proc.get (bl::rangeMax);
+    const float lo = proc.get (bl::id::rangeMin), hi = proc.get (bl::id::rangeMax);
     g.setColour (theme::cyan.withAlpha (0.10f));
     g.fillRect (Rectangle<float>::leftTopRightBottom (72.0f, scaleY (hi), 149.0f, scaleY (lo)));
     g.setColour (kIdleLine.withAlpha (0.8f));

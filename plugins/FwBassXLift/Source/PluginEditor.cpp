@@ -17,7 +17,7 @@ float graphY (float db) { return kGraphDbTop - db * kPxPerDb; }
 }
 
 FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
-    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bx::mode), "Flatwater BassX Lift", JucePlugin_VersionString, W, H,
+    : Editor (p, p.apvts, p.undo, p.apvts.getParameter (bx::id::mode), "Flatwater BassX Lift", JucePlugin_VersionString, W, H,
               flatwater::Toolbar::Style::Flat),
       proc (p),
       input (make<VFader> (kWhite)), origBass (make<VFader> (kBlue)), harmonics (make<VFader> (kOrange)),
@@ -29,13 +29,13 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
     setFactoryPresets (bx::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (bx::input) });     // presets leave Input alone, as the reference
+    setKeepOnPresetLoad ({ p.apvts.getParameter (bx::id::input) });     // presets leave Input alone, as the reference
 
     auto gainFmt = [] (double v) { return gainText ((float) v); };
     for (auto* f : { &input, &origBass, &harmonics }) f->format = gainFmt;
-    attachSlider (input, bx::input, { 553, 90, 31, 250 }, 0.0);
-    attachSlider (origBass, bx::origBass, { 592, 90, 31, 250 }, 0.0);
-    attachSlider (harmonics, bx::harmonics, { 630, 90, 31, 250 }, -100.0);
+    attachSlider (input, bx::id::input, { 553, 90, 31, 250 }, 0.0);
+    attachSlider (origBass, bx::id::origBass, { 592, 90, 31, 250 }, 0.0);
+    attachSlider (harmonics, bx::id::harmonics, { 630, 90, 31, 250 }, -100.0);
     for (auto* f : { &input, &origBass, &harmonics }) applyFormat (*f, f->format);
     // measured on the reference: Input's wheel and slow Ctrl steps go 1.6 times as far here (its range is 2/3 of the
     // reference's scale)
@@ -44,9 +44,9 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     ratio.format = [] (double v) { return String (v, 2) + ":1"; };
     response.format = [] (double v) { return String (v, 1); };
     decay.format = [] (double v) { return String (v, 1); };
-    attachSlider (ratio, bx::ratio, { 106, 305, 54, 84 }, 1.0);
-    attachSlider (response, bx::response, { 172, 305, 54, 84 }, 20.0);
-    attachSlider (decay, bx::decay, { 418, 305, 54, 84 }, -15.0);
+    attachSlider (ratio, bx::id::ratio, { 106, 305, 54, 84 }, 1.0);
+    attachSlider (response, bx::id::response, { 172, 305, 54, 84 }, 20.0);
+    attachSlider (decay, bx::id::decay, { 418, 305, 54, 84 }, -15.0);
     for (auto* k : { &ratio, &response }) applyFormat (*k, k->format);
     applyFormat (decay, decay.format, true);         // a typed "15" means -15 (the reference's PositiveTextEntryToNegative)
 
@@ -54,7 +54,7 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     for (float f : { 32.0f, 64.0f, 128.0f, 256.0f }) freq.tickPositions.push_back (std::log2 (f / 32.0f) / 3.0f);
     freq.x0 = 7.0f; freq.x1 = 271.0f; freq.y = 16.0f;
     freq.textArea = { 284, 10, 50, 13 };
-    attachSlider (freq, bx::freq, { 86, 286, 344, 26 }, 80.0);    // wide enough for the entry box (x 380 ... 429)
+    attachSlider (freq, bx::id::freq, { 86, 286, 344, 26 }, 80.0);    // wide enough for the entry box (x 380 ... 429)
     freq.wheelScale = 1.2;                                                 // measured on the reference's Freq
 
     for (auto* f : { &input, &origBass, &harmonics }) f->selection = &selection;
@@ -63,9 +63,9 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
 
     slope.addItemList ({ "6 dB/oct", "12 dB/oct", "24 dB/oct" }, 1);
     slope.selection = &selection;
-    attachCombo (slope, bx::highpass, { 340, 325, 57, 28 });              // box at 344, 329 (49 x 20)
+    attachCombo (slope, bx::id::highpass, { 340, 325, 57, 28 });              // box at 344, 329 (49 x 20)
 
-    auto& mon = make<RadioColumn> (*p.apvts.getParameter (bx::monitor), &p.undo,
+    auto& mon = make<RadioColumn> (*p.apvts.getParameter (bx::id::monitor), &p.undo,
                                        StringArray { "Audio", "Harmonics", "Original Bass" },
                                        std::vector<Colour> { kWhite, kOrange, kBlue });
     mon.selection = &selection;
@@ -98,9 +98,9 @@ void FwBassXLiftEditor::setUpGroups()
 {
     // the reference's control order (as its layout lists them); Freq does not take part in groups. Input's 0..1 covers only
     // the lower 2/3 of the reference's scale (it stops at 0 dB)
-    groupable = { { &input, bx::input, 2.0f / 3.0f }, { &origBass, bx::origBass, 1.0f }, { &ratio, bx::ratio, 1.0f },
-                  { &harmonics, bx::harmonics, 1.0f }, { &decay, bx::decay, 1.0f }, { &response, bx::response, 1.0f },
-                  { monitor, bx::monitor, 1.0f }, { &slope, bx::highpass, 1.0f } };
+    groupable = { { &input, bx::id::input, 2.0f / 3.0f }, { &origBass, bx::id::origBass, 1.0f }, { &ratio, bx::id::ratio, 1.0f },
+                  { &harmonics, bx::id::harmonics, 1.0f }, { &decay, bx::id::decay, 1.0f }, { &response, bx::id::response, 1.0f },
+                  { monitor, bx::id::monitor, 1.0f }, { &slope, bx::id::highpass, 1.0f } };
     input.feel.referenceScale = 2.0f / 3.0f;
     auto paramOf = [this] (Component* c) -> RangedAudioParameter*
     {
@@ -203,9 +203,9 @@ void FwBassXLiftEditor::paintGraph (Graphics& g)
     g.fillRect (21.0f, 275.0f, 7.0f, 1.0f);
 
     // bands
-    const float F = value (bx::freq), orig = value (bx::origBass), harm = value (bx::harmonics);
-    const float dec = value (bx::decay);
-    const int hp = roundToInt (value (bx::highpass));
+    const float F = value (bx::id::freq), orig = value (bx::id::origBass), harm = value (bx::id::harmonics);
+    const float dec = value (bx::id::decay);
+    const int hp = roundToInt (value (bx::id::highpass));
     std::vector<Point<float>> blue, orange;
     for (float x = area.getX(); x <= area.getRight() + 1.0f; x += 2.0f)
     {

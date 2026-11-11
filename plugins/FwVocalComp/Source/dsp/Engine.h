@@ -25,7 +25,7 @@
 #include "Net.h"
 #include "Tuning.h"
 
-namespace vc
+namespace vc::dsp
 {
 
 inline int latencyFor (double fs) { return fs < 60000.0 ? 64 : fs < 120000.0 ? 128 : 256; }

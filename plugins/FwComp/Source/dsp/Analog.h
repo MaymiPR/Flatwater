@@ -14,7 +14,7 @@
 #include <vector>
 #include "Tables.h"
 
-namespace co
+namespace co::dsp
 {
 class Analog
 {

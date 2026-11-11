@@ -9,7 +9,7 @@
 // scripts/export_fit.py) and the measured weighting (MEASUREMENTS.md "Flatwater Vocal Leveler: Phase 3 / 4"). Kept in one
 // struct so the offline renderer (tools/VlRender.cpp) can override any of them by name (tune:key=value); the plug-in
 // uses the defaults. Times in ms, levels in dB.
-namespace vl
+namespace vl::dsp
 {
 struct Tuning
 {

@@ -19,7 +19,7 @@
 //              the rise is as fast as the detector passes samples (a steady tone just after a drop rises slowly)
 //   park       once the detector has passed nothing for the hold (Attack: 500 / 50 ms), v toward the Idle value by
 //              the park rate (1205 ms per neper, both ways)
-namespace vl
+namespace vl::dsp
 {
 struct RideSettings
 {

@@ -67,62 +67,12 @@ String de::rateText (float hz)
     return String (hz / 1000.0f, 2) + "k Hz";
 }
 
-AudioProcessorValueTreeState::ParameterLayout FwDelayProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto addC = [&] (const char* id, const char* name, StringArray items, int def)
-    {
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { id, 1 }, name, items, def));
-    };
-    auto logRange = [] (float lo, float hi)
-    {
-        return NormalisableRange<float> (lo, hi,
-            [] (float s, float e, float n) { return s * std::pow (e / s, n); },
-            [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); });
-    };
-    const NormalisableRange<float> delayRange (1.0f, 3500.0f,
-        [] (float, float, float n) { return de::delayFromNorm (n); },
-        [] (float, float, float v) { return de::delayToNorm (v); });
-    auto ms = [] (float v) { return String (roundToInt (v)) + " ms"; };
-    const auto& notes = de::noteNames();
-    // continuous values, as the reference keeps them (its presets store fractions; a slow Ctrl drag moves less than the
-    // display's last digit per mouse step); only the texts are rounded
-
-    addC (de::sync, "Sync", { "BPM", "Host", "ms" }, 1);
-    addF (de::bpm, "BPM", { 30.0f, 300.0f }, 120.0f, [] (float v) { return String (roundToInt (v)) + " BPM"; });
-    addF (de::delay, "Delay", delayRange, 375.0f, ms);
-    addC (de::delayNote, "Delay Note", notes, 11);
-    addF (de::mix, "Mix", { 0.0f, 100.0f }, 100.0f, [] (float v) { return String (roundToInt (v)); });
-    addF (de::feedback, "Feedback", { 0.0f, 200.0f }, 60.0f, [] (float v) { return String (roundToInt (v)); });
-    addC (de::phaseL, "Phase L", { "+", "-" }, 0);
-    addC (de::phaseR, "Phase R", { "+", "-" }, 0);
-    addC (de::pingPong, "Ping Pong", { "Stereo", "PingPong" }, 0);
-    addF (de::output, "Output", { -18.0f, 18.0f }, 0.0f, [] (float v) { return String (v, 1) + " dB"; });
-    addF (de::lopass, "LoPass", logRange (19.0f, 20138.77f), 20138.77f, [] (float v) { return de::freqText (v, false); });
-    addF (de::hipass, "HiPass", logRange (19.0f, 20138.77f), 19.0f, [] (float v) { return de::freqText (v, true); });
-    addF (de::depth, "Depth", { 0.0f, 100.0f }, 0.0f, [] (float v) { return String (roundToInt (v)) + " %"; });
-    addF (de::rate, "Rate", logRange (0.1f, 6000.0f), 0.1f, [] (float v) { return de::rateText (v); });
-    addC (de::lofi, "LoFi", { "HiFi", "LoFi" }, 0);
-    addC (de::analog, "Analog", { "Off", "1", "2", "3", "4" }, 2);
-    addC (de::pingPongStart, "Ping Pong Start", { "Left", "Right" }, 0);
-    addF (de::delayR, "Delay R", delayRange, 375.0f, ms);
-    addC (de::delayNoteR, "Delay Note R", notes, 11);
-    addC (de::dual, "Dual", { "Off", "On" }, 0);
-    addC (de::mode, "Mode", { "Stereo", "Mono", "M>S" }, 0);
-    return l;
-}
-
 FwDelayProcessor::FwDelayProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwDelay", layout())
+      apvts (*this, &undo, "FwDelay", de::createLayout())
 {
-    analogStage.modes = de::tables::analog;                   // the reference's Analog modes (4 is Flatwater Comp's)
+    analogStage.modes = de::dsp::tables::analog;                   // the reference's Analog modes (4 is Flatwater Comp's)
     apvts.state.addListener (this);
 }
 
@@ -173,7 +123,7 @@ void FwDelayProcessor::prepareToPlay (double sampleRate, int)
 void FwDelayProcessor::configure()
 {
     const int in = getMainBusNumInputChannels(), out = getMainBusNumOutputChannels();
-    layoutDual = in > 1 && roundToInt (get (de::mode)) == 1;
+    layoutDual = in > 1 && roundToInt (get (de::id::mode)) == 1;
     for (auto& d : delays) d.prepare (sr);
     analogStage.prepare (sr, jmax (in, out));
     prepared = true;
@@ -184,9 +134,9 @@ void FwDelayProcessor::configure()
 float de::atResolution (const char* id, float v)
 {
     const String p (id);
-    if (p == delay || p == delayR || p == feedback || p == mix || p == bpm || p == depth || p == hipass || p == lopass) return std::round (v);
-    if (p == output) return std::round (v * 10.0f) / 10.0f;
-    if (p == rate)                                                 // three significant digits, at least 0.01 (measured:
+    if (p == id::delay || p == id::delayR || p == id::feedback || p == id::mix || p == id::bpm || p == id::depth || p == id::hipass || p == id::lopass) return std::round (v);
+    if (p == id::output) return std::round (v * 10.0f) / 10.0f;
+    if (p == id::rate)                                                 // three significant digits, at least 0.01 (measured:
     {                                                              // 3074 acts as 3070, 281.7 as 282, 47.84 as 47.8)
         const float step = v >= 1000.0f ? 10.0f : v >= 100.0f ? 1.0f : v >= 10.0f ? 0.1f : 0.01f;
         return std::round (v / step) * step;
@@ -198,41 +148,41 @@ de::dsp::Settings FwDelayProcessor::settings (double fs) const
 {
     de::dsp::Settings s;
     auto get = [this] (const char* id) { return value (id); };
-    const int sync = roundToInt (get (de::sync));
+    const int sync = roundToInt (get (de::id::sync));
     auto samples = [&] (const char* msId, const char* noteId)
     {
         double ms = get (msId);
         if (sync != 2)
         {
             const double host = hostBpm.load (std::memory_order_relaxed);
-            const double tempo = sync == 0 ? (double) get (de::bpm) : (host > 0.0 ? host : 120.0);
+            const double tempo = sync == 0 ? (double) get (de::id::bpm) : (host > 0.0 ? host : 120.0);
             ms = de::noteBeats (roundToInt (get (noteId))) * 60000.0 / tempo;
         }
         return jlimit (1.0, 3500.0, ms) * fs / 1000.0;
     };
-    s.timeL = samples (de::delay, de::delayNote);
-    s.timeR = samples (de::delayR, de::delayNoteR);
-    s.feedback = get (de::feedback) * 0.01f;
-    s.mix = get (de::mix) * 0.01f;
-    s.outputDb = get (de::output);
+    s.timeL = samples (de::id::delay, de::id::delayNote);
+    s.timeR = samples (de::id::delayR, de::id::delayNoteR);
+    s.feedback = get (de::id::feedback) * 0.01f;
+    s.mix = get (de::id::mix) * 0.01f;
+    s.outputDb = get (de::id::output);
     bool lpPreset = false;
-    const float hp = get (de::hipass), lp = value (de::lopass, &lpPreset);
+    const float hp = get (de::id::hipass), lp = value (de::id::lopass, &lpPreset);
     s.hipassHz = hp < de::kHiPassOff ? 0.0f : hp;
     // set from outside, LoPass is Off from 20 100; a preset's is Off at exactly 20 100 (its 20 139 filters, measured)
     s.lopassHz = (lpPreset ? juce::exactlyEqual (lp, de::kLoPassOff) : lp >= de::kLoPassOff) ? 0.0f : lp;
-    s.depth = get (de::depth) * 0.01f;
-    s.rateHz = get (de::rate);
+    s.depth = get (de::id::depth) * 0.01f;
+    s.rateHz = get (de::id::rate);
     if (sync != 2)                                                 // synced: Rate is in cycles per beat at 60 BPM (measured)
     {
         const double host = hostBpm.load (std::memory_order_relaxed);
-        s.rateHz *= (float) ((sync == 0 ? (double) get (de::bpm) : (host > 0.0 ? host : 120.0)) / 60.0);
+        s.rateHz *= (float) ((sync == 0 ? (double) get (de::id::bpm) : (host > 0.0 ? host : 120.0)) / 60.0);
     }
-    s.lofi = get (de::lofi) > 0.5f;
-    s.pingPong = get (de::pingPong) > 0.5f;
-    s.startRight = get (de::pingPongStart) > 0.5f;
-    s.phaseL = get (de::phaseL) > 0.5f;
-    s.phaseR = get (de::phaseR) > 0.5f;
-    s.dual = get (de::dual) > 0.5f;
+    s.lofi = get (de::id::lofi) > 0.5f;
+    s.pingPong = get (de::id::pingPong) > 0.5f;
+    s.startRight = get (de::id::pingPongStart) > 0.5f;
+    s.phaseL = get (de::id::phaseL) > 0.5f;
+    s.phaseR = get (de::id::phaseR) > 0.5f;
+    s.dual = get (de::id::dual) > 0.5f;
     return s;
 }
 
@@ -247,13 +197,13 @@ void FwDelayProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
             hostBpm.store (pos->getBpm() ? *pos->getBpm() : 0.0);
     const int n = b.getNumSamples();
     const int in = getMainBusNumInputChannels(), out = getMainBusNumOutputChannels();
-    const int mode = roundToInt (get (de::mode));
+    const int mode = roundToInt (get (de::id::mode));
     const bool wantDual = in > 1 && mode == 1;
     if (! prepared || wantDual != layoutDual) configure();
     if (in == 1 && out == 2) b.copyFrom (1, 0, b, 0, 0, n);           // mono in, stereo out: both sides get the input
     else if (out == 2 && mode == 2) b.copyFrom (1, 0, b, 0, 0, n);    // M>S on a stereo bus: the left input on both
     float* const* w = b.getArrayOfWritePointers();
-    analogStage.setMode (roundToInt (get (de::analog)));
+    analogStage.setMode (roundToInt (get (de::id::analog)));
     analogStage.process (w, n);
     auto s = settings (sr);
     if (out == 1) { s.mode = 1; delays[0].process (w, 1, n, s); }

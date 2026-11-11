@@ -34,7 +34,7 @@
 //
 // Everything runs per sample (no block-size dependence), allocates only in prepare(), and is deterministic.
 // The analysis (the voice's pitch) is shared by the channels; detectedHz() hands it to the PT modulator.
-namespace pb
+namespace pb::dsp
 {
 class Shifter
 {

@@ -28,27 +28,27 @@ static void testParameters()
     FwVocalLevelerProcessor p;
     auto v = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
     auto range = [&p] (const char* id) { return p.apvts.getParameter (id)->getNormalisableRange(); };
-    CHECK_NEAR (v (vl::target), -21.0, 1e-6);
-    CHECK_NEAR (v (vl::vocalSensitivity), 0.0, 1e-6);
-    CHECK_NEAR (v (vl::musicSensitivity), 0.0, 1e-6);
-    CHECK_NEAR (v (vl::rangeMax), 6.0, 1e-6);
-    CHECK_NEAR (v (vl::rangeMin), -6.0, 1e-6);
-    CHECK_NEAR (v (vl::idle), 0.5, 1e-6);
-    CHECK_NEAR (v (vl::rider), 0.0, 1e-6);
-    CHECK_NEAR (v (vl::output), 0.0, 1e-6);
-    CHECK_NEAR (v (vl::attack), 0.0, 1e-6);
-    CHECK_NEAR (v (vl::spill), -48.0, 1e-6);
-    CHECK_NEAR (v (vl::automation), 0.0, 1e-6);
-    CHECK_NEAR (range (vl::target).start, -42.0, 1e-6);
-    CHECK_NEAR (range (vl::musicSensitivity).start, -12.1, 1e-5);
-    CHECK_NEAR (range (vl::spill).start, -48.0, 1e-6);
-    CHECK_NEAR (range (vl::spill).end, -12.0, 1e-6);
-    CHECK_NEAR (range (vl::rangeMax).start, -11.0, 1e-6);
-    CHECK_NEAR (range (vl::rangeMin).end, 11.0, 1e-6);
-    CHECK (p.apvts.getParameter (vl::musicSensitivity)->getText (0.0f, 16) == "Off");
-    CHECK (p.apvts.getParameter (vl::idle)->getText (0.5f, 16) == "0.0");
-    CHECK (p.apvts.getParameter (vl::attack)->getText (1.0f, 16) == "Fast");
-    CHECK (! p.apvts.getParameter (vl::automation)->isAutomatable());
+    CHECK_NEAR (v (vl::id::target), -21.0, 1e-6);
+    CHECK_NEAR (v (vl::id::vocalSensitivity), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::id::musicSensitivity), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::id::rangeMax), 6.0, 1e-6);
+    CHECK_NEAR (v (vl::id::rangeMin), -6.0, 1e-6);
+    CHECK_NEAR (v (vl::id::idle), 0.5, 1e-6);
+    CHECK_NEAR (v (vl::id::rider), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::id::output), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::id::attack), 0.0, 1e-6);
+    CHECK_NEAR (v (vl::id::spill), -48.0, 1e-6);
+    CHECK_NEAR (v (vl::id::automation), 0.0, 1e-6);
+    CHECK_NEAR (range (vl::id::target).start, -42.0, 1e-6);
+    CHECK_NEAR (range (vl::id::musicSensitivity).start, -12.1, 1e-5);
+    CHECK_NEAR (range (vl::id::spill).start, -48.0, 1e-6);
+    CHECK_NEAR (range (vl::id::spill).end, -12.0, 1e-6);
+    CHECK_NEAR (range (vl::id::rangeMax).start, -11.0, 1e-6);
+    CHECK_NEAR (range (vl::id::rangeMin).end, 11.0, 1e-6);
+    CHECK (p.apvts.getParameter (vl::id::musicSensitivity)->getText (0.0f, 16) == "Off");
+    CHECK (p.apvts.getParameter (vl::id::idle)->getText (0.5f, 16) == "0.0");
+    CHECK (p.apvts.getParameter (vl::id::attack)->getText (1.0f, 16) == "Fast");
+    CHECK (! p.apvts.getParameter (vl::id::automation)->isAutomatable());
     CHECK (vl::modeNames().size() == 4);
 }
 
@@ -73,9 +73,9 @@ static void testBuses()
 static void testPathAndRead()
 {
     FwVocalLevelerProcessor p;
-    set (p, vl::automation, (float) vl::Read);
-    set (p, vl::rider, -6.0f);
-    set (p, vl::output, 3.0f);
+    set (p, vl::id::automation, (float) vl::Read);
+    set (p, vl::id::rider, -6.0f);
+    set (p, vl::id::output, 3.0f);
     p.setPlayConfigDetails (2, 2, 48000.0, 256);
     p.prepareToPlay (48000.0, 256);
     juce::AudioBuffer<float> b (2, 256);
@@ -95,10 +95,10 @@ static void testPathAndRead()
 static void testWrite()
 {
     FwVocalLevelerProcessor p;
-    set (p, vl::automation, (float) vl::Write);
+    set (p, vl::id::automation, (float) vl::Write);
     p.rideDb.store (4.2f);
     ((juce::Timer&) p).timerCallback();                              // (the processor's private timer)
-    CHECK_NEAR (p.get (vl::rider), 4.2, 0.06);
+    CHECK_NEAR (p.get (vl::id::rider), 4.2, 0.06);
 }
 
 // the editor: its size, Spill only on Live, the knobs moving with the layout, Music disabled without a side-chain
@@ -129,7 +129,7 @@ static void testEditor()
     if (vocal == nullptr || spill == nullptr) return;
     CHECK (! spill->isVisible());
     CHECK (vocal->getX() == 83);
-    set (p, vl::mode, 2.0f);                                  // Live Stereo
+    set (p, vl::id::mode, 2.0f);                                  // Live Stereo
     ((juce::Timer&) static_cast<flatwater::ren::Editor&> (*ed)).timerCallback();   // (the editor's private timer: tick)
     CHECK (spill->isVisible());
     CHECK (vocal->getX() == 133);
@@ -140,14 +140,14 @@ static void testEditor()
     CHECK (img.getWidth() == FwVocalLevelerEditor::W);
 }
 
-// the riding (vl::Ride) on 1 kHz sines at 48 kHz, against the reference's measured numbers
+// the riding (vl::dsp::Ride) on 1 kHz sines at 48 kHz, against the reference's measured numbers
 namespace vl::ridetest
 {
 constexpr double fs = 48000.0;
 // levels (dBFS rms; < -200 = silence) for durations (s); the gain in dB per sample
-static std::vector<double> ride (const std::vector<std::pair<double, double>>& parts, const vl::RideSettings& st)
+static std::vector<double> ride (const std::vector<std::pair<double, double>>& parts, const vl::dsp::RideSettings& st)
 {
-    vl::Ride r; r.prepare (fs);
+    vl::dsp::Ride r; r.prepare (fs);
     std::vector<double> g; double ph = 0.0;
     for (auto [lev, secs] : parts)
     {
@@ -165,7 +165,7 @@ static double vdb (double gdb, double rangeMin) { return 20.0 * std::log10 (std:
 static void testRiding()
 {
     using namespace vl::ridetest;
-    vl::RideSettings st;
+    vl::dsp::RideSettings st;
     // it starts at 1/2 gMin + 1 (the reference: +1.94 dB at Range -6 .. +6)
     auto g = ride ({ { -300.0, 0.1 } }, st);
     const double halfMin = 0.5 * std::pow (10.0, -6.0 / 20.0);
@@ -214,25 +214,43 @@ static void testPresets()
     CHECK (p.getProgramName (1) == "Essentials: Default");
     p.setCurrentProgram (12);                                         // "Ceiling Ride": Target -42, Range -12 .. 0, Fast, Idle 1
     CHECK (p.getProgramName (12) == "Essentials: Ceiling Ride");
-    CHECK_NEAR (p.apvts.getRawParameterValue (vl::target)->load(), -42.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (vl::rangeMin)->load(), -12.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (vl::rangeMax)->load(), 0.0, 0.05);
-    CHECK_NEAR (p.apvts.getRawParameterValue (vl::vocalSensitivity)->load(), -12.0, 0.05);
-    CHECK (p.apvts.getRawParameterValue (vl::attack)->load() > 0.5f);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::id::target)->load(), -42.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::id::rangeMin)->load(), -12.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::id::rangeMax)->load(), 0.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::id::vocalSensitivity)->load(), -12.0, 0.05);
+    CHECK (p.apvts.getRawParameterValue (vl::id::attack)->load() > 0.5f);
     CHECK_NEAR (p.idleDb(), 0.0, 1.0e-4);                             // Idle 1: at Max exactly (the arrow alone: -0.24)
-    set (p, vl::idle, 0.5f);                                   // the arrow moved: the parameter's value again
+    set (p, vl::id::idle, 0.5f);                                   // the arrow moved: the parameter's value again
     CHECK_NEAR (p.idleDb(), -6.0, 0.01);
     p.setCurrentProgram (13);                                         // "Open Up": Range -12 .. +12, Idle 0
     CHECK_NEAR (p.idleDb(), -12.0, 1.0e-4);
     p.setCurrentProgram (1);                                          // "Default" also sets Automation Off
-    CHECK_NEAR (p.apvts.getRawParameterValue (vl::target)->load(), -21.0, 0.05);
+    CHECK_NEAR (p.apvts.getRawParameterValue (vl::id::target)->load(), -21.0, 0.05);
     CHECK (p.automationMode() == vl::Off);
     CHECK_NEAR (p.idleDb(), 0.0, 0.01);
+}
+
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalLevelerProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == vl::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), vl::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == vl::allIds[i]) ++same;
+    CHECK (same == vl::numParams);
+    int preset = 0;
+    for (auto* pid : vl::presetIds)
+        for (auto* all : vl::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != vl::id::mode) ++preset;
+    CHECK (preset == vl::numParams - 1);
 }
 
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testParameters();
     testBuses();
     testPathAndRead();

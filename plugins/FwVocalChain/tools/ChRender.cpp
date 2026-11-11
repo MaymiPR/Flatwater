@@ -39,7 +39,7 @@ int main (int argc, char** argv)
     }
     FwVocalChainProcessor p;
     auto set = [&p] (const char* id, float v) { if (auto* q = p.apvts.getParameter (id)) q->setValueNotifyingHost (q->convertTo0to1 (v)); };
-    set (ch::mode, ch == 1 ? 1.0f : 0.0f);
+    set (ch::id::mode, ch == 1 ? 1.0f : 0.0f);
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];

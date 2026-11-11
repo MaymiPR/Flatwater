@@ -3,49 +3,10 @@
 
 using namespace juce;
 
-AudioProcessorValueTreeState::ParameterLayout FwBassLiftProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, bool automatable, const char* unit, int decimals)
-    {
-        auto a = AudioParameterFloatAttributes()
-                     .withStringFromValueFunction ([unit, decimals] (float v, int) { return String (v, decimals) + (unit[0] ? String (" ") + unit : String()); })
-                     .withAutomatable (automatable);
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    // on / off switches as two-choice parameters: unlike AudioParameterBool their value always snaps to 0 or 1, so a
-    // restored state can never leave them half-way (pluginval's state test)
-    auto addB = [&] (const char* id, const char* name, bool def, bool automatable, StringArray labels)
-    {
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { id, 1 }, name, labels, def ? 1 : 0,
-                                                       AudioParameterChoiceAttributes().withAutomatable (automatable)));
-    };
-    // Freq is logarithmic in the reference (32..256 Hz, 1 Hz steps)
-    NormalisableRange<float> freqRange (32.0f, 256.0f,
-        [] (float s, float e, float n) { return s * std::pow (e / s, n); },
-        [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); },
-        [] (float, float, float v) { return std::round (v); });
-
-    addF (bf::inGain, "Input", { -30.0f, 0.0f, 0.1f }, 0.0f, false, "dB", 1);
-    addF (bf::freq, "Freq", freqRange, 80.0f, true, "Hz", 0);
-    addF (bf::response, "Response", { 0.0f, 30.0f, 0.1f }, 30.0f, false, "ms", 1);
-    addF (bf::ratio, "Ratio", { 0.25f, 1.0f, 0.01f }, 0.63f, false, "", 2);
-    addF (bf::intensity, "Intensity", { -24.0f, 24.0f, 0.1f }, 0.0f, true, "dB", 1);
-    addB (bf::origBass, "Original Bass", true, true, { "Out", "In" });
-    addF (bf::gain, "Gain", { -30.0f, 0.0f, 0.1f }, 0.0f, true, "dB", 1);
-    addF (bf::decay, "Decay", { 0.0f, 1.0f, 0.1f }, 1.0f, false, "", 1);
-    addF (bf::smoothTc, "SmoothTc", { 0.0f, 1000.0f, 0.1f }, 20.0f, false, "", 1);
-    addF (bf::tc, "Tc", { 0.0f, 2000.0f, 0.1f }, 20.0f, false, "ms", 1);
-    addF (bf::xfadeTc, "XFadeTc", { 0.0f, 5000.0f, 0.1f }, 10.0f, false, "", 1);
-    addB (bf::smooth, "Smooth", true, false, { "Off", "On" });
-    l.add (std::make_unique<AudioParameterChoice> (ParameterID { bf::mode, 1 }, "Mode", StringArray { "Stereo", "Mono" }, 0));
-    return l;
-}
-
 FwBassLiftProcessor::FwBassLiftProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassLift", layout())
+      apvts (*this, &undo, "FwBassLift", bf::createLayout())
 {
 }
 
@@ -65,11 +26,11 @@ void FwBassLiftProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     ScopedNoDenormals nd;
     const int n = b.getNumSamples(), ch = jmin (2, b.getNumChannels());
     auto get = [this] (const char* id) { return apvts.getRawParameterValue (id)->load(); };
-    dsp.setFreq (get (bf::freq));
-    dsp.setIntensityDb (get (bf::intensity));
-    dsp.setOriginalBass (get (bf::origBass) > 0.5f);
-    dsp.setGainDb (get (bf::gain));
-    dsp.setDecay (get (bf::decay));
+    dsp.setFreq (get (bf::id::freq));
+    dsp.setIntensityDb (get (bf::id::intensity));
+    dsp.setOriginalBass (get (bf::id::origBass) > 0.5f);
+    dsp.setGainDb (get (bf::id::gain));
+    dsp.setDecay (get (bf::id::decay));
     dsp.process (b.getArrayOfWritePointers(), ch, n);
 
     auto toDb = [] (float v) { return v > 1.0e-4f ? Decibels::gainToDecibels (v) : -80.0f; };

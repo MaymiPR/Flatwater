@@ -21,10 +21,10 @@ static std::vector<float> tone (double fs, double f, double secs, double db)
 }
 
 // renders x through the DSP, latency compensated (the output lines up with the input)
-static std::vector<float> run (const std::vector<float>& x, double fs, vc::Processor::Params p, int block = 512,
-                               const vc::Tuning& t = {})
+static std::vector<float> run (const std::vector<float>& x, double fs, vc::dsp::Processor::Params p, int block = 512,
+                               const vc::dsp::Tuning& t = {})
 {
-    vc::Processor proc;
+    vc::dsp::Processor proc;
     proc.prepare (fs, 1, t);
     proc.setParams (p);
     const int lat = proc.getLatency();
@@ -49,18 +49,18 @@ static double steadyGainDb (double comp, double level, double gate = -80.0, doub
 {
     const double fs = 48000.0;
     auto x = tone (fs, 1000.0, 1.6, level);
-    vc::Processor::Params p; p.compDb = (float) comp; p.gateDb = (float) gate; p.gainDb = (float) gain;
+    vc::dsp::Processor::Params p; p.compDb = (float) comp; p.gateDb = (float) gate; p.gainDb = (float) gain;
     auto y = run (x, fs, p);
     return rmsDb (y, (size_t) (fs * 1.2)) - rmsDb (x, (size_t) (fs * 1.2));
 }
 
 static void testLatency()
 {
-    CHECK (vc::latencyFor (44100.0) == 64);  CHECK (vc::latencyFor (48000.0) == 64);
-    CHECK (vc::latencyFor (88200.0) == 128); CHECK (vc::latencyFor (96000.0) == 128);
-    CHECK (vc::latencyFor (176400.0) == 256); CHECK (vc::latencyFor (192000.0) == 256);
+    CHECK (vc::dsp::latencyFor (44100.0) == 64);  CHECK (vc::dsp::latencyFor (48000.0) == 64);
+    CHECK (vc::dsp::latencyFor (88200.0) == 128); CHECK (vc::dsp::latencyFor (96000.0) == 128);
+    CHECK (vc::dsp::latencyFor (176400.0) == 256); CHECK (vc::dsp::latencyFor (192000.0) == 256);
     // an impulse comes out exactly `latency` samples later
-    vc::Processor proc; proc.prepare (48000.0, 1);
+    vc::dsp::Processor proc; proc.prepare (48000.0, 1);
     std::vector<float> in (1000, 0.0f), out (1000);
     in[100] = 0.05f;
     const float* ip[1] = { in.data() }; float* op[1] = { out.data() };
@@ -105,7 +105,7 @@ static void testGate()
 static void testBehaviour()
 {
     const double fs = 48000.0;
-    vc::Processor::Params p; p.compDb = -24.0f;
+    vc::dsp::Processor::Params p; p.compDb = -24.0f;
     // attack is immediate: a short loud burst after silence gets its full reduction at once
     std::vector<float> x (24000, 0.0f);
     auto b = tone (fs, 3000.0, 0.01, -10.0);
@@ -135,7 +135,7 @@ static void testBlockSizeInvariance()
     const double fs = 48000.0;
     auto x = tone (fs, 440.0, 1.0, -20.0);
     for (size_t i = 0; i < x.size(); ++i) x[i] += 0.05f * std::sin (2.0f * 3.14159f * 61.0f * (float) i / 48000.0f) * ((i / 9000) % 2 ? 1.0f : 0.1f);
-    vc::Processor::Params p; p.compDb = -18.0f; p.gateDb = -50.0f;
+    vc::dsp::Processor::Params p; p.compDb = -18.0f; p.gateDb = -50.0f;
     auto a = run (x, fs, p, 512), b = run (x, fs, p, 64), c = run (x, fs, p, 37);
     double d1 = 0, d2 = 0;
     for (size_t i = 0; i < a.size(); ++i) { d1 = std::max (d1, (double) std::fabs (a[i] - b[i])); d2 = std::max (d2, (double) std::fabs (a[i] - c[i])); }
@@ -145,8 +145,8 @@ static void testBlockSizeInvariance()
 
 static void testStereoLink()
 {
-    vc::Processor proc; proc.prepare (48000.0, 2);
-    vc::Processor::Params p; p.compDb = -24.0f; proc.setParams (p);
+    vc::dsp::Processor proc; proc.prepare (48000.0, 2);
+    vc::dsp::Processor::Params p; p.compDb = -24.0f; proc.setParams (p);
     auto l = tone (48000.0, 1000.0, 1.0, -10.0), r = tone (48000.0, 1300.0, 1.0, -40.0);
     std::vector<float> ol (l.size()), orr (l.size());
     const float* ip[2] = { l.data(), r.data() }; float* op[2] = { ol.data(), orr.data() };
@@ -159,9 +159,9 @@ static void testStereoLink()
 static void testProcessor()
 {
     FwVocalCompProcessor proc;
-    auto* comp = proc.apvts.getParameter (vc::comp);
-    auto* gate = proc.apvts.getParameter (vc::gate);
-    auto* gain = proc.apvts.getParameter (vc::gain);
+    auto* comp = proc.apvts.getParameter (vc::id::comp);
+    auto* gate = proc.apvts.getParameter (vc::id::gate);
+    auto* gain = proc.apvts.getParameter (vc::id::gain);
     CHECK (comp != nullptr && gate != nullptr && gain != nullptr);
     CHECK_NEAR (comp->convertFrom0to1 (comp->getDefaultValue()), 0.0, 1e-4);
     CHECK_NEAR (gate->convertFrom0to1 (gate->getDefaultValue()), -80.0, 1e-4);
@@ -183,8 +183,8 @@ static void testProcessor()
     for (int c = 0; c < 2; ++c) std::copy (x.begin(), x.end(), buf.getWritePointer (c));
     juce::MidiBuffer midi;
     proc.processBlock (buf, midi);
-    vc::Processor::Params p; p.compDb = -24.0f;
-    vc::Processor ref; ref.prepare (48000.0, 2); ref.setParams (p);
+    vc::dsp::Processor::Params p; p.compDb = -24.0f;
+    vc::dsp::Processor ref; ref.prepare (48000.0, 2); ref.setParams (p);
     std::vector<float> o0 (x.size()), o1 (x.size());
     const float* ip[2] = { x.data(), x.data() }; float* op[2] = { o0.data(), o1.data() };
     ref.process (ip, op, (int) x.size());
@@ -194,10 +194,10 @@ static void testProcessor()
     // state round trip
     juce::MemoryBlock mb; proc.getStateInformation (mb);
     FwVocalCompProcessor other; other.setStateInformation (mb.getData(), (int) mb.getSize());
-    CHECK_NEAR (other.apvts.getRawParameterValue (vc::comp)->load(), -24.0, 1e-3);
+    CHECK_NEAR (other.apvts.getRawParameterValue (vc::id::comp)->load(), -24.0, 1e-3);
 
     // Mono mode on a stereo bus: independent channels
-    auto* mode = proc.apvts.getParameter (vc::mode);
+    auto* mode = proc.apvts.getParameter (vc::id::mode);
     mode->setValueNotifyingHost (1.0f);
     juce::AudioBuffer<float> b2 (2, 24000);
     auto loud = tone (48000.0, 1000.0, 0.5, -10.0), quiet = tone (48000.0, 1300.0, 0.5, -40.0);
@@ -240,30 +240,48 @@ static void testFactoryPresets()
 static void testLearnedGuards()
 {
     const double fs = 48000.0;
-    vc::Tuning off; off.learned = false;
+    vc::dsp::Tuning off; off.learned = false;
     auto maxDiff = [] (const std::vector<float>& a, const std::vector<float>& b, size_t from)
     { double m = 0; for (size_t i = from; i < a.size(); ++i) m = std::max (m, (double) std::fabs (a[i] - b[i])); return m; };
     for (double comp : { -12.0, -24.0, -36.0 })
         for (auto [f, level] : { std::pair<double, double> { 1000.0, -20.0 }, { 8000.0, -6.0 }, { 3000.0, -40.0 } })
         {
             const auto x = tone (fs, f, 2.5, level);
-            vc::Processor::Params p; p.compDb = (float) comp;
+            vc::dsp::Processor::Params p; p.compDb = (float) comp;
             CHECK (maxDiff (run (x, fs, p), run (x, fs, p, 512, off), (size_t) (fs * 1.2)) < 1.0e-5);
         }
     std::vector<float> z ((size_t) fs * 2); unsigned s = 1;
     for (auto& v : z) { s = s * 1664525u + 1013904223u; v = 0.3f * ((float) (s >> 8) / 16777216.0f - 0.5f); }
-    vc::Processor::Params p0; p0.compDb = 0.0f;
+    vc::dsp::Processor::Params p0; p0.compDb = 0.0f;
     CHECK (maxDiff (run (z, fs, p0), run (z, fs, p0, 512, off), 0) < 1.0e-7);
-    vc::Processor::Params p1; p1.compDb = -24.0f;
+    vc::dsp::Processor::Params p1; p1.compDb = -24.0f;
     const auto a = run (z, fs, p1), b = run (z, fs, p1, 512, off);
     bool finite = true; for (float v : a) finite = finite && std::isfinite (v);
     CHECK (finite);
     CHECK (maxDiff (a, b, (size_t) (fs * 0.2)) > 1.0e-4);
 }
 
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalCompProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == vc::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), vc::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == vc::allIds[i]) ++same;
+    CHECK (same == vc::numParams);
+    int preset = 0;
+    for (auto* pid : vc::presetIds)
+        for (auto* all : vc::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != vc::id::mode) ++preset;
+    CHECK (preset == vc::numParams - 1);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testLatency();
     testStaticLaw();
     testGate();

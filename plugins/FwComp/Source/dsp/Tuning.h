@@ -10,7 +10,7 @@
 // one struct so the offline renderer (tools/CoRender.cpp) can override any of them by name (tune:key=value); the
 // plug-in uses the defaults. The curves and their knots stay in Tables.h (generated), the Analog stage's too.
 // Sizes in samples are for 44.1 / 48 kHz and scale by 2 / 4 at 88.2-96 / 176.4-192 kHz.
-namespace co
+namespace co::dsp
 {
 struct Tuning
 {

@@ -1,14 +1,15 @@
 """Builds the null tests' native helpers: every plugins/<Id>/nulltest/native/*.c and *.cpp into a shared library at
 build/native/<Id>/<Stem>.dll (Windows, MSVC through vcvars64) or build/native/<Id>/<Stem>.so (Linux and macOS, cc or
-c++; MSVC's __declspec(dllexport) is defined away there). The Python scripts load them from build/native/. Standard
-library only.
+c++; MSVC's __declspec(dllexport) is defined away there). The Python scripts load them from build/native/. A C++
+helper compiles as C++17 with its plug-in's Source/ on the include path, so it can wrap a block of the plug-in's own
+DSP (an include of dsp/<Block>.h). Standard library only.
 
     python scripts/build_native.py                 # every helper
-    python scripts/build_native.py FwComp          # the helpers of one plug-in
+    python scripts/build_native.py <Id>            # the helpers of one plug-in
     python scripts/build_native.py --list          # what would be built, and where
 
 A helper that a fit compares with a fitted constant keeps the floating-point mode it was fitted with: FAST_MATH lists
-the ones built with fast floating point (MSVC /fp:fast, cc -ffast-math).
+the ones built with fast floating point (MSVC /fp:fast, cc -ffast-math), as (plug-in id, helper stem) pairs.
 """
 import argparse, glob, os, shutil, subprocess, sys, tempfile
 
@@ -57,18 +58,21 @@ def build(items):
     for plugin, stem, src, out in items:
         os.makedirs(os.path.dirname(out), exist_ok=True)
         fast = (plugin, stem) in FAST_MATH
+        cpp = src.endswith('.cpp')
+        include = os.path.join(ROOT, 'plugins', plugin, 'Source')
         if os.name == 'nt':
             work = tempfile.mkdtemp(prefix='native_')
             cmd = [cl, '/nologo', '/O2', '/D_USE_MATH_DEFINES'] + (['/fp:fast'] if fast else []) + \
-                  ['/LD', src, '/Fe:' + out, '/Fo:' + work + os.sep]
+                  (['/std:c++17', '/EHsc', '/I' + include] if cpp else []) + ['/LD', src, '/Fe:' + out, '/Fo:' + work + os.sep]
             r = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=work)
             shutil.rmtree(work, ignore_errors=True)
             for leftover in (os.path.splitext(out)[0] + e for e in ('.exp', '.lib')):
                 if os.path.exists(leftover):
                     os.remove(leftover)
         else:
-            cc = os.environ.get('CXX', 'c++') if src.endswith('.cpp') else os.environ.get('CC', 'cc')
-            cmd = [cc, '-O2', '-shared', '-fPIC', '-D__declspec(x)='] + (['-ffast-math'] if fast else []) + [src, '-o', out, '-lm']
+            cc = os.environ.get('CXX', 'c++') if cpp else os.environ.get('CC', 'cc')
+            cmd = [cc, '-O2', '-shared', '-fPIC', '-D__declspec(x)='] + (['-ffast-math'] if fast else []) + \
+                  (['-std=c++17', '-I' + include] if cpp else []) + [src, '-o', out, '-lm']
             r = subprocess.run(cmd, capture_output=True, text=True)
         ok = r.returncode == 0 and os.path.exists(out)
         failed += not ok

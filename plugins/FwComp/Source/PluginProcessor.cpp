@@ -18,58 +18,11 @@ String co::timeText (float ms)
     return String (roundToInt (ms)) + " ms";
 }
 
-AudioProcessorValueTreeState::ParameterLayout FwCompProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const char* name, NormalisableRange<float> r, float def, std::function<String (float)> text)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto addC = [&] (const char* id, const char* name, StringArray items, int def)
-    {
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { id, 1 }, name, items, def));
-    };
-    auto logRange = [] (float lo, float hi, float step)
-    {
-        return NormalisableRange<float> (lo, hi,
-            [] (float s, float e, float n) { return s * std::pow (e / s, n); },
-            [] (float s, float e, float v) { return std::log (v / s) / std::log (e / s); },
-            [step] (float, float, float v) { return std::round (v / step) * step; });
-    };
-    const NormalisableRange<float> ratioRange (1.0f, 50.0f,
-        [] (float, float, float n) { return co::ratioFromNorm (n); },
-        [] (float, float, float v) { return co::ratioToNorm (v); },
-        [] (float, float, float v) { return std::round (v * 100.0f) / 100.0f; });
-
-    // as the reference: normalised 0 is 0 dB and 1 is -48 dB (the knob turns clockwise toward -48, dragging up)
-    NormalisableRange<float> thr (-48.0f, 0.0f,
-        [] (float, float, float n) { return -48.0f * n; },
-        [] (float, float, float v) { return jlimit (0.0f, 1.0f, -v / 48.0f); },
-        [] (float, float, float v) { return std::round (v * 10.0f) / 10.0f; });
-    addF (co::threshold, "Threshold", thr, -18.0f, [] (float v) { return String (v, 1) + " dB"; });
-    addF (co::ratio, "Ratio", ratioRange, 3.0f, [] (float v) { return String (v, 2); });
-    addF (co::punch, "Punch", { 0.0f, 30.0f, 0.1f }, 1.0f, [] (float v) { return String (v, 1); });
-    addF (co::mix, "Mix", { 0.0f, 100.0f, 0.1f }, 100.0f, [] (float v) { return String (v, 1); });
-    addF (co::output, "Output", { -18.0f, 18.0f, 0.1f }, 0.0f, [] (float v) { return String (v, 1) + " dB"; });
-    addF (co::attack, "Attack", logRange (0.5f, 100.0f, 0.01f), 7.0f, [] (float v) { return co::timeText (v); });
-    addF (co::release, "Release", logRange (3.0f, 3000.0f, 0.01f), 100.25f, [] (float v) { return co::timeText (v); });
-    addC (co::releaseNote, "Release Note", { "1/64T", "1/64", "1/64D", "1/32T", "1/32", "1/32D", "1/16T", "1/16", "1/16D",
-                                                "1/8T", "1/8", "1/8D", "1/4T", "1/4", "1/4D", "1/2T", "1/2", "1/2D", "1 Bar", "2 Bars" }, 5);
-    addC (co::sync, "Sync", { "BPM", "Host", "ms" }, 2);
-    addF (co::bpm, "BPM", { 30.0f, 300.0f, 1.0f }, 120.0f, [] (float v) { return String (roundToInt (v)); });
-    addC (co::analog, "Analog", { "Off", "1", "2", "3", "4" }, 2);
-    addC (co::limiter, "Limiter", { "Off", "On" }, 0);
-    addC (co::meter, "Meter", { "In", "GR", "Out" }, 1);
-    addC (co::mode, "Mode", { "Stereo", "Mono" }, 0);
-    return l;
-}
-
 FwCompProcessor::FwCompProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                                        .withInput ("Side Chain", AudioChannelSet::stereo(), false)),
-      apvts (*this, &undo, "FwComp", layout())
+      apvts (*this, &undo, "FwComp", co::createLayout())
 {
 }
 
@@ -108,7 +61,7 @@ void FwCompProcessor::prepareToPlay (double sampleRate, int)
 void FwCompProcessor::configure()
 {
     const int ch = getMainBusNumInputChannels();
-    const bool dual = ch > 1 && get (co::mode) > 0.5f;
+    const bool dual = ch > 1 && get (co::id::mode) > 0.5f;
     layoutDual = dual;
     comps[0].prepare (sr, dual ? 1 : ch);
     comps[1].prepare (sr, 1);
@@ -117,22 +70,22 @@ void FwCompProcessor::configure()
     prepared = true;
 }
 
-co::Compressor::Settings FwCompProcessor::settings() const
+co::dsp::Compressor::Settings FwCompProcessor::settings() const
 {
-    co::Compressor::Settings s;
-    s.thresholdDb = get (co::threshold);
-    s.ratio = get (co::ratio);
-    s.attackMs = get (co::attack);
-    s.punch = get (co::punch);
-    s.mix = get (co::mix) * 0.01f;
-    s.outputDb = get (co::output);
-    s.limiter = get (co::limiter) > 0.5f;
-    const int sync = roundToInt (get (co::sync));
-    if (sync == 2) s.releaseMs = get (co::release);
+    co::dsp::Compressor::Settings s;
+    s.thresholdDb = get (co::id::threshold);
+    s.ratio = get (co::id::ratio);
+    s.attackMs = get (co::id::attack);
+    s.punch = get (co::id::punch);
+    s.mix = get (co::id::mix) * 0.01f;
+    s.outputDb = get (co::id::output);
+    s.limiter = get (co::id::limiter) > 0.5f;
+    const int sync = roundToInt (get (co::id::sync));
+    if (sync == 2) s.releaseMs = get (co::id::release);
     else
     {
         const double host = hostBpm.load (std::memory_order_relaxed);
-        s.releaseMs = co::syncedReleaseMs (roundToInt (get (co::releaseNote)), sync == 0 ? (double) get (co::bpm) : host);
+        s.releaseMs = co::syncedReleaseMs (roundToInt (get (co::id::releaseNote)), sync == 0 ? (double) get (co::id::bpm) : host);
     }
     return s;
 }
@@ -144,7 +97,7 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         if (auto pos = ph->getPosition())
             hostBpm.store (pos->getBpm() ? *pos->getBpm() : 0.0);
     const int n = b.getNumSamples(), ch = jmin (2, getMainBusNumInputChannels());
-    const bool wantDual = ch > 1 && get (co::mode) > 0.5f;
+    const bool wantDual = ch > 1 && get (co::id::mode) > 0.5f;
     if (! prepared || wantDual != layoutDual) configure();
     // a side-chain bus, if the host enabled it, is not part of the output (and the reference ignores it)
     for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);
@@ -173,7 +126,7 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         limDb.push ((float) jmax (comps[0].blockLimiterDb(), comps[1].blockLimiterDb()));
     }
     // the Analog stage is the last one, after the output gain and the limiter (measured)
-    analogStage.setMode (roundToInt (get (co::analog)));
+    analogStage.setMode (roundToInt (get (co::id::analog)));
     analogStage.process (w, n);
     outLDb.push (toDb (b.getMagnitude (0, 0, n))); outRDb.push (toDb (b.getMagnitude (ch > 1 ? 1 : 0, 0, n)));
     blocks.fetch_add (1, std::memory_order_relaxed);

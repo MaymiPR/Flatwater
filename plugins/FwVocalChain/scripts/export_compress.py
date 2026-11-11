@@ -26,7 +26,7 @@ def main():
              '// ceiling, limiter release, look-ahead, output gain, power detector, window, limiter knee, a2, b, a3, shaper after,',
              '// the static correction at -45 .. +6 dB, the stages\' order, the feedback detector, the limiter\'s input gain,',
              '// the detector\'s high-pass).',
-             '// Do not edit.', 'namespace ch::comptables', '{', 'inline constexpr int nParams = %d;' % NP,
+             '// Do not edit.', 'namespace ch::dsp::comptables', '{', 'inline constexpr int nParams = %d;' % NP,
              'struct Linear { double fs; double sos[4][5]; };', 'struct Colour { Linear linear[4]; double p[21][%d]; };' % NP]
     missing = []
     for c in (1, 2, 3):

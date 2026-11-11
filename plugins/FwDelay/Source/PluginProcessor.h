@@ -36,8 +36,8 @@ public:
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
         static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : de::factoryPresets()[(size_t) index - 1], apvts.getParameter (de::mode),
-                           { apvts.getParameter (de::mix) });           // presets leave Mix alone, as the reference
+        flatwater::applyPreset (apvts, index == 0 ? defaults : de::factoryPresets()[(size_t) index - 1], apvts.getParameter (de::id::mode),
+                           { apvts.getParameter (de::id::mix) });           // presets leave Mix alone, as the reference
     }
     const juce::String getProgramName (int index) override
     {
@@ -61,10 +61,9 @@ public:
     de::dsp::Settings settings (double sampleRate) const;
 
 private:
-    static juce::AudioProcessorValueTreeState::ParameterLayout layout();
     void configure();
     de::dsp::Delay delays[2];                 // one linked delay, or two mono ones (Mode Mono on a stereo bus)
-    co::Analog analogStage;
+    co::dsp::Analog analogStage;
     double sr = 48000.0;
     bool prepared = false, layoutDual = false;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
@@ -74,8 +73,8 @@ private:
     // exactly (Depth 0.69, Rate 281.7, LoPass 20 139 as a filter), but a value set from outside at its resolution.
     // A parameter uses its preset value while it stays where the preset put it.
     struct Exact { const char* id; std::atomic<float> value { std::numeric_limits<float>::quiet_NaN() }, norm { -1.0f }; };
-    std::array<Exact, 6> exact { { { de::depth }, { de::rate }, { de::lopass }, { de::hipass }, { de::bpm },
-                                   { de::feedback } } };
+    std::array<Exact, 6> exact { { { de::id::depth }, { de::id::rate }, { de::id::lopass }, { de::id::hipass }, { de::id::bpm },
+                                   { de::id::feedback } } };
     // the value the DSP takes: the preset's (exactFromPreset true) or the parameter's at its resolution
     float value (const char* id, bool* exactFromPreset = nullptr) const;
     void readExact();

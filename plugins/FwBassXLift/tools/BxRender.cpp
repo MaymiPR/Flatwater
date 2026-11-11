@@ -17,18 +17,18 @@ int main (int argc, char** argv)
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && bx::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && bx::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! bx::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! bx::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
             }
         }
     }
-    bx::Processor proc;
+    bx::dsp::Processor proc;
     int block = 512;
     proc.setHarmonicsDb (-100.0);
     for (int i = 5; i < argc; ++i)

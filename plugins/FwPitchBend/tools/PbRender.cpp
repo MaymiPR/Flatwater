@@ -47,11 +47,11 @@ int main (int argc, char** argv)
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && pb::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && pb::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! pb::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! pb::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
@@ -83,8 +83,8 @@ int main (int argc, char** argv)
         {
             juce::MemoryBlock mb;
             juce::File (v.substr (v.find (':') + 1)).loadFileAsData (mb);
-            if (mb.getSize() != sizeof (float) * (size_t) pb::tableSize) { std::fprintf (stderr, "a table is 512 float32\n"); return 2; }
-            pb::Table t;
+            if (mb.getSize() != sizeof (float) * (size_t) pb::dsp::tableSize) { std::fprintf (stderr, "a table is 512 float32\n"); return 2; }
+            pb::dsp::Table t;
             std::memcpy (t.data(), mb.getData(), mb.getSize());
             pb::setTable (st, parts[0].getIntValue(), t, nullptr);
         }

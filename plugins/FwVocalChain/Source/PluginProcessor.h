@@ -4,6 +4,7 @@
 #include "shared/Presets.h"
 #include "shared/ui/Widgets.h"
 #include "dsp/Engine.h"
+#include "ReverbConvolution.h"
 #include "Params.h"
 #include "Presets.h"
 
@@ -16,7 +17,7 @@ public:
     // the In/Out link (Flatwater's own): while it is on, Output is the mirror of Sensitivity (Output = -Sensitivity) in
     // the audio at every block, whatever the Output parameter holds; syncLink() sets the Output parameter to that
     // mirror (a timer does it too, so automation, presets, setups and undo cannot leave the two apart)
-    bool linked() const { return get (ch::link) > 0.5f; }
+    bool linked() const { return get (ch::id::link) > 0.5f; }
     void syncLink();
 
     void prepareToPlay (double, int) override;
@@ -37,8 +38,8 @@ public:
     {
         if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
         currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {}, { ch::sensitivity, ch::output, ch::link } };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : ch::factoryPresets()[(size_t) index - 1], apvts.getParameter (ch::mode));
+        static const flatwater::FactoryPreset defaults { "", "Default", {}, { ch::id::sensitivity, ch::id::output, ch::id::link } };
+        flatwater::applyPreset (apvts, index == 0 ? defaults : ch::factoryPresets()[(size_t) index - 1], apvts.getParameter (ch::id::mode));
     }
     const juce::String getProgramName (int index) override
     {
@@ -60,12 +61,12 @@ public:
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void setNoise (bool on) { chain.noiseOn = on; }                   // (the reference's state-only Noise; off for null tests)
-    int modeIndex() const { return juce::roundToInt (get (ch::mode)); }
+    int modeIndex() const { return juce::roundToInt (get (ch::id::mode)); }
 
 private:
     void timerCallback() override { syncLink(); }
-    juce::AudioProcessorValueTreeState::ParameterLayout layout();
     double sr = 48000.0;
+    ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)
     ch::dsp::Chain chain;
     juce::AudioBuffer<float> work;
     int currentProgram = 0;

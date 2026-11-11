@@ -100,7 +100,7 @@ private:
     double tempo() const;                                 // the tempo the note values follow (Host or BPM)
     void updateDelayKnobs();
     void contentMouseDown (const juce::MouseEvent&) override { selectOnly (nullptr); }
-    int modeIndex() const { return juce::roundToInt (value (de::mode)); }
+    int modeIndex() const { return juce::roundToInt (value (de::id::mode)); }
     bool mono() const { return modeIndex() == 1; }
 
     FwDelayProcessor& proc;

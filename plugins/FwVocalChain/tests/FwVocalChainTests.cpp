@@ -23,8 +23,8 @@ static void set (FwVocalChainProcessor& p, const char* id, float v)
 static void testParameters()
 {
     FwVocalChainProcessor p;
-    for (auto id : { ch::sensitivity, ch::bass, ch::treble, ch::compress, ch::reverb,
-                     ch::delay, ch::pitch, ch::output })
+    for (auto id : { ch::id::sensitivity, ch::id::bass, ch::id::treble, ch::id::compress, ch::id::reverb,
+                     ch::id::delay, ch::id::pitch, ch::id::output })
     {
         auto* q = dynamic_cast<juce::AudioParameterFloat*> (p.apvts.getParameter (id));
         CHECK (q != nullptr);
@@ -34,15 +34,15 @@ static void testParameters()
         CHECK_NEAR (q->range.interval, 0.1, 1e-6);
         CHECK_NEAR (q->get(), 0.0, 1e-6);
     }
-    CHECK_NEAR (p.apvts.getParameter (ch::balance)->convertFrom0to1 (1.0f), 6.0, 1e-6);
+    CHECK_NEAR (p.apvts.getParameter (ch::id::balance)->convertFrom0to1 (1.0f), 6.0, 1e-6);
     for (const auto& st : ch::stages())
     {
         auto* c = dynamic_cast<juce::AudioParameterChoice*> (p.apvts.getParameter (st.colour));
         CHECK (c != nullptr && c->getIndex() == 1 && c->choices.size() == 4);
     }
-    CHECK (p.apvts.getParameter (ch::compressColor)->getCurrentValueAsText() == "Push");
-    CHECK (p.apvts.getParameter (ch::reverbColor)->getText (0.0f, 64) == "Mute");
-    CHECK (p.apvts.getParameter (ch::pitchColor)->getText (1.0f, 64) == "Spreader");
+    CHECK (p.apvts.getParameter (ch::id::compressColor)->getCurrentValueAsText() == "Push");
+    CHECK (p.apvts.getParameter (ch::id::reverbColor)->getText (0.0f, 64) == "Mute");
+    CHECK (p.apvts.getParameter (ch::id::pitchColor)->getText (1.0f, 64) == "Spreader");
 }
 
 // Stereo (2 in, 2 out) and Mono/Stereo (1 in, 2 out); the reference's latency (193 samples at 48 kHz, 385 at 96)
@@ -70,8 +70,8 @@ static void testPath()
     FwVocalChainProcessor p;
     p.setPlayConfigDetails (2, 2, 48000.0, 512);
     for (const auto& st : ch::stages()) set (p, st.colour, 0.0f);
-    set (p, ch::sensitivity, 6.0f);
-    set (p, ch::output, -6.0f);
+    set (p, ch::id::sensitivity, 6.0f);
+    set (p, ch::id::output, -6.0f);
     p.prepareToPlay (48000.0, 512);
     juce::AudioBuffer<float> b (2, 512);
     juce::MidiBuffer m;
@@ -140,9 +140,9 @@ static void testEditor()
     if (cs.size() == 6)
     {
         cs[0]->setState ((cs[0]->state() + 1) % 4);
-        CHECK (p.apvts.getParameter (ch::bassColor)->getCurrentValueAsText() == "Lower");
+        CHECK (p.apvts.getParameter (ch::id::bassColor)->getCurrentValueAsText() == "Lower");
         cs[0]->setState (0);
-        CHECK (p.apvts.getParameter (ch::bassColor)->getCurrentValueAsText() == "Bypass");
+        CHECK (p.apvts.getParameter (ch::id::bassColor)->getCurrentValueAsText() == "Bypass");
     }
     // the selection (filmed on the reference): a fader is grabbed on its cap only (34 x 58, at 0 from 75.5 px down its
     // 215 px control); one control marked at a time; its value shows only while the mouse is on it
@@ -173,14 +173,32 @@ static void testEditor()
         CHECK (mk.selected == nullptr);
         mk.hover = nullptr;
     }
-    set (p, ch::mode, 1.0f);                                      // Mono/Stereo: no Balance
+    set (p, ch::id::mode, 1.0f);                                      // Mono/Stereo: no Balance
     img = ed->createComponentSnapshot (ed->getLocalBounds());
     CHECK (img.getHeight() == FwVocalChainEditor::H);
+}
+
+// allIds lists every parameter in the layout's order; presetIds every one of them but Mode
+static void testParamIds()
+{
+    FwVocalChainProcessor p;
+    const auto& prms = p.getParameters();
+    CHECK (prms.size() == ch::numParams);
+    int same = 0;
+    for (int i = 0; i < juce::jmin (prms.size(), ch::numParams); ++i)
+        if (auto* hp = dynamic_cast<juce::HostedAudioProcessorParameter*> (prms[i]); hp != nullptr && hp->getParameterID() == ch::allIds[i]) ++same;
+    CHECK (same == ch::numParams);
+    int preset = 0;
+    for (auto* pid : ch::presetIds)
+        for (auto* all : ch::allIds)
+            if (juce::String (pid) == all && juce::String (pid) != ch::id::mode) ++preset;
+    CHECK (preset == ch::numParams - 1);
 }
 
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testParamIds();
     testParameters();
     testBusesAndLatency();
     testPath();

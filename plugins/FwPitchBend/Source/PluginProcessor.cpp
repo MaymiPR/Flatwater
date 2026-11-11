@@ -3,77 +3,18 @@
 
 using namespace juce;
 
-namespace
-{
-// a range lo .. hi, exponential in its normalised value (the reference's tapers: x = lo * (hi / lo)^v); computed the
-// same on every platform, the value rounded to 1e-5 so that a value set comes back as itself (a free rate of 4 Hz a
-// hair over 4 runs a tick short)
-NormalisableRange<float> expRange (float lo, float hi)
-{
-    return { lo, hi,
-             [] (float a, float b, float v) { return (float) (std::round (a * pb::pbmath::pow (b / a, v) * 1e5) / 1e5); },
-             [] (float a, float b, float x) { return (float) (pb::pbmath::log (x / a) / pb::pbmath::log (b / a)); } };
-}
-}
-
-AudioProcessorValueTreeState::ParameterLayout FwPitchBendProcessor::layout()
-{
-    AudioProcessorValueTreeState::ParameterLayout l;
-    auto addF = [&] (const char* id, const String& name, NormalisableRange<float> r, float def, std::function<String (float)> text)
-    {
-        auto a = AudioParameterFloatAttributes().withStringFromValueFunction ([text] (float v, int) { return text (v); });
-        l.add (std::make_unique<AudioParameterFloat> (ParameterID { id, 1 }, name, r, def, a));
-    };
-    auto addC = [&] (const char* id, const String& name, const StringArray& items, int def)
-    {
-        l.add (std::make_unique<AudioParameterChoice> (ParameterID { id, 1 }, name, items, def));
-    };
-    auto fix = [] (int digits) { return [digits] (float v) { return String (v, digits); }; };
-    auto ms = [] (float v) { return String (v, 1) + " ms"; };
-    // in the reference's parameter order
-    for (int m = 0; m < 2; ++m)
-    {
-        const auto& d = pb::mod[m];
-        const String p = "Mod" + String (m + 1) + " ";
-        addF (d.warp, p + "Warp", expRange (0.01f, 100.0f), 1.0f, fix (2));
-        addF (d.level, p + "Level", { 0.0f, 1.0f }, 1.0f, fix (2));
-        addC (d.rateSynced, p + "Rate Synced", pb::syncedRates(), 5);
-        addF (d.rate, p + "Rate", expRange (0.06f, 30.0f), 0.5f, [] (float v) { return String (v, 3) + " Hz"; });
-        addC (d.sync, p + "Sync On/Off", StringArray { "Note", "ms" }, 0);
-        addF (d.phase, p + "Phase", { 0.0f, 1.0f }, 0.0f, fix (3));
-        addC (d.type, p + "Type", StringArray { "LFO", "Seq" }, 0);
-        addF (d.smooth, p + "Smooth", expRange (1.0f, 1000.0f), 1.5f, fix (1));
-        addF (d.steps, p + "Steps", { 2.0f, 16.0f, 1.0f }, 16.0f, fix (0));
-    }
-    addF (pb::amAttack, "AM Attack", expRange (0.1f, 1000.0f), 10.0f, ms);
-    addF (pb::amRelease, "AM Release", expRange (0.1f, 1000.0f), 100.0f, ms);
-    addF (pb::amLevel, "AM Level", { 0.0f, 2.0f }, 1.0f, fix (2));
-    addF (pb::ptSmooth, "PT Smooth", expRange (1.0f, 1000.0f), 10.0f, fix (1));
-    addF (pb::ptOffset, "PT Offset", { -1.0f, 1.0f }, 0.0f, fix (2));
-    addF (pb::ptLevel, "PT Level", { 0.0f, 2.0f }, 1.0f, fix (2));
-    auto semis = [] (float v) { return String (roundToInt (v)) + " semitones"; };
-    addF (pb::pitch, "Pitch", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (pb::formant, "Formant", { -12.0f, 12.0f }, 0.0f, semis);
-    addF (pb::mix, "Mix", { 0.0f, 100.0f }, 100.0f, fix (1));
-    addC (pb::flattenNote, "Flatten Note", pb::noteNames(), 12);
-    addC (pb::flatten, "Flatten On/Off", StringArray { "Off", "On" }, 0);
-    addC (pb::mode, "Mode", pb::modeNames(), 0);
-    return l;
-}
-
 FwPitchBendProcessor::FwPitchBendProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwPitchBend", layout())
+      apvts (*this, &undo, "FwPitchBend", pb::createLayout())
 {
     ensureState();
-    for (int t = 0; t < pb::numTargets; ++t)
+    for (int t = 0; t < pb::dsp::numTargets; ++t)
     {
-        targetParams[(size_t) t] = apvts.getParameter (pb::targets[t].param);
-        modulated[(size_t) t] = get (pb::targets[t].param);
+        targetParams[(size_t) t] = apvts.getParameter (pb::dsp::targets[t].param);
+        modulated[(size_t) t] = get (pb::dsp::targets[t].param);
         engine.modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     }
-    engine.setTargets (targetParams);
     apvts.state.addListener (this);
     refreshModel();
 }
@@ -81,6 +22,7 @@ FwPitchBendProcessor::FwPitchBendProcessor()
 void FwPitchBendProcessor::ensureState()
 {
     using namespace pb;
+    using namespace pb::dsp;
     auto& st = apvts.state;
     child (st, modsTag);
     auto shapes = child (st, shapesTag);
@@ -94,6 +36,7 @@ void FwPitchBendProcessor::ensureState()
 void FwPitchBendProcessor::refreshModel()
 {
     using namespace pb;
+    using namespace pb::dsp;
     Engine::Setup m;
     auto& st = apvts.state;
     for (int t = 0; t < numTargets; ++t)
@@ -112,7 +55,7 @@ void FwPitchBendProcessor::setCurrentProgram (int index)
     if (index < 0 || index >= getNumPrograms()) return;
     currentProgram = index;
     static const flatwater::FactoryPreset defaults { "", "Default", {} };
-    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::mode));
+    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::id::mode));
 }
 
 void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
@@ -124,6 +67,7 @@ void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
 void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
 {
     using namespace pb;
+    using namespace pb::dsp;
     auto& st = apvts.state;
     st.setProperty (fineId, (bool) exact.getProperty ("fine", false), nullptr);
     for (int t = 0; t < numTargets; ++t)
@@ -150,7 +94,9 @@ bool FwPitchBendProcessor::isBusesLayoutSupported (const BusesLayout& l) const
 
 void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
 {
-    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()));
+    std::array<float, pb::dsp::numTargets> norm {};
+    for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()), norm);
 }
 
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
@@ -163,8 +109,8 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
         if (tl.isLocked()) audio = shared;
     }
     // the controls once per block, and the transport
-    pb::Engine::Params p;
-    for (int t = 0; t < pb::numTargets; ++t) p.norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    pb::dsp::Engine::Params p;
+    for (int t = 0; t < pb::dsp::numTargets; ++t) p.norm[(size_t) t] = targetParams[(size_t) t]->getValue();
     for (int m = 0; m < 2; ++m)
     {
         const auto& d = pb::mod[m];
@@ -173,9 +119,9 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
         c.phase = get (d.phase); c.level = get (d.level); c.smooth = get (d.smooth);
         c.rateSynced = apvts.getParameter (d.rateSynced)->getValue();
     }
-    p.ptOffset = get (pb::ptOffset);
-    p.flatten = get (pb::flatten);
-    p.flattenNote = get (pb::flattenNote);
+    p.ptOffset = get (pb::id::ptOffset);
+    p.flatten = get (pb::id::flatten);
+    p.flattenNote = get (pb::id::flattenNote);
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
         {
@@ -183,7 +129,7 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
             if (auto q = pos->getPpqPosition()) { p.ppq = *q; p.havePpq = true; }
         }
     engine.process (buffer.getArrayOfWritePointers(), ch, n, p, audio);
-    for (int t = 0; t < pb::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
+    for (int t = 0; t < pb::dsp::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
     for (int m = 0; m < 2; ++m) cycle[m] = engine.cycle[m];
     amValue = engine.amValue;
     ptValue = engine.ptValue;

@@ -110,8 +110,8 @@ int main (int argc, char** argv)
         if (x.rfind ("time0=", 0) == 0) s.timeL = s.timeR = std::floor (std::atof (x.c_str() + 6) * fs / 1000.0);   // the first block's time
         if (x.rfind ("rate0=", 0) == 0) s.rateHz = (float) std::atof (x.c_str() + 6);   // the first block's LFO rate
     }
-    co::Analog analog;
-    analog.modes = de::tables::analog;                        // the reference's modes (4 is Flatwater Comp's)
+    co::dsp::Analog analog;
+    analog.modes = de::dsp::tables::analog;                        // the reference's modes (4 is Flatwater Comp's)
     analog.prepare (fs, ch);
     std::vector<float> out (in.size());
     std::vector<float> a ((size_t) block), b ((size_t) block);

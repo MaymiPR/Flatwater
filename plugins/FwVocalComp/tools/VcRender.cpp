@@ -15,7 +15,7 @@ int main (int argc, char** argv)
     if (argc < 8) { std::fprintf (stderr, "usage: VcRender in.f32 out.f32 channels fs comp gate gain [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
-    vc::Processor::Params p;
+    vc::dsp::Processor::Params p;
     p.compDb = (float) std::atof (argv[5]);
     p.gateDb = (float) std::atof (argv[6]);
     p.gainDb = (float) std::atof (argv[7]);
@@ -23,18 +23,18 @@ int main (int argc, char** argv)
     for (int i = 8; i < argc; ++i)
     {
         const std::string a = argv[i];
-        if (a.rfind ("tuning=", 0) == 0 && vc::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tuning=", 0) == 0 && vc::dsp::tuning().load (a.c_str() + 7) != 0) return 1;
         if (a.rfind ("tune:", 0) == 0)
         {
             const auto eq = a.find ('=');
-            if (eq == std::string::npos || ! vc::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            if (eq == std::string::npos || ! vc::dsp::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
             {
                 std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
                 return 2;
             }
         }
     }
-    vc::Tuning t = vc::tuning();
+    vc::dsp::Tuning t = vc::dsp::tuning();
     bool compensate = true, dump = false;
     for (int i = 8; i < argc; ++i)
     {
@@ -58,7 +58,7 @@ int main (int argc, char** argv)
     if (std::fread (inter.data(), sizeof (float), inter.size(), f) != inter.size()) return 1;
     std::fclose (f);
 
-    vc::Processor proc;
+    vc::dsp::Processor proc;
     proc.prepare (fs, ch, t);
     proc.setParams (p);
     std::vector<float> trace;
