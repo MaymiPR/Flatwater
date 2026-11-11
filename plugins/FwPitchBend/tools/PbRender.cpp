@@ -9,6 +9,7 @@
 //   slot=<target>:<s>:<source>:<depth>   a modulation slot (target a key of targets[], s 0 .. 3, source 0 .. 4)
 //   table=<m>:<file>           modulator m's (0 M1, 1 M2) shape table, 512 raw float32 values
 //   preset=<k>                 factory preset k (1 .. 40, as the host's program list; given first, later keys change it)
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 // There is no latency; the output is the same length as the input.
 #include <cstdio>
 #include <cstdlib>
@@ -42,6 +43,21 @@ int main (int argc, char** argv)
     double preroll = 0.0;
     Head head;
     head.fs = fs;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && pb::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! pb::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     FwPitchBendProcessor p;
     p.setPlayConfigDetails (ch, ch, fs, block);
     auto& st = p.apvts.state;
@@ -49,7 +65,7 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (eq == std::string::npos || a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
         const std::string k = a.substr (0, eq), v = a.substr (eq + 1);
         const juce::StringArray parts = juce::StringArray::fromTokens (juce::String (v), ":", "");
         if (k == "preset") p.setCurrentProgram (std::atoi (v.c_str()));

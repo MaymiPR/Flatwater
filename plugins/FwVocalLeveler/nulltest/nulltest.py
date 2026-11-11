@@ -16,6 +16,7 @@ import numpy as np
 import subprocess
 from scipy.signal import resample_poly
 import refhost as R
+import local_config_lib as L
 import render_reference as Q
 import vocal_corpus_lib as V
 from measure_reference import seg, with_pilot
@@ -23,8 +24,8 @@ from measure_reference import seg, with_pilot
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXE = os.environ.get('FWVOCALLEVELER_RENDER', os.path.join(HERE, '..', '..', '..', 'build', 'VlRender_artefacts', 'Release', 'VlRender.exe'))
 TMP = os.path.join(HERE, 'renders'); os.makedirs(TMP, exist_ok=True)
-COMPONENTS = {1: 'Vocal Rider Mono', 2: 'Vocal Rider Stereo'}
-LIVE = {1: 'Vocal Rider Live Mono', 2: 'Vocal Rider Live Stereo'}
+COMPONENTS = {1: L.ref_component('FwVocalLeveler', 'Mono', required=False), 2: L.ref_component('FwVocalLeveler', required=False)}
+LIVE = {1: L.ref_component('FwVocalLeveler', 'Live Mono', required=False), 2: L.ref_component('FwVocalLeveler', 'Live Stereo', required=False)}
 
 
 def render_ours(x, fs, live, s):

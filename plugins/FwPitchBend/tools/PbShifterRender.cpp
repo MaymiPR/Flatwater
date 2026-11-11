@@ -8,6 +8,7 @@
 // step=<st>: Pitch moves by that much and back every steplen samples (default 12000), set once per block.
 // pitchctl= / formantctl=: the controls' own values before modulation (default: the same as the totals).
 // Files are raw interleaved 32-bit floats; the output is the same length as the input (the shifter reports no latency).
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <algorithm>
 #include <chrono>
@@ -31,7 +32,7 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (eq == std::string::npos || a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
         const std::string k = a.substr (0, eq);
         const double v = std::atof (a.c_str() + eq + 1);
         if (k == "pitch") pitch = (float) v;
@@ -56,6 +57,21 @@ int main (int argc, char** argv)
     while ((got = std::fread (tmp, sizeof (float), 4096, f)) > 0) in.insert (in.end(), tmp, tmp + got);
     std::fclose (f);
     const long long n = (long long) in.size() / ch;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && pb::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! pb::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     pb::Shifter s;
     s.prepare (fs, block, ch);
     std::vector<std::vector<float>> buf ((size_t) ch, std::vector<float> ((size_t) block));

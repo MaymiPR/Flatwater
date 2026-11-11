@@ -12,6 +12,7 @@ import subprocess, tempfile
 import numpy as np
 import pedalboard as pb
 import refhost as R
+import local_config_lib as L
 
 
 def buzz(t, f0=180.0, n=20):
@@ -22,7 +23,7 @@ def buzz(t, f0=180.0, n=20):
 
 def main():
     names = pb.VST3Plugin.get_plugin_names_for_file(R.REF_SHELL)
-    vr = [n for n in names if "Vocal Rider" in n]
+    vr = [n for n in names if L.ref_base('FwVocalLeveler') in n]
     print("the reference's components in the shell:", vr)
     for name in vr:
         R.fresh(name); p = R.load(name)
@@ -54,13 +55,12 @@ def main():
     d = tempfile.mkdtemp()
     xi = np.zeros((2, fs // 10), np.float32); xi.T.tofile(os.path.join(d, "in.f32"))
     for name in vr:
-        uid = {"Vocal Rider Mono": -510562340, "Vocal Rider Stereo": -509086244,
-               "Vocal Rider Live Mono": 989902242, "Vocal Rider Live Stereo": 991378338}[name]
-        out = subprocess.run([R.REFRENDER, R.REF_SHELL, "%s@%d" % (name, uid), os.path.join(d, "in.f32"),
+        full = {c.split('@')[0]: c for c in (L.ref_component('FwVocalLeveler', k) for k in ('Stereo', 'Mono', 'Live Stereo', 'Live Mono'))}
+        out = subprocess.run([R.REFRENDER, R.REF_SHELL, full.get(name, name), os.path.join(d, "in.f32"),
                               os.path.join(d, "out.f32")], capture_output=True, text=True).stdout
         print(name, "\n" + "\n".join(l for l in out.splitlines() if "bus" in l))
     # the gain on steady buzzes (after 4 s), at the default settings
-    name = "Vocal Rider Stereo"
+    name = L.ref_component('FwVocalLeveler')
     for lev in (-48, -36, -27, -21, -15, -9, -3):
         R.fresh(name); p = R.load(name)
         xs = (10 ** (lev / 20) * buzz(t)).astype(np.float32)

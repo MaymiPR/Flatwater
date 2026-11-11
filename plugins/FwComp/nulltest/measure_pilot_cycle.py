@@ -13,7 +13,7 @@ fs, F0, LA = 48000, 6170.0, 64
 tag = sys.argv[1]; f, db = float(sys.argv[2]), float(sys.argv[3]); st = [float(v) for v in sys.argv[4:9]]
 t = np.arange(int(2.5 * fs)) / fs
 x = (10 ** (db / 20) * np.sin(2 * np.pi * f * t) + 0.01 * np.sin(2 * np.pi * F0 * t)).astype(np.float32); xs = np.stack([x, x])
-R.fresh('H-Comp Stereo')
+R.fresh(N.REF_NAME)
 outs = {'reference': N.theirs(xs, fs, *st, 100.0, 0.0, 'Off')[0], 'Flatwater Comp': N.ours(xs, fs, *st, 100.0, 0.0, 'Off')[0]}
 ph = np.exp(-2j * np.pi * F0 * t)
 def lp(v):

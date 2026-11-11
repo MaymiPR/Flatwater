@@ -1,6 +1,6 @@
 """Writes the note detector's fitted constants (measurements/FwBassLeveler/detector_fit.json, from nulltest/fit_detector.py)
-into the plug-in's top DSP header (plugins/FwBassLeveler/Source/dsp/Engine.h, Ride.h before the file took the standard
-name), so the plug-in rides as the fitted model does.
+into the plug-in's constants (plugins/FwBassLeveler/Source/dsp/Tuning.h), each field's default replaced in place, so the
+plug-in rides as the fitted model does.
 
     python -I export_detector.py
 """
@@ -8,25 +8,23 @@ import os, re, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIT = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'detector_fit.json')
-HDR = next((p for p in (os.path.join(HERE, '..', 'Source', 'dsp', n) for n in ('Engine.h', 'Ride.h')) if os.path.exists(p)), None)
+HDR = os.path.join(HERE, '..', 'Source', 'dsp', 'Tuning.h')
 
 d = json.load(open(FIT))
 g = d['globals']
 sens = ['0', '25', '50', '75', '100']
-arr = lambda vals: '{ %s }' % ', '.join('%.4f' % v for v in vals)
-block = """    // the note detector's constants (plugins/FwBassLeveler/nulltest/fit_detector.py, measurements/FwBassLeveler/detector_fit.json; export_detector.py)
-    double slowAtt = %.4f, slowRel = %.4f, refRel = %.4f, hyst = %.4f, relMs = %.4f, holdMs = %.4f,
-           followAtt = %.4f, followRel = %.4f, bandHi = 172.0, bandLo = 78.0, reRideLo = %.4f, reRideHi = %.4f, reRideDepth = 4.4, offMs = %.4f, offRelMs = %.4f, winMs = %.4f, floorDb = -48.75;
-    // at Sensitivity 0 .. 100 by 25: the rise over S that is a new note, the margin over F that keeps the attack, and a
-    // released note's rise that is a new note
-    double onThr[5] %s, margin[5] %s, onRise[5] %s;
-    double depthSlow[5] %s, depthFast[5] %s;
-
-""" % (g['slow_att'], g['slow_rel'], g['ref_rel'], g['hyst'], g['rel_ms'], g['settle'], g['f_att'], g['f_rel'], g['rr_lo1'], g['rr_hi1'], g['off_ms'], g.get('off_rel_ms', 60.0), g['win_ms'],
-       arr([d['thr_u'][k] for k in sens]), arr([d['margin'][k] for k in sens]), arr([d['on_rise'][k] for k in sens]),
-       arr([d['rel_depth']['Slow ' + k] for k in sens]), arr([d['rel_depth']['Fast ' + k] for k in sens]))
+scalars = {'slowAtt': g['slow_att'], 'slowRel': g['slow_rel'], 'refRel': g['ref_rel'], 'hyst': g['hyst'], 'relMs': g['rel_ms'],
+           'holdMs': g['settle'], 'followAtt': g['f_att'], 'followRel': g['f_rel'], 'reRideLo': g['rr_lo1'],
+           'reRideHi': g['rr_hi1'], 'offMs': g['off_ms'], 'offRelMs': g.get('off_rel_ms', 60.0), 'winMs': g['win_ms']}
+arrays = {'onThr': [d['thr_u'][k] for k in sens], 'margin': [d['margin'][k] for k in sens],
+          'onRise': [d['on_rise'][k] for k in sens], 'depthSlow': [d['rel_depth']['Slow ' + k] for k in sens],
+          'depthFast': [d['rel_depth']['Fast ' + k] for k in sens]}
 s = open(HDR, encoding='utf-8').read()
-a = s.index("    // the note detector's constants"); b = s.index("private:")
-s = s[:a] + block + s[b:]
-open(HDR, 'w', encoding='utf-8').write(s)
-print(block)
+for name, v in scalars.items():
+    s, n = re.subn(r'(\n    double %s = )[^;]*;' % name, lambda m: m.group(1) + '%.4f;' % v, s)
+    assert n == 1, name
+for name, vals in arrays.items():
+    s, n = re.subn(r'(\n    double %s\[5\] )\{[^}]*\};' % name, lambda m: m.group(1) + '{ %s };' % ', '.join('%.4f' % x for x in vals), s)
+    assert n == 1, name
+open(HDR, 'w', encoding='utf-8', newline='\n').write(s)
+print('\n'.join('%s = %.4f' % kv for kv in scalars.items()))

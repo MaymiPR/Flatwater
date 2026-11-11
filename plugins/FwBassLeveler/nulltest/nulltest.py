@@ -14,6 +14,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 import numpy as np
 import subprocess
 import refhost as R
+import local_config_lib as L
 import measure_reference as M
 import compare_model as C
 
@@ -39,7 +40,8 @@ def render_ours(x, **params):
 
 
 def render_ref(x, **params):
-    R.fresh('Bass Rider Stereo'); p = R.load('Bass Rider Stereo')
+    name = L.ref_component('FwBassLeveler')
+    R.fresh(name); p = R.load(name)
     for k, v in params.items(): setattr(p, k, v)
     return p(np.asarray(x, np.float32), FS, buffer_size=512, reset=True)
 
@@ -154,13 +156,13 @@ def vst3_check():
         R.fresh(M.NAME); p = R.load(M.NAME); r = p(x[None], fs, buffer_size=512, reset=True)[0]
         y = render_fs(x[None], fs)[0]
         rows.append(('reference vs Flatwater Bass Leveler, bass line at %g kHz' % (fs / 1000), res_db(x, y, r))); print(rows[-1], flush=True)
-    for label, name, mode, st in (('Live Mono, bass line', 'Bass Rider Live Mono', 3, {}), ('Live Mono, bass line, Fast', 'Bass Rider Live Mono', 3, {'response': 'Fast '}),
-                                  ('Live Mono, bass line, Spill -25', 'Bass Rider Live Mono', 3, {'spill': -25.0}),
-                                  ('Live Mono, bass line, Spill -15', 'Bass Rider Live Mono', 3, {'spill': -15.0})):
+    for label, name, mode, st in (('Live Mono, bass line', L.ref_component('FwBassLeveler', 'Live Mono'), 3, {}), ('Live Mono, bass line, Fast', L.ref_component('FwBassLeveler', 'Live Mono'), 3, {'response': 'Fast '}),
+                                  ('Live Mono, bass line, Spill -25', L.ref_component('FwBassLeveler', 'Live Mono'), 3, {'spill': -25.0}),
+                                  ('Live Mono, bass line, Spill -15', L.ref_component('FwBassLeveler', 'Live Mono'), 3, {'spill': -15.0})):
         r = M.render(bass, name=name, **st); y = render_fs(bass[None], 48000, mode=mode, **st)[0]
         rows.append(('reference vs Flatwater Bass Leveler, %s' % label, res_db(bass, y, r))); print(rows[-1], flush=True)
     xs = np.vstack([bass, K.part(30)[0][:len(bass)] * 0.7]).astype(np.float32)
-    for label, name, mode in (('Stereo, two different bass parts (L / R)', 'Bass Rider Stereo', 0), ('Live Stereo, the same', 'Bass Rider Live Stereo', 2)):
+    for label, name, mode in (('Stereo, two different bass parts (L / R)', L.ref_component('FwBassLeveler'), 0), ('Live Stereo, the same', L.ref_component('FwBassLeveler', 'Live Stereo'), 2)):
         r = M.render(xs, name=name); y = render_fs(xs, 48000, mode=mode)
         rows.append(('reference vs Flatwater Bass Leveler, %s' % label, res_db(xs, y, r))); print(rows[-1], flush=True)
     # (3) CPU: 60 s of stereo through the offline renderer, 512-sample blocks

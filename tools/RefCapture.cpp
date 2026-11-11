@@ -134,7 +134,7 @@ public:
     float rowFrom = 0.0f, rowTo = 1.0f;      // rows=<from>,<to>: only that band of the editor (fractions of its height)
 };
 
-// grabs the component's screen area (also native child windows, e.g. a Waves editor) into a PNG
+// grabs the component's screen area (also native child windows, e.g. a reference's editor) into a PNG
 static Image grabImage (Component& c);
 static void grabPng (Component& c, const File& f)
 {

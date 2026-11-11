@@ -155,5 +155,4 @@ renamed. The values that differ from what the naming rules would give today:
 
 | Deviation | Reason |
 |---|---|
-| `dsp/Tuning.h` exists in FwBassLift and FwVocalComp only, the plug-ins whose renderers override constants by name; the other plug-ins keep their constants beside the DSP that uses them, and FwPitchBend has no `dsp/Engine` (its processor joins the modulators, `dsp/Mod.h`, and the shifter, `dsp/Shifter`) | moving every constant or the processor's own DSP is a DSP change, which a layout change does not make |
 | The renderers of FwBassLift, FwBassXLift, FwComp, FwDelay and FwVocalComp, and `PbShifterRender`, are plain executables of the DSP alone, without JUCE and without a `RenderDev` copy; they land in `build/<Target>_artefacts/Release/` like the others | they need no plug-in wrapper |

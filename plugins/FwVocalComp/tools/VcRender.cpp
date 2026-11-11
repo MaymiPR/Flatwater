@@ -2,6 +2,7 @@
 //   VcRender in.f32 out.f32 channels sampleRate comp gate gain [key=value ...]
 // Files are raw interleaved 32-bit floats. The output is shifted back by the latency, so it lines up with the input
 // (the reference host does the same).  Keys: hold box1 box2 ta1 tr1 ta2 tr2 gateRelMs fixedGain  tail=<seconds>
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -18,7 +19,22 @@ int main (int argc, char** argv)
     p.compDb = (float) std::atof (argv[5]);
     p.gateDb = (float) std::atof (argv[6]);
     p.gainDb = (float) std::atof (argv[7]);
-    vc::Tuning t;
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 8; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && vc::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! vc::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
+    vc::Tuning t = vc::tuning();
     bool compensate = true, dump = false;
     for (int i = 8; i < argc; ++i)
     {

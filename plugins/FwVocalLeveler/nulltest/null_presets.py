@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 import local_config_lib as LC
 SRC = LC.local_file('build/ref_presets_FwVocalLeveler.json')
 FS = 48000
-COMP = 'Vocal Rider Mono'
+COMP = LC.ref_component('FwVocalLeveler', 'Mono', required=False)
 PARTS = (24, 27, 33)
 
 

@@ -26,6 +26,13 @@
 - **Documents:** each plug-in's MEASUREMENTS.md holds its null-test results in brief and its validation (the suite
   pages and the root indexes are gone); the root README links every plug-in's README, RESEARCH, MEASUREMENTS and
   NULLTESTS; code, scripts and the names of local data files carry no vendor word.
+- **Constants:** every plug-in's fitted and design constants are in one `Tuning` struct in `dsp/Tuning.h`, with
+  `set()` and `load()`; every renderer takes `tune:key=value` and `tuning=<file>` overrides. FwPitchBend's
+  modulators and shifter are joined in `dsp/Engine`, which the processor calls. No sound or saved state changes (the
+  render regression is byte-identical).
+- **Reference names:** the null-test and measurement scripts read the reference's component names from `local.yaml`
+  (`<Id>.ref_name` and the other component keys, `<Id>.ref_presets` for the preset files and folders) and name no
+  reference product; the test helpers' namespaces nest in their plug-in's.
 
 ## 1.0.0 (2026-11-04)
 

@@ -21,6 +21,14 @@ _cache = {}
 STATS = {"silent_retries": 0}
 
 
+def _named(name):
+    """a component's name, or stop with the keys that set it (a harness reads them with required=False)"""
+    if not name:
+        raise SystemExit('local.yaml: set the reference component <Id>.ref_name (and <Id>.ref_mono_name and kin where a '
+                         'script uses one; scripts/nulltest/README.md lists the keys)')
+    return name
+
+
 def fresh(name):
     """forget the cached instance: the next render loads a new one (a reference can keep state from the settings
     of earlier renders that its parameters do not show)"""
@@ -29,7 +37,7 @@ def fresh(name):
 
 def load(name):
     if name not in _cache:
-        _cache[name] = pb.load_plugin(REF_SHELL, plugin_name=name)
+        _cache[name] = pb.load_plugin(REF_SHELL, plugin_name=_named(name))
     return _cache[name]
 
 
@@ -81,7 +89,7 @@ def render_ref(x, fs, name, sc=None, bpm=0.0, params=None, block=512, extra=(), 
     d = tempfile.mkdtemp(prefix="refr_")
     fin, fout, fsc = os.path.join(d, "in.f32"), os.path.join(d, "out.f32"), os.path.join(d, "sc.f32")
     x.T.astype(np.float32).tofile(fin)
-    cmd = [REFRENDER, vst3 or REF_SHELL, name, fin, fout, "fs=%d" % fs, "block=%d" % block]
+    cmd = [REFRENDER, vst3 or REF_SHELL, _named(name), fin, fout, "fs=%d" % fs, "block=%d" % block]
     if sc is not None:
         sc = np.asarray(sc, np.float32)
         if sc.ndim == 1: sc = np.stack([sc, sc])

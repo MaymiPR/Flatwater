@@ -28,7 +28,7 @@ def write_states():
     import ref_state_lib as W
     os.makedirs(STATES, exist_ok=True)
     t = open(SRC, encoding="utf-8").read()
-    p = R.load("H-Delay Stereo")
+    p = R.load(H.REF_NAME)
     base = p.raw_state
     inner0 = W.get_inner(base).decode("latin-1")
     k = 0
@@ -50,7 +50,7 @@ def write_states():
 def state_file(vals, path, kind="RealWorld"):
     """a reference state with this preset array (45 values, '*' keeps the current one) loaded, written to path"""
     import ref_state_lib as W
-    p = R.load("H-Delay Stereo")
+    p = R.load(H.REF_NAME)
     base = p.raw_state
     inner0 = W.get_inner(base).decode("latin-1")
     for pad in range(16):

@@ -15,10 +15,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(HERE)
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 import refhost as R
+import local_config_lib as L
 
 OUT = os.path.join(HERE, '..', '..', '..', 'reference', 'fwvocalchain', 'meas', 'campaign')
 FS = 48000
-STEREO, MONO = 'CLA Vocals Stereo@1510537014', 'CLA Vocals Mono/Stereo@1511767094'
+STEREO, MONO = L.ref_component('FwVocalChain', required=False), L.ref_component('FwVocalChain', 'Mono/Stereo', required=False)
 NAMES = {'bass': 'Bass', 'treble': 'Treble', 'compress': 'Compress', 'reverb': 'Reverb', 'delay': 'Delay', 'pitch': 'Pitch'}
 
 

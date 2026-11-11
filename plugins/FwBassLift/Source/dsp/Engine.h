@@ -120,7 +120,7 @@ inline double onePoleCoef (double tauSeconds, double fs) { return tauSeconds > 0
 class Processor
 {
 public:
-    Tuning t;
+    Tuning t = tuning();                                   // dsp/Tuning.h: the defaults, or the renderer's overrides
 
     void prepare (double sampleRate, int channels)
     {

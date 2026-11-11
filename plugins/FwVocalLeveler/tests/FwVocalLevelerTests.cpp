@@ -141,7 +141,7 @@ static void testEditor()
 }
 
 // the riding (vl::Ride) on 1 kHz sines at 48 kHz, against the reference's measured numbers
-namespace ridetest
+namespace vl::ridetest
 {
 constexpr double fs = 48000.0;
 // levels (dBFS rms; < -200 = silence) for durations (s); the gain in dB per sample
@@ -164,7 +164,7 @@ static double vdb (double gdb, double rangeMin) { return 20.0 * std::log10 (std:
 
 static void testRiding()
 {
-    using namespace ridetest;
+    using namespace vl::ridetest;
     vl::RideSettings st;
     // it starts at 1/2 gMin + 1 (the reference: +1.94 dB at Range -6 .. +6)
     auto g = ride ({ { -300.0, 0.1 } }, st);

@@ -1,6 +1,7 @@
 // Offline renderer for the Flatwater BassX Lift DSP (used by the null test).
 //   BxRender in.f32 out.f32 channels sampleRate [key=value ...]
 // Files are raw interleaved 32-bit floats. Keys: input freq decay response ratio highpass orig harm monitor block
+//   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -12,6 +13,21 @@ int main (int argc, char** argv)
     if (argc < 5) { std::fprintf (stderr, "usage: BxRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
     const double fs = std::atof (argv[4]);
+    // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
+    for (int i = 5; i < argc; ++i)
+    {
+        const std::string a = argv[i];
+        if (a.rfind ("tuning=", 0) == 0 && bx::tuning().load (a.c_str() + 7) != 0) return 1;
+        if (a.rfind ("tune:", 0) == 0)
+        {
+            const auto eq = a.find ('=');
+            if (eq == std::string::npos || ! bx::tuning().set (a.substr (5, eq - 5), std::atof (a.c_str() + eq + 1)))
+            {
+                std::fprintf (stderr, "unknown tuning key in %s\n", a.c_str());
+                return 2;
+            }
+        }
+    }
     bx::Processor proc;
     int block = 512;
     proc.setHarmonicsDb (-100.0);

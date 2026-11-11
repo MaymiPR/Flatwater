@@ -89,5 +89,5 @@ In [plugins/FwBassLeveler/scripts/](../scripts/): the scripts that write under `
 
 | File | What it does |
 |---|---|
-| `../scripts/export_detector.py` | Writes the note detector's fitted constants (measurements/FwBassLeveler/detector_fit.json, from nulltest/fit_detector.py) into the plug-in's top DSP header |
+| `../scripts/export_detector.py` | Writes the note detector's fitted constants (measurements/FwBassLeveler/detector_fit.json, from nulltest/fit_detector.py) into the plug-in's constants (`Source/dsp/Tuning.h`) |
 | `../scripts/measure_ui.py` | Measures the reference's controls on its skin (extracted into the git-ignored reference/fwbassleveler/) and prints a report: per fader cap, switch, meter bar |

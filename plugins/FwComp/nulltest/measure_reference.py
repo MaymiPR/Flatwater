@@ -14,6 +14,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import refhost as R
+import local_config_lib as L
 import co_ref as CO
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "measurements", "FwComp")
@@ -357,7 +358,7 @@ def sec_stereo():
     r['loud_left'] = float(np.median(db(gain_trace(xl, y[0]))[FS // 2:]))
     r['quiet_right'] = float(np.median(db(gain_trace(xr, y[1]))[FS // 2:]))
     r['quiet_alone'] = float(np.median(db(gain_trace(xr, hc(xr, threshold=-30.0, ratio=4.0)[0]))[FS // 2:]))
-    ym = CO.render_ref(xl, FS, name="H-Comp Mono", threshold=-30.0, ratio=4.0)[0]
+    ym = CO.render_ref(xl, FS, name=L.ref_component('FwComp', 'Mono'), threshold=-30.0, ratio=4.0)[0]
     r['mono_loud'] = float(np.median(db(gain_trace(xl, ym))[FS // 2:]))
     print(r, flush=True)
     RES['stereo'] = r

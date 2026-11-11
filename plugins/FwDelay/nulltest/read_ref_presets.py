@@ -22,7 +22,7 @@ def num(t):
 
 
 t = open(SRC, encoding="utf-8").read()
-p = R.load("H-Delay Stereo")
+p = R.load(L.ref_component('FwDelay'))
 base = p.raw_state
 inner0 = W.get_inner(base).decode("latin-1")
 assert re.search(r'<Parameters Type="RealWorld">', inner0), inner0[:400]

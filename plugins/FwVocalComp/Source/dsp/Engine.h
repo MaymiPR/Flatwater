@@ -206,7 +206,7 @@ class Processor
 public:
     struct Params { float compDb = 0.0f, gateDb = -80.0f, gainDb = 0.0f; };
 
-    void prepare (double fs, int numChannels, const Tuning& t = {})
+    void prepare (double fs, int numChannels, const Tuning& t = tuning())
     {
         tune = t;
         channels = std::max (1, std::min (numChannels, 2));

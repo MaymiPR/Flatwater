@@ -2,8 +2,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include "dsp/Model.h"
-#include "dsp/Mod.h"
-#include "dsp/Shifter.h"
+#include "dsp/Engine.h"
 #include "Presets.h"
 #include "Params.h"
 
@@ -59,7 +58,7 @@ public:
     void resetExtras() { applyPresetExtras (juce::ValueTree { "Defaults" }); }
 
     // the last block's Pitch with its modulation, in semitones as the shifter takes it (to +-24, past the knob's range)
-    float pitchShifted() const { return 24.0f * modNorm[0] - 12.0f; }
+    float pitchShifted() const { return 24.0f * engine.modNorm[0] - 12.0f; }
 
 private:
     void ensureState();                                          // the state tree's parts, with their defaults
@@ -73,25 +72,8 @@ private:
 
     // the copy the audio thread works on: written on the message thread under the lock, read with a try-lock
     juce::SpinLock modelLock;
-    struct Model
-    {
-        std::array<pb::Slot, pb::numTargets * pb::numSlots> slots {};
-        pb::Table tables[2] {};
-        bool fine = false;
-    } shared, audio;
+    pb::Engine::Setup shared, audio;
 
-    double sr = 48000.0;
-    long long processed = 0;                                     // samples since the start of processing
     std::array<juce::RangedAudioParameter*, pb::numTargets> targetParams {};
-    std::array<float, pb::numTargets> modNorm {};       // last block's modulated values (normalised)
-    std::array<double, pb::numTargets> modSum {};       // last block's sums of the slots (depth / 100 x source)
-    std::array<double, pb::numSources> lastValue {};    // the sources' values at the last sample
-    double modulatedValue (int t) const;                         // a control with last block's modulation, real units
-    pb::Lfo lfo[2];
-    pb::Follower am;
-    pb::PitchFollower pt;
-    pb::Shifter shifter;
-    juce::AudioBuffer<float> dry;
-    std::vector<float> mono;                                     // the input's mix, then the Mix per sample
-    std::vector<float> pitchPer, formantPer;                     // the Pitch and Formant totals per sample (semitones)
+    pb::Engine engine;                                           // the audio path (dsp/Engine)
 };

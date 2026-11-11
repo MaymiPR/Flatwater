@@ -27,8 +27,9 @@ iscc: ''
 
 # Suite keys: the keys this suite's own scripts read, below this line. sync_template.py replaces everything above it
 # with the starter's form and keeps this block as it is.
-# The reference's stereo component in the shell, per plug-in ("Name@uid"); every harness has a default except
-# FwBassXLift's, which needs its key (scripts/nulltest/README.md lists the readers)
+# The reference's stereo component in the shell, per plug-in ("Name" or "Name@uid", as the shell host's --list prints
+# it); every script that hosts the reference reads it, and no tracked file names the reference's products
+# (scripts/nulltest/README.md lists the readers)
 FwBassLeveler.ref_name: ''
 FwBassLift.ref_name: ''
 FwBassXLift.ref_name: ''
@@ -38,16 +39,30 @@ FwPitchBend.ref_name: ''
 FwVocalChain.ref_name: ''
 FwVocalComp.ref_name: ''
 FwVocalLeveler.ref_name: ''
-# The reference's mono component for FwVocalComp's mono cases (a default otherwise)
+# Its other components where a script uses one; when a key is empty the name is the stereo one with the kind in place of
+# "Stereo" (without the uid)
+FwBassLeveler.ref_mono_name: ''
+FwBassLeveler.ref_live_stereo_name: ''
+FwBassLeveler.ref_live_mono_name: ''
+FwComp.ref_mono_name: ''
+FwDelay.ref_mono_name: ''
+FwDelay.ref_mono_stereo_name: ''
+FwPitchBend.ref_mono_name: ''
+FwVocalChain.ref_mono_stereo_name: ''
 FwVocalComp.ref_mono_name: ''
-# The vendor's shared preset folder, for the preset readers of FwBassLift, FwVocalComp and FwPitchBend
-ref_presets_dir: ''
-# Each reference's factory preset file, for its plug-in's preset reader and scripts/make_presets.py
+FwVocalLeveler.ref_mono_name: ''
+FwVocalLeveler.ref_live_stereo_name: ''
+FwVocalLeveler.ref_live_mono_name: ''
+# Each reference's factory presets: the preset file for its plug-in's preset reader and scripts/make_presets.py, the
+# preset folder for FwBassLift, FwVocalComp and FwPitchBend
 FwBassLeveler.ref_presets: ''
+FwBassLift.ref_presets: ''
 FwBassXLift.ref_presets: ''
 FwComp.ref_presets: ''
 FwDelay.ref_presets: ''
+FwPitchBend.ref_presets: ''
 FwVocalChain.ref_presets: ''
+FwVocalComp.ref_presets: ''
 FwVocalLeveler.ref_presets: ''
 # FL Studio's sample packs folder, for the bass and vocal corpora (decoded once into a git-ignored cache)
 fl_packs: ''
