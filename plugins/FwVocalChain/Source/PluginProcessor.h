@@ -4,6 +4,7 @@
 #include "shared/Presets.h"
 #include "shared/ui/Widgets.h"
 #include "dsp/Engine.h"
+#include "ReverbConvolution.h"
 #include "Params.h"
 #include "Presets.h"
 
@@ -66,6 +67,7 @@ private:
     void timerCallback() override { syncLink(); }
     juce::AudioProcessorValueTreeState::ParameterLayout layout();
     double sr = 48000.0;
+    ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)
     ch::dsp::Chain chain;
     juce::AudioBuffer<float> work;
     int currentProgram = 0;

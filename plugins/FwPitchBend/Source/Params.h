@@ -9,7 +9,7 @@
 // reads them; RESEARCH.md, Flatwater Pitch Bend). The tapers are the exponential ones the texts show (Rate 0.06 ..
 // 30 Hz, Smooth 1 .. 1000, Warp 0.01 .. 100, the AM times 0.1 .. 1000 ms). No latency (as the reference's).
 // The settings that are not host parameters (the modulation slots, Fine, the shape tables) are in the state tree
-// (dsp/Model.h); the audio thread works on a copy of them, refreshed whenever the tree changes. Per host block:
+// (ModulationState.h); the audio thread works on a copy of them, refreshed whenever the tree changes. Per host block:
 // the modulators (dsp/Mod.h) move the controls, the shifter (dsp/Shifter.h) makes the wet signal, and
 // Mix crossfades the dry input and the wet one (dry + m (wet - dry), as the reference's).
 namespace pb

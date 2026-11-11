@@ -1,8 +1,12 @@
 #pragma once
-#include <juce_dsp/juce_dsp.h>
+#include <algorithm>
 #include <array>
+#include <cmath>
 #include <memory>
 #include <random>
+#include <vector>
+#include "shared/dsp/Math.h"
+#include "Buffer.h"
 #include "Fixed.h"
 #include "Eq.h"
 #include "EqTables.h"
@@ -51,7 +55,7 @@ struct Biquad
 // RBJ cookbook sections, the frequency prewarped by the bilinear transform's own warping (as fitted)
 inline void rbj (eq::Kind kind, double f0, double q, double gdb, double fs, double c[5])
 {
-    const double A = std::pow (10.0, gdb / 40.0), w = 2.0 * juce::MathConstants<double>::pi * juce::jlimit (1.0, fs * 0.49, f0) / fs;
+    const double A = std::pow (10.0, gdb / 40.0), w = 2.0 * flatwater::math::pi * std::clamp (f0, 1.0, fs * 0.49) / fs;
     const double cw = std::cos (w), sw = std::sin (w), al = sw / (2.0 * q);
     double b[3], a[3];
     switch (kind)
@@ -95,7 +99,7 @@ public:
     // the Bass and Treble faders glide (90 % in about 124 ms, measured): a one-pole of 54 ms on the fader
     void set (int colourIdx, float target)
     {
-        colourIdx = juce::jlimit (0, 3, colourIdx);
+        colourIdx = std::clamp (colourIdx, 0, 3);
         if (colourIdx != colourIndex) { colourIndex = colourIdx; for (auto& s : sec) s.reset(); dirty = true; shown = target; }
         to = target;
     }
@@ -103,7 +107,7 @@ public:
     {
         if (colourIndex == 0) return;
         if (std::abs (shown - to) > 1.0e-4) { shown = to + glide * (shown - to); if (++count >= 16) { count = 0; dirty = true; } }
-        else if (! juce::exactlyEqual (shown, to)) { shown = to; dirty = true; }
+        else if (! flatwater::math::exactlyEqual (shown, to)) { shown = to; dirty = true; }
         if (dirty) update();
         for (int i = 0; i < n; ++i) { l = sec[(size_t) i].run (l, 0); r = sec[(size_t) i].run (r, 1); }
     }
@@ -114,22 +118,22 @@ private:
         dirty = false;
         if (rate != nullptr)
         {
-            const int k = juce::jlimit (0, 200, (int) std::lround ((shown + 10.0) * 10.0));
+            const int k = std::clamp ((int) std::lround ((shown + 10.0) * 10.0), 0, 200);
             const auto& pos = (bassStage ? rate->bass : rate->treble)[colourIndex - 1][k];
             n = eqtables::sections;
             for (int i = 0; i < n; ++i) sec[(size_t) i].set (pos.sos[i]);
             return;
         }
         const auto* colour = (bassStage ? eq::bass : eq::treble)[colourIndex];
-        const double x = juce::jlimit (0.0, 20.0, shown + 10.0);
-        const int i = juce::jmin (19, (int) x);
+        const double x = std::clamp (shown + 10.0, 0.0, 20.0);
+        const int i = std::min (19, (int) x);
         const double t = x - i;
         n = 0;
         for (int k = 0; k < colour->n; ++k)
         {
             const auto& s = colour->s[k];
             if (s.kind == eq::highPass && colour->hpFromZero && shown < -1.0e-6) continue;     // (Upper: from 0 up)
-            const double g = s.g[i] + (s.g[i + 1] - s.g[i]) * t, q = juce::jmax (0.05, s.q0 + s.q1 * g + s.q2 * g * g), f = s.f;
+            const double g = s.g[i] + (s.g[i + 1] - s.g[i]) * t, q = std::max (0.05, s.q0 + s.q1 * g + s.q2 * g * g), f = s.f;
             double c[5];
             rbj (s.kind, f, q, g, fs, c);
             sec[(size_t) n++].set (c);
@@ -145,19 +149,18 @@ private:
 };
 
 // the reverb: per colour, two stereo zero-latency convolutions (L->L with R->R, and R->L with L->R on the swapped input)
-// with the reference's measured responses at the nearest rate; the last colour keeps running while Reverb is clear
+// with the reference's measured responses at the nearest rate; the last colour keeps running while Reverb is clear.
+// The convolution engine is the plug-in's (Source/ReverbConvolution), handed to the chain with setReverb; without
+// one the reverb is silent.
 class Reverb
 {
 public:
+    virtual ~Reverb() = default;
     // skip: samples dropped from the responses' (silent) start, the reverb's de-esser's delay
-    void prepare (double fs, int block, int skip);
-    void process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain);
-    void reset() { for (auto& c : conv) for (auto& e : c) if (e) e->reset(); }
-
-private:
-    std::array<std::array<std::unique_ptr<juce::dsp::Convolution>, 2>, 3> conv;
-    juce::AudioBuffer<float> a, b;
-    int running = 0;                                                  // the colour whose engine runs (0: none yet)
+    virtual void prepare (double fs, int block, int skip) = 0;
+    // the wet signal of the colour (0: clear, muted while the last colour's engine keeps running) at a gain
+    virtual void process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain) = 0;
+    virtual void reset() = 0;
 };
 
 // The learned correction of Compress (plugins/FwVocalChain/nulltest/train_compress.py, MEASUREMENTS.md "Flatwater Vocal Chain: Compress, a
@@ -307,7 +310,7 @@ private:
     Tuning tune;
     co::dsp::Analog analog;
     de::dsp::Delay line;
-    juce::AudioBuffer<float> work;
+    StereoBuffer work;
     std::vector<float> histL, histR;                                  // the line's output, for the second tap
     int hpos = 0, running = 1;
 };
@@ -363,6 +366,8 @@ class Chain
 public:
     void prepare (double fs, int maxBlock);
     void reset();
+    // the reverb's convolution engine (owned by the caller, outliving the chain's use of it)
+    void setReverb (Reverb* r) { reverb = r; }
     // stereo in place (Mono/Stereo: the caller copies the input to both channels first)
     void process (float* l, float* r, int n, const Params&);
     // the Sensitivity LED's level: the input's rms (dB), after Sensitivity, over about 10 ms
@@ -379,11 +384,11 @@ private:
     EqStage bass, treble;
     Compressor compressor;
     DeEsser deesser, reverbDeesser;
-    Reverb reverb;
+    Reverb* reverb = nullptr;
     Delays delays;
     std::array<Biquad, 3> delayFix;                                    // (the echoes' response against the reference's)
     Doubler doubler;
-    juce::AudioBuffer<float> tap, send, wet, wet2, wet3;
+    StereoBuffer tap, send, wet, wet2, wet3;
     std::minstd_rand noise { 0x5eed };
     double level = 0.0, levelCoef = 0.0, noiseGain = 0.0;
 };

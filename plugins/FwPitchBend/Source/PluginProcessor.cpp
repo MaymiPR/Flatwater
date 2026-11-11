@@ -73,7 +73,6 @@ FwPitchBendProcessor::FwPitchBendProcessor()
         modulated[(size_t) t] = get (pb::dsp::targets[t].param);
         engine.modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     }
-    engine.setTargets (targetParams);
     apvts.state.addListener (this);
     refreshModel();
 }
@@ -153,7 +152,9 @@ bool FwPitchBendProcessor::isBusesLayoutSupported (const BusesLayout& l) const
 
 void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
 {
-    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()));
+    std::array<float, pb::dsp::numTargets> norm {};
+    for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()), norm);
 }
 
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)

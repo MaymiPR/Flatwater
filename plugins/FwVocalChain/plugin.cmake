@@ -5,6 +5,7 @@ set(CH_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CH_SOURCES
     ${CH_DIR}/Source/PluginProcessor.cpp
     ${CH_DIR}/Source/dsp/Engine.cpp
+    ${CH_DIR}/Source/ReverbConvolution.cpp
     ${CH_DIR}/Source/PluginEditor.cpp
     ${CH_DIR}/Source/Presets.cpp)
 # the snapshot / test / render executables compile the plug-in sources outside the plug-in wrapper

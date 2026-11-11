@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include "Model.h"
@@ -61,12 +62,12 @@ struct Lfo
         double v;
         if (seq)
         {
-            const int k = juce::jlimit (0, steps - 1, (int) (p * steps));
+            const int k = std::clamp ((int) (p * steps), 0, steps - 1);
             v = t[(size_t) (seqFirst + k)];
         }
         else
         {
-            v = t[(size_t) juce::jlimit (0, lfoPoints - 1, (int) (p * lfoPoints))];
+            v = t[(size_t) std::clamp ((int) (p * lfoPoints), 0, lfoPoints - 1)];
         }
         v *= gain;
         smoothed = v + a * (smoothed - v);          // (from 0: measured at Smooth 1000, where the start still shows)

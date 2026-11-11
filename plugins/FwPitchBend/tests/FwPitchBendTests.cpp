@@ -343,12 +343,12 @@ static void testBehaviour()
     CHECK_NEAR (p.get (pb::id::pitch), 0.0, 1e-6);
     slowDrag (pitchAt, 60);
     CHECK_NEAR (p.get (pb::id::pitch), 1.0, 1e-6);
-    p.apvts.state.setProperty (pb::dsp::fineId, true, nullptr);
+    p.apvts.state.setProperty (pb::fineId, true, nullptr);
     slowDrag (pitchAt, 20);
     CHECK_NEAR (p.get (pb::id::pitch), 1.2, 1e-3);
     pb::mouse::wheel (content, pitchAt, 1.0f);                               // Fine: 32 cents per notch
     CHECK_NEAR (p.get (pb::id::pitch), 1.52, 1e-3);
-    p.apvts.state.setProperty (pb::dsp::fineId, false, nullptr);
+    p.apvts.state.setProperty (pb::fineId, false, nullptr);
     set (p, pb::id::pitch, 0.0f);
     set (p, pb::id::formant, 2.0f);
     slowDrag (linkAt, 60);                                               // Link: whole semitones, the offset kept
@@ -508,9 +508,32 @@ static void testShifterLatch()
     CHECK (r < -60.0);
 }
 
+// the DSP's ranges of the modulatable controls (dsp/Model.h targets) convert as their host parameters do, to the bit
+static void testTargetRanges()
+{
+    FwPitchBendProcessor p;
+    int same = 0, total = 0;
+    for (int t = 0; t < pb::dsp::numTargets; ++t)
+    {
+        auto* q = dynamic_cast<juce::RangedAudioParameter*> (p.apvts.getParameter (pb::dsp::targets[t].param));
+        CHECK (q != nullptr);
+        if (q == nullptr) continue;
+        const auto& r = pb::dsp::targets[t].range;
+        for (int k = -20; k <= 1020; ++k)
+        {
+            const float v = (float) k / 1000.0f, x = r.start + (r.end - r.start) * v;
+            total += 2;
+            if (juce::exactlyEqual (q->convertFrom0to1 (v), r.from0to1 (v))) ++same;
+            if (juce::exactlyEqual (q->convertTo0to1 (x), r.to0to1 (x))) ++same;
+        }
+    }
+    CHECK (same == total);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testTargetRanges();
     testParameters();
     testBuses();
     testPassThrough();

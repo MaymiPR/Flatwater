@@ -1,5 +1,4 @@
 #pragma once
-#include <juce_audio_processors/juce_audio_processors.h>
 #include <array>
 #include <vector>
 #include "Model.h"
@@ -10,7 +9,7 @@
 // Flatwater Pitch Bend's audio path: the modulators (dsp/Mod.h) put on the controls through the slots, then the pitch
 // and formant shifter (dsp/Shifter) on the wet path and Mix, per sample, with its modulation. The processor hands it
 // the controls' values once per block (Params), the slots and shapes (Setup) and the host's transport; the controls'
-// ranges come from their host parameters (setTargets), as the modulation acts on their normalised values. No latency.
+// ranges are their host parameters' (dsp/Model.h targets), as the modulation acts on their normalised values. No latency.
 namespace pb::dsp
 {
 class Engine
@@ -36,8 +35,8 @@ public:
         bool havePpq = false;
     };
 
-    void setTargets (const std::array<juce::RangedAudioParameter*, numTargets>& p) { targets = p; }
-    void prepare (double sampleRate, int maxBlock, int channels);
+    // norm: the modulatable controls' normalised values now (targets[] order), where their modulation starts from
+    void prepare (double sampleRate, int maxBlock, int channels, const std::array<float, numTargets>& norm);
     // in place, `channels` channels of n samples
     void process (float* const* io, int channels, int n, const Params&, const Setup&);
 
@@ -52,7 +51,6 @@ public:
 private:
     double modulatedValue (int target, const Params&) const;     // a control with last block's modulation, real units
 
-    std::array<juce::RangedAudioParameter*, numTargets> targets {};
     double sr = 48000.0;
     long long processed = 0;                                     // samples since the start of processing
     std::array<double, numTargets> modSum {};                    // last block's sums of the slots (depth / 100 x source)

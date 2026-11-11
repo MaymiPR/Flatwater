@@ -35,6 +35,7 @@ FwVocalChainProcessor::FwVocalChainProcessor()
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
       apvts (*this, &undo, "FwVocalChain", layout())
 {
+    chain.setReverb (&reverb);
     setLatencySamples (ch::latencySamples (48000.0));
     startTimerHz (30);
 }

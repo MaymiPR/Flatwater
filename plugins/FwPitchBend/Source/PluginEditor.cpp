@@ -87,7 +87,7 @@ public:
 //==============================================================================
 FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
     : Editor (p, p.apvts, p.undo, p.apvts.getParameter (pb::id::mode), "Flatwater Pitch Bend", JucePlugin_VersionString, W,
-              (bool) p.apvts.state.getProperty (pb::dsp::expandedId, false) ? HOpen : HClosed,
+              (bool) p.apvts.state.getProperty (pb::expandedId, false) ? HOpen : HClosed,
               flatwater::Toolbar::Style::Hybrid, pb::modeNames()),
       proc (p), ui { p }
 {

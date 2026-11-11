@@ -72,12 +72,12 @@ int main (int argc, char** argv)
         else if (k == "block") block = std::max (1, std::atoi (v.c_str()));
         else if (k == "bpm") head.bpm = std::atof (v.c_str());
         else if (k == "preroll") preroll = std::atof (v.c_str());
-        else if (k == "fine") st.setProperty (pb::dsp::fineId, std::atoi (v.c_str()) != 0, nullptr);
+        else if (k == "fine") st.setProperty (pb::fineId, std::atoi (v.c_str()) != 0, nullptr);
         else if (k == "slot" && parts.size() == 4)
         {
-            const int t = pb::dsp::targetIndex (parts[0]);
+            const int t = pb::targetIndex (parts[0]);
             if (t < 0) { std::fprintf (stderr, "unknown target %s\n", parts[0].toRawUTF8()); return 2; }
-            pb::dsp::setSlot (st, t, parts[1].getIntValue(), { parts[2].getIntValue(), parts[3].getFloatValue() }, nullptr);
+            pb::setSlot (st, t, parts[1].getIntValue(), { parts[2].getIntValue(), parts[3].getFloatValue() }, nullptr);
         }
         else if (k == "table" && parts.size() >= 2)
         {
@@ -86,7 +86,7 @@ int main (int argc, char** argv)
             if (mb.getSize() != sizeof (float) * (size_t) pb::dsp::tableSize) { std::fprintf (stderr, "a table is 512 float32\n"); return 2; }
             pb::dsp::Table t;
             std::memcpy (t.data(), mb.getData(), mb.getSize());
-            pb::dsp::setTable (st, parts[0].getIntValue(), t, nullptr);
+            pb::setTable (st, parts[0].getIntValue(), t, nullptr);
         }
         else if (auto* q = p.apvts.getParameter (k)) q->setValueNotifyingHost (q->convertTo0to1 ((float) std::atof (v.c_str())));
         else { std::fprintf (stderr, "unknown key %s\n", k.c_str()); return 2; }

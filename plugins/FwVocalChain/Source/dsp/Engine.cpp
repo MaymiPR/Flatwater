@@ -1,123 +1,14 @@
 #include "Engine.h"
-#include "FwVocalChainIR.h"
-#include <thread>
-
-using namespace juce;
+#include <algorithm>
+#include <cstring>
 
 namespace ch::dsp
 {
-namespace
-{
-// the reverb's responses for one rate (plugins/FwVocalChain/scripts/pack_reverb.py): per colour a length, then LL, LR, RL, RR
-// interleaved as 16-bit floats
-struct Packed { double fs; const char* data; int size; };
-
-float half (uint16 h)
-{
-    const uint32 s = (uint32) (h & 0x8000u) << 16, e = (h >> 10) & 0x1fu, m = h & 0x3ffu;
-    uint32 f;
-    if (e == 0) { if (m == 0) f = s; else { int ee = -1; uint32 mm = m; do { ++ee; mm <<= 1; } while ((mm & 0x400u) == 0); f = s | ((uint32) (127 - 15 - ee) << 23) | ((mm & 0x3ffu) << 13); } }
-    else if (e == 31) f = s | 0x7f800000u | (m << 13);
-    else f = s | ((e + 112u) << 23) | (m << 13);
-    float v;
-    std::memcpy (&v, &f, 4);
-    return v;
-}
-
-Packed nearestPacked (double fs)
-{
-    const Packed all[] = { { 44100.0, ch::ir::reverb_44100_bin, ch::ir::reverb_44100_binSize },
-                           { 48000.0, ch::ir::reverb_48000_bin, ch::ir::reverb_48000_binSize },
-                           { 88200.0, ch::ir::reverb_88200_bin, ch::ir::reverb_88200_binSize },
-                           { 96000.0, ch::ir::reverb_96000_bin, ch::ir::reverb_96000_binSize } };
-    const Packed* best = &all[0];
-    for (const auto& p : all) if (std::abs (std::log (p.fs / fs)) < std::abs (std::log (best->fs / fs))) best = &p;
-    return *best;
-}
-}
-
-//==============================================================================
-void Reverb::prepare (double fs, int block, int skip)
-{
-    const auto pk = nearestPacked (fs);
-    const auto* p = reinterpret_cast<const uint8*> (pk.data);
-    const juce::dsp::ProcessSpec spec { fs, (uint32) jmax (1, block), 2 };
-    int want[3] {};
-    for (int c = 0; c < 3; ++c)
-    {
-        uint32 n;
-        std::memcpy (&n, p, 4); p += 4;
-        const int m = (int) n - skip;
-        AudioBuffer<float> direct (2, m), cross (2, m);                  // (LL, RR) and (RL, LR): the outputs from each input
-        for (int i = 0; i < m; ++i)
-        {
-            uint16 v[4];
-            std::memcpy (v, p + (size_t) (i + skip) * 8, 8);
-            direct.setSample (0, i, half (v[0])); direct.setSample (1, i, half (v[3]));
-            cross.setSample (0, i, half (v[2])); cross.setSample (1, i, half (v[1]));
-        }
-        p += (size_t) n * 8;
-        want[c] = (int) (0.99 * m * fs / pk.fs);                       // (its length at this rate, less a margin)
-        for (int k = 0; k < 2; ++k)
-        {
-            auto& e = conv[(size_t) c][(size_t) k];
-            e = std::make_unique<juce::dsp::Convolution> (juce::dsp::Convolution::NonUniform { 256 });
-            e->prepare (spec);
-            e->loadImpulseResponse (k == 0 ? std::move (direct) : std::move (cross), pk.fs, juce::dsp::Convolution::Stereo::yes,
-                                    juce::dsp::Convolution::Trim::no, juce::dsp::Convolution::Normalise::no);
-        }
-    }
-    // the responses load on a background thread and are swapped in during processing (with a short crossfade): run
-    // silence through every engine until each holds its whole response (a busy machine can take seconds), so the first
-    // real block already has it
-    a.setSize (2, jmax (1, block)); b.setSize (2, jmax (1, block));
-    const auto t0 = Time::getMillisecondCounter();
-    for (;;)
-    {
-        bool ready = true;
-        for (int c = 0; c < 3; ++c)
-            for (auto& e : conv[(size_t) c])
-            {
-                a.clear();
-                juce::dsp::AudioBlock<float> blk (a);
-                e->process (juce::dsp::ProcessContextReplacing<float> (blk));
-                ready = ready && e->getCurrentIRSize() >= want[c];
-            }
-        if (ready || Time::getMillisecondCounter() - t0 > 20000) break;
-        std::this_thread::sleep_for (std::chrono::milliseconds (2));
-    }
-    for (int i = 0; i < (int) (0.2 * fs) / jmax (1, block) + 2; ++i)    // (past the crossfade)
-        for (auto& c : conv)
-            for (auto& e : c) { a.clear(); juce::dsp::AudioBlock<float> blk (a); e->process (juce::dsp::ProcessContextReplacing<float> (blk)); }
-    reset();
-    running = 0;
-}
-
-void Reverb::process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain)
-{
-    if (colour > 0 && colour != running) { running = colour; for (auto& e : conv[(size_t) running - 1]) e->reset(); }
-    if (running == 0) { FloatVectorOperations::clear (outL, n); FloatVectorOperations::clear (outR, n); return; }
-    a.setSize (2, n, false, false, true); b.setSize (2, n, false, false, true);
-    a.copyFrom (0, 0, inL, n); a.copyFrom (1, 0, inR, n);
-    b.copyFrom (0, 0, inR, n); b.copyFrom (1, 0, inL, n);
-    {
-        juce::dsp::AudioBlock<float> ba (a), bb (b);
-        conv[(size_t) running - 1][0]->process (juce::dsp::ProcessContextReplacing<float> (ba));
-        conv[(size_t) running - 1][1]->process (juce::dsp::ProcessContextReplacing<float> (bb));
-    }
-    const float g = colour > 0 ? gain : 0.0f;                          // (clear: muted, the engine still running)
-    for (int i = 0; i < n; ++i)
-    {
-        outL[i] = g * (a.getSample (0, i) + b.getSample (0, i));
-        outR[i] = g * (a.getSample (1, i) + b.getSample (1, i));
-    }
-}
-
 //==============================================================================
 void Compressor::prepare (double sampleRate)
 {
     fs = sampleRate;
-    la = jmax (1, (int) std::lround (64.0 * fs / 48000.0));
+    la = std::max (1, (int) std::lround (64.0 * fs / 48000.0));
     bl.assign ((size_t) la + 1, 0.0f); br.assign ((size_t) la + 1, 0.0f);
     dq.assign ((size_t) la + 2, 0); dqNeed.assign ((size_t) la + 2, 1.0);
     feat.assign ((size_t) la + 1, Feature { -120.0, 0.0, 0.0, 0.0 });
@@ -162,17 +53,17 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
     }
     // the parameters at the fader, linear between the fitted steps
     const auto& c = *comptables::colours[colour];
-    const double x = juce::jlimit (0.0, 20.0, (double) fader + 10.0);
-    const int k0 = juce::jmin (19, (int) x);
+    const double x = std::clamp ((double) fader + 10.0, 0.0, 20.0);
+    const int k0 = std::min (19, (int) x);
     const double t = x - k0;
     double p[comptables::nParams];
     // (two steps fitted in different structures, the stages' order or the detector, do not blend: the nearer one)
-    const bool same = juce::exactlyEqual (c.p[k0][37], c.p[k0 + 1][37]) && juce::exactlyEqual (c.p[k0][38], c.p[k0 + 1][38]);
+    const bool same = flatwater::math::exactlyEqual (c.p[k0][37], c.p[k0 + 1][37]) && flatwater::math::exactlyEqual (c.p[k0][38], c.p[k0 + 1][38]);
     for (int k = 0; k < comptables::nParams; ++k)
         p[k] = same ? c.p[k0][k] + (c.p[k0 + 1][k] - c.p[k0][k]) * t : c.p[t < 0.5 ? k0 : k0 + 1][k];
     const bool limFirst = p[37] >= 0.5, feedback = p[38] >= 0.5;
     const double gin = std::pow (10.0, p[0] / 20.0), gout = std::pow (10.0, p[11] / 20.0), limGin = limFirst ? std::pow (10.0, p[39] / 20.0) : 1.0;
-    const double T = p[1], R = juce::jmax (1.0, p[2]), K = p[3];
+    const double T = p[1], R = std::max (1.0, p[2]), K = p[3];
     auto coef = [this] (double ms) { return ms <= 0.0 ? 0.0 : std::exp (-1.0 / (ms * 0.001 * fs)); };
     const double ca = coef (p[4]), cr = coef (p[5]), cs = coef (p[6]), share = p[7];
     const double ceil = std::pow (10.0, p[8] / 20.0), clr = coef (p[9]), cw = coef (p[13]), lk = p[14];
@@ -181,7 +72,7 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
     auto shape = [a2, bb, a3] (double u) { return u + a2 * u * u + bb * u * std::abs (u) + a3 * u * u * u; };
     // the detector's first-order high-pass (none at 0)
     const bool detHp = p[40] > 0.0;
-    const double hk = detHp ? std::tan (juce::MathConstants<double>::pi * juce::jmin (p[40], 0.45 * fs) / fs) : 0.0;
+    const double hk = detHp ? std::tan (flatwater::math::pi * std::min (p[40], 0.45 * fs) / fs) : 0.0;
     const double hb = 1.0 / (1.0 + hk), hav = (hk - 1.0) / (hk + 1.0);
     // the compressor (its input gain first; the static correction's knots referred to the level before that gain)
     double det = 0.0, red = 0.0;                                      // (the compressor's last sample, for the net)
@@ -195,7 +86,7 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
             const double ua = hb * (da - dhx[0]) - hav * dhy[0], ub = hb * (db - dhx[1]) - hav * dhy[1];
             dhx[0] = da; dhx[1] = db; dhy[0] = ua; dhy[1] = ub; da = ua; db = ub;
         }
-        const double v = juce::jmax (std::abs (da), std::abs (db));
+        const double v = std::max (std::abs (da), std::abs (db));
         double L;
         if (power) { pw = cw * pw + (1.0 - cw) * v * v; L = 10.0 * std::log10 (pw + 1.0e-30); }
         else L = 20.0 * std::log10 (v + 1.0e-30);
@@ -219,12 +110,12 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
     // sample la behind
     auto limit = [&] (double& a, double& b)
     {
-        const double pk = juce::jmax (std::abs (a), std::abs (b));
+        const double pk = std::max (std::abs (a), std::abs (b));
         double nd = 1.0;
         if (pk > 1.0e-30)
         {
             const double o2 = 20.0 * std::log10 (pk / ceil);
-            const double r2 = lk > 0.0 && o2 > -lk / 2.0 && o2 < lk / 2.0 ? (o2 + lk / 2.0) * (o2 + lk / 2.0) / (2.0 * lk) : juce::jmax (0.0, o2);
+            const double r2 = lk > 0.0 && o2 > -lk / 2.0 && o2 < lk / 2.0 ? (o2 + lk / 2.0) * (o2 + lk / 2.0) / (2.0 * lk) : std::max (0.0, o2);
             nd = std::pow (10.0, -r2 / 20.0);
         }
         bl[(size_t) w] = (float) a; br[(size_t) w] = (float) b;
@@ -244,7 +135,7 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
     {
         double a = l[i], b = r[i];
         auto& in = feat[(size_t) fw];                                 // (this sample's input, read again la later)
-        in.pk = juce::jmax (std::abs (a), std::abs (b)); in.pw = juce::jmax (a * a, b * b);
+        in.pk = std::max (std::abs (a), std::abs (b)); in.pw = std::max (a * a, b * b);
         if (limFirst) { a *= limGin; b *= limGin; limit (a, b); compress (a, b); }
         else { compress (a, b); limit (a, b); in.det = det; in.red = red; }
         fw = (fw + 1) % len;
@@ -266,14 +157,14 @@ void DeEsser::prepare (double sampleRate, double thresholdOffsetDb)
     const deesstables::Taps* best = &deesstables::taps[0];
     for (const auto& t : deesstables::taps) if (std::abs (std::log (t.fs / fs)) < std::abs (std::log (best->fs / fs))) best = &t;
     nt = best->nt; h = best->h;
-    la = jmax (0, (int) std::lround (deesstables::lookAhead48 * fs / 48000.0));
+    la = std::max (0, (int) std::lround (deesstables::lookAhead48 * fs / 48000.0));
     len = 2 * nt + la + 1;
     for (auto* v : { &al, &ar, &bl, &br }) v->assign ((size_t) len, 0.0f);
     gq.assign ((size_t) nt + 1, 1.0f);
     const double* p = deesstables::p;
     auto pass = [this] (bool high, double f0, double q, Biquad& f)
     {
-        const double wv = 2.0 * juce::MathConstants<double>::pi * juce::jlimit (1.0, fs * 0.49, f0) / fs;
+        const double wv = 2.0 * flatwater::math::pi * std::clamp (f0, 1.0, fs * 0.49) / fs;
         const double cw = std::cos (wv), alpha = std::sin (wv) / (2.0 * q), a0 = 1.0 + alpha;
         const double c[5] = { (high ? 1.0 + cw : 1.0 - cw) / 2.0 / a0, (high ? -(1.0 + cw) : 1.0 - cw) / a0,
                               (high ? 1.0 + cw : 1.0 - cw) / 2.0 / a0, -2.0 * cw / a0, (1.0 - alpha) / a0 };
@@ -377,7 +268,7 @@ void Delays::prepare (double sampleRate, int block, const Tuning& t)
     analog.prepare (fs, 2);
     analog.setMode (4);
     line.prepare (fs);
-    work.setSize (2, juce::jmax (1, block));
+    work.setSize (std::max (1, block));
     histL.assign ((size_t) (fs * 0.25) + 1, 0.0f); histR.assign (histL.size(), 0.0f);
     hpos = 0;
     running = 1;
@@ -386,16 +277,17 @@ void Delays::prepare (double sampleRate, int block, const Tuning& t)
 void Delays::process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain, double bpm)
 {
     if (colour > 0) running = colour;
-    if (work.getNumSamples() < n) work.setSize (2, n, false, false, true);
-    work.copyFrom (0, 0, inL, n); work.copyFrom (1, 0, inR, n);
-    float* const ch[2] = { work.getWritePointer (0), work.getWritePointer (1) };
+    if (work.size() < n) work.setSize (n);
+    std::copy (inL, inL + n, work.write (0)); std::copy (inR, inR + n, work.write (1));
+    float* const ch[2] = { work.write (0), work.write (1) };
     analog.process (ch, n);
-    work.applyGain (0, n, tune.loopIn);                                     // (the reference delay's loop sees the send 4.4 dB lower)
+    for (auto* c : ch)                                                       // (the reference delay's loop sees the send 4.4 dB lower)
+        for (int i = 0; i < n; ++i) c[i] *= tune.loopIn;
     static constexpr double beats[4] = { 0.0, 0.25, 0.5, 1.0 };
     static constexpr float fb[4] = { 0.0f, 0.0f, 0.5f, 0.3f }, outDb[4] = { 0.0f, -12.0f, -9.0f, -9.0f };
     const double tempo = bpm > 0.0 ? bpm : 120.0;
     de::dsp::Settings st;
-    st.timeL = st.timeR = juce::jlimit (1.0, 3500.0, beats[running] * 60000.0 / tempo) * fs / 1000.0;
+    st.timeL = st.timeR = std::clamp (beats[running] * 60000.0 / tempo, 1.0, 3500.0) * fs / 1000.0;
     st.feedback = fb[running];
     st.mix = 1.0f;
     st.outputDb = outDb[running];
@@ -403,7 +295,7 @@ void Delays::process (const float* inL, const float* inR, float* outL, float* ou
     st.mode = 0;
     line.process (ch, 2, n, st);
     const int len = (int) histL.size();
-    const int t2 = juce::jlimit (1, len - 1, (int) std::lround (tune.tap2Bars * 4.0 * 60.0 / tempo * fs));
+    const int t2 = std::clamp ((int) std::lround (tune.tap2Bars * 4.0 * 60.0 / tempo * fs), 1, len - 1);
     const float g = colour > 0 ? gain / tune.loopIn : 0.0f;
     for (int i = 0; i < n; ++i)
     {
@@ -564,13 +456,13 @@ void Doubler::process (const float* inL, const float* inR, float* outL, float* o
             const double d = triDelay (running, k, t);
             const bool down = d < st.last;
             if (down != st.down) { st.down = down; st.armed = true; st.armFloor = std::floor (st.last); }
-            if (st.armed && ! juce::exactlyEqual (std::floor (d), st.armFloor)) { st.extra = st.down && mc.extraSample ? 1 : 0; st.armed = false; }
+            if (st.armed && ! flatwater::math::exactlyEqual (std::floor (d), st.armFloor)) { st.extra = st.down && mc.extraSample ? 1 : 0; st.armed = false; }
             st.last = d;
             for (int r = 0; r < 20; ++r)                                        // (the input's autocorrelation at the steps)
                 st.corr[(size_t) r] = keep * st.corr[(size_t) r] + (double) line[(size_t) pos] * line[(size_t) ((pos - lag[r] + len) % len)];
             auto tap = [&] (double offset)                                      // a linear read offset + d (+ 1) samples back
             {
-                const double e = juce::jlimit (1.0, (double) len - 4.0, offset + d + st.extra);
+                const double e = std::clamp (offset + d + st.extra, 1.0, (double) len - 4.0);
                 const int i0 = (int) e; const double fr = e - i0;
                 return (1.0 - fr) * line[(size_t) ((pos - i0 + 2 * len) % len)] + fr * line[(size_t) ((pos - i0 - 1 + 2 * len) % len)];
             };
@@ -621,7 +513,7 @@ void Chain::prepare (double sampleRate, int maxBlock)
         fixedFilter[(size_t) i].set (best->sos[i]); fixedFilter[(size_t) i].reset();
     }
     bass.prepare (fs, true, t.eqGlideS); treble.prepare (fs, false, t.eqGlideS);
-    reverb.prepare (fs, maxBlock, reverbDeesser.delay());
+    if (reverb != nullptr) reverb->prepare (fs, maxBlock, reverbDeesser.delay());
     delays.prepare (fs, maxBlock, t);
     {
         // the echoes measured against the reference's (noise, every delay colour alike): our delay model leaves
@@ -633,7 +525,7 @@ void Chain::prepare (double sampleRate, int maxBlock)
         for (auto& f : delayFix) f.reset();
     }
     doubler.prepare (fs, latency, t);
-    for (auto* bf : { &tap, &send, &wet, &wet2, &wet3 }) bf->setSize (2, jmax (1, maxBlock));
+    for (auto* bf : { &tap, &send, &wet, &wet2, &wet3 }) bf->setSize (std::max (1, maxBlock));
     levelCoef = std::exp (-1.0 / (t.levelS * fs));
     level = 0.0;
     // the Noise (on in the reference by default): white, uncorrelated L / R, -108.3 dBFS rms at the output with every
@@ -648,7 +540,7 @@ void Chain::reset()
     deesser.reset();
     reverbDeesser.reset();
     for (auto& f : delayFix) f.reset();
-    reverb.reset();
+    if (reverb != nullptr) reverb->reset();
     doubler.reset();
 }
 
@@ -658,7 +550,7 @@ void Chain::process (float* l, float* r, int n, const Params& p)
     const double balL = std::pow (10.0, std::min (0.0f, -p.balance) / 20.0), balR = std::pow (10.0, std::min (0.0f, p.balance) / 20.0);
     bass.set (p.colour[0], p.fader[0]);
     treble.set (p.colour[1], p.fader[1]);
-    if (tap.getNumSamples() < n) for (auto* bf : { &tap, &send, &wet, &wet2, &wet3 }) bf->setSize (2, n, false, false, true);
+    if (tap.size() < n) for (auto* bf : { &tap, &send, &wet, &wet2, &wet3 }) bf->setSize (n);
     std::normal_distribution<double> gauss (0.0, 1.0);
     const int len = (int) lineL.size();
     // the input, Sensitivity, Balance, the Noise, the input delay, the clear chain's shaper, Bass, Treble (into tap)
@@ -676,36 +568,39 @@ void Chain::process (float* l, float* r, int n, const Params& p)
         xr = xr - t.clearShaperSq * xr * xr + t.clearShaperCube * xr * xr * xr;
         bass.run (xl, xr);
         treble.run (xl, xr);
-        tap.setSample (0, i, (float) xl); tap.setSample (1, i, (float) xr);
+        tap.set (0, i, (float) xl); tap.set (1, i, (float) xr);
     }
     // Compress, the fixed filter, then the de-esser (on the dry path and on the tap the reverb takes)
-    compressor.process (tap.getWritePointer (0), tap.getWritePointer (1), n, p.colour[2], p.fader[2]);
+    compressor.process (tap.write (0), tap.write (1), n, p.colour[2], p.fader[2]);
     for (int i = 0; i < n; ++i)
     {
-        double xl = tap.getSample (0, i), xr = tap.getSample (1, i);
+        double xl = tap.sample (0, i), xr = tap.sample (1, i);
         for (auto& f : fixedFilter) { xl = f.run (xl, 0); xr = f.run (xr, 1); }
         l[i] = (float) xl; r[i] = (float) xr;
     }
-    deesser.process (l, r, l, r, tap.getWritePointer (0), tap.getWritePointer (1), n);
-    reverbDeesser.process (l, r, tap.getWritePointer (0), tap.getWritePointer (1), nullptr, nullptr, n);
+    deesser.process (l, r, l, r, tap.write (0), tap.write (1), n);
+    reverbDeesser.process (l, r, tap.write (0), tap.write (1), nullptr, nullptr, n);
     // the wet stages on the tap: the reverb (1.2 dB per fader step from its measured response at 0)
-    reverb.process (tap.getReadPointer (0), tap.getReadPointer (1), wet.getWritePointer (0), wet.getWritePointer (1), n,
-                    p.colour[3], (float) std::pow (10.0, t.faderDbPerStep * p.fader[3] / 20.0));
+    if (reverb != nullptr)
+        reverb->process (tap.read (0), tap.read (1), wet.write (0), wet.write (1), n,
+                         p.colour[3], (float) std::pow (10.0, t.faderDbPerStep * p.fader[3] / 20.0));
+    else
+        for (auto& c : wet.ch) std::fill (c.begin(), c.begin() + n, 0.0f);
     // the delays and the doubler take the dry path (after the fixed filter and the de-esser)
-    send.copyFrom (0, 0, l, n); send.copyFrom (1, 0, r, n);
-    delays.process (send.getReadPointer (0), send.getReadPointer (1), wet2.getWritePointer (0), wet2.getWritePointer (1), n,
+    std::copy (l, l + n, send.write (0)); std::copy (r, r + n, send.write (1));
+    delays.process (send.read (0), send.read (1), wet2.write (0), wet2.write (1), n,
                     p.colour[4], (float) std::pow (10.0, t.faderDbPerStep * p.fader[4] / 20.0), p.bpm);
     for (int ch = 0; ch < 2; ++ch)
     {
-        auto* d = wet2.getWritePointer (ch);
+        auto* d = wet2.write (ch);
         for (int i = 0; i < n; ++i) { double v = d[i]; for (auto& f : delayFix) v = f.run (v, ch); d[i] = (float) v; }
     }
-    doubler.process (send.getReadPointer (0), send.getReadPointer (1), wet3.getWritePointer (0), wet3.getWritePointer (1), n,
+    doubler.process (send.read (0), send.read (1), wet3.write (0), wet3.write (1), n,
                      p.colour[5], (float) std::pow (10.0, t.faderDbPerStep * p.fader[5] / 20.0));
     for (int i = 0; i < n; ++i)
     {
-        l[i] = (float) ((l[i] + wet.getSample (0, i) + wet2.getSample (0, i) + wet3.getSample (0, i)) * gOut);
-        r[i] = (float) ((r[i] + wet.getSample (1, i) + wet2.getSample (1, i) + wet3.getSample (1, i)) * gOut);
+        l[i] = (float) ((l[i] + wet.sample (0, i) + wet2.sample (0, i) + wet3.sample (0, i)) * gOut);
+        r[i] = (float) ((r[i] + wet.sample (1, i) + wet2.sample (1, i) + wet3.sample (1, i)) * gOut);
     }
 }
 }

@@ -6,6 +6,8 @@
 // the compiler does not fuse a multiply and an add (CMakeLists.txt turns that off for GCC and Clang).
 // Accuracy: within about 2 units in the last place of the true value.
 #include <cmath>
+#include <cstdint>
+#include <cstring>
 #include <functional>
 #include <limits>
 
@@ -13,6 +15,18 @@ namespace flatwater::math
 {
 // a == b, meant exactly: through std::equal_to, so -Wfloat-equal stays quiet (juce::exactlyEqual where JUCE is in)
 template <typename T> constexpr bool exactlyEqual (T a, T b) { return std::equal_to<T>{} (a, b); }
+
+inline constexpr double pi = 3.141592653589793238;           // (the double juce::MathConstants<double>::pi holds)
+
+// the nearest whole number, as juce::roundToInt gives it (halves to the even neighbour): x + 1.5 * 2^52 leaves the
+// rounded value in the low 32 bits of the sum
+inline int roundToInt (double x)
+{
+    const double sum = x + 6755399441055744.0;
+    std::uint64_t bits = 0;
+    std::memcpy (&bits, &sum, sizeof (bits));
+    return (int) (std::uint32_t) (bits & 0xffffffffu);
+}
 
 inline constexpr double ln2Hi = 6.93147180369123816490e-01;   // ln 2 split so that k * ln2Hi is exact for |k| < 2^20
 inline constexpr double ln2Lo = 1.90821492927058770002e-10;

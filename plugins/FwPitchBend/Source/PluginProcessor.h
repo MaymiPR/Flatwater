@@ -3,6 +3,7 @@
 #include <atomic>
 #include "dsp/Model.h"
 #include "dsp/Engine.h"
+#include "ModulationState.h"
 #include "Presets.h"
 #include "Params.h"
 
@@ -41,7 +42,7 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    bool fine() const { return (bool) apvts.state.getProperty (pb::dsp::fineId, false); }
+    bool fine() const { return (bool) apvts.state.getProperty (pb::fineId, false); }
     // Pitch / Formant in semitones as they act: whole semitones while Fine is off, cents (0.01) while it is on
     float shiftSemitones (const char* id) const
     {
