@@ -32,7 +32,7 @@ add_dependencies(ci_targets FwVocalComp_VST3 FwVocalCompTests)
 if(FLATWATER_TOOLS)
     # Editor snapshot tool (renders the GUI to a PNG for the visual comparison; docs/screenshots/README.md).
     juce_add_console_app(FwVocalCompSnapshot PRODUCT_NAME "FwVocalCompSnapshot")
-    target_sources(FwVocalCompSnapshot PRIVATE ${VC_DIR}/tools/Snapshot.cpp ${VC_SOURCES})
+    target_sources(FwVocalCompSnapshot PRIVATE ${CMAKE_SOURCE_DIR}/tools/Snapshot.cpp ${VC_SOURCES})
     target_include_directories(FwVocalCompSnapshot PRIVATE ${VC_DIR}/Source)
     target_compile_definitions(FwVocalCompSnapshot PRIVATE ${VC_APP_DEFS})
     target_link_libraries(FwVocalCompSnapshot PRIVATE FlatwaterShared juce::juce_recommended_config_flags)
