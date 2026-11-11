@@ -1,5 +1,7 @@
 #include "shared/ui/RenUI.h"
 #include "shared/ui/Widgets.h"
+#include <iostream>
+#include <typeinfo>
 
 using namespace juce;
 
@@ -294,6 +296,54 @@ Editor::~Editor()
     for (auto& c : owned) c->setLookAndFeel (nullptr);
     for (auto* c : getChildren()) if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setLookAndFeel (nullptr);
     owned.clear();
+}
+
+bool Editor::snapshotOption (const String& option)
+{
+    if (option == "--bench")                  // each visible slider: the time to repaint it as it turns
+    {
+        std::function<void (Component&)> visit = [&] (Component& c)
+        {
+            for (auto* k : c.getChildren())
+            {
+                if (auto* s = dynamic_cast<Slider*> (k); s != nullptr && s->isVisible() && s->getWidth() > 20)
+                {
+                    s->createComponentSnapshot (s->getLocalBounds(), true, 1.0f);
+                    const double t0 = Time::getMillisecondCounterHiRes();
+                    for (int n = 0; n < 40; ++n)
+                    {
+                        s->setValue (s->proportionOfLengthToValue ((double) n / 40.0), dontSendNotification);
+                        s->createComponentSnapshot (s->getLocalBounds(), true, 1.0f);
+                    }
+                    std::cout << "slider at " << s->getBounds().toString() << ": "
+                              << (Time::getMillisecondCounterHiRes() - t0) / 40.0 << " ms per repaint\n";
+                }
+                visit (*k);
+            }
+        };
+        visit (*this);
+        return true;
+    }
+    if (option.startsWith ("--click="))       // a mouse click (editor pixels) on whatever component is there
+    {
+        const auto xy = StringArray::fromTokens (option.fromFirstOccurrenceOf ("=", false, false), ",", "");
+        const Point<float> pt (xy[0].getFloatValue(), xy[1].getFloatValue());
+        setVisible (true);                    // (off screen; hit-testing skips hidden components)
+        auto* target = getComponentAt (pt.roundToInt());
+        if (target == nullptr) return true;
+        std::cerr << "click " << pt.toString() << " -> " << typeid (*target).name() << " at " << target->getScreenBounds().toString() << "\n";
+        const auto local = target->getLocalPoint (this, pt);
+        const auto now = Time::getCurrentTime();
+        auto ev = [&] (ModifierKeys mods)
+        {
+            return MouseEvent (Desktop::getInstance().getMainMouseSource(), local, mods, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                               target, target, now, local, now, 1, false);
+        };
+        target->mouseDown (ev (ModifierKeys::leftButtonModifier));
+        target->mouseUp (ev ({}));
+        return true;
+    }
+    return false;
 }
 
 Fader& Editor::makeFader (Fader::Kind k, int thumbOffsetX)

@@ -77,7 +77,7 @@ public:
     void paintButton (juce::Graphics&, bool hot, bool down) override;
 };
 
-class Editor : public juce::AudioProcessorEditor, private juce::Timer
+class Editor : public juce::AudioProcessorEditor, public flatwater::SnapshotHooks, private juce::Timer
 {
 public:
     Editor (juce::AudioProcessor&, juce::AudioProcessorValueTreeState&, juce::UndoManager&,
@@ -87,6 +87,13 @@ public:
     ~Editor() override;
     void resized() override;
     void parentHierarchyChanged() override;
+
+    // the snapshot tool's options (tools/Snapshot.cpp), in the order given:
+    //   --click=x,y  a mouse click (editor pixels) on whatever component is there, for a state only a click sets
+    //   --bench      each visible slider's repaint time as it turns, printed
+    // The meters read the processor's own taps, so --levels has nothing to freeze here.
+    bool snapshotOption (const juce::String& option) override;
+    void setTestLevels (float, float) override {}
 
 protected:
     // subclasses draw and react in design coordinates
