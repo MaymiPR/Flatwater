@@ -68,7 +68,7 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Effect of the side-chain | none observed: with the side-chain bus enabled and fed (`tools/RefRender`, `tools/MeterCapture` with `sc=`), the reference's Music knob keeps its disabled picture, its LED stays dark and Music Sensitivity changes nothing; the reference uses the music only while its host reports the side-chain active, which these hosts do not achieve | offline hosts | open: needs a host with a real side-chain send; the plug-in rides without the music |
+| Effect of the side-chain | the music raises the gain on the voice: on a steady voice at -21 dBFS the gain is -3.38 dB without music and with pink noise up to -40 dBFS rms, -3.07 dB at -20, -1.75 at -12 and 0.90 at -6 (Music Sensitivity 0, after 8 s); Music Sensitivity adds to the music's level in dB (6 with music at -12 gives the 0.90 dB of 0 with music at -6, and 12 with music at -12 the 5.09 dB of 6 with music at -6), and at Off the music changes nothing (-3.38 dB at every level); after a step of the music the gain moves by about 1.1 dB per second upward and 0.6 to 0.8 downward; the two channels are summed (one alone counts 6 dB less); a 1 kHz tone counts more than pink noise of the same level (-0.74 against -1.75 dB at -12 dBFS) and a 100 Hz tone less (-2.88) | `plugins/FwVocalLeveler/nulltest/measure_sidechain.py`: `tools/RefRender` with `sc=` | a first measurement: the law is not fitted, and the plug-in rides without the music |
 
 ## 5. The model against the reference
 
@@ -104,8 +104,8 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 - How: the reference's riding was identified from probes and a corpus of 36 vocal parts (a DAW's own vocal phrases).
   It rides only on the samples its vocal detector passes, which is why it rises slowly on a real voice; every
   constant is the reference's own hidden value, none is fitted.
-- Not covered: the Music side-chain (Music Sensitivity). The reference uses the music only when its host reports the
-  side-chain active, which no offline host here does; Flatwater Vocal Leveler rides without it.
+- Not covered: the Music side-chain (Music Sensitivity). The reference raises the voice with the music (section 4);
+  Flatwater Vocal Leveler rides without it.
 - Every case: [NULLTESTS.md](NULLTESTS.md).
 
 ## Validation
@@ -120,7 +120,7 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 | Render regression cases | 3 |
 | CPU per 60 s of stereo at 48 kHz | about 0.36 s (0.6 %) |
 | The C++ ride against the model (`plugins/FwVocalLeveler/nulltest/check_port.py`, 25 cases) | identical (0.0000 dB) |
-| Listening | the Music side-chain is untested: the reference uses it in no offline host; it needs FL Studio or another host with a real side-chain send |
+| Listening | the Music side-chain is untested by ear: it needs FL Studio or another host with a side-chain send |
 | Unit tests cover | the parameters as the reference's, the buses (a side-chain), no latency, the audio path, Automation Read and Write, the editor's Studio and Live layouts and the Music knob's disabled look, the 13 factory presets (their values, Attack, Automation Off in Default, an Idle of 0 or 1 kept exactly), and the riding against the reference's measured values: the start, the law, the rise after 12 and 4 dB drops, the hold and glide to Idle at Slow and Fast, Spill on Live and off at -48 |
 
 The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the

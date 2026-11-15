@@ -21,7 +21,7 @@ and the residual or confidence of each. The data and plots are in [measurements/
 | Latency | 64 samples at 44.1 / 48 kHz, reported and compensated; 128 at 88.2 to 96 kHz, 256 at 176.4 to 192 kHz | an impulse at Analog Off with the compressor idle | exact |
 | Idle path | Analog Off, threshold 0 or ratio 1: an exact identity (impulse response 1.0, flat to 0.000 dB) | impulse | exact |
 | Stereo | linked: a loud left channel compresses a quiet right one by the same gain (-10.01 dB both); the Mono component equals a Stereo channel | tones per channel | exact |
-| Side-chain | the plug-in offers a side-chain bus, but the reference ignores it: a loud key does not compress a quiet main signal and a silent key does not stop a loud one; the manual has no side-chain | `tools/RefRender` with `sc=` | exact |
+| Side-chain | when a host feeds the side-chain bus, the detector reads the key and nothing of the main signal: a main tone of -40 to -6 dBFS gets the gain a tone of the key's level gets as the main signal (9.06 dB, the gain of no reduction, at a silent key or one of -40 dBFS; 0.55 dB at -20, -8.38 at -10, -11.97 at -6; Threshold -30, Ratio 10); under a key that steps in level the gain equals, every 5 ms, the gain the same steps get as the main signal (0.000 dB apart), so attack, release and makeup are unchanged; one channel of the key alone counts as both; the manual has no side-chain. Flatwater Comp does not read its side-chain bus yet | `plugins/FwComp/nulltest/measure_sidechain.py`: `tools/RefRender` with `sc=` | exact |
 | Sample rates | 44.1 to 192 kHz: the same makeup, static gain, attack (12.3 ms at 63 %) and release (72 ms) | the battery per rate | within 0.02 dB and 2 % |
 
 ## 2. Detector

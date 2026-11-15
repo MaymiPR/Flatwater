@@ -213,9 +213,9 @@
     },
     {
      "lines": [
-      "- The **Music side-chain**: the reference used it in no host available offline (its Music knob stays disabled), so",
-      "  Music Sensitivity is not modelled and the plug-in rides without the music. It needs a host with a real side-chain",
-      "  send.",
+      "- The **Music side-chain**: the reference raises the voice with the music on its side-chain input (MEASUREMENTS.md",
+      "  section 4). Music Sensitivity is not modelled yet and the plug-in rides without the music; no case here feeds a",
+      "  side-chain.",
       "- Automation Read and Write, and grabbing the Rider fader, are host interactions; the unit tests check them, not",
       "  this null test."
      ]

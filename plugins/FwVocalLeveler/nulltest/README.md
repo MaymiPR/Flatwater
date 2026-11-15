@@ -23,6 +23,7 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 | File | What it does |
 |---|---|
 | `measure_reference.py` | Phase 3 measurements of the reference (the shell VST3, the local install named by local.yaml's ref_vst3), from its audio: no latency |
+| `measure_sidechain.py` | What the music on the reference's side-chain bus does to its riding (through `tools/RefRender`, which feeds the bus): the settled gain by music level and Music Sensitivity, timing, the music's channels and kind |
 
 ## Probes
 

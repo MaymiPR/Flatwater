@@ -55,6 +55,14 @@
   the Attack control at 7.00 ms held a value one float step above 7, and the output differed from the offline
   renderer's by about -90 dB at that setting, the default one.
 
+### Known issues
+
+- Flatwater Comp: the side-chain input does not key the compressor. The original reads its detector from the
+  side-chain when a host feeds it (`plugins/FwComp/MEASUREMENTS.md`, Side-chain); Flatwater Comp reads the main
+  signal.
+- Flatwater Vocal Leveler: the music side-chain is not modelled yet. The original raises the voice with the music
+  (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4).
+
 ## 1.0.0 (2026-11-04)
 
 The first public release: nine plug-ins, each a recreation of a Waves original, identified from measurements of the
