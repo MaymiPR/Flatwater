@@ -16,8 +16,7 @@
 *.bin binary
 *.ttf binary
 
-# Generated headers (nets, measured tables, image data, presets: each says which tool writes it). A regeneration
-# rewrites them wholesale, so GitHub collapses their diffs and no formatter or whitespace check touches them.
+# Suite block: the attributes of this suite's own file types, kept when the starter's form of this file is synced.
 plugins/FwBassLift/Source/dsp/GainNet.h linguist-generated=true
 plugins/FwBassLift/Source/Presets.h linguist-generated=true
 plugins/FwBassLeveler/Source/Presets.h linguist-generated=true
@@ -38,3 +37,4 @@ plugins/FwVocalChain/Source/dsp/EqTables.h linguist-generated=true
 plugins/FwVocalChain/Source/dsp/Fixed.h linguist-generated=true
 plugins/FwVocalLeveler/Source/dsp/Fit.h linguist-generated=true
 plugins/FwVocalLeveler/Source/Presets.h linguist-generated=true
+# Suite block end

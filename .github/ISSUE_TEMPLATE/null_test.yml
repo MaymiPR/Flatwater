@@ -6,7 +6,7 @@ body:
     id: plugin
     attributes:
       label: Plug-in, its version and the original's version
-      placeholder: "Flatwater Vocal Comp 1.x.y against the original vX.Y"
+      placeholder: "Flatwater Vocal Comp, Flatwater Bass Lift, Flatwater BassX Lift or another plug-in of the suite 1.x.y against the original vX.Y"
     validations:
       required: true
   - type: textarea

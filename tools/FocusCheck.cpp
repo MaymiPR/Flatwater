@@ -3,7 +3,7 @@
 // Hosts the plugin's editor in a window, clicks into it (at the given design points, default a few spots) the way
 // Windows delivers a click, then sends the space key to whichever window has the keyboard focus. PASS when the
 // space ends up with the host: either the host kept the focus, or the plugin passed the unhandled key on to its
-// parent window. Chan Sampler (whose space bar works in FL Studio) is the known-good reference for this check.
+// parent window. A plug-in whose space bar is known to work in FL Studio is the reference for this check.
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <iostream>
@@ -30,7 +30,7 @@ int main (int argc, char** argv)
     if (argc < 2) { std::cerr << "usage: FocusCheck plugin.vst3 [x,y ...]\n"; return 2; }
     juce::ScopedJuceInitialiser_GUI init;
     juce::AudioPluginFormatManager fm;
-    fm.addFormat (new juce::VST3PluginFormat());
+    fm.addFormat (std::make_unique<juce::VST3PluginFormat>());
     juce::OwnedArray<juce::PluginDescription> found;
     juce::VST3PluginFormat vst3;
     vst3.findAllTypesForFile (found, juce::String (argv[1]));
@@ -40,7 +40,7 @@ int main (int argc, char** argv)
     if (inst == nullptr) { std::cerr << "load failed: " << err << "\n"; return 2; }
 
     juce::DocumentWindow win ("FocusCheck", juce::Colours::black, 0);
-    auto* ed = inst->createEditorIfNeeded();
+    auto* ed = inst->createEditorAndMakeActive();
     win.setContentNonOwned (ed, true);
     win.setVisible (true);
     win.toFront (true);

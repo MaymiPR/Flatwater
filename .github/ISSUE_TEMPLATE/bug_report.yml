@@ -27,7 +27,7 @@ body:
     attributes:
       label: Plug-in and version
       description: The logo menu at the top of the plug-in shows the version.
-      placeholder: "Flatwater Vocal Comp 1.x.y"
+      placeholder: "Flatwater Vocal Comp, Flatwater Bass Lift, Flatwater BassX Lift or another plug-in of the suite 1.x.y"
     validations:
       required: true
   - type: dropdown
