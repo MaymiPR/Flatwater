@@ -1,6 +1,7 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
+#include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
@@ -17,6 +18,9 @@ public:
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
+    // the host's bypass: the input delayed by the reported latency (shared/dsp/BypassDelay.h)
+    void processBlockBypassed (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    using AudioProcessor::processBlockBypassed;
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
@@ -54,6 +58,7 @@ public:
     std::atomic<double> hostBpm { 0.0 };                  // 0: the host gives no tempo
 
 private:
+    flatwater::BypassDelay bypassLine;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     void configure();
     co::dsp::Compressor::Settings settings() const;

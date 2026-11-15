@@ -2,6 +2,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include <vector>
+#include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
@@ -17,6 +18,9 @@ public:
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
+    // the host's bypass: the input delayed by the reported latency (shared/dsp/BypassDelay.h)
+    void processBlockBypassed (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    using AudioProcessor::processBlockBypassed;
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
@@ -60,6 +64,7 @@ public:
     float idleDb() const { return bl::idleDb (get (bl::id::idle), get (bl::id::rangeMin), get (bl::id::rangeMax)); }
 
 private:
+    flatwater::BypassDelay bypassLine;
     int currentProgram = 0;
     void configure();
     double sr = 48000.0;

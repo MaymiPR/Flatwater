@@ -36,6 +36,7 @@ void FwVocalCompProcessor::configure()
     procs[0].prepare (sr, dual ? 1 : ch);
     procs[1].prepare (sr, 1);
     setLatencySamples (procs[0].getLatency());
+    bypassLine.prepare (ch, getLatencySamples());
     prepared = true;
 }
 
@@ -45,6 +46,7 @@ void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     const int n = b.getNumSamples(), ch = b.getNumChannels();
     const bool wantDual = ch > 1 && pMode->load() > 0.5f;
     if (! prepared || wantDual != layoutDual) configure();
+    bypassLine.write (b.getArrayOfReadPointers(), ch, n);
 
     // input energy meter
     auto toDb = [] (float v) { return v > 1.0e-4f ? Decibels::gainToDecibels (v) : -80.0f; };
@@ -77,6 +79,12 @@ void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     energyDb.push (toDb (inPeak));
     outLDb.push (toDb (peakL));
     outRDb.push (toDb (peakR));
+}
+
+void FwVocalCompProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+{
+    if (! prepared) configure();
+    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
 }
 
 AudioProcessorEditor* FwVocalCompProcessor::createEditor() { return new FwVocalCompEditor (*this); }

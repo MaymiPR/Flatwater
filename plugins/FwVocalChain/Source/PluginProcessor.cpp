@@ -38,6 +38,14 @@ void FwVocalChainProcessor::prepareToPlay (double sampleRate, int block)
     setLatencySamples (ch::latencySamples (sr));
     chain.prepare (sr, jmax (block, 16));
     work.setSize (2, jmax (block, 16));
+    bypassLine.prepare (jmax (1, getTotalNumInputChannels()), getLatencySamples());
+}
+
+void FwVocalChainProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+{
+    const int n = b.getNumSamples(), ins = jmin (getTotalNumInputChannels(), b.getNumChannels());
+    bypassLine.process (b.getArrayOfWritePointers(), ins, n);
+    for (int c = jmax (1, ins); c < b.getNumChannels(); ++c) b.copyFrom (c, 0, b, 0, 0, n);   // (Mono/Stereo)
 }
 
 void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
@@ -45,6 +53,7 @@ void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     ScopedNoDenormals nd;
     const int n = b.getNumSamples(), ins = getTotalNumInputChannels(), outs = b.getNumChannels();
     if (work.getNumSamples() < n) work.setSize (2, n, false, false, true);
+    bypassLine.write (b.getArrayOfReadPointers(), jmin (ins, outs), n);
     float pin[2] { 0.0f, 0.0f }, pout[2] { 0.0f, 0.0f };
     for (int c = 0; c < 2; ++c)                                         // (Mono/Stereo: the input on both sides)
     {

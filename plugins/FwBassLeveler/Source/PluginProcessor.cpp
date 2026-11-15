@@ -36,6 +36,13 @@ void FwBassLevelerProcessor::configure()
     outGain = Decibels::decibelsToGain ((double) get (bl::id::output));
     heldDb = 0.0;
     setLatencySamples (delaySamples);
+    bypassLine.prepare ((int) line.size(), delaySamples);
+}
+
+void FwBassLevelerProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+{
+    if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
+    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
 }
 
 void FwBassLevelerProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
@@ -43,6 +50,7 @@ void FwBassLevelerProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     ScopedNoDenormals nd;
     if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
     const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size());
+    bypassLine.write (b.getArrayOfReadPointers(), ch, n);
     bl::dsp::RideSettings st;
     st.target = get (bl::id::target); st.rangeMin = get (bl::id::rangeMin); st.rangeMax = get (bl::id::rangeMax);
     st.idleDb = idleDb(); st.artifacts = get (bl::id::artifacts); st.sensitivity = get (bl::id::sensitivity);
