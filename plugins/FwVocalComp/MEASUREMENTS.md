@@ -191,7 +191,7 @@ Every script named on this page by its current name; the earlier names stay in t
 |---|---|
 | `nulltest/fit_gain_hold.py` | the gain hold's length and smoothing (fit_ramp2.py) |
 | `nulltest/vc_ref.py` | the harness and the null test of the settings (null_fwvocalcomp.py) |
-| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer check (check_vst3.py) |
+| `nulltest/nulltest.py --vst3` | the built VST3 against the offline renderer, without the reference: it ends with exit code 1 when a case is above -120 dB |
 
 ## Provenance
 

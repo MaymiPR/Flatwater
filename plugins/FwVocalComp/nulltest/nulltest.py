@@ -4,7 +4,9 @@
 
 vc_ref.py gets the arguments.
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwVocalComp/nulltests.json, rendering nothing
-    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
+    python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
+                                       our built VST3 against our renderer, without the reference: exit code 0
+                                       equal (below -120 dB), 1 a case differs, 2 it could not run
 """
 import os
 import subprocess
@@ -23,7 +25,7 @@ def main():
         print('wrote', os.path.relpath(RL.write('FwVocalComp')))
         return
     if '--vst3' in sys.argv:
-        sys.exit(0 if vst3_check() is not False else 1)
+        sys.exit(vst3_check())
     failed = 0
     for script, args in STEPS:
         print(f'== {script} {" ".join(args)}', flush=True)
@@ -32,21 +34,19 @@ def main():
 
 
 def vst3_check():
-    """--vst3: the built Flatwater Vocal Comp VST3 (through tools/RefRender) against the offline renderer, which must be
-    identical; prints one line per case and returns False when one is above -100 dB"""
-    import numpy as np, vc_ref as N
+    """--vst3: the built VST3 against the renderer on the harness's quick signals at two settings; the exit code"""
+    import refhost as R, vc_ref as N
 
-    FS = 48000
-    ok = True
-    for name, x in N.signals(quick=True).items():
-        xs = np.stack([x, x]).astype(np.float32)
-        for comp, gate, gain in ((-24, None, 0), (-12, -30, -3)):
-            y = N.render_vst3(xs, FS, {'Comp': comp, 'Gate': -80.0 if gate is None else gate, 'Gain': gain})[0]
-            m = N.ours(xs, FS, comp, gate, gain)[0]
-            r = N.residual_db(y, m, int(0.1 * FS))
-            ok &= r < -100
-            print('%-26s %4d/%s  plug-in vs offline %7.1f dB' % (name, comp, 'off' if gate is None else gate, r), flush=True)
-    return ok
+    def cases(fs):
+        out = []
+        for name, x in N.signals(fs, quick=True).items():
+            for comp, gate, gain in ((-24, None, 0), (-12, -30, -3)):
+                out.append(('%s, Comp %d, Gate %s, Gain %d' % (name, comp, 'off' if gate is None else gate, gain), x,
+                            {'Comp': comp, 'Gate': -80.0 if gate is None else gate, 'Gain': gain}, (),
+                            lambda x, fs, s=(comp, gate, gain): N.ours(x, fs, *s)))
+        return out
+    return R.vst3_main(N, sys.argv[1:], cases)
+
 
 if __name__ == '__main__':
     main()

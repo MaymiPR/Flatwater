@@ -5,13 +5,36 @@ error (ours vs the reference's, sample by sample where the input is loud enough)
 (scripts/nulltest/vocal_corpus_lib.py 24 .. 35), not used to identify the model. Numbers are reported as they come: no case is called a
 null unless the data shows it.
 
-    python -I nulltest.py [--quick] [--save] [--report] [--vst3]
+    python -I nulltest.py [--quick] [--save] [--report] [--checks]
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwVocalLeveler/nulltests.json, rendering nothing
-    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
+    python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
+                                       our built VST3 against our renderer, without the reference: exit code 0
+                                       equal (below -120 dB), 1 a case differs, 2 it could not run
+    python -I nulltest.py --checks     the CPU load of the renderer
 """
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+
+
+def vst3_check():
+    """--vst3: the built VST3 against the renderer on noise, a low tone and drums at three settings; the exit code.
+    It runs before the reference's modules load, so it needs neither the reference nor the vocal corpus."""
+    import refhost as R, nulltest_lib as nl, vl_ref as h
+
+    def cases(fs):
+        S = (('noise -18 dBFS', nl.noise(3.0, -18.0, seed=7, fs=fs)), ('tone 100 Hz -12 dBFS', nl.tone(100.0, 3.0, -12.0, fs=fs)),
+             ('drums', nl.drums(3.0, -6.0, fs=fs)))
+        return [('%s, %s' % (name, label), x, params, (), {'mode': 0, **keys}) for name, x in S for label, params, keys in (
+            ('defaults', {}, {}), ('Fast, Target -30', {'Attack': 'Fast', 'Target': '-30'}, {'attack': 1, 'target': -30}),
+            ('Range -12 .. +12, Vocal Sensitivity 6', {'Range Max': '12', 'Range Min': '-12', 'Vocal Sensitivity': '6'},
+             {'rangeMax': 12, 'rangeMin': -12, 'vocalSensitivity': 6}))]
+    return R.vst3_main(h, sys.argv[1:], cases)
+
+
+if __name__ == '__main__' and '--vst3' in sys.argv:
+    sys.exit(vst3_check())
+
 import numpy as np
 import subprocess
 from scipy.signal import resample_poly
@@ -76,8 +99,8 @@ def main():
         import report_lib as RL
         print('wrote', os.path.relpath(RL.write('FwVocalLeveler')))
         return
-    if '--vst3' in sys.argv:
-        sys.exit(0 if vst3_check() is not False else 1)
+    if '--checks' in sys.argv:
+        return checks()
     quick = '--quick' in sys.argv
     rows = []
     for name, x, fs, live, s in cases(quick):
@@ -101,7 +124,7 @@ def main():
             for r in rows: f.write('| %s | %.1f | %.3f | %.3f |\n' % r)
 
 
-# ---- --vst3 ----
+# ---- --checks ----
 import time, tempfile
 from scipy.signal import resample_poly
 import vocal_corpus_lib as V
@@ -109,16 +132,6 @@ import vocal_corpus_lib as V
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VST3 = os.path.join(HERE, '..', '..', '..', 'build', 'FwVocalLeveler_artefacts', 'Release', 'VST3', 'Flatwater Vocal Leveler.vst3')
-
-
-def vst3(x, fs, params):
-    """Flatwater Vocal Leveler's VST3 through RefRender (stereo in / out), parameters by their display text"""
-    d = tempfile.mkdtemp(prefix='vrv_'); fin, fout = os.path.join(d, 'in.f32'), os.path.join(d, 'out.f32')
-    x.T.astype(np.float32).tofile(fin)
-    cmd = [R.REFRENDER, VST3, 'Flatwater Vocal Leveler', fin, fout, 'fs=%d' % fs, 'block=512'] + ['%s=%s' % kv for kv in params.items()]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-    if not os.path.exists(fout): raise RuntimeError(r.stdout + r.stderr)
-    return np.fromfile(fout, np.float32).reshape(-1, 2).T
 
 
 def offline(x, fs, keys):
@@ -133,21 +146,10 @@ def res_db(y, r):
     return 10 * np.log10(np.sum((y[:, a:] - r[:, a:]) ** 2) / np.sum(r[:, a:] ** 2) + 1e-30)
 
 
-def vst3_check():
-    """--vst3: Phase 5 checks for Flatwater Vocal Leveler: (1) the built VST3 (hosted by tools/RefRender) against the offline renderer"""
+def checks():
+    """--checks: the CPU load of the renderer on a vocal part"""
     v = V.part(24)[0].astype(np.float32)
     rows = []
-    for fs in (48000, 96000):
-        x = v if fs == 48000 else resample_poly(v, 2, 1).astype(np.float32)
-        xs = np.vstack([x, 0.6 * np.roll(x, 2000)]).astype(np.float32)
-        for label, p_txt, p_keys in (('defaults', {}, {}),
-                                      ('Fast, Target -30', {'Attack': 'Fast', 'Target': '-30'}, {'attack': 1, 'target': -30}),
-                                      ('Range -12 .. +12, Vocal Sensitivity 6', {'Range Max': '12', 'Range Min': '-12', 'Vocal Sensitivity': '6'},
-                                       {'rangeMax': 12, 'rangeMin': -12, 'vocalSensitivity': 6})):
-            yv = vst3(xs, fs, p_txt); yo = offline(xs, fs, p_keys)
-            m = min(yv.shape[1], yo.shape[1])
-            rows.append(('VST3 vs offline renderer, %s, %g kHz' % (label, fs / 1000), res_db(yv[:, :m], yo[:, :m])))
-            print(rows[-1], flush=True)
     xs = np.vstack([v, v]); x = np.tile(xs, (1, 3)); t0 = time.perf_counter(); offline(x, 48000, {}); dt = time.perf_counter() - t0
     rows.append(('CPU: 60 s of stereo at 48 kHz rendered in (s; includes start-up)', dt)); print('cpu %.2f s = %.2f %%' % (dt, dt / 60 * 100))
     for k, val in rows: print('| %s | %.1f |' % (k, val))

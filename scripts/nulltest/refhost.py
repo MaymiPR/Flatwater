@@ -121,19 +121,53 @@ def render_exe(exe, x, fs, *positional, **keys):
     return y.reshape(-1, ch).T
 
 
-def vst3_equals_renderer(h, signals, fs=48000, limit=-100.0):
-    """the check every published number passes: our built VST3 (h.render_vst3, through tools/RefRender) against our
-    renderer (h.render_model) at the plug-in's defaults, signal by signal; h is a plug-in's harness. Prints one line per
-    signal and returns True when every residual is below limit (dB re the renderer's output)."""
-    ok = True
-    for name, x in signals.items():
+EQUAL_DB = -120.0      # nulltest.py --vst3: the built VST3 equals the renderer when the residual is below this
+
+
+def vst3_main(h, argv, cases=None):
+    """nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]: our built VST3 (h.render_vst3, through
+    tools/RefRender) against our renderer (h.render_model), case by case, without the reference; h is a plug-in's
+    harness. A case is (name, x, params, extra, model): params are the VST3's settings by display text ('Name:' for
+    a normalised value), extra more RefRender arguments, model the renderer's keys or a function of (x, fs) that
+    renders it. cases(fs) gives a plug-in's own cases; without it the plug-in's defaults on noise, a low tone and
+    drums. Both sides get h.CHECK, the settings that make the plug-in deterministic (an Analog stage off). Prints one
+    line per case; the residual is over the whole render, in dB re the renderer's output. Returns the exit code: 0
+    every case below the threshold, 1 a case above it, 2 the check could not run (the VST3, the renderer or RefRender
+    is not built, or no case matches)."""
+    import argparse, subprocess
+    ap = argparse.ArgumentParser(prog='nulltest.py --vst3', description='Our built VST3 against our renderer; no reference needed.')
+    ap.add_argument('--vst3', action='store_true'); ap.add_argument('--only', default=None)
+    ap.add_argument('--fs', type=int, default=48000); ap.add_argument('--threshold', type=float, default=EQUAL_DB)
+    v = ap.parse_args(argv)
+    missing = [q for q in (REFRENDER, getattr(h, 'VST3', None), getattr(h, 'RENDER', None)) if q and not os.path.exists(q)]
+    if missing:
+        print('not built: ' + ', '.join(os.path.relpath(q, ROOT).replace(os.sep, '/') for q in missing))
+        return 2
+    if cases is None:
+        import nulltest_lib as nl
+        cases = lambda fs: [(name, x, {}, (), {}) for name, x in (
+            ('noise -18 dBFS', nl.noise(3.0, -18.0, seed=7, fs=fs)), ('tone 100 Hz -12 dBFS', nl.tone(100.0, 3.0, -12.0, fs=fs)),
+            ('drums', nl.drums(3.0, -6.0, fs=fs)))]
+    rows = [c for c in cases(v.fs) if not v.only or v.only.lower() in c[0].lower()]
+    if not rows:
+        print('no case matches --only ' + str(v.only))
+        return 2
+    params0, keys0 = getattr(h, 'CHECK', ({}, {}))
+    worst, failed = -400.0, 0
+    for name, x, params, extra, model in rows:
         x = np.asarray(x, np.float32)
         if x.ndim == 1: x = np.stack([x, x])
-        params, keys = getattr(h, 'CHECK', ({}, {}))      # settings both need to be deterministic (an Analog stage off)
-        a, b = h.render_vst3(x, fs, params), h.render_model(x, fs, **keys)
+        try:
+            a = h.render_vst3(x, v.fs, {**params0, **params}, extra=tuple(extra))
+            b = model(x, v.fs) if callable(model) else h.render_model(x, v.fs, **{**keys0, **model})
+        except (RuntimeError, OSError, subprocess.CalledProcessError) as e:
+            print('could not render %s: %s' % (name, str(e).strip().splitlines()[-1] if str(e).strip() else type(e).__name__))
+            return 2
         n = min(a.shape[1], b.shape[1])
         d = np.asarray(a[:, :n], np.float64) - b[:, :n]
         res = 10 * np.log10(max(float(np.sum(d * d)), 1e-30) / max(float(np.sum(np.asarray(b[:, :n], np.float64) ** 2)), 1e-30))
-        ok &= res < limit
-        print('%s  %-28s VST3 against the renderer %7.1f dB (limit %g)' % ('PASS' if res < limit else 'FAIL', name, res, limit), flush=True)
-    return ok
+        worst = max(worst, res); failed += res >= v.threshold
+        print('%s  %-58s %7.1f dB' % ('ok  ' if res < v.threshold else 'FAIL', name, res), flush=True)
+    print('%d case(s) at %d Hz, the VST3 against the renderer: worst %.1f dB, limit %g dB, %d above it'
+          % (len(rows), v.fs, worst, v.threshold, failed))
+    return 1 if failed else 0

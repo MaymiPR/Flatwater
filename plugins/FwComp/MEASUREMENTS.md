@@ -261,7 +261,7 @@ Every script named on this page by its current name; the earlier names stay in t
 | `nulltest/fit_analog_offset.py` | the Analog stage as an offset, the start of the general fit (fit_analog.py) |
 | `nulltest/native/GainPath.c`, `nulltest/native/ReleaseLaw.c` | the gain path and the two-state law in C (gain_fast.c, gain_fast2.c), built by `scripts/build_native.py` |
 | removed | fit_release3.py, fit_release6.py, train_release2.py and the C models gain_fast3.c to gain_fast6.c and gain_grad.c: the release forms of the declined changes (section 5), none of which the plug-in uses |
-| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer check (check_vst3.py) |
+| `nulltest/nulltest.py --vst3` | the built VST3 against the offline renderer, without the reference: it ends with exit code 1 when a case is above -120 dB |
 
 ## Provenance
 

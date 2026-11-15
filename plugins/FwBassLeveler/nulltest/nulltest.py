@@ -4,13 +4,37 @@ same input on both channels unless the case says otherwise. Reports per case the
 0.1 s, and the applied gain's error (ours vs the reference's, sample by sample where the input is loud enough).
 Numbers are reported as they come: no case is called a null unless the data shows it.
 
-    python -I nulltest.py [--quick] [--save] [--report] [--vst3]
+    python -I nulltest.py [--quick] [--save] [--report] [--checks]
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwBassLeveler/nulltests.json, rendering nothing
-    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
+    python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
+                                       our built VST3 against our renderer, without the reference: exit code 0
+                                       equal (below -120 dB), 1 a case differs, 2 it could not run
+    python -I nulltest.py --checks     the reference against the plug-in at other rates, in the Live components and in
+                                       stereo, and the CPU load
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
+
+
+def vst3_check():
+    """--vst3: the built VST3 against the renderer on noise, a low tone and drums at three settings; the exit code.
+    It runs before the reference's modules load, so it needs neither the reference nor the model library."""
+    import refhost as R, nulltest_lib as nl, bl_ref as h
+
+    def cases(fs):
+        S = (('noise -18 dBFS', nl.noise(3.0, -18.0, seed=7, fs=fs)), ('tone 100 Hz -12 dBFS', nl.tone(100.0, 3.0, -12.0, fs=fs)),
+             ('drums', nl.drums(3.0, -6.0, fs=fs)))
+        return [('%s, %s' % (name, label), x, params, (), {'mode': 0, **keys}) for name, x in S for label, params, keys in (
+            ('defaults', {}, {}), ('Fast, Sensitivity 75', {'Response': 'Fast', 'Sensitivity': '75'}, {'response': 1, 'sensitivity': 75.0}),
+            ('Artifacts 100, Range -6 .. +6', {'Artifacts': '100', 'Range Max': '6', 'Range Min': '-6'},
+             {'artifacts': 100.0, 'rangeMax': 6.0, 'rangeMin': -6.0}))]
+    return R.vst3_main(h, sys.argv[1:], cases)
+
+
+if __name__ == '__main__' and '--vst3' in sys.argv:
+    sys.exit(vst3_check())
+
 import numpy as np
 import subprocess
 import refhost as R
@@ -65,8 +89,8 @@ def main():
         import report_lib as RL
         print('wrote', os.path.relpath(RL.write('FwBassLeveler')))
         return
-    if '--vst3' in sys.argv:
-        sys.exit(0 if vst3_check() is not False else 1)
+    if '--checks' in sys.argv:
+        return checks()
     quick = '--quick' in sys.argv
     rows = []
     for name, x, kw in cases(quick):
@@ -89,7 +113,7 @@ def main():
             for r in rows: f.write('| %s | %.1f | %.3f | %.3f |\n' % r)
 
 
-# ---- --vst3 ----
+# ---- --checks ----
 import time, tempfile
 from scipy.signal import resample_poly
 import measure_reference as M, compare_model as C, bass_corpus_lib as K
@@ -105,17 +129,6 @@ def res_db(x, y, r):
     env = np.convolve(xm.astype(float) ** 2, np.ones(96) / 96, 'same'); ok = env > 1e-6; ok[:4800] = False
     y, r = np.atleast_2d(y), np.atleast_2d(r)
     return 10 * np.log10(np.sum((y - r)[:, ok] ** 2) / np.sum(r[:, ok] ** 2) + 1e-30)
-
-
-def vst3(x, fs, params):
-    """Flatwater Bass Leveler's VST3 through RefRender (stereo in / out), parameters by their display text"""
-    d = tempfile.mkdtemp(prefix='brv_'); fin, fout = os.path.join(d, 'in.f32'), os.path.join(d, 'out.f32')
-    x = np.atleast_2d(np.asarray(x, np.float32)); x = np.vstack([x, x]) if x.shape[0] == 1 else x
-    x.T.astype(np.float32).tofile(fin)
-    cmd = [R.REFRENDER, VST3, 'Flatwater Bass Leveler', fin, fout, 'fs=%d' % fs, 'block=512'] + ['%s=%s' % kv for kv in params.items()]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-    if not os.path.exists(fout): raise RuntimeError(r.stdout + r.stderr)
-    return np.fromfile(fout, np.float32).reshape(-1, 2).T
 
 
 def ours(x, fs, **st):
@@ -136,21 +149,12 @@ def render_fs(x, fs, **st):
     return np.fromfile(fo, np.float32).reshape(-1, ch).T
 
 
-def vst3_check():
-    """--vst3: Phase 5 checks for Flatwater Bass Leveler: (1) the built VST3 (hosted by tools/RefRender) against the offline renderer"""
+def checks():
+    """--checks: the reference against Flatwater Bass Leveler at other rates, in the Live components and in stereo, and
+    the CPU load of the renderer"""
     bass = C.bassline().astype(np.float32)
     rows = []
-    # (1) the VST3 against the offline renderer, stereo, at 48 and 96 kHz
-    for fs in (48000, 96000):
-        x = bass if fs == 48000 else resample_poly(bass, 2, 1).astype(np.float32)
-        xs = np.vstack([x, 0.5 * np.roll(x, 1000)])
-        for label, p_txt, p_ours in (('defaults', {}, {}), ('Fast, Sensitivity 75', {'Response': 'Fast', 'Sensitivity': '75'}, {'response': 'Fast ', 'sensitivity': 75.0}),
-                                      ('Artifacts 100, Range -6 .. +6', {'Artifacts': '100', 'Range Max': '6', 'Range Min': '-6'}, {'artifacts': 100.0, 'range_max': 6.0, 'range_min': -6.0})):
-            yv = vst3(xs, fs, p_txt); yo = render_fs(xs, fs, **p_ours)
-            m = min(yv.shape[1], yo.shape[1])
-            rows.append(('VST3 vs offline renderer, %s, %g kHz' % (label, fs / 1000), res_db(xs[:, :m], yv[:, :m], yo[:, :m])))
-            print(rows[-1], flush=True)
-    # (2) the reference against Flatwater Bass Leveler: other rates (the bass line resampled), Live, stereo
+    # the reference against Flatwater Bass Leveler: other rates (the bass line resampled), Live, stereo
     for fs in (44100, 96000):
         x = resample_poly(bass, 147, 160).astype(np.float32) if fs == 44100 else resample_poly(bass, 2, 1).astype(np.float32)
         R.fresh(M.NAME); p = R.load(M.NAME); r = p(x[None], fs, buffer_size=512, reset=True)[0]
@@ -165,7 +169,7 @@ def vst3_check():
     for label, name, mode in (('Stereo, two different bass parts (L / R)', L.ref_component('FwBassLeveler'), 0), ('Live Stereo, the same', L.ref_component('FwBassLeveler', 'Live Stereo'), 2)):
         r = M.render(xs, name=name); y = render_fs(xs, 48000, mode=mode)
         rows.append(('reference vs Flatwater Bass Leveler, %s' % label, res_db(xs, y, r))); print(rows[-1], flush=True)
-    # (3) CPU: 60 s of stereo through the offline renderer, 512-sample blocks
+    # CPU: 60 s of stereo through the offline renderer, 512-sample blocks
     x = np.tile(xs, (1, 6)); t0 = time.perf_counter(); render_fs(x, 48000); dt = time.perf_counter() - t0
     rows.append(('CPU: 60 s of stereo at 48 kHz rendered in (s; % of one core in real time)', dt)); print('cpu %.2f s = %.2f %%' % (dt, dt / 60 * 100))
     for k, v in rows: print('| %s | %.1f |' % (k, v))

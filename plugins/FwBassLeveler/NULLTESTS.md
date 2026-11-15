@@ -86,7 +86,7 @@ rests, staccato, legato and ringing notes. 24 parts were used in the fit, 12 are
 The worst parts are -10 .. -17 dB. Nearly all of the remaining error is a note ridden by one side and not the
 other (then the two hold 1 .. 4 dB apart until the next note), not a different gain law.
 
-### Sample rates, components, stereo (`plugins/FwBassLeveler/nulltest/nulltest.py --vst3`)
+### Sample rates, components, stereo (`plugins/FwBassLeveler/nulltest/nulltest.py --checks`)
 
 | case | residual (dB) |
 |---|---|
