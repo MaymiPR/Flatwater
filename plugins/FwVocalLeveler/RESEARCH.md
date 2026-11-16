@@ -40,7 +40,7 @@ The measured behaviour is in [MEASUREMENTS.md](MEASUREMENTS.md).
 | Item | Value |
 |---|---|
 | Latency | 0 on all four components (reported and real: cross-correlation lag 0); Studio and Live differ in the Spill control (and a LIVE badge), not in latency |
-| Buses | every component has a side-chain bus (Mono SideChain 1 channel, Stereo SideChain 2) besides its main input; an offline check (a steady -21 dBFS buzz, music a buzz stepping from -40 to -6 dBFS on the side-chain, Music Sensitivity -12 / 0 / +12) shows no effect of the side-chain on the gain (MEASUREMENTS.md section 4) |
+| Buses | every component has a side-chain bus (Mono SideChain 1 channel, Stereo SideChain 2) besides its main input; music fed to it raises the gain on the voice, by an amount that follows the music's level and Music Sensitivity (MEASUREMENTS.md section 4) |
 | Static level at the defaults | a 180 Hz buzz (harmonics falling 6 dB per octave), after 4 s: gain +6.00 dB (the Max range) at -48 and -36 dBFS rms, +0.69 at -27, -3.48 at -21, -6.00 (the Min range) at -15 and louder; the law behind it is MEASUREMENTS.md section 3 (the default Target -21 does not mean 0 dB gain at -21 dBFS rms, and the slope between -27 and -21 is not -1 dB per dB) |
 | VST3 parameters | 10 plus bypass (Spill only on Live): Target (421 steps of 0.1 dB), Vocal Sensitivity (+-12, 0.1), Music Sensitivity (Off, -12 ... +12), Range Max, Range Min (0.1 dB), Idle (shown in dB, +-11.5), Rider Fader (+-12 dB, 0.1: the fader is a host parameter, which is how Write sends automation), Output, Attack (Slow / Fast), Spill (-48 ... -12) |
 

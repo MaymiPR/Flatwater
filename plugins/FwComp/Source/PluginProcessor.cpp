@@ -113,7 +113,8 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     const int n = b.getNumSamples(), ch = jmin (2, getMainBusNumInputChannels());
     const bool wantDual = ch > 1 && get (co::id::mode) > 0.5f;
     if (! prepared || wantDual != layoutDual) configure();
-    // a side-chain bus, if the host enabled it, is not part of the output (and the reference ignores it)
+    // a side-chain bus, if the host enabled it, is not part of the output (the reference reads its detector from it;
+    // Flatwater Comp does not yet: MEASUREMENTS.md, Side-chain)
     for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
 
