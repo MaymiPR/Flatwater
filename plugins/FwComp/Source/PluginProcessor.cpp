@@ -113,10 +113,19 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     const int n = b.getNumSamples(), ch = jmin (2, getMainBusNumInputChannels());
     const bool wantDual = ch > 1 && get (co::id::mode) > 0.5f;
     if (! prepared || wantDual != layoutDual) configure();
-    // a side-chain bus, if the host enabled it, is not part of the output (the reference reads its detector from it;
-    // Flatwater Comp does not yet: MEASUREMENTS.md, Side-chain)
-    for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
+    // The side-chain bus, when the host enabled it, is the key: the detector and the limiter read it and nothing of
+    // the main signal, also while it is silent (no reduction then), as the reference does (MEASUREMENTS.md,
+    // Side-chain). The louder key channel counts; in Mode Mono the left key drives the left side and the right key
+    // the right one.
+    const float* keyPtr[2] = { nullptr, nullptr };
+    int keyCh = 0;
+    if (auto* bus = getBus (true, 1); bus != nullptr && bus->isEnabled())
+    {
+        auto kb = getBusBuffer (b, true, 1);
+        keyCh = jmin (2, kb.getNumChannels());
+        for (int c = 0; c < keyCh; ++c) keyPtr[c] = kb.getReadPointer (c);
+    }
 
     auto toDb = [] (float v) { return v > 1.0e-5f ? Decibels::gainToDecibels (v) : -100.0f; };
     inLDb.push (toDb (b.getMagnitude (0, 0, n))); inRDb.push (toDb (b.getMagnitude (ch > 1 ? 1 : 0, 0, n)));
@@ -126,7 +135,7 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     if (! layoutDual)
     {
         comps[0].setSettings (s);
-        comps[0].process (w, n);
+        comps[0].process (w, n, keyCh > 0 ? keyPtr : nullptr, keyCh);
         grDb.push ((float) comps[0].blockGainReductionDb());
         limDb.push ((float) comps[0].blockLimiterDb());
     }
@@ -136,11 +145,13 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         {
             comps[c].setSettings (s);
             float* one[1] = { w[c] };
-            comps[c].process (one, n);
+            const float* oneKey[1] = { keyCh > 0 ? keyPtr[jmin (c, keyCh - 1)] : nullptr };
+            comps[c].process (one, n, keyCh > 0 ? oneKey : nullptr, 1);
         }
         grDb.push ((float) jmax (comps[0].blockGainReductionDb(), comps[1].blockGainReductionDb()));
         limDb.push ((float) jmax (comps[0].blockLimiterDb(), comps[1].blockLimiterDb()));
     }
+    for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);   // the key is not an output
     // the Analog stage is the last one, after the output gain and the limiter (measured)
     analogStage.setMode (roundToInt (get (co::id::analog)));
     analogStage.process (w, n);

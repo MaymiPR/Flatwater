@@ -1,7 +1,8 @@
 #pragma once
 // Flatwater Comp's compressor, as identified on the reference (MEASUREMENTS.md "Flatwater Comp", plugins/FwComp/nulltest/fit_*.py).
 //
-//   detector  the larger channel's |x|, held over the next 64 samples (the look-ahead; Punch delays it by 1 ms per unit)
+//   detector  the larger channel's |x|, held over the next 64 samples (the look-ahead; Punch delays it by 1 ms per unit);
+//             with a key on the side-chain, the key's larger channel in its place, for the limiter as well
 //   static    GR = h((1 - 1/ratio) * max(0, 20 log10(peak + 0.001) - threshold)), h a measured table
 //   release   in the gain-reduction domain: a slow state S follows the output (charging at the Crest time constant)
 //             and releases at fs(S) / release; the output R falls at the same law with an effective release
@@ -151,15 +152,18 @@ public:
         return makeupRelScale[i] + f * (makeupRelScale[i + 1] - makeupRelScale[i]);
     }
 
-    // in-place; ch[0..channels-1]
-    void process (float* const* ch, int n)
+    // in-place; ch[0..channels-1]. key: the side-chain signal (keyChannels of them), or nullptr. With a key the
+    // detector and the output limiter read the key's peak and nothing of the main signal, as the reference does
+    // (MEASUREMENTS.md, Side-chain): the gain is the one the key would get, applied to the delayed main signal.
+    void process (float* const* ch, int n, const float* const* key = nullptr, int keyChannels = 0)
     {
         minGain = minLimGain = 1.0;
         for (int i = 0; i < n; ++i)
         {
             // input side: the detector level and the delayed audio
             float a = 0.0f;
-            for (int c = 0; c < channels; ++c) a = std::max (a, std::abs (ch[c][i]));
+            if (key != nullptr) for (int c = 0; c < keyChannels; ++c) a = std::max (a, std::abs (key[c][i]));
+            else for (int c = 0; c < channels; ++c) a = std::max (a, std::abs (ch[c][i]));
             det[(size_t) detPos] = a;
             const double h = heldPeak();
             const double Rt = targetGr (h);

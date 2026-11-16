@@ -177,6 +177,39 @@ Residual = 20 log10(rms(FwComp - reference) / rms(reference)), 48000 Hz, after t
 
 median -48.7 dB, best -99.2, worst -22.1
 
+### With a key on the side-chain
+
+The main signal against the reference, both keyed by the same signal on the side-chain bus, and the same case without a key (48000 Hz, residual after the first 0.2 s, dB re the reference output; Analog Off). The pad is a sustained chord of three tones. Produced by `plugins/FwComp/nulltest/null_sidechain.py`.
+
+| threshold | ratio | attack | release | punch | mix | output | limiter | signal | key | residual (dB) | without a key (dB) |
+|---:|---:|---:|---:|---:|---:|---:|---|---|---|---:|---:|
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | drum loop | -37.7 | -38.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | bass line | drum loop | -34.4 | -54.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | bass line | -52.4 | -38.3 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | drum loop | -28.1 | -37.9 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | bass line | drum loop | -28.3 | -40.8 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | bass line | -37.8 | -37.9 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | drum loop | -30.6 | -29.4 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | bass line | drum loop | -31.3 | -33.5 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | bass line | -34.2 | -29.4 |
+| -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | pad | drum loop | -30.8 | -38.9 |
+| -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | bass line | drum loop | -36.1 | -42.6 |
+| -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | pad | bass line | -40.8 | -38.9 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | drum loop | -41.7 | -6.7 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | bass line | drum loop | -38.5 | -60.0 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | bass line | -61.4 | -6.7 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | drum loop | -33.0 | -48.5 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | bass line | drum loop | -33.5 | -40.4 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | bass line | -39.6 | -48.5 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | drum loop | -35.9 | -38.9 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | bass line | drum loop | -30.9 | -34.6 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | bass line | -42.0 | -38.9 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | drum loop | -35.0 | -36.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | bass line | drum loop | -30.2 | -31.7 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | bass line | -38.9 | -36.3 |
+
+with a key: median -35.4 dB, best -61.4, worst -28.1; without a key: median -38.3 dB, worst -6.7
+
 ## Presets
 
 Each preset against the reference with the same settings (48 kHz, residual after 0.5 s, dB re the reference output). "Analog Off" shows the compressor alone; the second set uses the preset's Analog mode (modes 1-3 add random noise, which no null can remove). Produced by `plugins/FwComp/nulltest/null_presets.py`.

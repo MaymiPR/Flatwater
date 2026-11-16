@@ -3,6 +3,7 @@
 // Files are raw interleaved 32-bit floats; the output is aligned with the input (the latency removed).
 // Keys: threshold ratio attack release punch mix (0..100) output limiter (0/1) analog (0 Off, 1..4) block
 //       learned=0: without the learned gain correction (as the training set is rendered)
+//       sc=<file>: the side-chain signal (the key), raw interleaved floats of scch channels (scch=, default: channels)
 //       trace=<file>: per processed sample (the latency first) six floats: held peak, target, R, S (dB), the gains g1, g
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
@@ -36,7 +37,8 @@ int main (int argc, char** argv)
     co::dsp::Compressor::Settings s;
     co::dsp::Analog analog;
     int block = 512, analogMode = 0;
-    std::string tracePath;
+    std::string tracePath, keyPath;
+    int keyCh = 0;
     std::vector<float> trace;
     for (int i = 5; i < argc; ++i)
     {
@@ -45,6 +47,8 @@ int main (int argc, char** argv)
         if (eq == std::string::npos) continue;
         const std::string k = a.substr (0, eq); const float v = (float) std::atof (a.c_str() + eq + 1);
         if (k == "trace") { tracePath = a.substr (eq + 1); continue; }
+        if (k == "sc") { keyPath = a.substr (eq + 1); continue; }
+        if (k == "scch") { keyCh = (int) v; continue; }
         if (k == "threshold") s.thresholdDb = v; else if (k == "ratio") s.ratio = v; else if (k == "attack") s.attackMs = v;
         else if (k == "release") s.releaseMs = v; else if (k == "punch") s.punch = v; else if (k == "mix") s.mix = v / 100.0f;
         else if (k == "output") s.outputDb = v; else if (k == "limiter") s.limiter = v > 0.5f; else if (k == "block") block = (int) v;
@@ -68,10 +72,24 @@ int main (int argc, char** argv)
     const int total = frames + lat;
     std::vector<std::vector<float>> buf ((size_t) ch, std::vector<float> ((size_t) total, 0.0f));
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) buf[(size_t) c][(size_t) i] = inter[(size_t) i * (size_t) ch + (size_t) c];
+    // the key: silent after its end and through the latency's tail
+    std::vector<std::vector<float>> key;
+    if (! keyPath.empty())
+    {
+        keyCh = std::max (1, std::min (2, keyCh > 0 ? keyCh : ch));
+        key.assign ((size_t) keyCh, std::vector<float> ((size_t) total, 0.0f));
+        FILE* kf = std::fopen (keyPath.c_str(), "rb");
+        if (! kf) { std::fprintf (stderr, "cannot read %s\n", keyPath.c_str()); return 1; }
+        std::vector<float> one ((size_t) keyCh);
+        for (int i = 0; i < frames && std::fread (one.data(), sizeof (float), one.size(), kf) == one.size(); ++i)
+            for (int c = 0; c < keyCh; ++c) key[(size_t) c][(size_t) i] = one[(size_t) c];
+        std::fclose (kf);
+    }
     for (int p = 0; p < total; p += block)
     {
         float* q[2] = { buf[0].data() + p, ch > 1 ? buf[1].data() + p : nullptr };
-        comp.process (q, std::min (block, total - p));
+        const float* kq[2] = { key.empty() ? nullptr : key[0].data() + p, key.size() > 1 ? key[1].data() + p : nullptr };
+        comp.process (q, std::min (block, total - p), key.empty() ? nullptr : kq, (int) key.size());
         analog.process (q, std::min (block, total - p));
     }
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) inter[(size_t) i * (size_t) ch + (size_t) c] = buf[(size_t) c][(size_t) (i + lat)];
