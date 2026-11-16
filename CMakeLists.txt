@@ -47,7 +47,7 @@ option(FLATWATER_CLAP "Build CLAP plugins" ON)
 if(FLATWATER_CLAP)
     FetchContent_Declare(clap_juce_extensions
         GIT_REPOSITORY https://github.com/free-audio/clap-juce-extensions.git
-        GIT_TAG 7adee3a1bd4684d4caa5601100e364abccff4b4d
+        GIT_TAG 6bde108329ff9fc24404b79b8b397261a75cf6a8
         GIT_SUBMODULES_RECURSE ON)
     FetchContent_MakeAvailable(clap_juce_extensions)
 endif()
