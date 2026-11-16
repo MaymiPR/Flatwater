@@ -11,7 +11,8 @@ Part of [Flatwater](../../README.md). Flatwater Comp is a hybrid compressor: a p
 colour. It recreates Waves H-Comp. Punch lets transients through even at a fast attack. The release can follow the
 tempo. Mix blends in the dry signal for parallel compression. Makeup gain is automatic, so the compressed and
 uncompressed levels stay about the same. An output limiter or a clipper catches the peaks. The Mode menu picks Stereo
-or Mono.
+or Mono. A signal on the side-chain input keys the compressor: the gain then follows that signal and nothing of the
+track's own, as in the original, so a silent side-chain means no compression.
 
 ## Controls
 

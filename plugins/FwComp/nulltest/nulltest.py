@@ -2,7 +2,7 @@
 
     python -I nulltest.py [the arguments of co_ref.py]
 
-co_ref.py gets the arguments, then null_presets.py run with none.
+co_ref.py gets the arguments, then null_presets.py and null_sidechain.py run with none.
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwComp/nulltests.json, rendering nothing
     python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
                                        our built VST3 against our renderer, without the reference: exit code 0
@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-STEPS = (('co_ref.py', sys.argv[1:] + ['--save']), ('null_presets.py', ['--save']))
+STEPS = (('co_ref.py', sys.argv[1:] + ['--save']), ('null_presets.py', ['--save']), ('null_sidechain.py', ['--save']))
 
 
 def main():
@@ -47,8 +47,9 @@ def synced_ms(note, bpm):
 
 
 def vst3_check():
-    """--vst3: the built VST3 against the renderer, the Analog stage off: five signals at five settings, then the
-    release synced to a tempo (BPM mode, Host mode with and without a host tempo); the exit code"""
+    """--vst3: the built VST3 against the renderer, the Analog stage off: five signals at five settings, the
+    release synced to a tempo (BPM mode, Host mode with and without a host tempo), then a key on the side-chain bus
+    (a stereo key, a key on one channel, a silent key); the exit code"""
     import numpy as np, refhost as R, co_ref as N
 
     def host(thr, rat, att, rel, pu, mix, out, lim, sync=2, note=5, bpm=120.0):
@@ -72,6 +73,15 @@ def vst3_check():
             out.append(('sync %s %s, BPM %g, host tempo %g: release %.1f ms' % (['BPM', 'Host'][sync], NOTES[note], bpm, tempo, ms), x2,
                         host(*st, sync=sync, note=note, bpm=bpm), ('bpm=%g' % tempo,) if tempo else (),
                         lambda x, fs, ms=ms: N.ours(x, fs, *st[:3], ms, *st[4:])))
+        # a key on the side-chain bus: RefRender enables the bus only when it feeds it
+        loud, low = S[names[0]], 0.3 * S[names[1]][::-1]
+        zero = np.zeros_like(loud)
+        for label, key in (('a stereo key', np.stack([loud, low])), ('a key on the left channel alone', np.stack([loud, zero])),
+                           ('a silent key', np.stack([zero, zero]))):
+            for ks in (N.SETTINGS[1], N.SETTINGS[7]):          # (st stays the sync cases' setting: their renders read it)
+                key = key.astype(np.float32)
+                out.append(('%s, thr %g ratio %g out %g lim %s' % (label, ks[0], ks[1], ks[6], ks[7]), x2, host(*ks), (),
+                            lambda x, fs, ks=ks, key=key: N.ours(x, fs, *ks, key=key), key))
         return out
     return R.vst3_main(N, sys.argv[1:], cases)
 

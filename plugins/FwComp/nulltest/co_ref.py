@@ -33,13 +33,19 @@ SETTINGS = [(-18.0, 3.0, 7.0, 100.0, 1.0, 100.0, 0.0, 'Off'),          # the def
             (-24.0, 4.0, 7.0, 100.0, 1.0, 100.0, 0.0, 'Off', 3)]
 
 
-def ours(x, fs, thr, rat, att, rel, pu, mix, out, lim, analog=0):
+def ours(x, fs, thr, rat, att, rel, pu, mix, out, lim, analog=0, key=None):
+    """our renderer; key: the side-chain signal, (channels, n) or mono, or None for no side-chain"""
     x = np.atleast_2d(np.asarray(x, np.float32)); ch = x.shape[0]
     fi, fo = os.path.join(TMP, "cin%d.f32" % os.getpid()), os.path.join(TMP, "cout%d.f32" % os.getpid())
     x.T.astype(np.float32).tofile(fi)
+    extra = []
+    if key is not None:
+        k = np.atleast_2d(np.asarray(key, np.float32)); fk = os.path.join(TMP, "ckey%d.f32" % os.getpid())
+        k.T.astype(np.float32).tofile(fk)
+        extra = ["sc=" + fk, "scch=%d" % k.shape[0]]
     args = [EXE, fi, fo, str(ch), str(fs), "threshold=%g" % thr, "ratio=%g" % rat, "attack=%g" % att, "release=%g" % rel,
             "punch=%g" % pu, "mix=%g" % mix, "output=%g" % out, "limiter=%d" % (lim == 'On'), "analog=%d" % analog,
-            "learned=%s" % os.environ.get("FWCOMP_LEARNED", "1")]      # FWCOMP_LEARNED=0: the analytical model alone
+            "learned=%s" % os.environ.get("FWCOMP_LEARNED", "1")] + extra   # FWCOMP_LEARNED=0: the analytical model alone
     subprocess.run(args, check=True, capture_output=True)
     return np.fromfile(fo, np.float32).reshape(-1, ch).T
 
@@ -121,9 +127,9 @@ def render_ref_host(x, fs=48000, params=None, extra=()):
     return R.render_ref(x, fs, REF_NAME, params=params, extra=extra)[0]
 
 
-def render_vst3(x, fs=48000, params=None, extra=()):
-    """our built VST3 through tools/RefRender"""
-    return R.render_ref(x, fs, PRODUCT, params=params, extra=extra, vst3=VST3)[0]
+def render_vst3(x, fs=48000, params=None, extra=(), sc=None):
+    """our built VST3 through tools/RefRender; sc: the side-chain signal (the bus is enabled only when it is given)"""
+    return R.render_ref(x, fs, PRODUCT, sc=sc, params=params, extra=extra, vst3=VST3)[0]
 
 
 def render_model(x, fs=48000, **keys):

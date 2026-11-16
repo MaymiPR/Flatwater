@@ -46,6 +46,14 @@
   script's null step runs it at 48 and 96 kHz. The reference and CPU checks of FwBassLeveler and FwVocalLeveler are
   `nulltest.py --checks`.
 
+### Added
+
+- **Flatwater Comp, side-chain:** a signal on the side-chain input keys the compressor, as in the original. While a
+  host enables the side-chain bus, the detector and the output limiter read the key and nothing of the main signal,
+  so a silent key means no compression; the louder key channel counts, and in Mode Mono each side follows its own
+  key channel. Without the bus the sound is unchanged. Before, the plug-in ignored its side-chain input
+  (`plugins/FwComp/MEASUREMENTS.md`, Side-chain; the null with a key: `plugins/FwComp/NULLTESTS.md`).
+
 ### Fixed
 
 - **Bypass with latency:** FwBassLeveler, FwComp, FwVocalChain and FwVocalComp, the four plug-ins that report a
@@ -57,9 +65,6 @@
 
 ### Known issues
 
-- Flatwater Comp: the side-chain input does not key the compressor. The original reads its detector from the
-  side-chain when a host feeds it (`plugins/FwComp/MEASUREMENTS.md`, Side-chain); Flatwater Comp reads the main
-  signal.
 - Flatwater Vocal Leveler: the music side-chain is not modelled yet. The original raises the voice with the music
   (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4).
 

@@ -129,7 +129,7 @@ def vst3_main(h, argv, cases=None):
     tools/RefRender) against our renderer (h.render_model), case by case, without the reference; h is a plug-in's
     harness. A case is (name, x, params, extra, model): params are the VST3's settings by display text ('Name:' for
     a normalised value), extra more RefRender arguments, model the renderer's keys or a function of (x, fs) that
-    renders it. cases(fs) gives a plug-in's own cases; without it the plug-in's defaults on noise, a low tone and
+    renders it. A sixth item is the signal for the VST3's side-chain bus (h.render_vst3 then takes sc=). cases(fs) gives a plug-in's own cases; without it the plug-in's defaults on noise, a low tone and
     drums. Both sides get h.CHECK, the settings that make the plug-in deterministic (an Analog stage off). Prints one
     line per case; the residual is over the whole render, in dB re the renderer's output. Returns the exit code: 0
     every case below the threshold, 1 a case above it, 2 the check could not run (the VST3, the renderer or RefRender
@@ -154,11 +154,11 @@ def vst3_main(h, argv, cases=None):
         return 2
     params0, keys0 = getattr(h, 'CHECK', ({}, {}))
     worst, failed = -400.0, 0
-    for name, x, params, extra, model in rows:
+    for name, x, params, extra, model, *more in rows:
         x = np.asarray(x, np.float32)
         if x.ndim == 1: x = np.stack([x, x])
         try:
-            a = h.render_vst3(x, v.fs, {**params0, **params}, extra=tuple(extra))
+            a = h.render_vst3(x, v.fs, {**params0, **params}, extra=tuple(extra), **({'sc': more[0]} if more else {}))
             b = model(x, v.fs) if callable(model) else h.render_model(x, v.fs, **{**keys0, **model})
         except (RuntimeError, OSError, subprocess.CalledProcessError) as e:
             print('could not render %s: %s' % (name, str(e).strip().splitlines()[-1] if str(e).strip() else type(e).__name__))

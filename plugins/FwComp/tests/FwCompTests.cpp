@@ -213,9 +213,9 @@ static void testProcessor()
     auto set = [&proc] (const char* id, float v) { auto* p = proc.apvts.getParameter (id); p->setValueNotifyingHost (p->convertTo0to1 (v)); };
     set (co::id::analog, 0.0f); set (co::id::threshold, -30.0f); set (co::id::ratio, 4.0f);
 
-    // the side-chain bus is ignored: the same output with or without it fed
+    // the enabled side-chain bus is the key: the gain follows the key and nothing of the main signal
     auto x = tone (300.0, 0.5, -10.0);
-    auto render = [&] (bool feedSc)
+    auto render = [&] (const std::vector<float>* keyL, const std::vector<float>* keyR)
     {
         proc.prepareToPlay (48000.0, 512);
         std::vector<float> out;
@@ -224,16 +224,41 @@ static void testProcessor()
         for (size_t p = 0; p + 512 <= x.size(); p += 512)
         {
             for (int c = 0; c < 2; ++c) b.copyFrom (c, 0, x.data() + p, 512);
-            for (int c = 2; c < 4; ++c) if (feedSc) b.copyFrom (c, 0, x.data() + p, 512); else b.clear (c, 0, 512);
+            if (keyL != nullptr) b.copyFrom (2, 0, keyL->data() + p, 512); else b.clear (2, 0, 512);
+            if (keyR != nullptr) b.copyFrom (3, 0, keyR->data() + p, 512); else b.clear (3, 0, 512);
             proc.processBlock (b, midi);
             out.insert (out.end(), b.getReadPointer (0), b.getReadPointer (0) + 512);
+            CHECK (b.getMagnitude (2, 0, 512) == 0.0f && b.getMagnitude (3, 0, 512) == 0.0f);   // the key is not an output
         }
         return out;
     };
-    auto a = render (false), c = render (true);
-    CHECK (maxDiff (a, c) == 0.0);
-    CHECK (rms (a, 12000) < rms (x, 12000));
+    auto lowKey = tone (300.0, 0.5, -50.0);
+    auto own = render (&x, &x);              // the key equal to the main signal: reduction
     CHECK (proc.grDb.take() > 1.0f);
+    auto silent = render (nullptr, nullptr); // a silent key: no reduction, whatever the main signal's level
+    CHECK (proc.grDb.take() < 0.01f);
+    auto low = render (&lowKey, &lowKey);    // a key under the threshold: the same
+    auto keyLeft = render (&x, nullptr), keyRight = render (nullptr, &x);   // one key channel counts as both
+    CHECK (rms (own, 12000) < 0.6 * rms (silent, 12000));
+    CHECK (maxDiff (silent, low) < 1.0e-6);
+    CHECK (maxDiff (keyLeft, own) == 0.0 && maxDiff (keyRight, own) == 0.0);
+    {
+        // without the bus (stereo in and out alone) the main signal drives the gain, as with the key equal to it
+        FwCompProcessor plain;
+        plain.prepareToPlay (48000.0, 512);
+        auto setP = [&plain] (const char* id, float v) { auto* p = plain.apvts.getParameter (id); p->setValueNotifyingHost (p->convertTo0to1 (v)); };
+        setP (co::id::analog, 0.0f); setP (co::id::threshold, -30.0f); setP (co::id::ratio, 4.0f);
+        std::vector<float> out;
+        juce::AudioBuffer<float> b (2, 512);
+        juce::MidiBuffer midi;
+        for (size_t p = 0; p + 512 <= x.size(); p += 512)
+        {
+            for (int c = 0; c < 2; ++c) b.copyFrom (c, 0, x.data() + p, 512);
+            plain.processBlock (b, midi);
+            out.insert (out.end(), b.getReadPointer (0), b.getReadPointer (0) + 512);
+        }
+        CHECK (maxDiff (out, own) == 0.0);
+    }
 
     // state round trip
     juce::MemoryBlock mb;
