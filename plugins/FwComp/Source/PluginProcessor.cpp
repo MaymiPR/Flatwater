@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include <cmath>
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -67,27 +68,40 @@ void FwCompProcessor::configure()
     comps[1].prepare (sr, 1);
     analogStage.prepare (sr, ch);
     setLatencySamples (comps[0].latency());
+    bypassLine.prepare (ch, getLatencySamples());
     prepared = true;
 }
 
 co::dsp::Compressor::Settings FwCompProcessor::settings() const
 {
     co::dsp::Compressor::Settings s;
+    // The two times on the 0.01 ms grid the controls show: the logarithmic range gives a value one float step off
+    // (7.0000005 for 7), and the learned correction turns that step into a difference near -90 dB, so the plug-in
+    // would not equal the renderer at the setting its control names.
+    auto shown = [] (float ms) { return std::round (ms * 100.0f) / 100.0f; };
     s.thresholdDb = get (co::id::threshold);
     s.ratio = get (co::id::ratio);
-    s.attackMs = get (co::id::attack);
+    s.attackMs = shown (get (co::id::attack));
     s.punch = get (co::id::punch);
     s.mix = get (co::id::mix) * 0.01f;
     s.outputDb = get (co::id::output);
     s.limiter = get (co::id::limiter) > 0.5f;
     const int sync = roundToInt (get (co::id::sync));
-    if (sync == 2) s.releaseMs = get (co::id::release);
+    if (sync == 2) s.releaseMs = shown (get (co::id::release));
     else
     {
         const double host = hostBpm.load (std::memory_order_relaxed);
         s.releaseMs = co::syncedReleaseMs (roundToInt (get (co::id::releaseNote)), sync == 0 ? (double) get (co::id::bpm) : host);
     }
     return s;
+}
+
+void FwCompProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+{
+    if (! prepared) configure();
+    const int n = b.getNumSamples();
+    for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);   // (the side-chain bus)
+    bypassLine.process (b.getArrayOfWritePointers(), jmin (2, getMainBusNumInputChannels(), b.getNumChannels()), n);
 }
 
 void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
@@ -101,6 +115,7 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     if (! prepared || wantDual != layoutDual) configure();
     // a side-chain bus, if the host enabled it, is not part of the output (and the reference ignores it)
     for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);
+    bypassLine.write (b.getArrayOfReadPointers(), ch, n);
 
     auto toDb = [] (float v) { return v > 1.0e-5f ? Decibels::gainToDecibels (v) : -100.0f; };
     inLDb.push (toDb (b.getMagnitude (0, 0, n))); inRDb.push (toDb (b.getMagnitude (ch > 1 ? 1 : 0, 0, n)));

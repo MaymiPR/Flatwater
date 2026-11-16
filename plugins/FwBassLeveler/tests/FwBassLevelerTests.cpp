@@ -3,7 +3,9 @@
 // the factory presets.
 // Run: FwBassLevelerTests (exit code 0 = all passed).
 #include <functional>
+#include <algorithm>
 #include <cmath>
+#include <vector>
 #include <cstdio>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
@@ -272,8 +274,47 @@ static void testParamIds()
     CHECK (preset == bl::numParams - 1);
 }
 
+// The host's bypass, engaged and released in mid-stream: every bypassed sample is the input of `latency` samples
+// before, from the first one on, because the delay line takes the input while the bypass is off too.
+static void testBypassIsDelayedInput()
+{
+    FwBassLevelerProcessor p;
+    p.prepareToPlay (48000.0, 512);
+    const int lat = p.getLatencySamples();
+    CHECK (lat > 0);
+    const int block = 512, blocks = 60;
+    std::vector<float> x ((size_t) (block * blocks));
+    unsigned int seed = 12345u;
+    for (auto& v : x) { seed = seed * 1664525u + 1013904223u; v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f; }
+    auto bypassedAt = [] (int b) { return (b >= 10 && b < 20) || (b >= 21 && b < 22) || (b >= 40 && b < 55); };
+    juce::AudioBuffer<float> buf (2, block);
+    double err = 0.0;
+    int compared = 0;
+    for (int b = 0; b < blocks; ++b)
+    {
+        for (int i = 0; i < block; ++i)
+        {
+            buf.setSample (0, i, x[(size_t) (b * block + i)]);
+            buf.setSample (1, i, -x[(size_t) (b * block + i)]);
+        }
+        juce::MidiBuffer midi;
+        if (! bypassedAt (b)) { p.processBlock (buf, midi); continue; }
+        p.processBlockBypassed (buf, midi);
+        for (int i = 0; i < block; ++i)
+        {
+            const float want = x[(size_t) (b * block + i - lat)];
+            err = std::max (err, (double) std::fabs (buf.getSample (0, i) - want));
+            err = std::max (err, (double) std::fabs (buf.getSample (1, i) + want));
+            ++compared;
+        }
+    }
+    CHECK (compared == 26 * block);
+    CHECK (err == 0.0);
+}
+
 int main()
 {
+    testBypassIsDelayedInput();
     juce::ScopedJuceInitialiser_GUI init;
     testParamIds();
     testParameters();

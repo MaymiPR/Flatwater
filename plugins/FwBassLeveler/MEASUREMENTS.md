@@ -150,7 +150,7 @@ None ships. A learned lock was tried (`plugins/FwBassLeveler/nulltest/fit_lock.p
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
 | C++ against the model | 0.08 dB at 99 % (also on a 42 Hz decay at Fast, a corpus part at Fast 25 and at Artifacts 100) | `plugins/FwBassLeveler/nulltest/check_port.py` | |
-| The plug-in against the reference | the fixed cases, the corpus, the rates, the components and stereo | [NULLTESTS.md](NULLTESTS.md) (`plugins/FwBassLeveler/nulltest/nulltest.py`, `plugins/FwBassLeveler/nulltest/nulltest.py --vst3`, through `BlRender`) | |
+| The plug-in against the reference | the fixed cases, the corpus, the rates, the components and stereo | [NULLTESTS.md](NULLTESTS.md) (`plugins/FwBassLeveler/nulltest/nulltest.py`, `plugins/FwBassLeveler/nulltest/nulltest.py --checks`, through `BlRender`) | |
 | Where the corpus error is | the level read is right (on 173 of 175 notes the reference's held value lies on the law's path over the attack); per 10 ms block, 66 to 77 % of the error energy is both sides holding more than 1 dB apart (typically 0.3 to 0.5 dB, 1 to 4 dB at the 90th percentile), and 81 to 99 % of that follows a different ride decision, not a different lock on the same ride; at Fast what remains is mostly re-rides the reference takes and the model does not (at onsets 49 %, inside notes 33 %) | `plugins/FwBassLeveler/nulltest/compare_corpus.py` | |
 | Synthetic part 6 | turns on one note at 2.38 s, 13 dB over a quiet passage, which the reference takes as a new note; the gate's form is the reference's, the long reference R's exact fall is not | the fixed cases | open |
 | Part 6 at Fast | -16 dB at every Sensitivity from one passage: a 77 Hz note fading after its release, where the pitch read wobbles over the 78 Hz band edge and the window switch reads as a rise (the reference holds) | the fixed cases | open |
@@ -236,7 +236,8 @@ Every script named on this page by its current name; the earlier names stay in t
 
 | Script | Replaces |
 |---|---|
-| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer, rate, component and CPU checks (check_vst3.py) |
+| `nulltest/nulltest.py --vst3` | the built VST3 against the offline renderer, without the reference: it ends with exit code 1 when a case is above -120 dB |
+| `nulltest/nulltest.py --checks` | the reference against the plug-in at other rates, in the Live components and in stereo, and the CPU load |
 | `scripts/export_detector.py` | the detector constants into `Source/dsp/Tuning.h` |
 
 ## Provenance

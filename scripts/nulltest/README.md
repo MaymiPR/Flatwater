@@ -25,7 +25,7 @@ renders go to the git-ignored `renders/`, `build/` and `reference/` folders.
 | Module | What it does |
 |---|---|
 | `local_config_lib.py` | reads `local.yaml`: `get(key)` returns a value or stops with the key's name; `ref_component(id, kind)` and `ref_base(id)` give a reference's component and product names from the `<Id>.ref_name` keys; `local_file(path)` finds a local data file under its earlier name while only that one exists (`renamed_local_files.txt`) |
-| `refhost.py` | the reference host: fresh pedalboard instances with dropout retries, `tools/RefRender` on the shell or on one of our built VST3 bundles, our offline renderers, the VST3-equals-renderer check |
+| `refhost.py` | the reference host: fresh pedalboard instances with dropout retries, `tools/RefRender` on the shell or on one of our built VST3 bundles, our offline renderers, the VST3-equals-renderer check behind every `nulltest.py --vst3` (`vst3_main`) |
 | `ref_state_lib.py` | reads and writes the parameter array inside a reference's saved VST3 state |
 | `renamed_local_files.txt` | the local data files renamed in 1.1 (no vendor word names a file a script reads), each with its earlier name |
 

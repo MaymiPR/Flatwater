@@ -2,6 +2,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include "shared/Presets.h"
+#include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
 #include "dsp/Engine.h"
 #include "ReverbConvolution.h"
@@ -25,6 +26,9 @@ public:
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
+    // the host's bypass: the input delayed by the reported latency (shared/dsp/BypassDelay.h)
+    void processBlockBypassed (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    using AudioProcessor::processBlockBypassed;
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
@@ -64,6 +68,7 @@ public:
     int modeIndex() const { return juce::roundToInt (get (ch::id::mode)); }
 
 private:
+    flatwater::BypassDelay bypassLine;
     void timerCallback() override { syncLink(); }
     double sr = 48000.0;
     ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)

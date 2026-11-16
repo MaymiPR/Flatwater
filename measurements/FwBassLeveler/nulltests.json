@@ -381,7 +381,7 @@
     },
     {
      "heading": 3,
-     "text": "Sample rates, components, stereo (`plugins/FwBassLeveler/nulltest/nulltest.py --vst3`)"
+     "text": "Sample rates, components, stereo (`plugins/FwBassLeveler/nulltest/nulltest.py --checks`)"
     },
     {
      "table": true,

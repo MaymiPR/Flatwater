@@ -7,7 +7,9 @@ For every signal x setting both render the same stereo input. The residual is
 for the generated part alone (Monitor: Harmonics, which plays it pre-fader on both). Numbers are reported as they
 come: no case is labelled a null unless the data shows it.
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwBassXLift/nulltests.json, rendering nothing
-    python -I nulltest.py --vst3       our built VST3 against our renderer (the check before a number is published)
+    python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
+                                       our built VST3 against our renderer, without the reference: exit code 0
+                                       equal (below -120 dB), 1 a case differs, 2 it could not run
 """
 import sys, os, subprocess, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -70,7 +72,7 @@ def main():
         print('wrote', os.path.relpath(RL.write('FwBassXLift')))
         return
     if '--vst3' in sys.argv:
-        sys.exit(0 if vst3_check() is not False else 1)
+        sys.exit(vst3_check())
     args = sys.argv[1:]
     quick = "--quick" in args
     save = "--save" in args
@@ -99,11 +101,9 @@ def main():
 
 
 def vst3_check():
-    """--vst3: our built VST3 against our renderer at the defaults, on noise, a low tone and drums"""
-    import refhost as R, nulltest_lib as nl, bx_ref as h
-    S = {'noise -18 dBFS': nl.noise(3.0, -18.0, seed=7), 'tone 100 Hz -12 dBFS': nl.tone(100.0, 3.0, -12.0),
-         'drums': nl.drums(3.0, -6.0)}
-    return R.vst3_equals_renderer(h, S)
+    """--vst3: our built VST3 against our renderer at the defaults, on noise, a low tone and drums; the exit code"""
+    import refhost as R, bx_ref as h
+    return R.vst3_main(h, sys.argv[1:])
 
 
 if __name__ == "__main__":

@@ -41,6 +41,19 @@
   tests), `presetIds` and `createLayout`; parameter ids, order, ranges, names and defaults are unchanged.
 - **Screenshots:** the snapshot tool is the starter's (`--scale` resizes the editor as a host would); the editors
   take `--click=x,y` and `--bench` as snapshot options, and `scripts/make_screenshots.py` renders `docs/screenshots`.
+- **VST3 against the renderer:** `nulltest.py --vst3` of every plug-in compares the built VST3 with the offline
+  renderer case by case, at the rate `--fs` gives, and ends with exit code 1 when a case is above -120 dB; the check
+  script's null step runs it at 48 and 96 kHz. The reference and CPU checks of FwBassLeveler and FwVocalLeveler are
+  `nulltest.py --checks`.
+
+### Fixed
+
+- **Bypass with latency:** FwBassLeveler, FwComp, FwVocalChain and FwVocalComp, the four plug-ins that report a
+  latency, delay the input by that latency while the host bypasses them, so a bypassed track stays in time with the
+  others. Before, the bypassed signal came out early by the latency (64 samples to 42 ms at 48 kHz).
+- **FwComp, Attack and Release:** the processor reads the two times on the 0.01 ms grid their controls show. Before,
+  the Attack control at 7.00 ms held a value one float step above 7, and the output differed from the offline
+  renderer's by about -90 dB at that setting, the default one.
 
 ## 1.0.0 (2026-11-04)
 

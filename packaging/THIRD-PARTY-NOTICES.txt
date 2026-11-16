@@ -1,8 +1,8 @@
 Flatwater: third-party software
-================================
+==================================
 
-The Flatwater plug-ins are open source under the GNU Affero General Public License v3
-(LICENSE). They include the following third-party software, under these licenses.
+Flatwater is free software under the GNU Affero General Public License v3
+(LICENSE). It includes the following third-party software, under these licenses.
 
 ------------------------------------------------------------------------------
 JUCE (https://juce.com), used under the GNU Affero General Public License v3, like Flatwater itself: see LICENSE.

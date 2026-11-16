@@ -125,7 +125,7 @@ the learned blocks), the original plug-ins installed and named in `local.yaml`, 
 (`python scripts/build_native.py` for the C helpers). The folder is flat: the harness `<ab>_ref.py` (the reference
 and our renderer behind one interface), `nulltest_lib.py`, `first_null.py` (one bypass null, the smoke test),
 `nulltest.py` (every case; `--report` writes `plugins/<Id>/NULLTESTS.md` from `measurements/<Id>/nulltests.json`,
-`--vst3` checks the built VST3 against the offline renderer), the purpose scripts (`measure_`, `probe_`, `fit_`,
+`--vst3` compares the built VST3 with the offline renderer and ends with exit code 1 above -120 dB), the purpose scripts (`measure_`, `probe_`, `fit_`,
 `train_`, `null_`, `render_`, `compare_`, `check_`, `read_`) and the `_lib.py` helpers; its README lists every
 script by role. None of this runs in CI, which has no originals.
 

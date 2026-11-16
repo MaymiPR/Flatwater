@@ -140,7 +140,8 @@ Every script named on this page by its current name; the earlier names stay in t
 
 | Script | Replaces |
 |---|---|
-| `nulltest/nulltest.py --vst3` | the VST3-equals-renderer and CPU checks (check_vst3.py) |
+| `nulltest/nulltest.py --vst3` | the built VST3 against the offline renderer, without the reference: it ends with exit code 1 when a case is above -120 dB |
+| `nulltest/nulltest.py --checks` | the CPU load of the renderer |
 
 ## Provenance
 
