@@ -36,8 +36,10 @@ def fresh(name):
 
 
 def load(name):
+    """the component through pedalboard, which knows a component by its name alone: the '@<id>' that tools/RefRender
+    needs to tell two components of one name apart is left off"""
     if name not in _cache:
-        _cache[name] = pb.load_plugin(REF_SHELL, plugin_name=_named(name))
+        _cache[name] = pb.load_plugin(REF_SHELL, plugin_name=_named(name).split('@')[0])
     return _cache[name]
 
 
