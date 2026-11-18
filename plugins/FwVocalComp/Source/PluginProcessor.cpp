@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -43,6 +44,7 @@ void FwVocalCompProcessor::configure()
 void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     const int n = b.getNumSamples(), ch = b.getNumChannels();
     const bool wantDual = ch > 1 && pMode->load() > 0.5f;
     if (! prepared || wantDual != layoutDual) configure();

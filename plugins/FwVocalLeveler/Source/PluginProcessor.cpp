@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -34,10 +35,11 @@ void FwVocalLevelerProcessor::prepareToPlay (double sampleRate, int)
 void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
     auto b = getBusBuffer (buffer, true, 0);
     const int n = b.getNumSamples(), ch = b.getNumChannels();
     vl::dsp::RideSettings st;
-    st.target = get (vl::id::target); st.rangeMin = get (vl::id::rangeMin); st.rangeMax = get (vl::id::rangeMax);
+    st.target = get (vl::id::target); st.rangeMin = get (vl::id::rangeMin); st.rangeMax = jmax (st.rangeMin, (double) get (vl::id::rangeMax));   // (a host may automate Max under Min)
     st.idleDb = idleDb(); st.vocalSensitivity = get (vl::id::vocalSensitivity); st.spill = get (vl::id::spill);
     st.fast = get (vl::id::attack) > 0.5f; st.live = vl::isLive (modeIndex());
     const double outTo = Decibels::decibelsToGain ((double) get (vl::id::output));

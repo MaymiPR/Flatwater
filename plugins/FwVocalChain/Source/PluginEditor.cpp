@@ -735,7 +735,11 @@ void FwVocalChainEditor::showEntry (Slider* sl)
                 }
             }
         }
-        MessageManager::callAsync ([this] { entry.reset(); entryFor = nullptr; content().repaint(); });
+        Component::SafePointer<FwVocalChainEditor> safe (this);   // (the editor may be gone when the message arrives)
+        MessageManager::callAsync ([safe]
+        {
+            if (safe != nullptr) { safe->entry.reset(); safe->entryFor = nullptr; safe->content().repaint(); }
+        });
     };
     e.onReturnKey = [close] { close (true); };
     e.onEscapeKey = [close] { close (false); };

@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -51,6 +52,7 @@ void FwVocalChainProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuf
 void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     const int n = b.getNumSamples(), ins = getTotalNumInputChannels(), outs = b.getNumChannels();
     if (work.getNumSamples() < n) work.setSize (2, n, false, false, true);
     bypassLine.write (b.getArrayOfReadPointers(), jmin (ins, outs), n);

@@ -1,4 +1,6 @@
+#include <cstring>
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -133,10 +135,10 @@ void FwDelayProcessor::configure()
 // Feedback, Mix, BPM, Depth and the filters in whole units, Output in 0.1 dB, Rate in 0.01 Hz
 float de::atResolution (const char* id, float v)
 {
-    const String p (id);
-    if (p == id::delay || p == id::delayR || p == id::feedback || p == id::mix || p == id::bpm || p == id::depth || p == id::hipass || p == id::lopass) return std::round (v);
-    if (p == id::output) return std::round (v * 10.0f) / 10.0f;
-    if (p == id::rate)                                                 // three significant digits, at least 0.01 (measured:
+    const auto is = [id] (const char* other) { return std::strcmp (id, other) == 0; };   // (no string: the audio thread calls this)
+    if (is (id::delay) || is (id::delayR) || is (id::feedback) || is (id::mix) || is (id::bpm) || is (id::depth) || is (id::hipass) || is (id::lopass)) return std::round (v);
+    if (is (id::output)) return std::round (v * 10.0f) / 10.0f;
+    if (is (id::rate))                                                 // three significant digits, at least 0.01 (measured:
     {                                                              // 3074 acts as 3070, 281.7 as 282, 47.84 as 47.8)
         const float step = v >= 1000.0f ? 10.0f : v >= 100.0f ? 1.0f : v >= 10.0f ? 0.1f : 0.01f;
         return std::round (v / step) * step;
@@ -192,6 +194,7 @@ de::dsp::Settings FwDelayProcessor::settings (double fs) const
 void FwDelayProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
             hostBpm.store (pos->getBpm() ? *pos->getBpm() : 0.0);

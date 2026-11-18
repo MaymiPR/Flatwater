@@ -312,9 +312,62 @@ static void testBypassIsDelayedInput()
     CHECK (err == 0.0);
 }
 
+// The release of the host's bypass: the main delay line took the input while the bypass was on, so the first samples
+// after it are the input of the last `latency` samples, not what the line held when the bypass came on.
+static void testBypassReleaseHasNoOldAudio()
+{
+    FwBassLevelerProcessor p;
+    p.prepareToPlay (48000.0, 512);
+    const int lat = p.getLatencySamples();
+    CHECK (lat > 0);
+    const int block = 512, quiet = lat / block + 2;
+    juce::AudioBuffer<float> buf (2, block);
+    juce::MidiBuffer midi;
+    unsigned int seed = 777u;
+    for (int b = 0; b < 20; ++b)                           // noise, processed
+    {
+        for (int i = 0; i < block; ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            buf.setSample (0, i, v); buf.setSample (1, i, v);
+        }
+        p.processBlock (buf, midi);
+    }
+    for (int b = 0; b < quiet; ++b) { buf.clear(); p.processBlockBypassed (buf, midi); }   // silence, bypassed for longer than the latency
+    buf.clear();
+    p.processBlock (buf, midi);                            // silence, processed: the delayed silence
+    CHECK (buf.getMagnitude (0, block) == 0.0f);
+}
+
+// Range Max under Range Min (a host can automate them so; the editor does not allow it): the gain stays finite and
+// inside the wider of the two bounds
+static void testInvertedRange()
+{
+    FwBassLevelerProcessor p;
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    set (bl::id::rangeMin, 6.0f); set (bl::id::rangeMax, -6.0f);
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512);
+    juce::MidiBuffer midi;
+    bool finite = true;
+    float peak = 0.0f;
+    for (int b = 0; b < 40; ++b)
+    {
+        for (int i = 0; i < 512; ++i) { const float v = 0.1f * std::sin (0.01f * (float) (b * 512 + i)); buf.setSample (0, i, v); buf.setSample (1, i, v); }
+        p.processBlock (buf, midi);
+        for (int i = 0; i < 512; ++i) finite = finite && std::isfinite (buf.getSample (0, i));
+        peak = std::max (peak, buf.getMagnitude (0, 512));
+    }
+    CHECK (finite);
+    CHECK (peak <= 0.1f * 4.1f);                           // +12 dB at most
+}
+
 int main()
 {
     testBypassIsDelayedInput();
+    testBypassReleaseHasNoOldAudio();
+    testInvertedRange();
     juce::ScopedJuceInitialiser_GUI init;
     testParamIds();
     testParameters();

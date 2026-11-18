@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 #include "shared/ui/FlatUI.h"
 
@@ -25,6 +26,7 @@ void FwBassXLiftProcessor::prepareToPlay (double sampleRate, int)
 void FwBassXLiftProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     const int n = b.getNumSamples(), ch = jmin (2, b.getNumChannels());
     dsp.setInputDb (get (bx::id::input));
     dsp.setFreq (get (bx::id::freq));

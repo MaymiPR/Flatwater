@@ -374,6 +374,7 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
 
 FwBassLevelerEditor::~FwBassLevelerEditor()
 {
+    proc.userRide.store (false);                            // a Rider held when the window closes is let go
     entry.reset();
     for (auto* k : { &sensitivity, &spill, &artifacts }) k->marks = nullptr;
 }

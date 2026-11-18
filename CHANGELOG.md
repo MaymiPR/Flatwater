@@ -62,6 +62,17 @@
 - **FwComp, Attack and Release:** the processor reads the two times on the 0.01 ms grid their controls show. Before,
   the Attack control at 7.00 ms held a value one float step above 7, and the output differed from the offline
   renderer's by about -90 dB at that setting, the default one.
+- **Bypass released, Flatwater Bass Leveler:** the first 42 ms after the host's bypass is switched off (5 ms on Live)
+  are the audio of now. Before, they were the audio from before the bypass was switched on.
+- **Input that is not a number:** a NaN or infinite input sample is taken as silence in every plug-in. Before, one
+  such sample stayed in the filters until playback was restarted, and it could crash Flatwater Vocal Chain with
+  Compress on.
+- **Closing the editor:** a Mode menu left open no longer acts on a closed editor; a Rider fader held when the
+  window of Flatwater Bass Leveler or Vocal Leveler closes is let go; Flatwater Vocal Leveler ends its automation
+  write when the plug-in is removed.
+- **User presets:** a preset file that is not this plug-in's is refused. Before, it replaced the plug-in's state.
+- **Range in the two levelers:** Range Max automated under Range Min is read as equal to it.
+- **Flatwater Delay:** its settings are read without building text on the audio thread.
 - **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
   show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
   (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed

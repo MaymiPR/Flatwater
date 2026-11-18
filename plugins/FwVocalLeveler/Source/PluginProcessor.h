@@ -11,7 +11,7 @@ class FwVocalLevelerProcessor : public juce::AudioProcessor, private juce::Timer
 {
 public:
     FwVocalLevelerProcessor();
-    ~FwVocalLevelerProcessor() override { stopTimer(); }
+    ~FwVocalLevelerProcessor() override { stopTimer(); if (writing) apvts.getParameter (vl::id::rider)->endChangeGesture(); }
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
