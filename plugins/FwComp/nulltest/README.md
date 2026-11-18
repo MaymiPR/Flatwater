@@ -25,6 +25,7 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 | `measure_pilot_cycle.py` | The gain inside each cycle of a low tone, the reference against Flatwater Comp: a -40 dBFS 6170 Hz pilot on the tone, demodulated from input and output |
 | `measure_pilot_gain.py` | The compressor's gain over time from a MeterCapture run of vu_probe_pilot.f32: the -54 dBFS 6170 Hz pilot (no harmonic of the 300 Hz tones) |
 | `measure_reference.py` | Phase 3 measurements of the reference (private analysis |
+| `measure_dense_chord.py` | The weak case, a sustained chord at Ratio 50 and Release 30 ms: the residual by level, with one control moved, and with the release memory's floor at other values; the gain both sides apply |
 | `measure_sidechain.py` | What a key on the reference's side-chain bus does to its gain (through `tools/RefRender`, which feeds the bus): steady tones, timing to the sample, the key's channels and frequency, the limiter, Mix, 96 kHz |
 | `measure_vu_face.py` | Measures a VU face's print from MeterCapture gl=1 crops (needle removed: the median of frames with the needle in three places) |
 
