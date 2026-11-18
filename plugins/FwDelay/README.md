@@ -39,8 +39,10 @@ The toolbar is the one every Flatwater plug-in shares: see [the suite README](..
 
 ## How close
 
-The delay path nulls against the original at -84 to -104 dB: the defaults, ms and synced times, the filters, Ping Pong
-from either side and Feedback up to 200 %. Modulation matches at -61 to -81 dB, and the original's 88 factory presets
+At 48 kHz the settled delay path nulls against the original at -84 to -104 dB: the defaults, an ms time, the filters,
+Ping Pong from either side and Feedback up to 200 %. Two cases measured while the time is still gliding are weaker,
+-41.9 to -96.2 dB (ms 250 with Feedback 80, and a synced 1/4 at 97 BPM). At 96 kHz the match is looser
+([the 96 kHz table](NULLTESTS.md#96-khz-below-20-khz)). Modulation matches at -61 to -81 dB, and the original's 88 factory presets
 at a median of -53.2 dB. Analog mode 3 is the weakest part (about -41 dB). Modes 1 to 3 add random noise, as the
 original does, which no null can remove. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the
 original's own: [the presets null test](NULLTESTS.md#presets).

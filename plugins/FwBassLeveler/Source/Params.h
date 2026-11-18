@@ -6,7 +6,7 @@
 
 // Parameters follow the reference's (its VST3 parameters and the ranges, defaults and resolutions; see
 // RESEARCH.md, Flatwater Bass Leveler). The audio is delayed by the component's latency (the look-ahead) and ridden by the model
-// identified on the reference's audio (dsp/Ride.h; MEASUREMENTS.md, Flatwater Bass Leveler Phase 3 / 4).
+// identified on the reference's audio (dsp/Engine.h; MEASUREMENTS.md, Flatwater Bass Leveler Phase 3 / 4).
 namespace bl
 {
 namespace id

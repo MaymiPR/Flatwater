@@ -194,7 +194,9 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 `plugins/FwComp/nulltest/co_ref.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
 output limiter, the four Analog modes): median -48.7 dB, worst -22.1 dB; the reference's 26 factory presets (each on
-voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB.
+voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB. The worst case of the page is outside both sets:
+a sustained chord of three tones at Threshold -12, Ratio 50, Release 30 and Punch 10, -6.7 dB (not a null; the
+side-chain table's column without a key).
 
 - At the default settings: tones and sweeps -84 dB (a null), voice-like -61 dB, bass line -57 dB, white noise -43 dB,
   drums -33 dB, pink noise -32 dB.

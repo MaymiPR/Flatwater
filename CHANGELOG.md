@@ -62,9 +62,18 @@
 - **FwComp, Attack and Release:** the processor reads the two times on the 0.01 ms grid their controls show. Before,
   the Attack control at 7.00 ms held a value one float step above 7, and the output differed from the offline
   renderer's by about -90 dB at that setting, the default one.
+- **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
+  show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
+  (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed
+  more than its table.
+- **Null tests:** the harnesses of Flatwater Comp, Vocal Comp and Bass Lift run as scripts again (`nulltest.py`
+  starts them that way); each called its `main()` above the functions it needs.
 
 ### Known issues
 
+- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -6.7 dB. The
+  original holds its gain reduction between the chord's envelope peaks; Flatwater Comp lets go between them. The same
+  chord 6 dB lower is at -60.6 dB.
 - Flatwater Vocal Leveler: the music side-chain is not modelled yet. The original raises the voice with the music
   (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4).
 

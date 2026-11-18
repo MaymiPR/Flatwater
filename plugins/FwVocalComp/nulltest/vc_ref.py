@@ -133,9 +133,6 @@ def extra_cases(out_rows):
             out_rows.append(row); print("%-26s %-22s %9.1f %9.1f %9.1f" % row)
 
 
-if __name__ == "__main__":
-    main()
-
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
 PLUGIN, PRODUCT = 'FwVocalComp', 'Flatwater Vocal Comp'
@@ -182,3 +179,6 @@ def render_ref(x, fs, comp=0.0, gate=None, gain=0.0, name=None, buffer=512, prer
     y = R.render_with(p, x, fs, buffer)
     return y[:, int(preroll * fs):] if preroll > 0 else y
 
+
+if __name__ == "__main__":
+    main()

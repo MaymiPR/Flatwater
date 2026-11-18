@@ -14,7 +14,7 @@ own hidden default or preset values; none is fitted. The data is in [measurement
 | Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `plugins/FwVocalLeveler/nulltest/measure_reference.py` is named in the tables |
 | Corpus | `scripts/nulltest/vocal_corpus_lib.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
 | Reference renders | `plugins/FwVocalLeveler/nulltest/render_reference.py`: the probes and the 36 parts at ten settings each, 620 renders |
-| Model | `plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
+| Model | `plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Engine.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
 
 ## 1. The level read
 

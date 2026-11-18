@@ -5,7 +5,7 @@
 
 // Parameters follow the reference's (its VST3 parameters and the ranges, defaults and resolutions; see
 // RESEARCH.md, Flatwater Vocal Leveler). No latency (as the reference's); a side-chain input for the music. The riding is the model
-// identified on the reference's audio (dsp/Ride.h; MEASUREMENTS.md, Flatwater Vocal Leveler Phase 3 / 4). The music does not
+// identified on the reference's audio (dsp/Engine.h; MEASUREMENTS.md, Flatwater Vocal Leveler Phase 3 / 4). The music does not
 // steer it yet (what the reference does with it: MEASUREMENTS.md section 4).
 namespace vl
 {

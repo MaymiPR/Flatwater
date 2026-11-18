@@ -28,8 +28,9 @@ presets carry the original's values under Flatwater names.
 
 ## How close
 
-Over a 672-case grid of settings the median residual against the original is -70 dB and the worst is -23 dB. Steady
-tones null at -95 to -120 dB at any setting. The match is weakest on dense noise at heavy compression (-24 to
+Over a 672-case grid of settings the median residual against the original is -70 dB and the worst is -23 dB; the
+worst case of the settings table is -19.3 dB. Steady tones at 1 kHz and 8 kHz null at -101.7 to -121.5 dB at every
+setting that compresses (48 kHz); a steady 100 Hz tone is close, at -47.8 to -51.7 dB. The match is weakest on dense noise at heavy compression (-24 to
 -33 dB). Every case: [NULLTESTS.md](NULLTESTS.md); the grid of settings: [the settings grid](NULLTESTS.md#grid).
 
 ## How it was made
