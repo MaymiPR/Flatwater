@@ -69,6 +69,52 @@ static void testBuses()
     CHECK (! p.checkBusesLayoutSupported (layout));
 }
 
+// The music on the side-chain raises the gain on the voice (MEASUREMENTS.md section 4). The numbers are the
+// reference's settled gains on a 1 kHz voice at -21 dBFS rms with Target -21 and Range -12 ... +12
+// (plugins/FwVocalLeveler/nulltest/measure_music_law.py): -1.271 dB without music, 6.224 dB with a 1 kHz tone at
+// -6 dBFS rms on the side-chain, 2.158 dB with it at -18 dBFS and Music Sensitivity 6.
+static double settledGainWithMusic (bool bus, double musicDb, float sensitivity)
+{
+    FwVocalLevelerProcessor p;
+    auto layout = p.getBusesLayout();
+    layout.inputBuses.getReference (1) = bus ? juce::AudioChannelSet::stereo() : juce::AudioChannelSet::disabled();
+    p.setBusesLayout (layout);
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    set (vl::id::rangeMin, -12.0f); set (vl::id::rangeMax, 12.0f); set (vl::id::musicSensitivity, sensitivity);
+    const double fs = 48000.0;
+    const int block = 512, blocks = (int) (16.0 * fs) / block, ch = bus ? 4 : 2;
+    p.setRateAndBufferSizeDetails (fs, block);
+    p.prepareToPlay (fs, block);
+    juce::AudioBuffer<float> buf (ch, block);
+    juce::MidiBuffer midi;
+    const double voice = std::sqrt (2.0) * std::pow (10.0, -21.0 / 20.0), music = std::sqrt (2.0) * std::pow (10.0, musicDb / 20.0);
+    const double w = 2.0 * 3.14159265358979323846 * 1000.0 / fs;
+    double in2 = 0.0, out2 = 0.0;
+    for (int b = 0; b < blocks; ++b)
+    {
+        for (int i = 0; i < block; ++i)
+        {
+            const double s = std::sin (w * (double) (b * block + i));
+            buf.setSample (0, i, (float) (voice * s)); buf.setSample (1, i, (float) (voice * s));
+            if (bus) { buf.setSample (2, i, (float) (music * s)); buf.setSample (3, i, (float) (music * s)); }
+            if (b >= blocks - 94) in2 += voice * s * voice * s;
+        }
+        p.processBlock (buf, midi);
+        if (b >= blocks - 94)
+            for (int i = 0; i < block; ++i) out2 += (double) buf.getSample (0, i) * buf.getSample (0, i);
+    }
+    return 10.0 * std::log10 (out2 / in2);
+}
+
+static void testMusicSideChain()
+{
+    const double none = settledGainWithMusic (false, -6.0, 0.0f);
+    CHECK_NEAR (none, -1.271, 0.02);
+    CHECK_NEAR (settledGainWithMusic (true, -6.0, 0.0f), 6.224, 0.05);
+    CHECK_NEAR (settledGainWithMusic (true, -18.0, 6.0f), 2.158, 0.05);
+    CHECK_NEAR (settledGainWithMusic (true, -6.0, -12.1f), none, 1.0e-9);    // Music Sensitivity Off: as without music
+}
+
 // the audio path: no delay; Automation Read applies the host's Rider Fader (and Output) to the input
 static void testPathAndRead()
 {
@@ -253,6 +299,7 @@ int main()
     testParamIds();
     testParameters();
     testBuses();
+    testMusicSideChain();
     testPathAndRead();
     testWrite();
     testEditor();

@@ -19,17 +19,23 @@
 //              the rise is as fast as the detector passes samples (a steady tone just after a drop rises slowly)
 //   park       once the detector has passed nothing for the hold (Attack: 500 / 50 ms), v toward the Idle value by
 //              the park rate (1205 ms per neper, both ways)
+//   music      with the side-chain connected and Music Sensitivity not Off: the mid of the side-chain through the
+//              same weighting into a follower of its own, M (the weighted power plus its floor; up by its attack's
+//              rate, down by its release's on samples where the music is present and by its hold's on the others);
+//              the ride then aims at sqrt (Target^2 + k M) in place of Target, k = Music Sensitivity - 10 dB
 namespace vl::dsp
 {
 struct RideSettings
 {
     double target = -21.0, rangeMin = -6.0, rangeMax = 6.0, idleDb = 0.0, vocalSensitivity = 0.0, spill = -48.0;
+    double musicSensitivity = 0.0;
     bool fast = false, live = false;
+    bool music = false;                                        // the side-chain is connected and Music Sensitivity is not Off
 
     bool operator== (const RideSettings& o) const
     {
-        return std::tie (target, rangeMin, rangeMax, idleDb, vocalSensitivity, spill, fast, live)
-               == std::tie (o.target, o.rangeMin, o.rangeMax, o.idleDb, o.vocalSensitivity, o.spill, o.fast, o.live);
+        return std::tie (target, rangeMin, rangeMax, idleDb, vocalSensitivity, spill, musicSensitivity, fast, live, music)
+               == std::tie (o.target, o.rangeMin, o.rangeMax, o.idleDb, o.vocalSensitivity, o.spill, o.musicSensitivity, o.fast, o.live, o.music);
     }
 };
 
@@ -49,7 +55,9 @@ public:
         };
         shelf (weighting[0], t.lowShelfHz, t.lowShelfDb / 2.0, true); shelf (weighting[1], t.lowShelfHz, t.lowShelfDb / 2.0, true);
         shelf (weighting[2], t.highShelfHz, t.highShelfDb / 2.0, false); shelf (weighting[3], t.highShelfHz, t.highShelfDb / 2.0, false);
+        for (int k = 0; k < 4; ++k) musicWeighting[k] = weighting[k];
         floorPower = std::pow (10.0, t.bias / 10.0);
+        musicFloor = std::pow (10.0, t.musicBias / 10.0);
         valid = false;
         reset();
     }
@@ -57,17 +65,29 @@ public:
     void reset()
     {
         for (auto& s : weighting) s.z = 0.0;
+        for (auto& s : musicWeighting) s.z = 0.0;
         Q = floorPower;
+        M = musicFloor;
         shortPower = 0.0;
         voice = false;
         quiet = 0;
         started = false;
     }
 
-    // one input sample; returns the gain in dB
-    double push (double x, const RideSettings& s)
+    // one input sample (and the side-chain's, the mid of its channels, used when s.music); returns the gain in dB
+    double push (double x, const RideSettings& s, double music = 0.0)
     {
         if (! valid || ! (s == cur)) derive (s);
+        double aim = law;
+        if (s.music)
+        {
+            double ym = music;
+            for (auto& w : musicWeighting) ym = w.run (ym);
+            const double pm = ym * ym, qm = pm + musicFloor;
+            if (qm > M) M = std::min (qm, M * mUp);
+            else M = std::max (qm, M * (pm > musicThreshold * M ? mDown : mHold));
+            aim = std::sqrt (law * law + musicGain * M);
+        }
         if (! started) { v = std::clamp (t.initialV, vlo, vhi); started = true; }
         double y = x;
         for (auto& w : weighting) y = w.run (y);
@@ -81,7 +101,7 @@ public:
         quiet = voice ? 0 : quiet + 1;
         if (voice)
         {
-            const double vd = std::clamp (law / std::sqrt (Q), vlo, vhi);
+            const double vd = std::clamp (aim / std::sqrt (Q), vlo, vhi);
             if (vd < v) v = std::max (vd, v * rDown);
             else v = std::min (vd, v / rUp);
         }
@@ -121,12 +141,17 @@ private:
         rDown = std::pow (coef (s.fast ? t.rideAttackFast : t.rideAttackSlow), t.ridePower);
         rUp = std::pow (coef (t.rideRelease), t.ridePower);
         park = coef (t.parkTime);
+        mUp = std::pow (coef (t.musicAttack), -t.followerPower);
+        mDown = std::pow (coef (t.musicRelease), t.followerPower);
+        mHold = std::pow (coef (t.musicHold), t.followerPower);
+        musicThreshold = std::pow (10.0, -t.musicVk / 10.0);
+        musicGain = std::pow (10.0, t.c / 10.0) * std::pow (10.0, (s.musicSensitivity + t.musicOffset) / 10.0);
         parkHold = (long) std::floor ((s.fast ? t.parkHoldFast : t.parkHoldSlow) * 0.001 * fs + 0.5);
         cur = s; valid = true;
     }
 
     double fs = 48000.0;
-    Section weighting[4];
+    Section weighting[4], musicWeighting[4];
     RideSettings cur;
     bool valid = false;
     double floorPower = 1.0e-4, halfMin = 0.25, vlo = 0.25, vhi = 1.75, vIdle = 0.75, law = 0.0891, threshold = 0.04,
@@ -134,6 +159,7 @@ private:
     double fUp = 1.0, fDown = 1.0, fHold = 1.0, vAtt = 0.0, vRel = 0.0, rDown = 1.0, rUp = 1.0, park = 1.0;
     long parkHold = 0, quiet = 0;
     double Q = 1.0e-4, shortPower = 0.0, v = 1.0;
+    double musicFloor = 1.0e-4, M = 1.0e-4, mUp = 1.0, mDown = 1.0, mHold = 1.0, musicThreshold = 0.04, musicGain = 0.1;
     bool voice = false, started = false;
 };
 }

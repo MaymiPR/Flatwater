@@ -12,7 +12,11 @@
                 passes: down by the ride attack, up by the ride release (multiplicative), clamped so that
                 1/2 gMin + v stays in the range; v starts at 1
      park       once the detector has passed nothing for the hold (it runs from the start too), v toward the Idle
-                value by the park rate (both ways, multiplicative) */
+                value by the park rate (both ways, multiplicative)
+     music      ride_music: the side-chain's mid through the same weighting into a follower of its own, M (the
+                weighted power plus its floor; up by its attack's rate, down by its release's on samples within vk dB
+                of M and by its hold's on the others); the ride aims at sqrt (Target^2 + k M), k = Music Sensitivity
+                plus the offset, in dB */
 #include <math.h>
 
 enum { P_C, P_BIAS, P_FATT_S, P_FATT_F, P_FREL, P_FHOLD, P_FPOW, P_VATT, P_VREL, P_VK, P_RATT_S, P_RATT_F, P_RREL,
@@ -36,8 +40,10 @@ static double run (Sec* s, double x)
     return y;
 }
 
-/* settings: target, rmin, rmax, idle (dB), vocal sensitivity, spill, fast (0/1), live (0/1) */
-__declspec(dllexport) void ride (const float* x, int n, double fs, const double* st, const double* p, float* out)
+/* settings: target, rmin, rmax, idle (dB), vocal sensitivity, spill, fast (0/1), live (0/1)
+   m: the side-chain's mid, or 0 for none; mp: Music Sensitivity (dB), then the music follower's bias (dB), attack,
+   release, hold (ms), vk (dB) and the offset (dB) */
+static void run_ride (const float* x, const float* m, int n, double fs, const double* st, const double* p, const double* mp, float* out)
 {
     const double target = st[0], rmin = st[1], rmax = st[2], idle = st[3], vs = st[4], spill = st[5];
     const int fast = st[6] > 0.5, live = st[7] > 0.5;
@@ -60,12 +66,28 @@ __declspec(dllexport) void ride (const float* x, int n, double fs, const double*
     const double rdn = pow (COEF (fast ? p[P_RATT_F] : p[P_RATT_S]), rp), rup = pow (COEF (p[P_RREL]), rp);
     const double kpark = COEF (p[P_PARK]);
     const long phold = (long) floor ((fast ? p[P_PHOLD_F] : p[P_PHOLD_S]) * 0.001 * fs + 0.5);
+    Sec wm[4];
+    for (int k = 0; k < 4; ++k) wm[k] = w[k];
+    const double mb2 = m ? pow (10.0, mp[1] / 10.0) : 0.0;
+    const double mup = m ? pow (COEF (mp[2]), -fp) : 1.0, mdn = m ? pow (COEF (mp[3]), fp) : 1.0, mhold = m ? pow (COEF (mp[4]), fp) : 1.0;
+    const double mthr = m ? pow (10.0, -mp[5] / 10.0) : 0.0, mgain = m ? c * c * pow (10.0, (mp[0] + mp[6]) / 10.0) : 0.0;
+    double M = mb2;
     double Q = b2, s = 0.0, v = p[P_V0];
     if (v < vlo) v = vlo; if (v > vhi) v = vhi;
     long quiet = 0;
     int voice = 0;
     for (int i = 0; i < n; ++i)
     {
+        double aim = c * T;
+        if (m)
+        {
+            double ym = m[i];
+            for (int k = 0; k < 4; ++k) ym = run (&wm[k], ym);
+            const double pm = ym * ym, qm = pm + mb2;
+            if (qm > M) { const double t = M * mup; M = qm < t ? qm : t; }
+            else { const double t = M * (pm > mthr * M ? mdn : mhold); M = qm > t ? qm : t; }
+            aim = sqrt (c * T * c * T + mgain * M);
+        }
         double y = x[i];
         for (int k = 0; k < 4; ++k) y = run (&w[k], y);
         const double pw = y * y, q = pw + b2;
@@ -78,7 +100,7 @@ __declspec(dllexport) void ride (const float* x, int n, double fs, const double*
         quiet = voice ? 0 : quiet + 1;
         if (voice)
         {
-            double vd = c * T / sqrt (Q);
+            double vd = aim / sqrt (Q);
             if (vd < vlo) vd = vlo; if (vd > vhi) vd = vhi;
             if (vd < v) { const double t = v * rdn; v = vd > t ? vd : t; }
             else { const double t = v / rup; v = vd < t ? vd : t; }
@@ -90,4 +112,14 @@ __declspec(dllexport) void ride (const float* x, int n, double fs, const double*
         }
         out[i] = (float) (20.0 * log10 (0.5 * gmin + v));
     }
+}
+
+__declspec(dllexport) void ride (const float* x, int n, double fs, const double* st, const double* p, float* out)
+{
+    run_ride (x, 0, n, fs, st, p, 0, out);
+}
+
+__declspec(dllexport) void ride_music (const float* x, const float* m, int n, double fs, const double* st, const double* p, const double* mp, float* out)
+{
+    run_ride (x, m, n, fs, st, p, mp, out);
 }

@@ -54,6 +54,13 @@
   key channel. Without the bus the sound is unchanged. Before, the plug-in ignored its side-chain input
   (`plugins/FwComp/MEASUREMENTS.md`, Side-chain; the null with a key: `plugins/FwComp/NULLTESTS.md`).
 
+- **Flatwater Vocal Leveler, music side-chain:** music on the side-chain input raises the voice, as in the original.
+  While a host enables the side-chain bus and Music Sensitivity is not Off, the ride aims higher by the music's
+  level: the music adds to the Target as a power, 10 dB down, moved by Music Sensitivity dB for dB. Without the bus,
+  or at Off, the sound is unchanged. Against the original with music: median -70.7 dB, worst -51.7 dB over 21 cases
+  (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4; `plugins/FwVocalLeveler/NULLTESTS.md`). Not yet tried in
+  a DAW.
+
 ### Fixed
 
 - **Bypass with latency:** FwBassLeveler, FwComp, FwVocalChain and FwVocalComp, the four plug-ins that report a
@@ -85,8 +92,6 @@
 - Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -6.7 dB. The
   original holds its gain reduction between the chord's envelope peaks; Flatwater Comp lets go between them. The same
   chord 6 dB lower is at -60.6 dB.
-- Flatwater Vocal Leveler: the music side-chain is not modelled yet. The original raises the voice with the music
-  (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4).
 
 ## 1.0.0 (2026-11-04)
 

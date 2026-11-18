@@ -43,11 +43,38 @@ Attack Fast, where the gain drops in about 10 ms and the two differ by a fractio
 
 ### Not covered
 
-- The **Music side-chain**: the reference raises the voice with the music on its side-chain input (MEASUREMENTS.md
-  section 4). Music Sensitivity is not modelled yet and the plug-in rides without the music; no case here feeds a
-  side-chain.
 - Automation Read and Write, and grabbing the Rider fader, are host interactions; the unit tests check them, not
   this null test.
+
+### With music on the side-chain
+
+Flatwater Vocal Leveler against the reference, both fed the same voice on the main input and the same music on the side-chain bus (Stereo, 48000 Hz; the residual after the first 0.1 s, dB re the reference output; the gain error is the largest difference of the two gains over 50 ms). The steady voice is a 1 kHz sine at -21 dBFS rms; the vocal parts are held-out parts of the corpus, with a dense synthetic mix as the music. Produced by `plugins/FwVocalLeveler/nulltest/null_sidechain.py`.
+
+| case | residual (dB) | gain error (dB) |
+|---|---:|---:|
+| steady voice, tone -18 dBFS, Sensitivity 0, Target -21, range -12 .. 12 | -75.2 | 0.00 |
+| steady voice, tone -6 dBFS, Sensitivity 0, Target -21, range -12 .. 12 | -70.7 | 0.01 |
+| steady voice, tone -18 dBFS, Sensitivity 6, Target -21, range -12 .. 12 | -73.2 | 0.01 |
+| steady voice, tone -18 dBFS, Sensitivity 0, Target -30, range -12 .. 12 | -73.0 | 0.01 |
+| steady voice, tone -18 dBFS, Sensitivity 0, Target -21, range -6 .. 6 | -76.2 | 0.00 |
+| steady voice, the music steps -40 / -6 / -40 dBFS | -67.5 | 0.01 |
+| the same, Attack Fast | -53.6 | 0.02 |
+| steady voice, music: pink noise | -67.3 | 0.01 |
+| steady voice, music: white noise | -73.7 | 0.00 |
+| steady voice, music: bursts 10 ms on, 90 off | -68.8 | 0.00 |
+| steady voice, music: bursts 50 ms on, 50 off | -72.7 | 0.01 |
+| steady voice, music: bursts 100 ms on, 400 off | -71.9 | 0.00 |
+| steady voice, music: bursts 500 ms on, 1500 off | -70.8 | 0.00 |
+| steady voice, music: two tones 1000 + 1100 Hz | -67.7 | 0.01 |
+| steady voice, music: two tones 1000 + 1010 Hz | -74.3 | 0.01 |
+| steady voice, music: tone 1 kHz, left channel alone | -75.2 | 0.00 |
+| vocal part 24 with a mix at -10 dBFS peak, defaults | -65.5 | 0.01 |
+| vocal part 27 with a mix at -10 dBFS peak, Sensitivity 6 | -67.9 | 0.01 |
+| vocal part 33 with a mix at -10 dBFS peak, Attack Fast | -51.7 | 0.20 |
+| vocal part 25 with a mix at -10 dBFS peak, Sensitivity -6, range -12 .. 12 | -56.0 | 0.10 |
+| vocal part 26 with a mix at -10 dBFS peak, Sensitivity Off | -64.2 | 0.01 |
+
+median -70.7 dB, best -76.2, worst -51.7; 21 cases
 
 ## Presets
 

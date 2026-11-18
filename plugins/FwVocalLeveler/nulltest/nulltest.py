@@ -18,14 +18,20 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 
 
 def vst3_check():
-    """--vst3: the built VST3 against the renderer on noise, a low tone and drums at three settings; the exit code.
+    """--vst3: the built VST3 against the renderer on noise, a low tone and drums at three settings, and on noise with
+    music on the side-chain bus at two; the exit code.
     It runs before the reference's modules load, so it needs neither the reference nor the vocal corpus."""
     import refhost as R, nulltest_lib as nl, vl_ref as h
 
     def cases(fs):
         S = (('noise -18 dBFS', nl.noise(3.0, -18.0, seed=7, fs=fs)), ('tone 100 Hz -12 dBFS', nl.tone(100.0, 3.0, -12.0, fs=fs)),
              ('drums', nl.drums(3.0, -6.0, fs=fs)))
-        return [('%s, %s' % (name, label), x, params, (), {'mode': 0, **keys}) for name, x in S for label, params, keys in (
+        music = nl.music(3.0, -10.0, fs=fs)                # on the side-chain bus: RefRender enables the bus only when it feeds it
+        keyed = [('noise -18 dBFS, music on the side-chain, %s' % label, S[0][1], params, (),
+                  lambda x, fs, keys=keys: h.render_model(x, fs, sc=music, mode=0, **keys), music) for label, params, keys in (
+                 ('defaults', {}, {}), ('Music Sensitivity 6, Range -12 .. +12', {'Music Sensitivity': '6', 'Range Max': '12', 'Range Min': '-12'},
+                                        {'musicSensitivity': 6, 'rangeMax': 12, 'rangeMin': -12}))]
+        return keyed + [('%s, %s' % (name, label), x, params, (), {'mode': 0, **keys}) for name, x in S for label, params, keys in (
             ('defaults', {}, {}), ('Fast, Target -30', {'Attack': 'Fast', 'Target': '-30'}, {'attack': 1, 'target': -30}),
             ('Range -12 .. +12, Vocal Sensitivity 6', {'Range Max': '12', 'Range Min': '-12', 'Vocal Sensitivity': '6'},
              {'rangeMax': 12, 'rangeMin': -12, 'vocalSensitivity': 6}))]
