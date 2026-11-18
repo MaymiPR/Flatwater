@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -42,17 +43,28 @@ void FwBassLevelerProcessor::configure()
 void FwBassLevelerProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 {
     if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
-    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
+    // the main line takes the input too, so the release of the bypass goes on with the audio of now, not with what
+    // the line held when the bypass came on
+    const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size()), len = delaySamples + 1;
+    int pos = writePos;
+    for (int i = 0; i < n; ++i)
+    {
+        for (int c = 0; c < ch; ++c) line[(size_t) c][(size_t) pos] = b.getSample (c, i);
+        pos = pos + 1 == len ? 0 : pos + 1;
+    }
+    writePos = pos;
+    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), n);
 }
 
 void FwBassLevelerProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
     const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size());
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
     bl::dsp::RideSettings st;
-    st.target = get (bl::id::target); st.rangeMin = get (bl::id::rangeMin); st.rangeMax = get (bl::id::rangeMax);
+    st.target = get (bl::id::target); st.rangeMin = get (bl::id::rangeMin); st.rangeMax = jmax (st.rangeMin, (double) get (bl::id::rangeMax));   // (a host may automate Max under Min)
     st.idleDb = idleDb(); st.artifacts = get (bl::id::artifacts); st.sensitivity = get (bl::id::sensitivity);
     st.fast = get (bl::id::response) > 0.5f;
     st.spill = get (bl::id::spill); st.live = bl::isLive (modeIndex());

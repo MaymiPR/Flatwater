@@ -14,7 +14,7 @@ own hidden default or preset values; none is fitted. The data is in [measurement
 | Probes | 26 probes (steps, gaps, stops, tones, syllable trains) and targeted drops; each subcommand of `plugins/FwVocalLeveler/nulltest/measure_reference.py` is named in the tables |
 | Corpus | `scripts/nulltest/vocal_corpus_lib.py`: 84 sung and spoken phrases from the DAW's own vocal packs strung into 36 parts of 20 s; parts 0 to 23 identify the model, 24 to 35 are held out |
 | Reference renders | `plugins/FwVocalLeveler/nulltest/render_reference.py`: the probes and the 36 parts at ten settings each, 620 renders |
-| Model | `plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Ride.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
+| Model | `plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical line for line to `plugins/FwVocalLeveler/Source/dsp/Engine.h`; `plugins/FwVocalLeveler/nulltest/fit_model.py report` scores it over the cached renders |
 
 ## 1. The level read
 
@@ -68,7 +68,17 @@ hold at Fast 45 or 55 ms) all make Fast worse. Steady tones at 150 Hz ... 8 kHz 
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Effect of the side-chain | the music raises the gain on the voice: on a steady voice at -21 dBFS the gain is -3.38 dB without music and with pink noise up to -40 dBFS rms, -3.07 dB at -20, -1.75 at -12 and 0.90 at -6 (Music Sensitivity 0, after 8 s); Music Sensitivity adds to the music's level in dB (6 with music at -12 gives the 0.90 dB of 0 with music at -6, and 12 with music at -12 the 5.09 dB of 6 with music at -6), and at Off the music changes nothing (-3.38 dB at every level); after a step of the music the gain moves by about 1.1 dB per second upward and 0.6 to 0.8 downward; the two channels are summed (one alone counts 6 dB less); a 1 kHz tone counts more than pink noise of the same level (-0.74 against -1.75 dB at -12 dBFS) and a 100 Hz tone less (-2.88) | `plugins/FwVocalLeveler/nulltest/measure_sidechain.py`: `tools/RefRender` with `sc=` | a first measurement: the law is not fitted, and the plug-in rides without the music |
+| Law | with the side-chain connected the ride aims at sqrt(Target^2 + k M) in place of Target, M the music's level and k = Music Sensitivity - 10 dB: the music adds to the Target as a power. Read on a steady 1 kHz voice as E, what the music adds to the Target's power: E less the music's rms level is -7.38 to -7.36 dB for a 1 kHz tone from -18 to 0 dBFS, and -7.57 to -7.30 dB at voice levels of -15 and -27 dBFS and Targets of -12 and -30 (gain without music -1.271 dB, with the tone at -6 dBFS 6.224 dB) | `law`: `plugins/FwVocalLeveler/nulltest/measure_music_law.py` | exact within the read (0.1 dB); the -10 dB is the tone's peak power through the weighting |
+| Weighting | the weighting of section 1: re 1 kHz -13.70 dB at 50 Hz, -8.65 at 100, -3.55 at 200, -0.48 at 500, -0.16 at 2 kHz, -1.45 at 4 kHz, -2.63 at 6.5 kHz, -4.04 at 10 kHz, -5.78 at 16 kHz | `weight` | within 0.3 dB of the voice's weighting |
+| Music Sensitivity | dB for dB: E moves by -5.97, -2.99, 3.00, 5.99 and 11.99 dB at -6, -3, 3, 6 and 12; Off: the gain is -1.271 dB, as without music | `weight` | exact |
+| Channels | the mid, (L + R) / 2: one channel alone counts -6.01 dB | `kinds` | exact |
+| Follower | M is the weighted power plus a floor of -42 dB: up at most by its attack's rate (105 ms), down at most by its release's (2013 ms) on samples within 9.03 dB of M (a power ratio of 1/8) and by its hold's (5000 ms) on the others, all multiplicative per sample with squared coefficients, as the voice's follower of section 1. The floor, the attack, the release and the hold are the reference's hidden values; the 9.03 dB is found on the null (14, 10, 9.5, 9.2, 9.03, 8.85, 8.7 and 8 tried) | the step, the bursts and the noises of `time` and `kinds`; `plugins/FwVocalLeveler/nulltest/null_sidechain.py --tune` | each hidden value is at a sharp optimum of the null: attack 95 or 115 ms, release 1500 or 3000 ms, hold 4000 or 6000 ms and an offset 0.05 dB away each cost 10 dB or more on at least one case |
+| Timing as seen from outside | after the music steps from -40 to -6 dBFS the gain rises at 6.9 dB/s (the ride's own rate), and after it steps back the gain falls at 1.00 dB/s two to four seconds later (the follower's hold); Attack Slow and Fast agree within 0.068 dB | `time` | measured |
+| Kinds of music | against a steady tone of the same rms level, E is -2.60 dB for pink noise, 0.19 for white noise, -0.59 for 10 ms bursts every 100 ms, -1.09 for 0.5 s bursts every 2 s and 2.51 for two tones 100 Hz apart: the follower reads peaks, and the ride then follows the lower edge of a moving aim | `kinds` | reproduced by the model through the null (NULLTESTS.md) |
+
+Method notes: the reference renders through `tools/RefRender`, which feeds the side-chain bus. A choice such as Attack
+is set there by its normalised value; its text is not taken. With the bus connected and silent, the floor alone adds
+0.003 dB to the gain. The results are in `measurements/FwVocalLeveler/music_law.json`.
 
 ## 5. The model against the reference
 
@@ -104,8 +114,10 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 - How: the reference's riding was identified from probes and a corpus of 36 vocal parts (a DAW's own vocal phrases).
   It rides only on the samples its vocal detector passes, which is why it rises slowly on a real voice; every
   constant is the reference's own hidden value, none is fitted.
-- Not covered: the Music side-chain (Music Sensitivity). The reference raises the voice with the music (section 4);
-  Flatwater Vocal Leveler rides without it.
+- With music on the side-chain (section 4): median -70.7 dB, worst -51.7 dB over 21 cases. A steady voice with a
+  tone, a step of the music, bursts, two tones or noise as the music: -67.3 to -76.2 dB (null), the step at Attack
+  Fast -53.6 dB (close). Held-out vocal parts with a dense mix: -64.2 to -67.9 dB on three (null), -56.0 dB at
+  Sensitivity -6 with the full range and -51.7 dB at Attack Fast (close).
 - Every case: [NULLTESTS.md](NULLTESTS.md).
 
 ## Validation
@@ -120,7 +132,7 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 | Render regression cases | 3 |
 | CPU per 60 s of stereo at 48 kHz | about 0.36 s (0.6 %) |
 | The C++ ride against the model (`plugins/FwVocalLeveler/nulltest/check_port.py`, 25 cases) | identical (0.0000 dB) |
-| Listening | the Music side-chain is untested by ear: it needs FL Studio or another host with a side-chain send |
+| Listening | the Music side-chain is untested by ear and untried in a DAW: it needs FL Studio or another host with a side-chain send |
 | Unit tests cover | the parameters as the reference's, the buses (a side-chain), no latency, the audio path, Automation Read and Write, the editor's Studio and Live layouts and the Music knob's disabled look, the 13 factory presets (their values, Attack, Automation Off in Default, an Idle of 0 or 1 kept exactly), and the riding against the reference's measured values: the start, the law, the rise after 12 and 4 dB drops, the hold and glide to Idle at Slow and Fast, Spill on Live and off at -48 |
 
 The commands: `ctest --test-dir build -C Release --output-on-failure`; pluginval 1.0.4 at strictness 10 as the

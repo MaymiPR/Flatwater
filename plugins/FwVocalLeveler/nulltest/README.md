@@ -23,6 +23,8 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 | File | What it does |
 |---|---|
 | `measure_reference.py` | Phase 3 measurements of the reference (the shell VST3, the local install named by local.yaml's ref_vst3), from its audio: no latency |
+| `measure_music_law.py` | The law of the music on the side-chain: what it adds to the Target by level, frequency and Music Sensitivity, its timing, and how noise, bursts and two tones are read; `--save` writes `measurements/FwVocalLeveler/music_law.json` |
+| `null_sidechain.py` | The null with music on the side-chain: `VlRender sc=` against the reference on the probes above and on held-out vocal parts with a mix; `--save` writes its part of NULLTESTS.md; `--tune key=value` for a fit |
 | `measure_sidechain.py` | What the music on the reference's side-chain bus does to its riding (through `tools/RefRender`, which feeds the bus): the settled gain by music level and Music Sensitivity, timing, the music's channels and kind |
 
 ## Probes

@@ -54,6 +54,13 @@
   key channel. Without the bus the sound is unchanged. Before, the plug-in ignored its side-chain input
   (`plugins/FwComp/MEASUREMENTS.md`, Side-chain; the null with a key: `plugins/FwComp/NULLTESTS.md`).
 
+- **Flatwater Vocal Leveler, music side-chain:** music on the side-chain input raises the voice, as in the original.
+  While a host enables the side-chain bus and Music Sensitivity is not Off, the ride aims higher by the music's
+  level: the music adds to the Target as a power, 10 dB down, moved by Music Sensitivity dB for dB. Without the bus,
+  or at Off, the sound is unchanged. Against the original with music: median -70.7 dB, worst -51.7 dB over 21 cases
+  (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4; `plugins/FwVocalLeveler/NULLTESTS.md`). Not yet tried in
+  a DAW.
+
 ### Fixed
 
 - **Bypass with latency:** FwBassLeveler, FwComp, FwVocalChain and FwVocalComp, the four plug-ins that report a
@@ -62,11 +69,29 @@
 - **FwComp, Attack and Release:** the processor reads the two times on the 0.01 ms grid their controls show. Before,
   the Attack control at 7.00 ms held a value one float step above 7, and the output differed from the offline
   renderer's by about -90 dB at that setting, the default one.
+- **Bypass released, Flatwater Bass Leveler:** the first 42 ms after the host's bypass is switched off (5 ms on Live)
+  are the audio of now. Before, they were the audio from before the bypass was switched on.
+- **Input that is not a number:** a NaN or infinite input sample is taken as silence in every plug-in. Before, one
+  such sample stayed in the filters until playback was restarted, and it could crash Flatwater Vocal Chain with
+  Compress on.
+- **Closing the editor:** a Mode menu left open no longer acts on a closed editor; a Rider fader held when the
+  window of Flatwater Bass Leveler or Vocal Leveler closes is let go; Flatwater Vocal Leveler ends its automation
+  write when the plug-in is removed.
+- **User presets:** a preset file that is not this plug-in's is refused. Before, it replaced the plug-in's state.
+- **Range in the two levelers:** Range Max automated under Range Min is read as equal to it.
+- **Flatwater Delay:** its settings are read without building text on the audio thread.
+- **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
+  show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
+  (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed
+  more than its table.
+- **Null tests:** the harnesses of Flatwater Comp, Vocal Comp and Bass Lift run as scripts again (`nulltest.py`
+  starts them that way); each called its `main()` above the functions it needs.
 
 ### Known issues
 
-- Flatwater Vocal Leveler: the music side-chain is not modelled yet. The original raises the voice with the music
-  (`plugins/FwVocalLeveler/MEASUREMENTS.md`, section 4).
+- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -6.7 dB. The
+  original holds its gain reduction between the chord's envelope peaks; Flatwater Comp lets go between them. The same
+  chord 6 dB lower is at -60.6 dB.
 
 ## 1.0.0 (2026-11-04)
 

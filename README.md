@@ -129,11 +129,11 @@ better: -60 dB is inaudible in practice, 0 dB is no match.
 
 | Plug-in | Real material | Synthetic signals | Best parts | Weakest part |
 |---|---|---|---|---|
-| [Flatwater Vocal Comp](plugins/FwVocalComp/NULLTESTS.md) | not measured | a grid of 672 settings: median -70 dB, worst -23 dB | steady tones at any setting: -95 to -120 dB | dense noise at heavy compression: -24 to -33 dB |
-| [Flatwater Bass Lift](plugins/FwBassLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median -36.8 dB | tones at or above Freq, sweeps, white noise: -43 to -49 dB | very low input at Freq 160 with Original Bass Out (kicks -9 dB) |
+| [Flatwater Vocal Comp](plugins/FwVocalComp/NULLTESTS.md) | not measured | a grid of 672 settings: median -70 dB, worst -23 dB; the settings table: worst -19.3 dB | steady tones at 1 kHz and 8 kHz: -101.7 to -121.5 dB (a 100 Hz tone: -47.8 to -51.7 dB) | dense noise at heavy compression: -24 to -33 dB |
+| [Flatwater Bass Lift](plugins/FwBassLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median -36.8 dB | tones at or above Freq, sweeps, white noise: -43 to -49 dB | very low input at Freq 160 with Original Bass Out (a 30 Hz tone -4.0 dB, kicks -9 dB) |
 | [Flatwater BassX Lift](plugins/FwBassXLift/NULLTESTS.md) | not measured | 12 signals × 8 settings: median -48.5 dB; 120 random settings: median -35.2 dB | white noise and quiet tones: -49 to -59 dB (the created harmonics) | kick-like transients (-19 dB), and extreme settings where the original's own feedback goes unstable |
-| [Flatwater Comp](plugins/FwComp/NULLTESTS.md) | not measured | 14 signals × 12 settings: median -48.7 dB, worst -22.1 dB; 26 factory presets: median -44.0 dB | tones and sweeps at the default: -84 dB; Analog mode 4: -82 to -100 dB | low notes under long attacks: -15 to -20 dB on a bass line |
-| [Flatwater Delay](plugins/FwDelay/NULLTESTS.md) | not measured | 88 factory presets on drums, bass and voice: median -53.2 dB | the delay path (times, filters, Ping Pong, Feedback to 200 %): -84 to -104 dB | Analog mode 3 (about -41 dB), and a loop that self-oscillates above 100 % Feedback |
+| [Flatwater Comp](plugins/FwComp/NULLTESTS.md) | not measured | 14 signals × 12 settings: median -48.7 dB, worst -22.1 dB; 26 factory presets: median -44.0 dB, worst -20.8 dB | tones and sweeps at the default: -84 dB; Analog mode 4: -82 to -100 dB | a sustained chord at full level with Ratio 50 and a short Release: -6.7 dB; low notes under long attacks |
+| [Flatwater Delay](plugins/FwDelay/NULLTESTS.md) | not measured | 88 factory presets on drums, bass and voice: median -53.2 dB | the settled delay path at 48 kHz (times, filters, Ping Pong, Feedback to 200 %): -84 to -104 dB | Analog mode 3 (about -41 dB), a time that is still gliding (-41.9 dB on one case), and a loop that self-oscillates above 100 % Feedback |
 | [Flatwater Bass Leveler](plugins/FwBassLeveler/NULLTESTS.md) | real bass parts held out from the fit: median -22 to -26 dB | a bass line at nearly every setting: -30 dB; 17 factory presets: median -24.8 dB | steady tones and level steps: -48 to -49 dB | Response Fast at Sensitivity 100 (worst parts -10 to -17 dB) |
 | [Flatwater Vocal Leveler](plugins/FwVocalLeveler/NULLTESTS.md) | vocal parts held out from the identification: -47 to -66 dB | level steps: -74 dB; 13 factory presets: median -60.9 dB | level steps: -74 dB | Attack Fast at word onsets: about -50 dB |
 | [Flatwater Vocal Chain](plugins/FwVocalChain/NULLTESTS.md) | held-out vocal parts, the whole chain: median -33.2 dB with the doubler clear, -36.0 dB on Stereo; 43 factory presets: median -30.1 dB | not measured | the Bass, Treble and Reverb stages: median -75.7 dB | the Wide and Spreader doublers, matched in level, spectrum and delay but not sample for sample (medians -9 to -24 dB) |
@@ -167,5 +167,5 @@ Flatwater is open source under the [GNU Affero General Public License v3](LICENS
 are in [THIRD-PARTY-NOTICES.txt](packaging/THIRD-PARTY-NOTICES.txt) and ship with every download. The reference
 plug-ins and their artwork are not part of this repository.
 
-Waves, Renaissance Vox, Renaissance Bass, MaxxBass, H-Comp, H-Delay, Bass Rider, Vocal Rider and CLA Vocals are names
-of their owners and are used only to describe what each plug-in is modelled on.
+Waves, Renaissance Vox, Renaissance Bass, MaxxBass, H-Comp, H-Delay, Bass Rider, Vocal Rider, CLA Vocals and Vocal
+Bender are names of their owners and are used only to describe what each plug-in is modelled on.

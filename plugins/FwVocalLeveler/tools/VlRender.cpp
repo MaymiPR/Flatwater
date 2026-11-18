@@ -3,8 +3,9 @@
 // Files are raw interleaved 32-bit floats. Keys (real units, the parameter IDs): target vocalSensitivity musicSensitivity
 // rangeMax rangeMin output spill rider (dB), attack (0 Slow, 1 Fast), automation (0 Off, 1 Write, 2 Read), idle (dB, its
 // place in the range as the editor's arrow), mode (0 Stereo, 1 Mono, 2 Live Stereo, 3 Live Mono), preset (a factory
-// preset's index, applied where it appears among the keys), block (samples, default 512). There is no latency; the
-// output is the same length as the input.
+// preset's index, applied where it appears among the keys), block (samples, default 512), sc (a raw float file for
+// the side-chain bus, which is enabled only when it is given) and scch (its channels, 1 or 2, default 2). There is no
+// latency; the output is the same length as the input. An unknown key ends the render with exit code 2.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -39,20 +40,26 @@ int main (int argc, char** argv)
     auto set = [&p] (const char* id, float v) { if (auto* q = p.apvts.getParameter (id)) q->setValueNotifyingHost (q->convertTo0to1 (v)); };
     float idleDbValue = 0.0f;
     bool idleGiven = false;
+    std::string keyPath;
+    int keyCh = 2;
     for (int i = 5; i < argc; ++i)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
+        if (eq == std::string::npos) { std::fprintf (stderr, "not a key=value argument: %s\n", a.c_str()); return 2; }
         const std::string k = a.substr (0, eq);
         const float v = (float) std::atof (a.c_str() + eq + 1);
         if (k == "block") block = std::max (1, (int) v);
+        else if (k == "sc") keyPath = a.substr (eq + 1);
+        else if (k == "scch") keyCh = std::max (1, std::min (2, (int) v));
         else if (k == "preset")
         {
             const auto& list = vl::factoryPresets();
             if ((int) v >= 0 && (int) v < (int) list.size()) { flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::id::mode)); p.readExactIdle(); }
         }
         else if (k == "idle") { idleDbValue = v; idleGiven = true; }
+        else if (p.apvts.getParameter (k.c_str()) == nullptr) { std::fprintf (stderr, "unknown key in %s\n", a.c_str()); return 2; }
         else set (k.c_str(), v);
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked
@@ -68,18 +75,35 @@ int main (int argc, char** argv)
     while ((got = std::fread (tmp, sizeof (float), 4096, f)) > 0) in.insert (in.end(), tmp, tmp + got);
     std::fclose (f);
     const long long n = (long long) in.size() / ch;
-    p.setPlayConfigDetails (ch, ch, fs, block);
+    std::vector<float> key;
+    if (! keyPath.empty())
+    {
+        FILE* kf = std::fopen (keyPath.c_str(), "rb");
+        if (! kf) { std::fprintf (stderr, "cannot read %s\n", keyPath.c_str()); return 1; }
+        while ((got = std::fread (tmp, sizeof (float), 4096, kf)) > 0) key.insert (key.end(), tmp, tmp + got);
+        std::fclose (kf);
+    }
+    const int sc = keyPath.empty() ? 0 : keyCh;
+    const long long keyFrames = sc > 0 ? (long long) key.size() / sc : 0;
+    juce::AudioProcessor::BusesLayout layout;
+    layout.inputBuses.add (juce::AudioChannelSet::canonicalChannelSet (ch));
+    layout.inputBuses.add (sc > 0 ? juce::AudioChannelSet::canonicalChannelSet (sc) : juce::AudioChannelSet::disabled());
+    layout.outputBuses.add (juce::AudioChannelSet::canonicalChannelSet (ch));
+    if (! p.setBusesLayout (layout)) { std::fprintf (stderr, "the bus layout was refused\n"); return 1; }
+    p.setRateAndBufferSizeDetails (fs, block);
     p.prepareToPlay (fs, block);
     const int lat = p.getLatencySamples();
-    juce::AudioBuffer<float> b (ch, block);
+    juce::AudioBuffer<float> b (ch + sc, block);
     juce::MidiBuffer midi;
     std::vector<float> out ((size_t) (n * ch), 0.0f);
     for (long long s = 0; s < n + lat; s += block)
     {
         const int m = (int) std::min<long long> (block, n + lat - s);
-        b.setSize (ch, m, false, false, true);
+        b.setSize (ch + sc, m, false, false, true);
         for (int c = 0; c < ch; ++c)
             for (int i = 0; i < m; ++i) b.setSample (c, i, s + i < n ? in[(size_t) ((s + i) * ch + c)] : 0.0f);
+        for (int c = 0; c < sc; ++c)
+            for (int i = 0; i < m; ++i) b.setSample (ch + c, i, s + i < keyFrames ? key[(size_t) ((s + i) * sc + c)] : 0.0f);
         p.processBlock (b, midi);
         for (int c = 0; c < ch; ++c)
             for (int i = 0; i < m; ++i)
@@ -90,7 +114,7 @@ int main (int argc, char** argv)
     }
     FILE* o = std::fopen (argv[2], "wb");
     if (! o) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
-    std::fwrite (out.data(), sizeof (float), out.size(), o);
-    std::fclose (o);
+    const bool written = std::fwrite (out.data(), sizeof (float), out.size(), o) == out.size();
+    if (std::fclose (o) != 0 || ! written) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

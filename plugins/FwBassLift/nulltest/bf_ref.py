@@ -86,7 +86,6 @@ def save_part(rows):
     json.dump(rows, open(DATA, "w", newline="\n"), indent=1)
 
 
-
 def main():
     args = sys.argv[1:]
     quick = "--quick" in args
@@ -118,9 +117,6 @@ def main():
     if save:
         save_part(rows)
 
-
-if __name__ == "__main__":
-    main()
 
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
@@ -172,3 +168,6 @@ def render_ref(x, fs, freq=80.0, intensity=0.0, gain=0.0, hp=0, extra=None, name
     assert all(abs(float(got[k]) - float(val)) < 1e-6 for k, val in want_hidden.items()), (want_hidden, got)
     return R.render_with(p, x, fs, buffer, stereo=name.endswith('Stereo'))
 
+
+if __name__ == "__main__":
+    main()

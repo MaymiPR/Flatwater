@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include <cmath>
 #include "PluginEditor.h"
 
@@ -107,6 +108,7 @@ void FwCompProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
             hostBpm.store (pos->getBpm() ? *pos->getBpm() : 0.0);

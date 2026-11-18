@@ -33,7 +33,8 @@ The toolbar is the one every Flatwater plug-in shares: see [the suite README](..
 
 Over 12 signals and 8 settings, the median residual against the original is -36.8 dB on the whole output and -31.5 dB
 on the created harmonics alone. It is weakest at Freq 160 with Original Bass Out on very low input: the output is then
-only the created bass, and its level is off there. Every case: [NULLTESTS.md](NULLTESTS.md).
+only the created bass, and its level is off there (a 30 Hz tone: -4.0 dB, not a match; the worst case on the created
+harmonics alone is 1.9 dB above the reference's own level). Every case: [NULLTESTS.md](NULLTESTS.md).
 
 ## How it was made
 

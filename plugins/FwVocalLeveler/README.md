@@ -21,7 +21,7 @@ Live modes add the Spill control.
 | Ride / Idle LEDs | Ride lights while a voice is detected, Idle while none is. |
 | Fast / Slow | Attack: the detection timing and the riding speed. Slow is the default. |
 | Vocal | Vocal Sensitivity, -12 to +12 dB (default 0). The threshold of the voice detector. |
-| Music | Music Sensitivity, Off or -12 to +12 dB (default 0). It reads the music on the side-chain input and is greyed out without one. The riding does not use the music yet. The LED beside it brightens as the music gets louder. |
+| Music | Music Sensitivity, Off or -12 to +12 dB (default 0). It reads the music on the side-chain input and is greyed out without one. The louder the music, the higher the voice is ridden; Off rides as without music. The LED beside it brightens as the music gets louder. |
 | Spill (Live modes) | -48 to -12 dB (default -48). Signal below it is treated as stage noise, not voice. |
 | Range | Two thumbs: Max, -11 to +12 dB (default +6), and Min, -12 to +11 dB (default -6). They stay at least 1 dB apart. The box below shows the effective range. |
 | Idle arrow | The Rider's gain when no voice is detected, a point inside the range (default: its middle, 0 dB at the default range). |
@@ -37,7 +37,8 @@ presets carry the original's values under Flatwater names.
 Against the original, level steps match at -74 dB, and vocal parts held out from the identification at -47 to -66 dB.
 That holds at Studio and Live, Slow and Fast, other Targets, ranges and Idle values, Stereo, and at 44.1 and 96 kHz.
 Attack Fast is the weakest (about -50 dB), at word onsets. The original's 13 presets match at a median of -60.9 dB.
-The Music side-chain is not covered: Flatwater Vocal Leveler rides without it. Every case: [NULLTESTS.md](NULLTESTS.md);
+With music on the side-chain the match is median -70.7 dB, worst -51.7 dB over the 21 cases with music, the weakest a vocal part at Attack Fast.
+Every case: [NULLTESTS.md](NULLTESTS.md);
 the factory presets against the original's own: [the presets null test](NULLTESTS.md#presets).
 
 ## How it was made

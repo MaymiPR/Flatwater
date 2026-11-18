@@ -107,9 +107,6 @@ def main():
             f.write("\nmedian %.1f dB, best %.1f, worst %.1f\n" % (np.median(v), v.min(), v.max()))
 
 
-if __name__ == '__main__':
-    main()
-
 # ---- the hosts of first_null.py and nulltest.py --vst3 ----------------------------------------------------------------
 import local_config_lib as L
 PLUGIN, PRODUCT = 'FwComp', 'Flatwater Comp'
@@ -161,3 +158,6 @@ def render_ref(x, fs, name=None, buffer=512, **kw):
     set_ref(p, **kw)
     return R.render_with(p, x, fs, buffer, stereo=name.endswith('Stereo'))
 
+
+if __name__ == '__main__':
+    main()

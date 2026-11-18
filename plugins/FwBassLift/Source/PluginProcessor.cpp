@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -24,6 +25,7 @@ void FwBassLiftProcessor::prepareToPlay (double sampleRate, int)
 void FwBassLiftProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     const int n = b.getNumSamples(), ch = jmin (2, b.getNumChannels());
     auto get = [this] (const char* id) { return apvts.getRawParameterValue (id)->load(); };
     dsp.setFreq (get (bf::id::freq));

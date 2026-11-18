@@ -214,6 +214,7 @@ void Toolbar::loadUser (const juce::File& f)
 {
     if (auto xml = juce::XmlDocument::parse (f))
     {
+        if (! xml->hasTagName (apvts.state.getType())) return;   // not a preset of this plug-in: the state stays
         const auto w = apvts.state.getProperty ("uiWidth");
         apvts.replaceState (juce::ValueTree::fromXml (*xml));
         apvts.state.setProperty ("uiWidth", w, nullptr);
@@ -615,13 +616,14 @@ void Toolbar::mouseDown (const juce::MouseEvent& e)
                 juce::PopupMenu m; m.setLookAndFeel (&menuLook);
                 const int cur = (int) modeParam->convertFrom0to1 (modeParam->getValue());
                 for (int i = 0; i < modes.size(); ++i) m.addItem (i + 1, modes[i], true, i == cur);
-                m.showMenuAsync (target.withMinimumWidth (rect (Mode).getWidth()), [this] (int r)
+                juce::Component::SafePointer<Toolbar> safe (this);   // (the editor may close while the menu is open)
+                m.showMenuAsync (target.withMinimumWidth (rect (Mode).getWidth()), [safe] (int r)
                 {
-                    if (r <= 0) return;
-                    modeParam->beginChangeGesture();
-                    modeParam->setValueNotifyingHost (modeParam->convertTo0to1 ((float) (r - 1)));
-                    modeParam->endChangeGesture();
-                    repaint();
+                    if (safe == nullptr || r <= 0) return;
+                    safe->modeParam->beginChangeGesture();
+                    safe->modeParam->setValueNotifyingHost (safe->modeParam->convertTo0to1 ((float) (r - 1)));
+                    safe->modeParam->endChangeGesture();
+                    safe->repaint();
                 });
             }
             break;

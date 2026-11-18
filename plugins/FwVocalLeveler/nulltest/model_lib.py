@@ -14,14 +14,26 @@ DEFAULTS = dict(c=0.0, bias=-42.0, fatt_s=50.0, fatt_f=10.0, frel=1009.0, fhold=
                 vk=14.0, ratt_s=0.55, ratt_f=0.35, rrel=1000.0, rpow=1.0, park=1205.0, phold_s=500.0, phold_f=50.0,
                 spill=0.0, v0=1.0)
 SET_DEFAULT = dict(target=-21.0, rmin=-6.0, rmax=6.0, idle=0.0, vs=0.0, spill=-48.0, fast=0.0, live=0.0)
+# the music follower's hidden values (bias, attack, release, hold), the presence threshold and the measured offset
+MUSIC_NAMES = ['bias', 'att', 'rel', 'hold', 'vk', 'offset']
+MUSIC_DEFAULTS = dict(bias=-42.0, att=105.0, rel=2013.0, hold=5000.0, vk=9.0309, offset=-10.0)
 
 
-def ride(x, settings=None, params=None, fs=48000.0):
+def ride(x, settings=None, params=None, fs=48000.0, music=None, music_sensitivity=0.0, music_params=None):
+    """music: the side-chain's mid (None: not connected), with Music Sensitivity in dB"""
     s = dict(SET_DEFAULT, **(settings or {}))
     p = dict(DEFAULTS, **(params or {}))
     x = np.ascontiguousarray(x, np.float32)
     st = np.array([s['target'], s['rmin'], s['rmax'], s['idle'], s['vs'], s['spill'], s['fast'], s['live']], np.float64)
     pv = np.array([p[k] for k in NAMES], np.float64)
     out = np.zeros(len(x), np.float32)
-    _lib.ride(x.ctypes.data, len(x), fs, st.ctypes.data, pv.ctypes.data, out.ctypes.data)
+    if music is None:
+        _lib.ride(x.ctypes.data, len(x), fs, st.ctypes.data, pv.ctypes.data, out.ctypes.data)
+    else:
+        m = np.ascontiguousarray(music, np.float32)
+        assert len(m) >= len(x)
+        q = dict(MUSIC_DEFAULTS, **(music_params or {}))
+        mp = np.array([music_sensitivity] + [q[k] for k in MUSIC_NAMES], np.float64)
+        _lib.ride_music.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+        _lib.ride_music(x.ctypes.data, m.ctypes.data, len(x), fs, st.ctypes.data, pv.ctypes.data, mp.ctypes.data, out.ctypes.data)
     return out

@@ -25,13 +25,16 @@ def header_params():
     return p
 
 
-def render_cpp(x, st):
+def render_cpp(x, st, music=None, sens=0.0):
     d = tempfile.mkdtemp()
     fi, fo = os.path.join(d, 'in.f32'), os.path.join(d, 'out.f32')
     np.asarray(x, np.float32).tofile(fi)
     args = [EXE, fi, fo, '1', '48000', 'target=%g' % st['target'], 'rangeMin=%g' % st['rmin'], 'rangeMax=%g' % st['rmax'],
             'vocalSensitivity=%g' % st['vs'], 'spill=%g' % st['spill'], 'attack=%g' % st['fast'], 'mode=%d' % (3 if st['live'] else 1),
             'idle=%g' % st['idle']]
+    if music is not None:                                  # the side-chain's mid, one channel
+        fk = os.path.join(d, 'key.f32'); np.asarray(music, np.float32).tofile(fk)
+        args += ['sc=' + fk, 'scch=1', 'musicSensitivity=%g' % sens]
     subprocess.run(args, check=True)
     return np.fromfile(fo, np.float32)
 
@@ -50,6 +53,18 @@ def main():
             d = np.abs(gc - gm[ok]).max()
             worst = max(worst, d)
             print('%-12s %-10s max |C++ - model| %.4f dB' % (key, s, d))
+    # with music on the side-chain: pink noise under two probes, at two Music Sensitivities
+    import nulltest_lib as nl
+    for key, s, sens in (('syll0', 'default', 0.0), ('step-18-30', 'range-3+9', 6.0)):
+        x, _ = Q.load('probes', key, s)
+        st = E.model_settings(s)
+        m = nl.pink(len(x) / 48000.0 + 1.0, -12.0, fs=48000, seed=4)[:len(x)]
+        gm = M.ride(x, st, p, music=m, music_sensitivity=sens).astype(np.float64)
+        y = render_cpp(x, st, m, sens).astype(np.float64)
+        ok = np.abs(x) > 1e-3
+        d = np.abs(20 * np.log10(np.abs(y[ok]) / np.abs(x[ok])) - gm[ok]).max()
+        worst = max(worst, d)
+        print('%-12s %-10s music, Sensitivity %g: max |C++ - model| %.4f dB' % (key, s, sens, d))
     print('worst %.4f dB' % worst)
 
 

@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -34,10 +35,11 @@ void FwVocalLevelerProcessor::prepareToPlay (double sampleRate, int)
 void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
     auto b = getBusBuffer (buffer, true, 0);
     const int n = b.getNumSamples(), ch = b.getNumChannels();
     vl::dsp::RideSettings st;
-    st.target = get (vl::id::target); st.rangeMin = get (vl::id::rangeMin); st.rangeMax = get (vl::id::rangeMax);
+    st.target = get (vl::id::target); st.rangeMin = get (vl::id::rangeMin); st.rangeMax = jmax (st.rangeMin, (double) get (vl::id::rangeMax));   // (a host may automate Max under Min)
     st.idleDb = idleDb(); st.vocalSensitivity = get (vl::id::vocalSensitivity); st.spill = get (vl::id::spill);
     st.fast = get (vl::id::attack) > 0.5f; st.live = vl::isLive (modeIndex());
     const double outTo = Decibels::decibelsToGain ((double) get (vl::id::output));
@@ -47,7 +49,7 @@ void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     const bool fixed = held || automation == vl::Read;   // a hand on the fader, or the host's automation
     if (! fixed && wasHeld) { returning = true; wasHeld = false; }
 
-    // the music on the side-chain (its level for the Music LED; the riding does not use it yet)
+    // the music on the side-chain: its level for the Music LED here; the riding reads it sample by sample below
     const bool sc = getBusCount (true) > 1 && getChannelCountOfBus (true, 1) > 0;
     sideChainOn.store (sc);
     if (sc)
@@ -63,11 +65,17 @@ void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         musicDb.push ((float) (10.0 * std::log10 (musicLevel + 1.0e-12)));
     }
 
+    st.musicSensitivity = get (vl::id::musicSensitivity);
+    st.music = sc && st.musicSensitivity > -12.05;             // (-12.1 is Off)
+    const auto key = st.music ? getBusBuffer (buffer, true, 1) : AudioBuffer<float>();
+    const int keyCh = key.getNumChannels();
     float vocalMax = -100.0f;
     for (int i = 0; i < n; ++i)
     {
         const double mid = ch > 1 ? 0.5 * ((double) b.getSample (0, i) + (double) b.getSample (1, i)) : (double) b.getSample (0, i);
-        const double r = ride.push (mid, st);
+        const double musicMid = keyCh > 1 ? 0.5 * ((double) key.getSample (0, i) + (double) key.getSample (1, i))
+                              : keyCh == 1 ? (double) key.getSample (0, i) : 0.0;
+        const double r = ride.push (mid, st, musicMid);
         vocalMax = jmax (vocalMax, (float) ride.levelDb());
         // a held Rider (or Automation Read): its gain, reached over 5 ms; on release the ride is rejoined over 5 ms
         if (fixed || returning)

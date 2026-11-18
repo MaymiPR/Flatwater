@@ -95,7 +95,7 @@ void Compressor::process (float* l, float* r, int n, int colour, float fader)
         if (K > 0.0 && over > -K / 2.0 && over < K / 2.0) tr = (1.0 - 1.0 / R) * (over + K / 2.0) * (over + K / 2.0) / (2.0 * K);
         else tr = over > 0.0 ? (1.0 - 1.0 / R) * over : 0.0;
         const double u = (L - p[0] + 45.0) / 3.0;
-        if (u <= 0.0) tr += p[19];
+        if (! (u > 0.0)) tr += p[19];
         else if (u >= 17.0) tr += p[36];
         else { const int kk = (int) u; tr += p[19 + kk] + (p[20 + kk] - p[19 + kk]) * (u - kk); }
         gf = tr > gf ? ca * gf + (1.0 - ca) * tr : cr * gf + (1.0 - cr) * tr;

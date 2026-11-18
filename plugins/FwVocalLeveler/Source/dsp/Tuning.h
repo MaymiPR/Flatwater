@@ -39,6 +39,13 @@ struct Tuning
     double parkHoldFast = fit::parkHoldFast;
     double spillOffset = fit::spillOffset;
     double initialV = fit::initialV;   // the ride's start
+    // the music on the side-chain (MEASUREMENTS.md section 4): its follower's hidden values, and the measured offset
+    double musicBias = -42.0;   // the music follower's floor
+    double musicAttack = 105.0;
+    double musicRelease = 2013.0;
+    double musicHold = 5000.0;
+    double musicVk = 9.0309;   // the music counts as present on a sample over this far under its follower (a power ratio of 1/8): then the release, else the hold
+    double musicOffset = -10.0;   // the music's level enters the Target's power this far down, plus Music Sensitivity
 
     // sets a constant by name (an array element as the name and its index: onThr0); false for an unknown key
     bool set (const std::string& key, double v)
@@ -67,6 +74,12 @@ struct Tuning
         if (key == "parkHoldFast") { parkHoldFast = v; return true; }
         if (key == "spillOffset") { spillOffset = v; return true; }
         if (key == "initialV") { initialV = v; return true; }
+        if (key == "musicBias") { musicBias = v; return true; }
+        if (key == "musicAttack") { musicAttack = v; return true; }
+        if (key == "musicRelease") { musicRelease = v; return true; }
+        if (key == "musicHold") { musicHold = v; return true; }
+        if (key == "musicVk") { musicVk = v; return true; }
+        if (key == "musicOffset") { musicOffset = v; return true; }
         return false;
     }
 

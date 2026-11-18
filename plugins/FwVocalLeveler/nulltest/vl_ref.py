@@ -28,13 +28,18 @@ def render_ref_host(x, fs=48000, params=None, extra=()):
     return R.render_ref(x, fs, REF_NAME, params=params, extra=extra)[0]
 
 
-def render_vst3(x, fs=48000, params=None, extra=()):
-    """our built VST3 through tools/RefRender"""
-    return R.render_ref(x, fs, PRODUCT, params=params, extra=extra, vst3=VST3)[0]
+def render_vst3(x, fs=48000, params=None, extra=(), sc=None):
+    """our built VST3 through tools/RefRender; sc: the music for the side-chain bus (enabled only when it is given)"""
+    return R.render_ref(x, fs, PRODUCT, sc=sc, params=params, extra=extra, vst3=VST3)[0]
 
 
-def render_model(x, fs=48000, **keys):
-    """our processor (keys: renderer keys) through VlRender at the plug-in's defaults"""
+def render_model(x, fs=48000, sc=None, **keys):
+    """our processor (keys: renderer keys) through VlRender at the plug-in's defaults; sc: the music, (2, n)"""
+    if sc is not None:
+        import tempfile
+        f = os.path.join(tempfile.mkdtemp(prefix='key_'), 'key.f32')
+        np.atleast_2d(np.asarray(sc, np.float32)).T.tofile(f)
+        keys = dict(keys, sc=f, scch=np.atleast_2d(sc).shape[0])
     return R.render_exe(RENDER, x, fs, **keys)
 
 

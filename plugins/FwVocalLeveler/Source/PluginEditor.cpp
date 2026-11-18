@@ -498,6 +498,7 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
 
 FwVocalLevelerEditor::~FwVocalLevelerEditor()
 {
+    proc.userRide.store (false);                            // a Rider held when the window closes is let go
     entry.reset();
     for (auto* k : { &vocal, &music, &spill }) k->marks = nullptr;
 }

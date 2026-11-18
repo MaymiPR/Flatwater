@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "shared/dsp/Finite.h"
 #include "PluginEditor.h"
 
 using namespace juce;
@@ -102,6 +103,7 @@ void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
     const int n = buffer.getNumSamples(), ch = jmin (buffer.getNumChannels(), getTotalNumInputChannels());
     if (n == 0 || ch == 0) return;
     {

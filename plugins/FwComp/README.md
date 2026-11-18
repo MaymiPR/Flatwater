@@ -37,7 +37,9 @@ The toolbar is the one every Flatwater plug-in shares: see [the suite README](..
 ## How close
 
 Over 14 signals and 12 settings, the median residual against the original is -48.7 dB and the worst is -22.1 dB. The
-original's 26 factory presets match at a median of -44.0 dB. It is weakest on low notes under long attacks (30 to 60
+original's 26 factory presets match at a median of -44.0 dB, the worst at -20.8 dB. The learned gain correction was
+trained on these settings and signals, so the numbers are not from held-out material. One signal outside them, a
+sustained chord of three tones at full level with Ratio 50 and Release 30 ms, is at -6.7 dB: not a match. It is weakest on low notes under long attacks (30 to 60
 ms: -15 to -20 dB on a bass line). Analog modes 1 to 3 add random noise, as the original does, which no null can
 remove. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the original's own:
 [the presets null test](NULLTESTS.md#presets).

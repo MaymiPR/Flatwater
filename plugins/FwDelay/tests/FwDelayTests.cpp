@@ -1,5 +1,6 @@
 // Unit tests for Flatwater Delay: the parameters, the editor's display, the DSP against the laws measured on the reference.
 // Run: FwDelayTests (exit code 0 = all passed).
+#include <limits>
 #include <cmath>
 #include <cstdio>
 #include <utility>
@@ -328,9 +329,30 @@ static void testParamIds()
     CHECK (preset == de::numParams - 1);
 }
 
+// A sample that is not a number, or infinite, is taken as silence: nothing of it stays in a filter, and the blocks
+// after it are finite again.
+static void testNonFiniteInput()
+{
+    FwDelayProcessor p;
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512);
+    juce::MidiBuffer midi;
+    bool finite = true;
+    for (int b = 0; b < 30; ++b)
+    {
+        for (int i = 0; i < 512; ++i) { const float v = 0.2f * std::sin (0.05f * (float) (b * 512 + i)); buf.setSample (0, i, v); buf.setSample (1, i, v); }
+        if (b == 3) { buf.setSample (0, 100, std::numeric_limits<float>::quiet_NaN()); buf.setSample (1, 200, std::numeric_limits<float>::infinity()); }
+        p.processBlock (buf, midi);
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < 512; ++i) finite = finite && std::isfinite (buf.getSample (c, i));
+    }
+    CHECK (finite);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
+    testNonFiniteInput();
     testParamIds();
     testDelayTaper();
     testNotes();
