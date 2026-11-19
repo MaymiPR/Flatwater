@@ -8,6 +8,8 @@
 // step=<st>: Pitch moves by that much and back every steplen samples (default 12000), set once per block.
 // pitchctl= / formantctl=: the controls' own values before modulation (default: the same as the totals).
 // Files are raw interleaved 32-bit floats; the output is the same length as the input (the shifter reports no latency).
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <algorithm>
@@ -19,10 +21,23 @@
 #include <vector>
 #include "dsp/Shifter.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: PbShifterRender in.f32 out.f32 channels fs [pitch=] [formant=] [flatten=] [block=]\n"); return 2; }
-    const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
+    const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     float pitch = 0.0f, formant = 0.0f, flatten = 0.0f, lfo = 0.0f, lfoRate = 1.0f, step = 0.0f;
     long long stepLen = 12000;
@@ -32,13 +47,14 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos || a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read below)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq);
         const double v = std::atof (a.c_str() + eq + 1);
         if (k == "pitch") pitch = (float) v;
         else if (k == "formant") formant = (float) v;
         else if (k == "flatten") flatten = (float) v;
-        else if (k == "block") block = std::max (1, (int) v);
+        else if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "track") track = (int) v;
         else if (k == "lfo") lfo = (float) v;
         else if (k == "lforate") lfoRate = (float) v;
@@ -99,14 +115,11 @@ int main (int argc, char** argv)
     }
     if (repeat > 1)
         std::printf ("%.6f s per render\n", std::chrono::duration<double> (std::chrono::steady_clock::now() - t0).count() / repeat);
-    if (track)
+    if (const std::string trkPath = std::string (argv[2]) + ".trk"; track && ! writeAll (trkPath.c_str(), trk))
     {
-        FILE* t = std::fopen ((std::string (argv[2]) + ".trk").c_str(), "wb");
-        if (t) { std::fwrite (trk.data(), sizeof (float), trk.size(), t); std::fclose (t); }
+        std::fprintf (stderr, "cannot write %s\n", trkPath.c_str());
+        return 1;
     }
-    FILE* o = std::fopen (argv[2], "wb");
-    if (! o) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
-    std::fwrite (out.data(), sizeof (float), out.size(), o);
-    std::fclose (o);
+    if (! writeAll (argv[2], out)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

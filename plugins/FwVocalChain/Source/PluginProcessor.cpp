@@ -42,9 +42,38 @@ void FwVocalChainProcessor::prepareToPlay (double sampleRate, int block)
     bypassLine.prepare (jmax (1, getTotalNumInputChannels()), getLatencySamples());
 }
 
+ch::dsp::Params FwVocalChainProcessor::chainParams()
+{
+    ch::dsp::Params p;
+    if (auto* ph = getPlayHead())
+        if (auto pos = ph->getPosition())
+            if (auto bpm = pos->getBpm()) p.bpm = *bpm;
+    p.sensitivity = get (ch::id::sensitivity); p.output = get (ch::id::output); p.balance = get (ch::id::balance);
+    if (linked()) p.output = -p.sensitivity;                            // (the In/Out link: Output mirrors Sensitivity)
+    for (size_t i = 0; i < 6; ++i)
+    {
+        const auto& st = ch::stages()[i];
+        p.fader[i] = get (st.fader);
+        p.colour[i] = roundToInt (get (st.colour));
+    }
+    return p;
+}
+
 void FwVocalChainProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 {
     const int n = b.getNumSamples(), ins = jmin (getTotalNumInputChannels(), b.getNumChannels());
+    // The chain's delays stand between its stages (the input delay, Compress's look-ahead, the de-esser's band), so
+    // they cannot be fed apart from the stages: the chain runs on the input as in processBlock and its output is
+    // dropped. The release of the bypass then goes on with the audio of now, the echoes and the reverb of it too,
+    // not with what the chain held when the bypass came on.
+    if (ins > 0)
+    {
+        ScopedNoDenormals nd;
+        if (work.getNumSamples() < n) work.setSize (2, n, false, false, true);
+        for (int c = 0; c < 2; ++c) work.copyFrom (c, 0, b, jmin (c, ins - 1), 0, n);
+        flatwater::silenceNonFinite (work.getArrayOfWritePointers(), 2, n);
+        chain.process (work.getWritePointer (0), work.getWritePointer (1), n, chainParams());
+    }
     bypassLine.process (b.getArrayOfWritePointers(), ins, n);
     for (int c = jmax (1, ins); c < b.getNumChannels(); ++c) b.copyFrom (c, 0, b, 0, 0, n);   // (Mono/Stereo)
 }
@@ -62,19 +91,7 @@ void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         work.copyFrom (c, 0, b, jmin (c, jmax (0, ins - 1)), 0, n);
         pin[c] = work.getMagnitude (c, 0, n);
     }
-    ch::dsp::Params p;
-    if (auto* ph = getPlayHead())
-        if (auto pos = ph->getPosition())
-            if (auto bpm = pos->getBpm()) p.bpm = *bpm;
-    p.sensitivity = get (ch::id::sensitivity); p.output = get (ch::id::output); p.balance = get (ch::id::balance);
-    if (linked()) p.output = -p.sensitivity;                            // (the In/Out link: Output mirrors Sensitivity)
-    for (size_t i = 0; i < 6; ++i)
-    {
-        const auto& st = ch::stages()[i];
-        p.fader[i] = get (st.fader);
-        p.colour[i] = roundToInt (get (st.colour));
-    }
-    chain.process (work.getWritePointer (0), work.getWritePointer (1), n, p);
+    chain.process (work.getWritePointer (0), work.getWritePointer (1), n, chainParams());
     for (int c = 0; c < outs; ++c)
     {
         b.copyFrom (c, 0, work, outs == 1 ? 0 : jmin (c, 1), 0, n);

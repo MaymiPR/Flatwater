@@ -86,7 +86,13 @@ void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 void FwVocalCompProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 {
     if (! prepared) configure();
-    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
+    // the processors' delay lines take the input too, so the release of the bypass goes on with the audio of now,
+    // not with what the lines held when the bypass came on
+    const int n = b.getNumSamples();
+    if (const float* const* r = b.getArrayOfReadPointers(); ! layoutDual) { if (b.getNumChannels() >= jmin (2, getTotalNumInputChannels())) procs[0].feed (r, n); }
+    else if (b.getNumChannels() >= 2)
+        for (int c = 0; c < 2; ++c) { const float* one[1] = { r[c] }; procs[c].feed (one, n); }
+    bypassLine.process (b.getArrayOfWritePointers(), b.getNumChannels(), n);
 }
 
 AudioProcessorEditor* FwVocalCompProcessor::createEditor() { return new FwVocalCompEditor (*this); }

@@ -317,9 +317,44 @@ static void testBypassIsDelayedInput()
     CHECK (err == 0.0);
 }
 
+// The release of the host's bypass: the audio after it is the audio of now. Noise is processed, then silence is
+// bypassed for longer than the latency, then silence is processed: nothing of the noise comes out, because the
+// processor's delay line took the input while the bypass was on.
+static void testBypassReleaseHasNoOldAudio()
+{
+    for (int dual = 0; dual < 2; ++dual)                       // Mode Stereo (one linked gain), Mode Mono (two)
+    {
+        FwVocalCompProcessor p;
+        auto* mode = p.apvts.getParameter (vc::id::mode);
+        mode->setValueNotifyingHost (mode->convertTo0to1 ((float) dual));
+        p.prepareToPlay (48000.0, 512);
+        const int lat = p.getLatencySamples();
+        CHECK (lat > 0);
+        const int block = 512, quiet = lat / block + 2;
+        juce::AudioBuffer<float> buf (2, block);
+        juce::MidiBuffer midi;
+        unsigned int seed = 777u;
+        for (int b = 0; b < 20; ++b)                           // noise, processed
+        {
+            for (int i = 0; i < block; ++i)
+            {
+                seed = seed * 1664525u + 1013904223u;
+                const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+                buf.setSample (0, i, v); buf.setSample (1, i, -v);
+            }
+            p.processBlock (buf, midi);
+        }
+        for (int b = 0; b < quiet; ++b) { buf.clear(); p.processBlockBypassed (buf, midi); }   // silence, bypassed
+        buf.clear();
+        p.processBlock (buf, midi);                            // silence, processed: the delayed silence
+        CHECK (buf.getMagnitude (0, block) == 0.0f);
+    }
+}
+
 int main()
 {
     testBypassIsDelayedInput();
+    testBypassReleaseHasNoOldAudio();
     juce::ScopedJuceInitialiser_GUI init;
     testParamIds();
     testLatency();

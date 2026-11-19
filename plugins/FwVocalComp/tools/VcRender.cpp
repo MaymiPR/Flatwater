@@ -1,7 +1,10 @@
 // Offline renderer for the Flatwater Vocal Comp DSP (used by the null test and the tuning scripts).
 //   VcRender in.f32 out.f32 channels sampleRate comp gate gain [key=value ...]
 // Files are raw interleaved 32-bit floats. The output is shifted back by the latency, so it lines up with the input
-// (the reference host does the same).  Keys: hold box1 box2 ta1 tr1 ta2 tr2 gateRelMs fixedGain  tail=<seconds>
+// (the reference host does the same).  Keys: hold box1 box2 ta1 tr1 ta2 tr2 gateRelMs band slowWinMs slowMode decayDbS
+// fixedGain learned, compensate (0: the latency stays in the output), dump (1: also <out>.trace).
+// An unknown key, an argument that is no key=value or a channel count other than 1 or 2 ends the render with exit
+// code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -10,10 +13,23 @@
 #include <vector>
 #include "dsp/Engine.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 8) { std::fprintf (stderr, "usage: VcRender in.f32 out.f32 channels fs comp gate gain [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     vc::dsp::Processor::Params p;
     p.compDb = (float) std::atof (argv[5]);
@@ -40,7 +56,8 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq); const float v = (float) std::atof (a.c_str() + eq + 1);
         if (k == "hold") t.hold = (int) v; else if (k == "box1") t.box1 = (int) v; else if (k == "box2") t.box2 = (int) v;
         else if (k == "ta1") t.ta1 = v; else if (k == "tr1") t.tr1 = v; else if (k == "ta2") t.ta2 = v; else if (k == "tr2") t.tr2 = v;
@@ -49,6 +66,7 @@ int main (int argc, char** argv)
         else if (k == "compensate") compensate = v != 0.0f;
         else if (k == "dump") dump = v != 0.0f;
         else if (k == "learned") t.learned = v != 0.0f;
+        else return fail ("unknown key", a.c_str());
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }
@@ -79,14 +97,12 @@ int main (int argc, char** argv)
     }
     const int shift = compensate ? lat : 0;
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) inter[(size_t) i * (size_t) ch + (size_t) c] = out[(size_t) c][(size_t) (i + shift)];
-    f = std::fopen (argv[2], "wb");
-    std::fwrite (inter.data(), sizeof (float), inter.size(), f);
-    std::fclose (f);
-    if (dump)     // <out>.trace: per processed sample v, fast ratio, slow ratio, gate gain (index i + latency acts on input i)
+    if (! writeAll (argv[2], inter)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
+    // <out>.trace: per processed sample v, fast ratio, slow ratio, gate gain (index i + latency acts on input i)
+    if (const std::string tracePath = std::string (argv[2]) + ".trace"; dump && ! writeAll (tracePath.c_str(), trace))
     {
-        f = std::fopen ((std::string (argv[2]) + ".trace").c_str(), "wb");
-        std::fwrite (trace.data(), sizeof (float), trace.size(), f);
-        std::fclose (f);
+        std::fprintf (stderr, "cannot write %s\n", tracePath.c_str());
+        return 1;
     }
     std::printf ("latency %d\n", lat);
     return 0;

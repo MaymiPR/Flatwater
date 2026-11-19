@@ -130,7 +130,17 @@ int Toolbar::itemAt (juce::Point<int> p) const
     return -1;
 }
 
-void Toolbar::refresh() { repaint(); }
+// The editor's timer calls this at every frame. The bar's own actions repaint it themselves; what it shows of the
+// plug-in's state (whether undo and redo can go, the star of a changed preset, the Mode's name) changes outside
+// it, so those are compared with the last look and the bar is repainted only when one of them differs.
+void Toolbar::refresh()
+{
+    const Shown now { undo.canUndo(), undo.canRedo(), isModified(),
+                      modeParam != nullptr ? (int) modeParam->convertFrom0to1 (modeParam->getValue()) : -1 };
+    if (now.canUndo == shown.canUndo && now.canRedo == shown.canRedo && now.modified == shown.modified && now.mode == shown.mode) return;
+    shown = now;
+    repaint();
+}
 
 //==============================================================================
 // Setup A/B

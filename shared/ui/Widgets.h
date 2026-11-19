@@ -326,7 +326,7 @@ public:
     void mouseMove (const juce::MouseEvent&) override;
     void mouseExit (const juce::MouseEvent&) override;
     void mouseDown (const juce::MouseEvent&) override;
-    void refresh();
+    void refresh();                                   // at every frame of the editor: repaints when what it shows changed
     void setFactoryPresets (const std::vector<FactoryPreset>* list) { factory = list; }
     // parameters the Default and factory presets leave alone (besides Mode)
     void setKeepOnPresetLoad (std::vector<juce::AudioProcessorParameter*> list) { keepOnLoad = std::move (list); }
@@ -374,6 +374,9 @@ private:
     std::vector<juce::AudioProcessorParameter*> keepOnLoad;
     int factoryIndex = -1;                 // -1: Default Preset or a user preset
     std::vector<float> loadedValues;
+    // what paint() reads of the plug-in's state, as refresh() last saw it (mode -2: not looked at yet)
+    struct Shown { bool canUndo = false, canRedo = false, modified = false; int mode = -2; };
+    Shown shown;
     MenuLook menuLook;
 };
 }

@@ -1,6 +1,8 @@
 // Offline renderer for the Flatwater Bass Lift DSP (used by the null test and the fitting scripts).
 //   BfRender in.f32 out.f32 channels sampleRate freq intensityDb gainDb originalBassIn [key=value ...]
 // Files are raw interleaved 32-bit floats. Keys: C0 E0 p cA QA cB kr ta1 tr1 ta2 tr2 alpha k2 decay ceiling
+// An unknown key, an argument that is no key=value or a channel count other than 1 or 2 ends the render with exit
+// code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -8,10 +10,23 @@
 #include <vector>
 #include "dsp/Engine.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 9) { std::fprintf (stderr, "usage: BfRender in.f32 out.f32 channels fs freq intensityDb gainDb origIn [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
     for (int i = 9; i < argc; ++i)
@@ -34,7 +49,8 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq); const double v = std::atof (a.c_str() + eq + 1);
         auto& t = proc.t;
         if (k == "C0") t.C0 = v; else if (k == "E0") t.E0 = v; else if (k == "p") t.p = v;
@@ -43,6 +59,7 @@ int main (int argc, char** argv)
         else if (k == "alpha") t.alpha = v; else if (k == "k2") t.k2 = v; else if (k == "limT") t.limT = v; else if (k == "limRel") t.limRel = v; else if (k == "s1") t.s1 = v; else if (k == "s2") t.s2 = v;
         else if (k == "El0") t.El0 = v; else if (k == "pL") t.pL = v; else if (k == "tLa") t.tLa = v; else if (k == "tLr") t.tLr = v; else if (k == "sL") t.sL = v; else if (k == "sA") t.sA = v; else if (k == "learned") t.learned = v != 0.0;
         else if (k == "ceiling") t.ceiling = v; else if (k == "decay") decay = v;
+        else return fail ("unknown key", a.c_str());
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }
@@ -67,8 +84,6 @@ int main (int argc, char** argv)
         proc.process (p, ch, std::min (block, frames - s));
     }
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) inter[(size_t) i * (size_t) ch + (size_t) c] = buf[(size_t) c][(size_t) i];
-    f = std::fopen (argv[2], "wb");
-    std::fwrite (inter.data(), sizeof (float), inter.size(), f);
-    std::fclose (f);
+    if (! writeAll (argv[2], inter)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

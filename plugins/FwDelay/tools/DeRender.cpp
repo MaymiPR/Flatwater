@@ -6,6 +6,8 @@
 // in the pre-roll). preroll=<seconds>: silence first, not written, as tools/RefRender gives the reference: its first
 // block at the reference's defaults (375 ms, or time0= in ms; the LFO at rate0=: Rate 0.1 at the host's tempo), then
 // the settings.
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <algorithm>
 #include <cstdio>
@@ -19,15 +21,16 @@
 
 static bool exactValues = false;                                  // exact=1: values as given (a preset's), not rounded
 
-static void apply (de::dsp::Settings& s, int& analog, int& block, const std::string& a, double fs)
+// one key=value into the settings; false: no key=value, or a key that is not one
+static bool apply (de::dsp::Settings& s, int& analog, int& block, const std::string& a, double fs)
 {
     const auto eq = a.find ('=');
-    if (eq == std::string::npos) return;
+    if (eq == std::string::npos) return false;
     const std::string k = a.substr (0, eq);
     double v = std::atof (a.c_str() + eq + 1);
     // the reference's resolutions (as the plug-in, PluginProcessor.cpp: atResolution; the times and the LFO's rate come
     // computed, their parameters rounded by the caller)
-    if (k == "exact") { exactValues = v > 0.5; return; }
+    if (k == "exact") { exactValues = v > 0.5; return true; }
     if (exactValues) {}
     else if (k == "feedback" || k == "mix" || k == "depth" || k == "hipass" || k == "lopass") v = std::round (v);
     else if (k == "output") v = std::round (v * 10.0) / 10.0;
@@ -49,12 +52,27 @@ static void apply (de::dsp::Settings& s, int& analog, int& block, const std::str
     else if (k == "mode") s.mode = (int) v;
     else if (k == "analog") analog = (int) v;
     else if (k == "block") block = (int) v;
+    else return false;
+    return true;
+}
+
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
 }
 
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: DeRender in.f32 out.f32 channels fs [key=value ...] [at=t:key=value ...]\n"); return 2; }
-    const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
+    const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     de::dsp::Settings s;
     s.timeL = s.timeR = std::floor (0.375 * fs);
@@ -68,11 +86,30 @@ int main (int argc, char** argv)
         if (a.rfind ("at=", 0) == 0)
         {
             const auto colon = a.find (':');
-            if (colon != std::string::npos) changes.push_back ({ (long long) std::llround (std::atof (a.c_str() + 3) * fs), a.substr (colon + 1) });
+            if (colon == std::string::npos) return fail ("not an at=<seconds>:key=value argument", a.c_str());
+            changes.push_back ({ (long long) std::llround (std::atof (a.c_str() + 3) * fs), a.substr (colon + 1) });
         }
         else if (a.rfind ("preroll=", 0) == 0) preroll = std::atof (a.c_str() + 8);
         else settings.push_back (a);
     }
+    // every setting and every change is read once into a copy first, so that a wrong one ends the render here
+    auto wrong = [&s, fs] (const std::string& a) -> const char*
+    {
+        de::dsp::Settings s0 = s;
+        int analog0 = 0, block0 = 512;
+        if (a.find ('=') == std::string::npos) return "not a key=value argument";
+        if (! apply (s0, analog0, block0, a, fs)) return "unknown key";
+        return block0 < 1 ? "block must be 1 or more" : nullptr;
+    };
+    for (auto& a : settings)
+    {
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;                        // (read below)
+        if (a.rfind ("modscale=", 0) == 0 || a.rfind ("glide=", 0) == 0 || a.rfind ("time0=", 0) == 0 || a.rfind ("rate0=", 0) == 0) continue;
+        if (const char* why = wrong (a)) return fail (why, a.c_str());
+    }
+    for (auto& c : changes)
+        if (const char* why = wrong (c.second)) return fail (why, c.second.c_str());
+    exactValues = false;                                          // (exact=1 counts from where it stands, below)
     for (auto& a : settings) if (a.rfind ("block=", 0) == 0) apply (s, analogMode, block, a, fs);
     std::sort (changes.begin(), changes.end(), [] (auto& x, auto& y) { return x.first < y.first; });
     FILE* f = std::fopen (argv[1], "rb");
@@ -150,9 +187,6 @@ int main (int argc, char** argv)
         }
         p += len;
     }
-    FILE* o = std::fopen (argv[2], "wb");
-    if (! o) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
-    std::fwrite (out.data(), sizeof (float), out.size(), o);
-    std::fclose (o);
+    if (! writeAll (argv[2], out)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

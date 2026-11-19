@@ -26,7 +26,8 @@ public:
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
-    // the host's bypass: the input delayed by the reported latency (shared/dsp/BypassDelay.h)
+    // the host's bypass: the input delayed by the reported latency (shared/dsp/BypassDelay.h); the chain goes on
+    // running on the input, unheard, so the audio after the bypass is the audio of now
     void processBlockBypassed (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlockBypassed;
 
@@ -69,6 +70,7 @@ public:
 
 private:
     flatwater::BypassDelay bypassLine;
+    ch::dsp::Params chainParams();                                    // the chain's settings of this block
     void timerCallback() override { syncLink(); }
     double sr = 48000.0;
     ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)

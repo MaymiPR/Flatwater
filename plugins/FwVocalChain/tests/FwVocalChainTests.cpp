@@ -256,9 +256,46 @@ static void testNonFiniteInput()
     CHECK (finite);
 }
 
+// The release of the host's bypass: the audio after it is the audio of now. Noise is processed, then silence is
+// bypassed for two seconds, then silence is processed: nothing of the noise comes out (under -120 dB: what is left
+// is the filters' decay), because the chain went on running on the input while the bypass was on. The Noise is off
+// and the three sends are muted, so the output is the dry path alone.
+static void testBypassReleaseHasNoOldAudio()
+{
+    FwVocalChainProcessor p;
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    set (ch::id::reverbColor, 0.0f); set (ch::id::delayColor, 0.0f); set (ch::id::pitchColor, 0.0f);
+    p.setNoise (false);
+    p.prepareToPlay (48000.0, 512);
+    const int lat = p.getLatencySamples();
+    CHECK (lat > 0);
+    const int block = 512, quiet = 2 * 48000 / block;
+    juce::AudioBuffer<float> buf (2, block);
+    juce::MidiBuffer midi;
+    unsigned int seed = 777u;
+    float loud = 0.0f;
+    for (int b = 0; b < 20; ++b)                               // noise, processed
+    {
+        for (int i = 0; i < block; ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            buf.setSample (0, i, v); buf.setSample (1, i, -v);
+        }
+        p.processBlock (buf, midi);
+        loud = buf.getMagnitude (0, block);
+    }
+    CHECK (loud > 0.01f);
+    for (int b = 0; b < quiet; ++b) { buf.clear(); p.processBlockBypassed (buf, midi); }   // silence, bypassed
+    buf.clear();
+    p.processBlock (buf, midi);                                // silence, processed: the delayed silence
+    CHECK (buf.getMagnitude (0, block) < 1.0e-6f);
+}
+
 int main()
 {
     testBypassIsDelayedInput();
+    testBypassReleaseHasNoOldAudio();
     juce::ScopedJuceInitialiser_GUI init;
     testNonFiniteInput();
     testParamIds();

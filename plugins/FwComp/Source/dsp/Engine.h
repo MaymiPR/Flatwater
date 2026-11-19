@@ -236,6 +236,17 @@ public:
         }
     }
 
+    // The input of a block that is not processed (the host's bypass): the delay line takes it, so the audio after
+    // the bypass is the audio of now. The detector, the gain and the limiter keep their states. No allocation.
+    void feed (const float* const* ch, int n)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            for (int c = 0; c < channels; ++c) delay[(size_t) c][(size_t) pos] = ch[c][i];
+            pos = (pos + 1) % la;
+        }
+    }
+
     double gainReductionDb() const { return R; }
     Tuning t = tuning();                               // dsp/Tuning.h: the defaults, or the renderer's overrides
     std::vector<float>* trace = nullptr;               // plugins/FwComp/tools/CoRender trace=: the model's states for plugins/FwComp/nulltest/train_net.py

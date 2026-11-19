@@ -1,6 +1,8 @@
 // Offline renderer for the Flatwater BassX Lift DSP (used by the null test).
 //   BxRender in.f32 out.f32 channels sampleRate [key=value ...]
 // Files are raw interleaved 32-bit floats. Keys: input freq decay response ratio highpass orig harm monitor block
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -8,10 +10,23 @@
 #include <vector>
 #include "dsp/Engine.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: BxRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
     for (int i = 5; i < argc; ++i)
@@ -35,12 +50,14 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq); const double v = std::atof (a.c_str() + eq + 1);
         if (k == "input") proc.setInputDb (v); else if (k == "freq") proc.setFreq (v); else if (k == "decay") proc.setDecayDb (v);
         else if (k == "response") proc.setResponseMs (v); else if (k == "ratio") proc.setRatio (v); else if (k == "highpass") proc.setHighPass ((int) v);
         else if (k == "orig") proc.setOrigBassDb (v); else if (k == "harm") proc.setHarmonicsDb (v); else if (k == "monitor") proc.setMonitor ((int) v);
-        else if (k == "block") block = (int) v;
+        else if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
+        else return fail ("unknown key", a.c_str());
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }
@@ -58,8 +75,6 @@ int main (int argc, char** argv)
         proc.process (p, ch, std::min (block, frames - s));
     }
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) inter[(size_t) i * (size_t) ch + (size_t) c] = buf[(size_t) c][(size_t) i];
-    f = std::fopen (argv[2], "wb");
-    std::fwrite (inter.data(), sizeof (float), inter.size(), f);
-    std::fclose (f);
+    if (! writeAll (argv[2], inter)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

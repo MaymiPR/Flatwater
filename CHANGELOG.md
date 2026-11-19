@@ -71,6 +71,20 @@
   renderer's by about -90 dB at that setting, the default one.
 - **Bypass released, Flatwater Bass Leveler:** the first 42 ms after the host's bypass is switched off (5 ms on Live)
   are the audio of now. Before, they were the audio from before the bypass was switched on.
+- **Bypass released, Flatwater Comp, Vocal Comp and Vocal Chain:** the audio after the host's bypass is switched
+  off is the audio of now. Before, the first samples (the plug-in's latency) were audio from before the bypass was
+  switched on. Flatwater Vocal Chain goes on running on its input while it is bypassed, unheard, so it uses its
+  processing time then too.
+- **Flatwater Vocal Comp, long sessions:** two sample counters wrap without an undefined step. Before, they were
+  signed and overflowed after 2^31 samples of continuous running. The sound is unchanged (the render regression is
+  byte-identical).
+- **Toolbar:** the shared toolbar is repainted when what it shows changes (undo and redo, the star of a changed
+  preset, the Mode), not at every frame of the editor's timer. It looks and works as before.
+- **Offline renderers:** the renderers of the eight plug-ins besides Flatwater Vocal Leveler (whose VlRender checks
+  its keys and its output already) end with exit code 2 and one line on stderr for an unknown key, an argument that
+  is no `key=value`, a channel count other than 1 or 2 or a block under 1, and with 1 for an output they could not
+  write in full. Before, a mistyped key was ignored, a channel count of 0 was a division by zero in BfRender,
+  BxRender, CoRender and VcRender, and CoRender ran without end at `block=0`.
 - **Input that is not a number:** a NaN or infinite input sample is taken as silence in every plug-in. Before, one
   such sample stayed in the filters until playback was restarted, and it could crash Flatwater Vocal Chain with
   Compress on.
