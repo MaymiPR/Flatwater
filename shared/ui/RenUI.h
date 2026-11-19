@@ -147,6 +147,7 @@ protected:
 private:
     class Content;
     void timerCallback() override { toolbar->refresh(); tick(); }
+    void setSizeLimits();
 
     Look look;
     std::unique_ptr<juce::LookAndFeel> auxLook;           // destroyed after the widgets that use it (declared first)

@@ -7,7 +7,7 @@ namespace
 {
 namespace theme = flatwater::theme;
 juce::Font tbFont (float h = 11.0f, bool bold = false) { return theme::font (h, bold); }
-const float kScales[] = { 0.75f, 1.0f, 1.25f, 1.5f, 2.0f };
+const float kScales[] = { minUiScale, 1.0f, 1.25f, 1.5f, maxUiScale };   // the window menu, over the corner's range
 
 // the bar's pieces in Flatwater's look (shared/ui/Theme.h): raised buttons with a 1 px border, the preset name in a well, a
 // cyan border on the button under the mouse; lettering and icons light grey, white-ish when hot, faint when idle

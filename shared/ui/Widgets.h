@@ -56,11 +56,11 @@ inline const char* const repoUrl = "https://github.com/MaymiPR/Flatwater";
 // is behind it). With an opaque `mono` colour everything is drawn in that one colour (a print on a panel or a
 // coloured badge).
 inline void drawMark (juce::Graphics& g, juce::Rectangle<float> r, bool bright, bool tile = true,
-                      juce::Colour mono = juce::Colours::transparentBlack, float strokeScale = 1.0f)
+                      juce::Colour mono = theme::clear, float strokeScale = 1.0f)
 {
     if (tile)
     {
-        g.setColour (juce::Colours::black);
+        g.setColour (theme::bg);
         g.fillRect (r);
     }
 
@@ -79,8 +79,8 @@ inline void drawMark (juce::Graphics& g, juce::Rectangle<float> r, bool bright, 
     };
     const auto width = [&] (float w) { return juce::jmax (1.2f, w * 1.3f * s) * strokeScale; };   // bolder than the icon: holds at 16 px
 
-    const auto cyan = bright ? juce::Colour (150, 235, 255) : juce::Colour (64, 214, 240);
-    const auto amber = bright ? juce::Colour (255, 210, 110) : juce::Colour (255, 170, 30);
+    const auto cyan = bright ? theme::cyanLit : theme::cyan;
+    const auto amber = bright ? theme::amberLit : theme::amber;
     const bool one = ! mono.isTransparent();
 
     juce::Path sun;   // the half disc, its flat side on the horizon

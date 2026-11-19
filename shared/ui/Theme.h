@@ -20,7 +20,16 @@ inline const juce::Colour bg { 0xff000000 },           // behind everything
                           cyan { 0xff40d6f0 },         // the value: arcs, fills, a member of a selection
                           amber { 0xffffaa1e },        // the hand: pointers, cap lines, the selected control
                           amberLight { 0xffffbf56 },
-                          red { 0xffff4d4d };          // clipping
+                          red { 0xffff4d4d },          // clipping
+                          shadow { 0xff000000 },       // a part's drop shadow (its alpha where it is drawn) and its dark edge
+                          glint { 0xffffffff },        // light on glass or metal, its alpha where it is drawn
+                          clear { 0x00000000 },        // nothing: a fade's open end, a part that is not drawn
+                          cyanLit { 0xff96ebff },      // the mark's cyan and amber when it is lit
+                          amberLit { 0xffffd26e },
+                          entryPaper { 0xffffffff },   // a typed value in black on white: its box and its selected text
+                          entryInk { 0xff000000 },     // its text, caret and frame
+                          cursorBody { 0xffffffff },   // a drawn mouse cursor
+                          cursorEdge { 0xff000000 };
 
 inline juce::Font font (float size, bool bold = false)
 {
@@ -83,11 +92,11 @@ inline void drawKnob (juce::Graphics& g, juce::Point<float> c, float radius, flo
         g.strokePath (value, juce::PathStrokeType (2.5f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
     }
     const auto disc = juce::Rectangle<float> (radius * 2.0f, radius * 2.0f).withCentre (c);
-    g.setColour (juce::Colours::black.withAlpha (0.35f));
+    g.setColour (shadow.withAlpha (0.35f));
     g.fillEllipse (disc.translated (0.0f, 1.5f));
     g.setGradientFill (juce::ColourGradient (raisedTop, 0.0f, disc.getY(), raised, 0.0f, disc.getBottom(), false));
     g.fillEllipse (disc);
-    g.setColour (juce::Colours::black);
+    g.setColour (shadow);
     g.drawEllipse (disc.reduced (0.5f), 1.0f);
     g.setGradientFill (juce::ColourGradient (rim, 0.0f, disc.getY(), rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
     g.drawEllipse (disc.reduced (1.5f), 1.0f);
@@ -100,11 +109,11 @@ inline void drawKnob (juce::Graphics& g, juce::Point<float> c, float radius, flo
 inline void drawCap (juce::Graphics& g, juce::Rectangle<float> r, int grips = 0)
 {
     const float radius = juce::jmin (3.0f, r.getHeight() * 0.2f);
-    g.setColour (juce::Colours::black.withAlpha (0.4f));
+    g.setColour (shadow.withAlpha (0.4f));
     g.fillRoundedRectangle (r.translated (0.0f, 2.0f), radius);
     g.setGradientFill (juce::ColourGradient (raisedTop, 0.0f, r.getY(), raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, radius);
-    g.setColour (juce::Colours::black);
+    g.setColour (shadow);
     g.drawRoundedRectangle (r.reduced (0.5f), radius, 1.0f);
     g.setColour (rim.withAlpha (0.7f));
     g.fillRect (r.getX() + radius, r.getY() + 1.0f, r.getWidth() - 2.0f * radius, 1.0f);

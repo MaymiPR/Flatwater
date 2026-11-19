@@ -239,7 +239,7 @@ void VFader::mouseUp (const MouseEvent& e)
 // the thumb: a raised cap with an index line in the fader's colour across its middle, grip lines above and below it
 static void drawThumb (Graphics& g, Rectangle<float> r, Colour index)
 {
-    g.setColour (Colours::black.withAlpha (0.4f));
+    g.setColour (theme::shadow.withAlpha (0.4f));
     g.fillRoundedRectangle (r.translated (0.0f, 2.0f), 2.5f);
     g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, r.getY(), theme::raised, 0.0f, r.getBottom(), false));
     g.fillRoundedRectangle (r, 2.5f);
@@ -354,7 +354,7 @@ void HSlider::paint (Graphics& g)
     g.setColour (theme::cyan);
     g.fillRoundedRectangle (x0 + 1.0f, y - 1.0f, jmax (0.0f, pos - x0 - 1.0f), 2.0f, 1.0f);
     const auto knob = Rectangle<float> (10.0f, 10.0f).withCentre ({ pos, y });
-    g.setColour (Colours::black.withAlpha (0.4f));
+    g.setColour (theme::shadow.withAlpha (0.4f));
     g.fillEllipse (knob.translated (0.0f, 1.0f));
     g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, knob.getY(), theme::raised, 0.0f, knob.getBottom(), false));
     g.fillEllipse (knob);
@@ -514,15 +514,15 @@ Label* FlatLook::createSliderTextBox (Slider& s)
     auto* l = LookAndFeel_V4::createSliderTextBox (s);
     l->setFont (font (11.5f));
     l->setColour (Label::textColourId, kValue);
-    l->setColour (Label::backgroundColourId, Colours::transparentBlack);
-    l->setColour (Label::outlineColourId, Colours::transparentBlack);
+    l->setColour (Label::backgroundColourId, theme::clear);
+    l->setColour (Label::outlineColourId, theme::clear);
     l->setBorderSize ({ 0, 0, 0, 0 });
     l->setJustificationType (Justification::centred);
     l->setInterceptsMouseClicks (false, true);                    // the entry box itself takes clicks while typing
     // the entry box: a well, light text, a 1 px frame in the line colour, the selection in cyan
     l->setColour (Label::backgroundWhenEditingColourId, theme::well);
     l->setColour (Label::textWhenEditingColourId, theme::text);
-    l->setColour (Label::outlineWhenEditingColourId, Colours::transparentBlack);
+    l->setColour (Label::outlineWhenEditingColourId, theme::clear);
     l->setColour (TextEditor::backgroundColourId, theme::well);
     l->setColour (TextEditor::textColourId, theme::text);
     l->setColour (TextEditor::highlightColourId, theme::cyan.withAlpha (0.4f));
@@ -530,7 +530,7 @@ Label* FlatLook::createSliderTextBox (Slider& s)
     l->setColour (TextEditor::outlineColourId, theme::cyan.withAlpha (0.7f));
     l->setColour (TextEditor::focusedOutlineColourId, theme::cyan.withAlpha (0.7f));
     l->setColour (CaretComponent::caretColourId, theme::cyan);
-    if (dynamic_cast<HSlider*> (&s) != nullptr) l->setColour (Label::textColourId, Colours::transparentBlack);   // hidden until typing
+    if (dynamic_cast<HSlider*> (&s) != nullptr) l->setColour (Label::textColourId, theme::clear);   // hidden until typing
     l->addListener (&valueEditStyle());
     return l;
 }

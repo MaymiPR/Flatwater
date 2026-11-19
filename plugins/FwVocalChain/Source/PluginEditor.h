@@ -25,7 +25,7 @@ struct Marks
     std::function<void (juce::Slider*)> enter;                    // a double-click: type a value
 };
 
-inline const juce::Colour activeColour { 0xffffaa1e };             // the marked control's frame (the theme's amber)
+inline const juce::Colour activeColour { flatwater::theme::amber };   // the marked control's frame
 
 // a channel fader: the cap (34 x 58) on its track, its shadow under it; a click on the cap marks it, Alt-click resets,
 // a drag moves the cap with the mouse (Ctrl fine) with the cursor hidden and put back on the cap, a double-click

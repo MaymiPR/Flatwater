@@ -136,8 +136,8 @@ Label* Look::createSliderTextBox (Slider& s)
     l->setFont (arial (big ? 15.5f : 16.0f));
     l->setColour (Label::textColourId, big ? kValue : kReadout);
     l->setColour (Label::textWhenEditingColourId, theme::text);
-    l->setColour (Label::backgroundColourId, Colours::transparentBlack);
-    l->setColour (Label::outlineColourId, Colours::transparentBlack);
+    l->setColour (Label::backgroundColourId, theme::clear);
+    l->setColour (Label::outlineColourId, theme::clear);
     l->setColour (Label::backgroundWhenEditingColourId, theme::well);
     l->setColour (Label::outlineWhenEditingColourId, theme::cyan.withAlpha (0.8f));
     l->setColour (TextEditor::backgroundColourId, theme::well);
@@ -155,7 +155,7 @@ Label* Look::createSliderTextBox (Slider& s)
 // amber outside it while the thumb is held
 static void ringThumb (Graphics& g, const Path& shape, Rectangle<float> bounds, bool down)
 {
-    g.setColour (Colours::black.withAlpha (0.4f));
+    g.setColour (theme::shadow.withAlpha (0.4f));
     g.strokePath (shape, PathStrokeType (4.5f), AffineTransform::translation (0.0f, 1.5f));
     g.setColour (theme::line.darker (0.3f));
     g.strokePath (shape, PathStrokeType (4.5f));
@@ -216,7 +216,7 @@ void InSwitch::paintButton (Graphics& g, bool hot, bool down)
     // the pill (27 x 21 at 3, 1): in, a raised button with its name lit in cyan; out, a dark well with a faint name
     const Rectangle<float> pill (3.0f, 1.0f, 27.0f, 21.0f);
     const bool on = getToggleState();
-    g.setColour (Colours::black.withAlpha (0.35f));
+    g.setColour (theme::shadow.withAlpha (0.35f));
     g.fillRoundedRectangle (pill.translated (0.0f, 1.5f), 9.0f);
     if (on)
     {
@@ -274,17 +274,16 @@ Editor::Editor (AudioProcessor& p, AudioProcessorValueTreeState& state, UndoMana
     toolbar->setWindowScale = [this] (float s) { setSize (roundToInt (W * s), roundToInt (H * s)); };
 
     // resizable, fixed aspect ratio; the size is remembered with the plugin state
-    constrainer.setMinimumSize (W * 3 / 4, H * 3 / 4);
-    constrainer.setMaximumSize (W * 3, H * 3);
-    constrainer.setFixedAspectRatio ((double) W / H);
+    setSizeLimits();
     setConstrainer (&constrainer);
     setResizable (true, true);
     for (auto* c : getChildren())                                     // the resize grip in the kit's look
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setLookAndFeel (&look);
     // the user's default window size applies in a host; the tests and offline tools (no wrapper) open at design size
     const bool hosted = state.processor.wrapperType != AudioProcessor::wrapperType_Undefined;
-    const int savedW = (int) state.state.getProperty ("uiWidth", roundToInt (W * (hosted ? flatwater::defaultWindowScale() : 1.0f)));
-    setSize (jlimit (W * 3 / 4, W * 3, savedW), jlimit (H * 3 / 4, H * 3, savedW * H / W));
+    const float savedScale = flatwater::readUiScale (state.state, W, hosted ? flatwater::defaultWindowScale() : 1.0f);
+    const int savedW = jlimit (constrainer.getMinimumWidth(), constrainer.getMaximumWidth(), roundToInt ((float) W * savedScale));
+    setSize (savedW, jlimit (constrainer.getMinimumHeight(), constrainer.getMaximumHeight(), savedW * H / W));
     hostFocus = std::make_unique<flatwater::HostFocus> (*this);
     startTimerHz (60);   // meter frames; the reference's bars fall smoothly
 }
@@ -362,7 +361,15 @@ InSwitch& Editor::makeSwitch()
 void Editor::resized()
 {
     contentComp->setTransform (AffineTransform::scale ((float) getWidth() / (float) W));
-    apvts.state.setProperty ("uiWidth", getWidth(), nullptr);
+    flatwater::writeUiScale (apvts.state, W, getWidth());
+}
+
+// the corner's range: the window menu's (shared/Presets.h), at the design's proportions
+void Editor::setSizeLimits()
+{
+    constrainer.setMinimumSize ((int) ((float) W * flatwater::minUiScale), (int) ((float) H * flatwater::minUiScale));
+    constrainer.setMaximumSize ((int) ((float) W * flatwater::maxUiScale), (int) ((float) H * flatwater::maxUiScale));
+    constrainer.setFixedAspectRatio ((double) W / H);
 }
 
 Component& Editor::content() { return *contentComp; }
@@ -373,9 +380,7 @@ void Editor::setDesignHeight (int h)
     const float scale = (float) getWidth() / (float) W;
     H = h;
     contentComp->setBounds (0, 0, W, H);
-    constrainer.setMinimumSize (W * 3 / 4, H * 3 / 4);
-    constrainer.setMaximumSize (W * 3, H * 3);
-    constrainer.setFixedAspectRatio ((double) W / H);
+    setSizeLimits();
     setSize (getWidth(), roundToInt ((float) H * scale));
 }
 
@@ -457,7 +462,7 @@ void Editor::paintPanel (Graphics& g) const
 void Editor::paintHousing (Graphics& g)
 {
     const Rectangle<float> outer (105.0f, 80.0f, 162.0f, 235.0f), inner (133.0f, 108.0f, 106.0f, 181.0f);
-    g.setColour (Colours::black.withAlpha (0.35f));
+    g.setColour (theme::shadow.withAlpha (0.35f));
     g.fillRoundedRectangle (outer.translated (0.0f, 2.0f), 46.0f);
     g.setGradientFill (ColourGradient (theme::panel, 0.0f, outer.getY(), kOuterFill, 0.0f, outer.getCentreY(), false));   // lit at the top, dark below
     g.fillRoundedRectangle (outer, 46.0f);

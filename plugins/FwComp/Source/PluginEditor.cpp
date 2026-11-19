@@ -35,8 +35,6 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
       vu (make<VuMeter>())
 {
     setAuxLook (std::make_unique<HybridLook>());
-    for (auto* c : getChildren())
-        if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, Rectangle<int> valueArea,
                          std::function<String (double)> fmt)
@@ -172,7 +170,7 @@ void FwCompEditor::paintContent (Graphics& g)
             g.fillEllipse (c.x - 8.6f, c.y - 8.6f, 17.2f, 17.2f);
             g.setOpacity (1.0f);
         }
-        g.setColour (Colours::white.withAlpha (0.22f));
+        g.setColour (theme::glint.withAlpha (0.22f));
         g.fillEllipse (c.x - 5.0f, c.y - 4.4f, 3.6f, 3.0f);
     }
 

@@ -2,7 +2,9 @@
 // What every Flatwater plug-in's unit tests check of its presets, programs and saved state (shared/Presets.h): the
 // preset's name and index and the two setups survive a save and a reload, a state without them (as 1.0.0 saved it)
 // loads at the default preset, a preset load and a setup switch are undo steps, and a host that sets a program just
-// after a restore changes nothing. A test program calls presetChecks<Processor> with its own check function.
+// after a restore changes nothing; the editor's size is saved in the form the standard names and in the older one,
+// within one range, and the resize corner is drawn. A test program calls programChecks, presetChecks and
+// windowChecks<Processor> with its own check function.
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include <cmath>
@@ -218,6 +220,118 @@ void presetChecks (const char* modeId, Check&& check)
         check (q.getCurrentProgram() == 1 && same (one, values (q)), "a program set from another thread waits");
         qs.applyPendingProgram();
         check (q.getCurrentProgram() == 0, "and is applied on the message thread");
+    }
+}
+
+// The editor's size in the state (shared/Presets.h: readUiScale, writeUiScale, the one range) and the resize corner.
+// The editors open without a window, at the state's size (no host, so no default size from the settings file).
+template <class Processor, class Check>
+void windowChecks (Check&& check)
+{
+    const auto close = [] (float a, float b) { return std::abs (a - b) < 1.0e-4f; };
+    {   // the rule alone, on a design 400 px wide
+        check (close (minUiScale, 0.75f) && close (maxUiScale, 2.0f), "the scale range is 75 to 200 %");
+        juce::ValueTree t ("State");
+        check (close (readUiScale (t, 400), 1.0f) && close (readUiScale (t, 400, 1.5f), 1.5f), "a state without a size gives the fallback");
+        check (close (readUiScale (t, 400, 5.0f), maxUiScale) && close (readUiScale (t, 400, 0.1f), minUiScale), "a fallback outside the range gives its nearer end");
+        t.setProperty ("uiWidth", 600, nullptr);
+        check (close (readUiScale (t, 400), 1.5f), "an older state, uiWidth alone, gives its scale");
+        t.setProperty ("uiScale", 1.25, nullptr);
+        check (close (readUiScale (t, 400), 1.5f), "a uiWidth that left its uiScale behind, as an older build's resize leaves it, gives the scale");
+        t.setProperty ("uiWidth", 500, nullptr);
+        t.setProperty ("uiScale", 1.2512, nullptr);
+        check (close (readUiScale (t, 400), 1.2512f), "uiScale is read before a uiWidth of the same size");
+        t.setProperty ("uiScale", 1.25, nullptr);
+        t.removeProperty ("uiWidth", nullptr);
+        check (close (readUiScale (t, 400), 1.25f), "uiScale alone gives the scale");
+        t.setProperty ("uiScale", 3.0, nullptr);
+        check (close (readUiScale (t, 400), maxUiScale), "a uiScale above the range gives its upper end");
+        t.setProperty ("uiScale", 0.2, nullptr);
+        check (close (readUiScale (t, 400), minUiScale), "a uiScale below the range gives its lower end");
+        t.setProperty ("uiScale", 0.0, nullptr);
+        t.setProperty ("uiWidth", 500, nullptr);
+        check (close (readUiScale (t, 400), 1.25f), "a uiScale that is no size leaves the reading to uiWidth");
+        t.removeProperty ("uiScale", nullptr);
+        t.setProperty ("uiWidth", 1200, nullptr);
+        check (close (readUiScale (t, 400), maxUiScale), "a uiWidth above the range gives its upper end");
+        t.setProperty ("uiWidth", 100, nullptr);
+        check (close (readUiScale (t, 400), minUiScale), "a uiWidth below the range gives its lower end");
+        juce::ValueTree w ("State");
+        writeUiScale (w, 400, 500);
+        check ((int) w.getProperty ("uiWidth", 0) == 500 && close ((float) (double) w.getProperty ("uiScale", 0.0), 1.25f), "a size is written as uiScale and as uiWidth");
+    }
+
+    const auto width = [] (Processor& p)
+    {
+        std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+        return ed != nullptr ? ed->getWidth() : 0;
+    };
+    const auto at = [] (int w, double scale) { return juce::roundToInt ((double) w * scale); };
+    int designW = 0;
+    {   // the corner: there to see, over the menu's range
+        Processor p;
+        std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+        check (ed != nullptr, "the plug-in has an editor");
+        if (ed == nullptr) return;
+        designW = ed->getWidth();
+        const int designH = ed->getHeight();
+        juce::Component* corner = nullptr;
+        for (auto* c : ed->getChildren())
+            if (dynamic_cast<juce::ResizableCornerComponent*> (c) != nullptr) corner = c;
+        check (corner != nullptr && corner->isVisible() && corner->getAlpha() == 1.0f && ! corner->getBounds().isEmpty(), "the resize corner is drawn");
+        check (corner != nullptr && ed->getChildren().getLast() == corner, "the resize corner is in front of the content");
+        auto* limits = ed->getConstrainer();
+        check (limits != nullptr && limits->getMinimumWidth() == (int) ((float) designW * minUiScale)
+                   && limits->getMaximumWidth() == (int) ((float) designW * maxUiScale)
+                   && limits->getMinimumHeight() == (int) ((float) designH * minUiScale)
+                   && limits->getMaximumHeight() == (int) ((float) designH * maxUiScale),
+               "the corner's range is the menu's");
+    }
+    {   // what a state holds decides the size the editor opens at
+        Processor old;
+        old.apvts.state.setProperty ("uiWidth", at (designW, 1.5), nullptr);
+        check (width (old) == at (designW, 1.5), "an older state, uiWidth alone, opens at its size");
+        Processor both;
+        both.apvts.state.setProperty ("uiWidth", at (designW, 1.5), nullptr);
+        both.apvts.state.setProperty ("uiScale", 1.25, nullptr);
+        check (width (both) == at (designW, 1.5), "a window an older build resized, which moves uiWidth alone, opens at that size");
+        Processor scaled;
+        scaled.apvts.state.setProperty ("uiScale", 1.5, nullptr);
+        check (width (scaled) == at (designW, 1.5), "uiScale alone opens at its size");
+        Processor wide;
+        wide.apvts.state.setProperty ("uiWidth", designW * 3, nullptr);
+        check (width (wide) == at (designW, maxUiScale), "a saved size above the range opens at its upper end");
+        Processor tiny;
+        tiny.apvts.state.setProperty ("uiScale", 0.5, nullptr);
+        check (width (tiny) == at (designW, minUiScale), "a saved size below the range opens at its lower end");
+    }
+    for (double scale : { 1.5, 1.25 })
+    {   // a size set in the editor comes back in a new instance, and in an older build, which reads uiWidth
+        Processor p;
+        const int w = at (designW, scale);
+        {
+            std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+            ed->setSize (w, juce::roundToInt ((double) ed->getHeight() * scale));
+        }
+        const auto mb = saved (p);
+        Processor q;
+        q.setStateInformation (mb.getData(), (int) mb.getSize());
+        const auto tree = q.apvts.copyState();
+        check (close ((float) (double) tree.getProperty ("uiScale", 0.0), (float) w / (float) designW), "the saved state holds the size as uiScale");
+        check ((int) tree.getProperty ("uiWidth", 0) == w, "and as uiWidth, for an older build");
+        check (width (q) == w, "a reload opens the editor at the saved size");
+
+        // the size is the window's, not a preset's or a setup's
+        auto& qs = q.presetState();
+        const auto user = qs.presetTree();
+        check (! user.hasProperty ("uiScale") && ! user.hasProperty ("uiWidth"), "a user preset holds no window size");
+        const auto sized = [&] { return close (readUiScale (q.apvts.state, designW), (float) w / (float) designW) && q.apvts.state.hasProperty ("uiScale"); };
+        qs.loadFactory (0);
+        check (sized(), "a factory preset leaves the window's size");
+        check (qs.loadTree (user, "Mine") && sized(), "a user preset leaves the window's size");
+        qs.switchSetup();
+        qs.switchSetup();
+        check (sized(), "a setup switch leaves the window's size");
     }
 }
 }

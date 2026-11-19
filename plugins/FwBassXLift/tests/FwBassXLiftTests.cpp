@@ -252,6 +252,7 @@ static void testPresetState()
     const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
     flatwater::test::programChecks<FwBassXLiftProcessor> (bx::id::mode, check);
     flatwater::test::presetChecks<FwBassXLiftProcessor> (bx::id::mode, check);
+    flatwater::test::windowChecks<FwBassXLiftProcessor> (check);
 }
 
 int main()

@@ -6,8 +6,8 @@ namespace flatwater
 namespace
 {
 const juce::Identifier presetId { "preset" }, presetIndexId { "presetIndex" }, compareId { "compare" },
-                       compareOtherId { "compareOther" }, uiWidthId { "uiWidth" }, paramTag { "PARAM" }, idId { "id" },
-                       valueId { "value" };
+                       compareOtherId { "compareOther" }, uiScaleId { "uiScale" }, uiWidthId { "uiWidth" }, paramTag { "PARAM" },
+                       idId { "id" }, valueId { "value" };
 
 juce::String asText (const juce::ValueTree& t) { return t.toXmlString (juce::XmlElement::TextFormat().singleLine()); }
 }
@@ -164,14 +164,14 @@ void PresetState::loadFactory (int index)
 }
 
 // The tree takes another one's content as undoable changes: the parameters' values, the root's properties and the
-// other children's (the window's width and the setups stay; the preset's name too unless `withPreset`). A parameter
+// other children's (the window's size and the setups stay; the preset's name too unless `withPreset`). A parameter
 // the source does not hold stays where it is.
 void PresetState::copyInto (const juce::ValueTree& source, bool withPreset)
 {
     auto& live = apvts.state;
     const auto stays = [withPreset] (const juce::Identifier& n)
     {
-        return n == uiWidthId || n == compareId || n == compareOtherId || (! withPreset && (n == presetId || n == presetIndexId));
+        return n == uiScaleId || n == uiWidthId || n == compareId || n == compareOtherId || (! withPreset && (n == presetId || n == presetIndexId));
     };
     for (int i = live.getNumProperties(); --i >= 0;)
     {
@@ -220,11 +220,11 @@ bool PresetState::loadTree (const juce::ValueTree& preset, const juce::String& p
     return true;
 }
 
-// the state as a setup holds it: everything but the window's width and the setups themselves
+// the state as a setup holds it: everything but the window's size and the setups themselves
 juce::ValueTree PresetState::setupTree()
 {
     auto t = apvts.copyState();
-    for (const auto& n : { uiWidthId, compareId, compareOtherId }) t.removeProperty (n, nullptr);
+    for (const auto& n : { uiScaleId, uiWidthId, compareId, compareOtherId }) t.removeProperty (n, nullptr);
     return t;
 }
 
@@ -290,5 +290,25 @@ void PresetState::applyPendingProgram()
     const auto at = restoredAt.load();
     if (at != 0 && juce::Time::getMillisecondCounter() - at < (juce::uint32) restoreGuardMs) return;
     if (index == 0) loadDefault(); else loadFactory (index - 1);
+}
+
+//==============================================================================
+float readUiScale (const juce::ValueTree& state, int designWidth, float fallback)
+{
+    float scale = fallback;
+    const float saved = (float) (double) state.getProperty (uiScaleId, 0.0);
+    const bool hasScale = std::isfinite (saved) && saved > 0.0f;
+    const bool hasWidth = state.hasProperty (uiWidthId) && designWidth > 0;
+    const float width = hasWidth ? (float) (int) state.getProperty (uiWidthId) : 0.0f;
+    // the two are written together, so a width more than a pixel off its scale was set later, by an older build
+    if (hasScale && ! (hasWidth && std::abs (saved * (float) designWidth - width) > 1.0f)) scale = saved;
+    else if (hasWidth) scale = width / (float) designWidth;
+    return std::isfinite (scale) ? juce::jlimit (minUiScale, maxUiScale, scale) : 1.0f;
+}
+
+void writeUiScale (juce::ValueTree& state, int designWidth, int width)
+{
+    if (designWidth > 0) state.setProperty (uiScaleId, (double) width / (double) designWidth, nullptr);
+    state.setProperty (uiWidthId, width, nullptr);
 }
 }

@@ -134,6 +134,14 @@
   more than its table.
 - **Null tests:** the harnesses of Flatwater Comp, Vocal Comp and Bass Lift run as scripts again (`nulltest.py`
   starts them that way); each called its `main()` above the functions it needs.
+- **Resize corner:** the grip in the window's lower right corner is drawn in Flatwater BassX Lift, Comp, Delay and
+  Vocal Chain, as in the other five plug-ins. Before, the corner resized those four windows but nothing showed it.
+- **Window size, one range:** the corner resizes a window between 75 and 200 % of its design size, the range of the
+  window-size menu. Before, the corner went up to 300 %. A project saved with a larger window opens at 200 %.
+- **Window size in the saved state:** the size is saved as `uiScale`, the name the standard gives it, beside the
+  older `uiWidth`. A project saved by 1.0.0 opens at its size, and a project saved now opens at its size in 1.0.0.
+- **Closing the editor, Flatwater Pitch Bend:** the list of the Flatten note and a slot's list of sources, left
+  open, no longer act on a closed editor.
 
 ### Known issues
 

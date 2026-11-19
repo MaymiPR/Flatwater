@@ -300,6 +300,7 @@ static void testPresetState()
     const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
     flatwater::test::programChecks<FwVocalLevelerProcessor> (vl::id::mode, check);
     flatwater::test::presetChecks<FwVocalLevelerProcessor> (vl::id::mode, check);
+    flatwater::test::windowChecks<FwVocalLevelerProcessor> (check);
 }
 
 int main()

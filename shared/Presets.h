@@ -101,6 +101,18 @@ private:
     std::atomic<juce::uint32> restoredAt { 0 };       // (0: no restore to guard)
 };
 
+// The editor's size in the state, two root properties side by side:
+//   uiScale   the window's width over the editor's design width (1 is 100 %)
+//   uiWidth   the window's width in pixels, the only form older builds read and wrote
+// A state is read by `uiScale` first and by `uiWidth` when it has none, so a project an older build saved opens at
+// its size; both are written, so an older build opens a newer project at its size too. An older build that resizes
+// the window moves `uiWidth` alone: a `uiWidth` more than a pixel off its `uiScale` is the later one and is read.
+// The window menu's entries and the resize corner share the one range below, and a size outside it opens at the
+// nearer end.
+inline constexpr float minUiScale = 0.75f, maxUiScale = 2.0f;
+float readUiScale (const juce::ValueTree& state, int designWidth, float fallback = 1.0f);
+void writeUiScale (juce::ValueTree& state, int designWidth, int width);
+
 // a processor with presets: the toolbar finds them through it
 struct HasPresets
 {
