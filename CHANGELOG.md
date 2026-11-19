@@ -109,6 +109,25 @@
   for them when the host prepares it, for 20 s at most, so a render has the reverb from its first sample. When the
   wait runs out, the plug-in now records it, the reverb is silent until the responses are there, and then comes in.
   Before, nothing recorded it and the reverb's input came through unprocessed meanwhile.
+- **Presets and Setup A/B kept:** the preset's name, its place in the factory list and both setups are part of
+  the plug-in's saved state, in every plug-in. They are still there when the window is closed and opened again and
+  when the project is reloaded, and each setup keeps its own preset name. Before, they lived in the window: closing
+  it or reloading the project put the bar back on Default Preset, setup A, and the other setup was lost. A project
+  saved by 1.0.0 loads with the same settings, on Default Preset; a project saved now still loads in 1.0.0, which
+  skips the added entries.
+- **Undo across presets:** loading a factory or user preset, switching the setup and a program change from the host
+  are each one undo step, so undo after a preset gives back the settings before it. Before, a user preset and a setup
+  switch cleared the undo history.
+- **Programs after a reload:** the host's program is saved with the state and comes back without being loaded
+  again, and a program the host sets in the first half second after it restored a state is not applied. Before, a
+  host that set a program after restoring could load that preset over the restored settings.
+- **Flatwater Delay, Sync:** the change between ms and note values converts the delay time only when Sync is
+  clicked in the window. A preset, an undo, a setup switch, the host's automation of Sync and a reloaded project keep
+  the times they bring. Before, with the window open, a preset in ms loaded after a synced one had its Delay
+  replaced by the note's time (505 ms became 500 ms at 120 BPM), and with the window closed it had not.
+- **Flatwater Vocal Leveler, threads:** a preset's own Idle value is read when the state changes, on the thread
+  that changes it. Before, a timer read the state 30 times a second, also while a host replaced it from another
+  thread.
 - **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
   show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
   (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed

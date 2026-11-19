@@ -7,7 +7,10 @@ using namespace juce;
 FwVocalChainProcessor::FwVocalChainProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwVocalChain", ch::createLayout())
+      apvts (*this, &undo, "FwVocalChain", ch::createLayout()),
+      presets (apvts, undo, ch::factoryPresets(), apvts.getParameter (ch::id::mode),
+               { apvts.getParameter (ch::id::sensitivity), apvts.getParameter (ch::id::output),   // (presets leave these
+                 apvts.getParameter (ch::id::link) })                                             // alone, as the reference)
 {
     chain.setReverb (&reverb);
     setLatencySamples (ch::latencySamples (48000.0));

@@ -436,7 +436,6 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
       output (make<Fader> (Fader::Output)), rider (make<Fader> (Fader::Rider)), idleColumn (make<IdleColumn>()),
       automation (make<AutomationButtons>())
 {
-    setFactoryPresets (vl::factoryPresets());
     marks.blueAlone = { &rider, &idleColumn };
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { openEntry (sl); };

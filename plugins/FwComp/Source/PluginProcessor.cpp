@@ -24,7 +24,9 @@ FwCompProcessor::FwCompProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                                        .withInput ("Side Chain", AudioChannelSet::stereo(), false)),
-      apvts (*this, &undo, "FwComp", co::createLayout())
+      apvts (*this, &undo, "FwComp", co::createLayout()),
+      presets (apvts, undo, co::factoryPresets(), apvts.getParameter (co::id::mode),
+               { apvts.getParameter (co::id::mix) })   // presets leave Mix alone, as the reference
 {
 }
 

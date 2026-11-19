@@ -56,7 +56,7 @@ int main (int argc, char** argv)
         else if (k == "preset")
         {
             const auto& list = vl::factoryPresets();
-            if ((int) v >= 0 && (int) v < (int) list.size()) { flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::id::mode)); p.readExactIdle(); }
+            if ((int) v >= 0 && (int) v < (int) list.size()) flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::id::mode));
         }
         else if (k == "idle") { idleDbValue = v; idleGiven = true; }
         else if (p.apvts.getParameter (k.c_str()) == nullptr) { std::fprintf (stderr, "unknown key in %s\n", a.c_str()); return 2; }

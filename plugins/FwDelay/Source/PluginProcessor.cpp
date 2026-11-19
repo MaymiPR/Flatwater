@@ -72,7 +72,9 @@ String de::rateText (float hz)
 FwDelayProcessor::FwDelayProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwDelay", de::createLayout())
+      apvts (*this, &undo, "FwDelay", de::createLayout()),
+      presets (apvts, undo, de::factoryPresets(), apvts.getParameter (de::id::mode),
+               { apvts.getParameter (de::id::mix) })   // presets leave Mix alone, as the reference
 {
     analogStage.modes = de::dsp::tables::analog;                   // the reference's Analog modes (4 is Flatwater Comp's)
     apvts.state.addListener (this);
@@ -105,6 +107,30 @@ float FwDelayProcessor::value (const char* id, bool* exactFromPreset) const
             }
         }
     return de::atResolution (id, get (id));
+}
+
+void FwDelayProcessor::convertDelayForSync (int from, int to)
+{
+    if (from == to || (from != 2 && to != 2)) return;              // BPM and Host both count in note values
+    const auto set = [this] (const char* id, float v)
+    {
+        auto* p = apvts.getParameter (id);
+        p->beginChangeGesture();
+        p->setValueNotifyingHost (p->convertTo0to1 (v));
+        p->endChangeGesture();
+    };
+    const double host = hostBpm.load (std::memory_order_relaxed);
+    const double tempo = to == 0 ? (double) get (de::id::bpm) : (host > 0.0 ? host : 120.0);   // the tempo of the new choice
+    if (to == 2)
+    {
+        set (de::id::delay, (float) (de::noteBeats (roundToInt (get (de::id::delayNote))) * 60000.0 / tempo));
+        set (de::id::delayR, (float) (de::noteBeats (roundToInt (get (de::id::delayNoteR))) * 60000.0 / tempo));
+    }
+    else
+    {
+        set (de::id::delayNote, (float) de::nearestNote (get (de::id::delay), tempo));
+        set (de::id::delayNoteR, (float) de::nearestNote (get (de::id::delayR), tempo));
+    }
 }
 
 // mono or stereo, in and out alike, or mono in and stereo out (the reference's mono-to-stereo component)

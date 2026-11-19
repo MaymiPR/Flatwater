@@ -37,8 +37,6 @@ FwCompEditor::FwCompEditor (FwCompProcessor& p)
     setAuxLook (std::make_unique<HybridLook>());
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (co::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (co::id::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, Rectangle<int> valueArea,
                          std::function<String (double)> fmt)

@@ -253,7 +253,8 @@ Editor::Editor (AudioProcessor& p, AudioProcessorValueTreeState& state, UndoMana
                 const StringArray& modes)
     : AudioProcessorEditor (&p), apvts (state), undo (u), W (designW), H (designH),
       contentComp (std::make_unique<Content> (*this)),
-      toolbar (std::make_unique<flatwater::Toolbar> (u, state, modes, mode, product, version, tbStyle)),
+      toolbar (std::make_unique<flatwater::Toolbar> (u, dynamic_cast<flatwater::HasPresets&> (p).presetState(), modes, mode,
+                                                     product, version, tbStyle)),
       modeParam (mode)
 {
     // never take the keyboard focus: the host keeps its shortcuts (space = play / pause) while the window is open

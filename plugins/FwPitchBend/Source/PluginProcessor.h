@@ -4,10 +4,11 @@
 #include "dsp/Model.h"
 #include "dsp/Engine.h"
 #include "ModulationState.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "Params.h"
 
-class FwPitchBendProcessor : public juce::AudioProcessor, private juce::ValueTree::Listener
+class FwPitchBendProcessor : public juce::AudioProcessor, public flatwater::HasPresets, private juce::ValueTree::Listener
 {
 public:
     FwPitchBendProcessor();
@@ -26,8 +27,8 @@ public:
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
     int getNumPrograms() override { return 1 + (int) pb::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override;
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -40,6 +41,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
     bool fine() const { return (bool) apvts.state.getProperty (pb::fineId, false); }
@@ -56,7 +60,7 @@ public:
     std::atomic<float> cycle[2] { 0.0f, 0.0f }, amValue { 0.0f }, ptValue { 0.0f };
 
     // what Default Preset resets beyond the parameters: no slots, Fine off, the default shapes, the steps at 0
-    void resetExtras() { applyPresetExtras (juce::ValueTree { "Defaults" }); }
+    void resetExtras() { applyPresetExtras (juce::ValueTree { "Defaults" }, nullptr); }
 
     // the last block's Pitch with its modulation, in semitones as the shifter takes it (to +-24, past the knob's range)
     float pitchShifted() const { return 24.0f * engine.modNorm[0] - 12.0f; }
@@ -65,9 +69,9 @@ private:
     void ensureState();                                          // the state tree's parts, with their defaults
     void refreshModel();                                         // the tree's settings -> the audio thread's copy
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override { refreshModel(); }
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& child) override;
-    void applyPresetExtras (const juce::ValueTree& exact);      // a factory preset's slots, Fine, shapes and steps
-    int currentProgram = 0;
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override { refreshModel(); }
+    // a factory preset's slots, Fine, shapes and steps (the preset load calls it, inside its undo step)
+    void applyPresetExtras (const juce::ValueTree& exact, juce::UndoManager*);
     double sr = 48000.0;
     int maxBlock = 0;                                                 // the block size prepareToPlay was given
     void valueTreeRedirected (juce::ValueTree&) override { refreshModel(); }

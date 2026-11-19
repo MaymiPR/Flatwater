@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -413,6 +414,94 @@ static void testModeAndAnalogChangeOnTheAudioThread()
     }
 }
 
+// Sync's conversion between ms and note values belongs to a click on the Sync control. A preset, a reload or an undo
+// that changes Sync brings its own Delay, and the open editor leaves it there.
+static void testSyncConversion()
+{
+    FwDelayProcessor p;
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    ed->setVisible (true);
+    auto get = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    auto tick = [&ed] { ((juce::Timer*) dynamic_cast<FwDelayEditor*> (ed.get()))->timerCallback(); };
+    auto click = [&] (float x, float y)
+    {
+        const juce::Point<float> pt (x, y);
+        auto* c = ed->getComponentAt (pt.roundToInt());
+        if (c == nullptr) return;
+        const auto local = c->getLocalPoint (ed.get(), pt);
+        const auto now = juce::Time::getCurrentTime();
+        c->mouseDown (juce::MouseEvent (juce::Desktop::getInstance().getMainMouseSource(), local, juce::ModifierKeys::leftButtonModifier,
+                                        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, c, c, now, local, now, 1, false));
+    };
+    const auto& list = de::factoryPresets();
+    auto program = [&list] (const char* name) { for (int k = 0; k < (int) list.size(); ++k) if (juce::String (list[(size_t) k].name) == name) return k + 1; return 0; };
+
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);                    // a fresh instance follows the host
+    p.setCurrentProgram (program ("Live Sound Start"));              // an ms preset: Delay 505
+    tick(); tick();
+    CHECK_NEAR (get (de::id::sync), 2.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+
+    juce::MemoryBlock ms;                                            // a state saved in ms, loaded over a synced one
+    p.getStateInformation (ms);
+    p.setCurrentProgram (program ("Default"));
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);
+    p.setStateInformation (ms.getData(), (int) ms.getSize());
+    tick(); tick();
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+
+    set (de::id::sync, 1.0f);                                        // the host's automation of Sync, there and back
+    tick();
+    set (de::id::sync, 2.0f);
+    tick();
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delayNote), 13.0, 1.0e-3);
+
+    // the click itself converts, as the reference: ms to the nearest note (505 ms at 120 BPM: a quarter), a note to
+    // its time (an eighth: 250 ms)
+    set (de::id::delayNote, 5.0f);
+    click (362.0f, 156.0f);                                          // HOST
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+    set (de::id::delayNote, 10.0f);
+    click (409.0f, 156.0f);                                          // MS
+    tick();
+    CHECK_NEAR (get (de::id::sync), 2.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 250.0, 1.0e-3);
+    click (409.0f, 156.0f);                                          // MS again: no change, nothing to convert
+    set (de::id::delay, 300.0f);
+    click (409.0f, 156.0f);
+    CHECK_NEAR (get (de::id::delay), 300.0, 1.0e-3);
+
+    // without an editor the same conversion is the processor's
+    FwDelayProcessor q;
+    auto qget = [&q] (const char* id) { return q.apvts.getRawParameterValue (id)->load(); };
+    auto* d = q.apvts.getParameter (de::id::delay);
+    d->setValueNotifyingHost (d->convertTo0to1 (250.0f));
+    q.convertDelayForSync (2, 1);
+    CHECK_NEAR (qget (de::id::delayNote), 10.0, 1.0e-3);
+    auto* n = q.apvts.getParameter (de::id::delayNote);
+    n->setValueNotifyingHost (n->convertTo0to1 (13.0f));
+    q.convertDelayForSync (1, 2);
+    CHECK_NEAR (qget (de::id::delay), 500.0, 1.0e-3);
+    q.convertDelayForSync (1, 0);                                    // between Host and BPM: note values both, nothing to do
+    CHECK_NEAR (qget (de::id::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (qget (de::id::delay), 500.0, 1.0e-3);
+}
+
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwDelayProcessor> (de::id::mode, check);
+    flatwater::test::presetChecks<FwDelayProcessor> (de::id::mode, check);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -426,6 +515,8 @@ int main()
     testDsp();
     testModeAndAnalogChangeOnTheAudioThread();
     testPresets();
+    testSyncConversion();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

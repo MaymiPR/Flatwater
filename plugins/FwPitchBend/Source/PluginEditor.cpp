@@ -93,7 +93,6 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
 {
     ui.changed = [this] { content().repaint(); };
     ui.menuLook = &menuLook;
-    setFactoryPresets (pb::factoryPresets());
     onDefaultPreset ([this] { proc.resetExtras(); });
     ui.enter = [this] (ModKnob& k) { openEntry (k); };
     ui.readout = [this] (const String& t, Rectangle<int> r) { readoutText = t; readoutArea = r; if (overlay) overlay->repaint(); };

@@ -584,9 +584,6 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
 {
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (ch::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (ch::id::sensitivity), p.apvts.getParameter (ch::id::output),   // (IgnoreOnPresetLoad)
-                           p.apvts.getParameter (ch::id::link) });
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { showEntry (sl); };
 

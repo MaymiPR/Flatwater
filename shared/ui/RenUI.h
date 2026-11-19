@@ -110,8 +110,6 @@ protected:
     void attach (juce::Button&, const char* paramID, juce::Rectangle<int> bounds);
     juce::Component& content();
     bool isMono() const;
-    void setFactoryPresets (const std::vector<flatwater::FactoryPreset>& list) { toolbar->setFactoryPresets (&list); }
-    void setKeepOnPresetLoad (std::vector<juce::AudioProcessorParameter*> list) { toolbar->setKeepOnPresetLoad (std::move (list)); }
     void onDefaultPreset (std::function<void()> f) { toolbar->onLoadDefault = std::move (f); }   // state that is not a parameter
 
     // for editors with their own widgets (e.g. the flat kit, shared/ui/FlatUI.h): the editor owns them and their look,

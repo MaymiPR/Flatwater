@@ -9,7 +9,7 @@
 #include "Params.h"
 #include "Presets.h"
 
-class FwVocalChainProcessor : public juce::AudioProcessor, private juce::Timer
+class FwVocalChainProcessor : public juce::AudioProcessor, public flatwater::HasPresets, private juce::Timer
 {
 public:
     FwVocalChainProcessor();
@@ -38,14 +38,8 @@ public:
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 5.0; }
     int getNumPrograms() override { return 1 + (int) ch::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {}, { ch::id::sensitivity, ch::id::output, ch::id::link } };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : ch::factoryPresets()[(size_t) index - 1], apvts.getParameter (ch::id::mode));
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -58,6 +52,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // editor taps: the input and output peaks per channel (dB, the highest of the block) for the meters, and the
     // input's rms level after Sensitivity for the Sensitivity LED
@@ -85,5 +82,4 @@ private:
     ch::dsp::Chain chain;
     juce::AudioBuffer<float> work;
     int maxBlock = 0;                                                 // the chain's block size (prepareToPlay)
-    int currentProgram = 0;
 };

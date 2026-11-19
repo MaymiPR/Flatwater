@@ -10,6 +10,7 @@
 #include "ui/Controls.h"
 #include "shared/ui/FlatUI.h"
 #include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -568,6 +569,14 @@ static void testModeAndAnalogChangeOnTheAudioThread()
     }
 }
 
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwCompProcessor> (co::id::mode, check);
+    flatwater::test::presetChecks<FwCompProcessor> (co::id::mode, check);
+}
+
 int main()
 {
     testBypassIsDelayedInput();
@@ -589,6 +598,7 @@ int main()
     testValueEntry();
     testPresets();
     testNeedle();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

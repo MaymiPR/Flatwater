@@ -7,7 +7,8 @@ using namespace juce;
 FwVocalCompProcessor::FwVocalCompProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwVocalComp", vc::createLayout())
+      apvts (*this, &undo, "FwVocalComp", vc::createLayout()),
+      presets (apvts, undo, vc::factoryPresets(), apvts.getParameter (vc::id::mode))
 {
     pComp = apvts.getRawParameterValue (vc::id::comp);
     pGate = apvts.getRawParameterValue (vc::id::gate);

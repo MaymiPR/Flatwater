@@ -311,7 +311,6 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
       target (make<TargetSlider>()), rangeMax (make<Fader> (Fader::RangeMax)), rangeMin (make<Fader> (Fader::RangeMin)),
       output (make<Fader> (Fader::Output)), rider (make<Fader> (Fader::Rider)), idleColumn (make<IdleColumn>())
 {
-    setFactoryPresets (bl::factoryPresets());             // Target stays where it is, as in the reference, unless a preset sets it
     marks.blueAlone = { &rider, &idleColumn };
     marks.changed = [this] { content().repaint(); };
     const auto dragging = dragCursor();

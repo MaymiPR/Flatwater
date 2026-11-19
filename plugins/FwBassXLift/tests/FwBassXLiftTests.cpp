@@ -6,6 +6,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "dsp/Engine.h"
 #include "PluginProcessor.h"
+#include "shared/test/PresetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -245,6 +246,14 @@ static void testParamIds()
     CHECK (preset == bx::numParams - 1);
 }
 
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwBassXLiftProcessor> (bx::id::mode, check);
+    flatwater::test::presetChecks<FwBassXLiftProcessor> (bx::id::mode, check);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -258,6 +267,7 @@ int main()
     testAgainstReference();
     testBlocksAndChannels();
     testProcessor();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

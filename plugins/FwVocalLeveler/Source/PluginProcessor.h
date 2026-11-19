@@ -7,11 +7,17 @@
 #include "Params.h"
 #include "Presets.h"
 
-class FwVocalLevelerProcessor : public juce::AudioProcessor, private juce::Timer
+class FwVocalLevelerProcessor : public juce::AudioProcessor, public flatwater::HasPresets, private juce::Timer,
+                                private juce::ValueTree::Listener
 {
 public:
     FwVocalLevelerProcessor();
-    ~FwVocalLevelerProcessor() override { stopTimer(); if (writing) apvts.getParameter (vl::id::rider)->endChangeGesture(); }
+    ~FwVocalLevelerProcessor() override
+    {
+        stopTimer();
+        apvts.state.removeListener (this);
+        if (writing) apvts.getParameter (vl::id::rider)->endChangeGesture();
+    }
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
@@ -26,15 +32,8 @@ public:
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
     int getNumPrograms() override { return 1 + (int) vl::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : vl::factoryPresets()[(size_t) index - 1], apvts.getParameter (vl::id::mode));
-        readExactIdle();
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -47,6 +46,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // editor taps: the vocal level (dB, the highest of the block, for the meter under Target), the output's peak (clip
     // LED), the music level (the Music LED), the Rider's gain (dB), vocal activity (the Ride / Idle LEDs)
@@ -68,15 +70,19 @@ public:
         return (e >= 0.0f && std::abs (v - juce::jlimit (0.02f, 0.98f, e)) < 1.0e-4f) ? e : v;
     }
     float idleDb() const { return vl::idleDb (idleFraction(), get (vl::id::rangeMin), get (vl::id::rangeMax)); }
-    void readExactIdle();                                       // (after a preset: also called by the timer)
 
 private:
-    void timerCallback() override;                              // Automation Write: the ride to the host; the preset's Idle
+    void timerCallback() override;                              // Automation Write: the ride to the host
+    // the preset's Idle, read when the tree changes (a preset, an undo, a restore) on the thread that changes it
+    void readExactIdle();
+    void valueTreePropertyChanged (juce::ValueTree& t, const juce::Identifier&) override { if (t.hasType (flatwater::presetExactTag)) readExactIdle(); }
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override { readExactIdle(); }
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override { readExactIdle(); }
+    void valueTreeRedirected (juce::ValueTree&) override { readExactIdle(); }
     std::atomic<float> exactIdle { -1.0f };
     double sr = 48000.0;
     vl::dsp::Ride ride;
     double outGain = 1.0, heldDb = 0.0, smooth5 = 0.0;          // the Output gain and a held Rider, each smoothed over 5 ms
     double musicLevel = 1.0e-10;
     bool wasHeld = false, returning = false, writing = false;
-    int currentProgram = 0;
 };

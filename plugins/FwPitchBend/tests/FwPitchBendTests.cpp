@@ -7,6 +7,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -414,6 +415,19 @@ static void testPresets()
     CHECK (getSlot (st, 0, 0).source == None);
     CHECK (getSlot (st, 1, 0).source == None);
     CHECK_NEAR (getTable (st, 1)[64], defaultTable (1)[64], 1e-6);
+
+    // a preset is one undo step, with what it sets beyond the parameters (the slots, the steps)
+    FwPitchBendProcessor u;
+    auto& ut = u.apvts.state;
+    u.setCurrentProgram (robot);
+    CHECK (getSlot (ut, 0, 0).source == M1);
+    CHECK (u.undo.undo());
+    CHECK (getSlot (ut, 0, 0).source == None);
+    CHECK (getSlot (ut, 1, 0).source == None);
+    CHECK (stepValue (getTable (ut, 0), 0) == stepValue (defaultTable (0), 0));
+    CHECK (u.undo.redo());
+    CHECK (getSlot (ut, 0, 0).source == M1);
+    CHECK_NEAR (getSlot (ut, 0, 0).depth, 100.0, 1e-6);
 }
 
 // the modulators' laws as measured (MEASUREMENTS.md, Flatwater Pitch Bend, Phase 3)
@@ -588,6 +602,14 @@ static void testOversizedBlock()
     CHECK (differing == 0);
 }
 
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwPitchBendProcessor> (pb::id::mode, check);
+    flatwater::test::presetChecks<FwPitchBendProcessor> (pb::id::mode, check);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -604,6 +626,7 @@ int main()
     testPresets();
     testOversizedBlock();
     testShifterLatch();
+    testPresetState();
     std::printf ("%d checks, %d failed\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

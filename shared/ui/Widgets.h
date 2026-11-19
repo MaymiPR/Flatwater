@@ -302,6 +302,8 @@ namespace flatwater
 //   row 2: the preset bar across the full width (name, "*" when modified).
 // Setup A/B follows the reference: one Setup button toggles between two settings, the copy
 // button copies the current setup to the other one.
+// The bar shows and drives the processor's flatwater::PresetState (shared/Presets.h): the preset's name, the two setups
+// and the loading are the processor's, so they outlive the window; the bar adds the user preset files and the menus.
 // Style::Flat is the newer single-row bar (800 x 36 px, e.g. Flatwater BassX Lift's reference): mark | Mode | undo | redo |
 // preset box | prev | next | A>B copy | Setup A/B | save icon | menu; same behaviour.
 // Style::Hybrid is the Hybrid-line bar (643 x 19 px, e.g. Flatwater Comp's reference): a logo block (the mark and the suite name),
@@ -314,7 +316,7 @@ class Toolbar : public juce::Component
 public:
     enum class Style { TwoRow, Flat, Hybrid, Classic };
     bool hybridLayout() const { return style == Style::Hybrid || style == Style::Classic; }
-    Toolbar (juce::UndoManager& undo, juce::AudioProcessorValueTreeState& state, juce::StringArray modeNames,
+    Toolbar (juce::UndoManager& undo, PresetState& presets, juce::StringArray modeNames,
              juce::RangedAudioParameter* modeParam, juce::String productName, juce::String version,
              Style style = Style::TwoRow);
 
@@ -327,9 +329,6 @@ public:
     void mouseExit (const juce::MouseEvent&) override;
     void mouseDown (const juce::MouseEvent&) override;
     void refresh();                                   // at every frame of the editor: repaints when what it shows changed
-    void setFactoryPresets (const std::vector<FactoryPreset>* list) { factory = list; }
-    // parameters the Default and factory presets leave alone (besides Mode)
-    void setKeepOnPresetLoad (std::vector<juce::AudioProcessorParameter*> list) { keepOnLoad = std::move (list); }
 
     static constexpr int width = 371, height = 36, flatWidth = 800, flatHeight = 36, hybridWidth = 643, hybridHeight = 19;
     const Style style;
@@ -340,13 +339,11 @@ private:
     juce::Rectangle<int> rect (Item) const;
     int itemAt (juce::Point<int>) const;
 
-    void switchSetup();
-    void copyToOther();
-
     // presets: factory "Default" and the plugin's factory list, then user presets (.flatwaterpreset files in
     // Documents/Flatwater/User Presets/<plugin>)
     juce::File userDir() const;
     juce::Array<juce::File> userPresets() const;
+    juce::File presetFile() const;                    // the loaded user preset's file; none for the factory presets
     void loadDefault();
     void loadFactory (int index);
     void loadUser (const juce::File&);
@@ -356,26 +353,17 @@ private:
     void showPresetMenu();
     void showToolbarMenu();
     void showAboutMenu();
-    std::vector<float> currentValues() const;
-    bool isModified() const;
+    juce::String presetLabel() const;                 // "A: <name>", with "*" when modified
 
     juce::UndoManager& undo;
-    juce::AudioProcessorValueTreeState& apvts;
+    PresetState& presets;
     juce::StringArray modes;
     juce::RangedAudioParameter* modeParam;
     juce::String product, version;
-    juce::ValueTree slot[2];
-    int active = 0;
     int hot = -1;
 
-    juce::String presetName { "Default Preset" };
-    juce::File presetFile;                 // empty for the factory presets
-    const std::vector<FactoryPreset>* factory = nullptr;
-    std::vector<juce::AudioProcessorParameter*> keepOnLoad;
-    int factoryIndex = -1;                 // -1: Default Preset or a user preset
-    std::vector<float> loadedValues;
     // what paint() reads of the plug-in's state, as refresh() last saw it (mode -2: not looked at yet)
-    struct Shown { bool canUndo = false, canRedo = false, modified = false; int mode = -2; };
+    struct Shown { bool canUndo = false, canRedo = false, modified = false; int mode = -2, setup = 0; juce::String preset; };
     Shown shown;
     MenuLook menuLook;
 };

@@ -2,11 +2,12 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include "shared/ui/Widgets.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "Params.h"
 
-class FwBassXLiftProcessor : public juce::AudioProcessor
+class FwBassXLiftProcessor : public juce::AudioProcessor, public flatwater::HasPresets
 {
 public:
     FwBassXLiftProcessor();
@@ -25,15 +26,8 @@ public:
     double getTailLengthSeconds() const override { return 0.0; }
     // programs for the host's preset list: 0 = Default, then the factory presets
     int getNumPrograms() override { return 1 + (int) bx::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bx::factoryPresets()[(size_t) index - 1], apvts.getParameter (bx::id::mode),
-                           { apvts.getParameter (bx::id::input) });         // presets leave Input alone, as the reference
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -46,6 +40,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // output meters (dB, highest peak since the editor last read them) and the clip latch
     flatwater::PeakTap outLDb, outRDb;
@@ -55,5 +52,4 @@ public:
 private:
     bx::dsp::Processor dsp;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    int currentProgram = 0;
 };

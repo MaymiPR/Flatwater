@@ -7,7 +7,8 @@ using namespace juce;
 FwBassLevelerProcessor::FwBassLevelerProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassLeveler", bl::createLayout())
+      apvts (*this, &undo, "FwBassLeveler", bl::createLayout()),
+      presets (apvts, undo, bl::factoryPresets(), apvts.getParameter (bl::id::mode))
 {
     latencyNow.store (roundToInt (bl::latencyMs (0) * 0.001 * sr));
     setLatencySamples (latencyNow.load());

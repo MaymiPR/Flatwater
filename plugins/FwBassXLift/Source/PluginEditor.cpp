@@ -28,8 +28,6 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
     // the window still resizes from its corner, but the grip is not drawn over the badge
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (bx::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (bx::id::input) });     // presets leave Input alone, as the reference
 
     auto gainFmt = [] (double v) { return gainText ((float) v); };
     for (auto* f : { &input, &origBass, &harmonics }) f->format = gainFmt;

@@ -8,8 +8,10 @@ FwVocalLevelerProcessor::FwVocalLevelerProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                                        .withInput ("Sidechain", AudioChannelSet::stereo(), false)),
-      apvts (*this, &undo, "FwVocalLeveler", vl::createLayout())
+      apvts (*this, &undo, "FwVocalLeveler", vl::createLayout()),
+      presets (apvts, undo, vl::factoryPresets(), apvts.getParameter (vl::id::mode))
 {
+    apvts.state.addListener (this);
     startTimerHz (30);
 }
 
@@ -107,7 +109,6 @@ void FwVocalLevelerProcessor::readExactIdle()
 // Automation Write: the Rider's movements go to the host as if a hand moved its parameter (one gesture while writing)
 void FwVocalLevelerProcessor::timerCallback()
 {
-    readExactIdle();
     auto* p = apvts.getParameter (vl::id::rider);
     const bool write = automationMode() == vl::Write;
     if (write != writing)
@@ -132,7 +133,7 @@ void FwVocalLevelerProcessor::getStateInformation (MemoryBlock& d)
 void FwVocalLevelerProcessor::setStateInformation (const void* data, int size)
 {
     if (auto xml = getXmlFromBinary (data, size))
-        if (xml->hasTagName (apvts.state.getType())) { apvts.replaceState (ValueTree::fromXml (*xml)); readExactIdle(); }
+        if (xml->hasTagName (apvts.state.getType())) apvts.replaceState (ValueTree::fromXml (*xml));
 }
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new FwVocalLevelerProcessor(); }

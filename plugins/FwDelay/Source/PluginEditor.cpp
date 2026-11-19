@@ -83,8 +83,6 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     setAuxLook (std::make_unique<HybridLook>());
     for (auto* c : getChildren())
         if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (de::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (de::id::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, std::function<String (double)> fmt)
     {
@@ -146,6 +144,9 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     // the tap pad
     for (auto* r : { stereoRow, monoRow }) r->onClick = [this] (Component* c) { selectOnly (c); };
     for (auto* b : { syncGroup, lofiButton }) b->onClick = [this] (Component* c) { selectOnly (c); };
+    // as the reference: the user's switch between ms and note values keeps the time, as near as the new unit allows.
+    // It belongs to this click alone (with the click's undo step); Sync changed any other way leaves the times alone.
+    syncGroup->onChoice = [this] (int from, int to) { proc.convertDelayForSync (from, to); };
 
     addToContent (display, kDisplay);
     addToContent (tap, kTapPad.expanded (6.0f).getSmallestIntegerContainer());
@@ -189,21 +190,6 @@ void FwDelayEditor::updateDelayKnobs()
     lastDualOn = (int) dualOn;
     // the right side's knob while Dual's layout shows (Ping Pong's takes over the display and shows the left)
     const bool right = rightSide && dual && ! ping;
-    if (s != lastSync && lastSync >= 0)
-    {
-        // as the reference: switching between ms and note values keeps the time, as near as the new unit allows
-        const double t = tempo();
-        if (s == 2)
-        {
-            setValue (de::id::delay, (float) (de::noteBeats (roundToInt (value (de::id::delayNote))) * 60000.0 / t));
-            setValue (de::id::delayR, (float) (de::noteBeats (roundToInt (value (de::id::delayNoteR))) * 60000.0 / t));
-        }
-        else if (lastSync == 2)
-        {
-            setValue (de::id::delayNote, (float) de::nearestNote (value (de::id::delay), t));
-            setValue (de::id::delayNoteR, (float) de::nearestNote (value (de::id::delayR), t));
-        }
-    }
     if (s == lastSync && m == lastMode && (int) dual == lastDual && (int) ping == lastPing && right == lastRight) return;
     lastSync = s; lastMode = m; lastDual = (int) dual; lastPing = (int) ping; lastRight = right;
     delay.setVisible (s == 2 && ! right);

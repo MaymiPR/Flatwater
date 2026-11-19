@@ -409,7 +409,12 @@ void ButtonGroup::mouseDown (const MouseEvent& e)
         if (buttonRect (i).contains (e.position))
         {
             if (toggle) attachment->setValueAsCompleteGesture (selected != 0 ? 0.0f : 1.0f);
-            else attachment->setValueAsCompleteGesture ((float) i);
+            else
+            {
+                const int from = selected;
+                attachment->setValueAsCompleteGesture ((float) i);
+                if (i != from && onChoice) onChoice (from, i);
+            }
         }
 }
 

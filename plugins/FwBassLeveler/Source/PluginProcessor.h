@@ -4,11 +4,12 @@
 #include <vector>
 #include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "Params.h"
 
-class FwBassLevelerProcessor : public juce::AudioProcessor, private juce::Timer
+class FwBassLevelerProcessor : public juce::AudioProcessor, public flatwater::HasPresets, private juce::Timer
 {
 public:
     FwBassLevelerProcessor();
@@ -31,14 +32,8 @@ public:
     double getTailLengthSeconds() const override { return 0.0; }
     // programs for the host's preset list: 0 = Default, then the factory presets (bl::factoryPresets())
     int getNumPrograms() override { return 1 + (int) bl::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bl::factoryPresets()[(size_t) index - 1], apvts.getParameter (bl::id::mode));
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -51,6 +46,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // editor taps: the input's energy (dB, the highest of the block, for the Target meter), the output's peak (clip LED),
     // the Rider's gain (dB)
@@ -71,7 +69,6 @@ public:
 
 private:
     flatwater::BypassDelay bypassLine;
-    int currentProgram = 0;
     void timerCallback() override { updateHostLatency(); }
     void configure();                // allocates: prepareToPlay
     void setMode (int mode);         // a Mode change: a reset without allocation, also on the audio thread

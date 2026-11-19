@@ -8,7 +8,9 @@ using namespace juce;
 FwBassXLiftProcessor::FwBassXLiftProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassXLift", bx::createLayout())
+      apvts (*this, &undo, "FwBassXLift", bx::createLayout()),
+      presets (apvts, undo, bx::factoryPresets(), apvts.getParameter (bx::id::mode),
+               { apvts.getParameter (bx::id::input) })   // presets leave Input alone, as the reference
 {
 }
 
