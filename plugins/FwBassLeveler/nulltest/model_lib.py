@@ -9,13 +9,13 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # build/native/FwBassLeveler/RideModel (scripts/build_native.py); BL_MODEL_DLL names another build of it
-_lib = ctypes.CDLL(os.environ.get('BL_MODEL_DLL') or os.environ.get('BRMODEL_DLL') or os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassLeveler', 'RideModel' + ('.dll' if os.name == 'nt' else '.so')))
-_lib.br_run.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double),
+_lib = ctypes.CDLL(os.environ.get('BL_MODEL_DLL') or os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassLeveler', 'RideModel' + ('.dll' if os.name == 'nt' else '.so')))
+_lib.bl_run.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double),
                         ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
 NAMES = ['target', 'rmin', 'rmax', 'idle', 'c0', 'sh_fc', 'sh_g', 'sh_q', 'pb_att', 'pb_rel', 'lp_fc', 'lp_q', 'n_att', 'n_rel',
          'floor', 'off', 'art', 'rel_depth', 'rel_ms', 'glide', 'smooth', 'ref_att', 'ref_rel', 'hp_fc', 'illegal', 'on_rise',
          'slow_att', 'slow_rel', 'mode', 'slow_rel_fast', 'thr_u', 'thr_a', 'hyst', 'settle', 'off_ms', 'win_ms', 'off_rel_ms', 'nmode', 'pitch_c', 'hold_min', 'win_latch', 'fast', 'block_rise', 'f_hi', 'f_lo', 'gate_block', 'att_mode', 'f_att', 'f_rel', 'band_hyst', 'hold_latch', 'rel_ref', 'pitch_lp', 'att_min', 'att_src', 'lock', 'lock_thr', 'sens_in', 'fast_in', 'rel_reset', 'rr_band', 'rr_lo1', 'rr_hi1', 'rr_lo2', 'rr_hi2', 'rr_depth', 'pre_silence', 'pre_hold', 'spill', 'agate']
-assert len(NAMES) == _lib.br_nparams()
+assert len(NAMES) == _lib.bl_nparams()
 DEFAULTS = dict(target=-14.0, rmin=-12.0, rmax=12.0, idle=0.0, c0=0.68, sh_fc=30.0, sh_g=-30.0, sh_q=0.0, pb_att=2.0,
                 pb_rel=100.0, lp_fc=1020.0, lp_q=0.60, n_att=1.0, n_rel=1.0, floor=-48.75, off=38.0, art=11.5, rel_depth=12.4,
                 rel_ms=21.0, glide=32.0, smooth=5.0, ref_att=1.0, ref_rel=5000.0, hp_fc=2000.0, illegal=0.0, on_rise=0.3,
@@ -44,7 +44,7 @@ def run(x, p, trace=False):
     v = (ctypes.c_double * len(NAMES))(*[float(p[k]) for k in NAMES])
     g = np.zeros(len(x), np.float32)
     tr = np.zeros((len(x), 6), np.float32) if trace else None
-    _lib.br_run(x.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), len(x), float(FS), v, g.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+    _lib.bl_run(x.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), len(x), float(FS), v, g.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
                 tr.ctypes.data_as(ctypes.POINTER(ctypes.c_float)) if trace else None)
     return (g, tr) if trace else g
 

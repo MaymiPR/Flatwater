@@ -20,6 +20,8 @@ public:
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the delay lines, their filters and the Analog stage as prepareToPlay leaves them. No allocation.
+    void reset() override { if (prepared) setLayout (layoutDual); }
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;

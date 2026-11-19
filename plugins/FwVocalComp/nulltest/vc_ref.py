@@ -4,7 +4,7 @@
 
 For every signal x setting both plug-ins render the same input at 48 kHz. The residual is
 20 log10( rms(ours - reference) / rms(reference) ), measured after the first 0.2 s (start-up) and
-also over the last 1 s (steady state). A residual of -60 dB or lower is a close match; 0 dB means nothing in common.
+also over the last 1 s (steady state). A residual of -60 dB or lower is a null; 0 dB means nothing in common.
 Numbers are reported as they come: no case is labelled a null unless the data shows it.
 """
 import sys, os, subprocess, json, time
@@ -94,7 +94,7 @@ def main():
         import report_lib as RL
         with RL.Part("FwVocalComp", "settings", from_table=True) as f:
             f.write("# Flatwater Vocal Comp null test results\n\nResidual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. ")
-            f.write("'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match.\n\n")
+            f.write("'steady' = last second only. Lower is better; about -60 dB or less is a null, 0 dB is no match.\n\n")
             f.write("| signal | comp / gate / gain (dB) | residual all (dB) | residual steady (dB) | peak error (dB re. peak) |\n|---|---|---:|---:|---:|\n")
             for r in rows: f.write("| %s | %s | %.1f | %.1f | %.1f |\n" % r)
             f.write("\nMedian %.1f dB, best %.1f dB, worst %.1f dB; %d of %d cases below -60 dB.\n" % (np.median(allv), allv.min(), allv.max(), (allv < -60).sum(), len(allv)))

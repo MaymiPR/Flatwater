@@ -34,6 +34,15 @@ void FwVocalLevelerProcessor::prepareToPlay (double sampleRate, int)
     musicLevel = 1.0e-10;
 }
 
+void FwVocalLevelerProcessor::reset()
+{
+    ride.reset();
+    outGain = Decibels::decibelsToGain ((double) get (vl::id::output));
+    heldDb = 0.0;
+    musicLevel = 1.0e-10;
+    wasHeld = returning = false;
+}
+
 void FwVocalLevelerProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;

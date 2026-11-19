@@ -90,6 +90,13 @@ void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
     engine.prepare (sampleRate, maxBlock, jmax (1, getTotalNumInputChannels()), norm);
 }
 
+void FwPitchBendProcessor::reset()
+{
+    std::array<float, pb::dsp::numTargets> norm {};
+    for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    engine.reset (norm);
+}
+
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;

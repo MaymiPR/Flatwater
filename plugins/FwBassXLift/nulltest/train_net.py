@@ -33,14 +33,14 @@ def lp3(F):
 def feat(v): return np.abs(np.arcsinh(v / 1e-3)) / 8.0
 
 
-FEAT = os.environ.get("MB_FEAT", "base")
+FEAT = os.environ.get("BX_FEAT", "base")
 ZENV_PEAK, ZENV_POW = (0.003, 0.01, 0.03, 0.1), (0.01, 0.05)
 import ctypes as _ctf
 _FEATURES = os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Features' + ('.dll' if os.name == 'nt' else '.so'))
 _F = _ctf.CDLL(_FEATURES) if os.path.exists(_FEATURES) else None
 if _F is not None:
-    _F.mb_peak.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]
-    _F.mb_power.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]       # "env": three peak followers of |u| as extra inputs
+    _F.bx_peak.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]
+    _F.bx_power.argtypes = [_ctf.c_void_p, _ctf.c_void_p, _ctf.c_int, _ctf.c_double]       # "env": three peak followers of |u| as extra inputs
 ENV_REL = (0.005, 0.03, 0.2)                     # release times (s); instant attack
 
 
@@ -68,9 +68,9 @@ def features(x, u, F, ratio, response, hp=1, Gprev=None):
         # slow time constants a GRU stepping at 48 kHz finds hard to hold
         z = np.ascontiguousarray(z, np.float64)
         for rel in ZENV_PEAK:
-            y = np.empty(n); _F.mb_peak(z.ctypes.data, y.ctypes.data, n, math.exp(-1.0 / (rel * FS))); cols.append(feat(y))
+            y = np.empty(n); _F.bx_peak(z.ctypes.data, y.ctypes.data, n, math.exp(-1.0 / (rel * FS))); cols.append(feat(y))
         for tau in ZENV_POW:
-            y = np.empty(n); _F.mb_power(z.ctypes.data, y.ctypes.data, n, math.exp(-1.0 / (tau * FS))); cols.append(feat(np.sqrt(y)))
+            y = np.empty(n); _F.bx_power(z.ctypes.data, y.ctypes.data, n, math.exp(-1.0 / (tau * FS))); cols.append(feat(np.sqrt(y)))
     if FEAT == "env":
         au = np.abs(u)
         cols += [feat(peak_follow(au, r)) for r in ENV_REL]
@@ -132,8 +132,8 @@ def evaluate(net, exs, bs=16):
 import ctypes as ct
 _J = ct.CDLL(os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Generator' + ('.dll' if os.name == 'nt' else '.so')))      # scripts/build_native.py
 _P = ct.c_void_p
-_J.mbp_traj.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 7
-_J.mbp_vjp.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 5
+_J.bxp_traj.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 7
+_J.bxp_vjp.argtypes = [_P, _P, _P, _P, ct.c_int] + [ct.c_double] * 5
 
 
 def sos2(fc, q, high):
@@ -149,7 +149,7 @@ def g_highpass(F, hp):
     return np.stack([sos2(0.8 * F, q, True)] * 2)
 
 
-TAG = os.environ.get("MB_TAG", "")
+TAG = os.environ.get("BX_TAG", "")
 KT = {int(k): v[0] for k, v in json.load(open(os.path.join(HERE, "..", "..", "..", "measurements", "FwBassXLift", "k_out_table.json"))).items()}
 IRL = 1 << 15
 
@@ -163,7 +163,7 @@ class GenFn(torch.autograd.Function):
         for i in range(B):
             a, c = coefs[i]
             wi = np.ascontiguousarray(wn[i]); yi = np.empty(n); dwi = np.empty(n); dzi = np.empty(n)
-            _J.mbp_traj(wi.ctypes.data, yi.ctypes.data, dwi.ctypes.data, dzi.ctypes.data, n, a, *c, 1.0)
+            _J.bxp_traj(wi.ctypes.data, yi.ctypes.data, dwi.ctypes.data, dzi.ctypes.data, n, a, *c, 1.0)
             y[i], dw[i], dz[i] = yi, dwi, dzi
         ctx.save_for_backward(torch.from_numpy(dw), torch.from_numpy(dz)); ctx.coefs = coefs; ctx.dev = w.device
         return torch.from_numpy(y).float().to(w.device)
@@ -175,7 +175,7 @@ class GenFn(torch.autograd.Function):
             a, c = ctx.coefs[i]
             gi = np.ascontiguousarray(gn[i]); oi = np.empty(gi.shape[0])
             dwi = np.ascontiguousarray(dw[i].numpy()); dzi = np.ascontiguousarray(dz[i].numpy())
-            _J.mbp_vjp(dwi.ctypes.data, dzi.ctypes.data, gi.ctypes.data, oi.ctypes.data, gi.shape[0], *c)
+            _J.bxp_vjp(dwi.ctypes.data, dzi.ctypes.data, gi.ctypes.data, oi.ctypes.data, gi.shape[0], *c)
             out[i] = oi
         return torch.from_numpy(out).float().to(ctx.dev), None
 
@@ -274,9 +274,9 @@ def main_e2e(steps, hidden, init):
             w = torch.zeros(1, hidden, device=dev); w[:, :h0] = sd["out.weight"].to(dev); sd["out.weight"] = w
         net.load_state_dict(sd)
     v = e2e_eval(net, va); print(f"start: val median {np.median(v):.2f} mean {v.mean():.2f}", flush=True)
-    opt = torch.optim.Adam(net.parameters(), float(os.environ.get("MB_LR", "1e-3")))
+    opt = torch.optim.Adam(net.parameters(), float(os.environ.get("BX_LR", "1e-3")))
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps)
-    rng = np.random.default_rng(int(os.environ.get("MB_SEED", "1"))); best = np.median(v); t0 = time.time()
+    rng = np.random.default_rng(int(os.environ.get("BX_SEED", "1"))); best = np.median(v); t0 = time.time()
     torch.save(net.state_dict(), os.path.join(OUTD, f"net_h{hidden}_e2e{TAG}.pt"))
     for it in range(1, steps + 1):
         idx = rng.choice(len(tr), 16, replace=False)

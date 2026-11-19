@@ -20,20 +20,20 @@ FS = 48000
 _here = os.path.dirname(os.path.abspath(__file__))
 for _name in (os.path.join(_here, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Generator' + ('.dll' if os.name == 'nt' else '.so')),):
     try:
-        _J = ct.CDLL(_name); _J.mb_traj; break
+        _J = ct.CDLL(_name); _J.bx_traj; break
     except (OSError, AttributeError):
         _J = None
 P = ct.c_void_p
-_J.mb_traj.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 7
-_J.mb_jvp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
-_J.mb_vjp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
+_J.bx_traj.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 7
+_J.bx_jvp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
+_J.bx_vjp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
 try:
-    _J.mbp_traj.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 7
-    _J.mbp_jvp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
-    _J.mbp_vjp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
+    _J.bxp_traj.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 7
+    _J.bxp_jvp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
+    _J.bxp_vjp.argtypes = [P, P, P, P, ct.c_int] + [ct.c_double] * 5
 except AttributeError:
     pass
-KIND = os.environ.get("MB_GEN", "prev")
+KIND = os.environ.get("BX_GEN", "prev")
 GMAX = 1.05      # generator form: "prev" (delayed feedback) or "implicit"
 
 
@@ -47,19 +47,19 @@ class Gen:
     def traj(self, w):
         w = np.ascontiguousarray(w, np.float64); n = len(w)
         y, dw, dz = np.empty(n), np.empty(n), np.empty(n)
-        if self.kind == "prev": _J.mbp_traj(w.ctypes.data, y.ctypes.data, dw.ctypes.data, dz.ctypes.data, n, self.a, *self.c, self.lim)
-        else: _J.mb_traj(w.ctypes.data, y.ctypes.data, dw.ctypes.data, dz.ctypes.data, n, self.a, *self.c, 0.2)
+        if self.kind == "prev": _J.bxp_traj(w.ctypes.data, y.ctypes.data, dw.ctypes.data, dz.ctypes.data, n, self.a, *self.c, self.lim)
+        else: _J.bx_traj(w.ctypes.data, y.ctypes.data, dw.ctypes.data, dz.ctypes.data, n, self.a, *self.c, 0.2)
         self.dw, self.dz = dw, dz
         return y
 
     def jvp(self, v):
         v = np.ascontiguousarray(v, np.float64); out = np.empty_like(v)
-        (_J.mbp_jvp if self.kind == "prev" else _J.mb_jvp)(self.dw.ctypes.data, self.dz.ctypes.data, v.ctypes.data, out.ctypes.data, len(v), *self.c)
+        (_J.bxp_jvp if self.kind == "prev" else _J.bx_jvp)(self.dw.ctypes.data, self.dz.ctypes.data, v.ctypes.data, out.ctypes.data, len(v), *self.c)
         return out
 
     def vjp(self, v):
         v = np.ascontiguousarray(v, np.float64); out = np.empty_like(v)
-        (_J.mbp_vjp if self.kind == "prev" else _J.mb_vjp)(self.dw.ctypes.data, self.dz.ctypes.data, v.ctypes.data, out.ctypes.data, len(v), *self.c)
+        (_J.bxp_vjp if self.kind == "prev" else _J.bx_vjp)(self.dw.ctypes.data, self.dz.ctypes.data, v.ctypes.data, out.ctypes.data, len(v), *self.c)
         return out
 
 
@@ -78,7 +78,7 @@ def extract(x, G, F, hp, decay_db, K=24, lam=1e-2, outer=8, iters=200, start=240
     def D2T(r):
         out = np.zeros(nk); out[:-2] += r; out[1:-1] -= 2 * r; out[2:] += r; return out
     mask = np.zeros(n); mask[start:] = 1
-    gen = Gen(F, decay_db, lim=float(os.environ.get("MB_LIM", "1e9")))
+    gen = Gen(F, decay_db, lim=float(os.environ.get("BX_LIM", "1e9")))
     c = np.full(nk, 0.3) if g0 is None else down(g0) / np.maximum(down(np.ones(n)), 1e-12)
     def cost(cv):
         y = gen.traj(up(cv) * u); r = (G - conv(y)) * mask

@@ -17,7 +17,7 @@ OUT = os.path.join(os.path.dirname(I.OUT), 'release_w0.json')
 
 def apply(z, x):
     w0 = z[:len(SX)]; K, p, crest = np.exp(z[len(SX)]), z[len(SX) + 1], z[len(SX) + 2]
-    I.dll.hc_set_w0(len(SX), SX.ctypes.data_as(ct.c_void_p), np.ascontiguousarray(w0).ctypes.data_as(ct.c_void_p), ct.c_double(K), ct.c_double(p))
+    I.dll.co_set_w0(len(SX), SX.ctypes.data_as(ct.c_void_p), np.ascontiguousarray(w0).ctypes.data_as(ct.c_void_p), ct.c_double(K), ct.c_double(p))
     y = x.copy(); y[-1] = crest
     return y
 
@@ -26,7 +26,7 @@ def main():
     nfev = int(sys.argv[1]) if len(sys.argv) > 1 else 40
     cs = load()
     x = np.array(json.load(open(I.OUT))['x'])
-    I.dll.hc_set_charge_from_r(1)
+    I.dll.co_set_charge_from_r(1)
     z0 = np.array(json.load(open(OUT))['z']) if os.path.exists(OUT) else np.concatenate([np.log(np.interp(SX, [0, 3, 6, 12, 30], [0.004, 0.02, 0.2, 1.0, 1.0])), [np.log(106.0), 1.1, 149.62]])
     cases = [c for c in cs if c['att'] == 0.5]
     Rts = [I.target(c) for c in cases]

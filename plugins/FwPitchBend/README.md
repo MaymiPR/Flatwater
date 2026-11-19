@@ -28,7 +28,9 @@ latency. Made for a solo voice: chords and mixes pass mostly unshifted.
 | PT tab | The voice's pitch as a modulator: Smooth (1 to 1000), Offset (-1 to +1, the note it swings about), Level (0 to 2). |
 | Modulation slots | Drag a tab's label onto a control (Pitch, Formant, Mix, M1's and M2's Rate, Warp, Phase and Level, AM's three controls, PT's Smooth and Level): up to four per control, each with its own depth, dragged up and down (Alt-click resets it). Right-click a slot to change or remove it. |
 
-The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage). The reference's
+The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage). Its Mode menu
+(Stereo, Mono) does not change the sound in this plug-in, which processes the one or two channels the host gives it.
+The reference's
 40 factory presets come with Flatwater names, in six groups: Character, Harmony, Double, Movement, Robot and Sequence.
 Where a preset used one of the original's drawn LFO shapes, ours uses the nearest of our own (we do not ship the
 drawn ones).

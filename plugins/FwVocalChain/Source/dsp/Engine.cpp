@@ -274,6 +274,14 @@ void Delays::prepare (double sampleRate, int block, const Tuning& t)
     running = 1;
 }
 
+void Delays::reset()
+{
+    analog.reset();
+    line.reset();
+    std::fill (histL.begin(), histL.end(), 0.0f); std::fill (histR.begin(), histR.end(), 0.0f);
+    hpos = 0;
+}
+
 void Delays::process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain, double bpm)
 {
     if (colour > 0) running = colour;
@@ -537,6 +545,10 @@ void Chain::reset()
 {
     std::fill (lineL.begin(), lineL.end(), 0.0f); std::fill (lineR.begin(), lineR.end(), 0.0f);
     for (auto& f : fixedFilter) f.reset();
+    bass.reset(); treble.reset();
+    compressor.reset();
+    delays.reset();
+    level = 0.0;
     deesser.reset();
     reverbDeesser.reset();
     for (auto& f : delayFix) f.reset();

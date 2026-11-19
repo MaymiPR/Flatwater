@@ -253,7 +253,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 | Check | Result |
 |---|---|
-| CHECK sites | 118 |
+| Unit-test program | `FwPitchBendTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

@@ -29,7 +29,7 @@ static double static_db(double E, const double* p)
     return -(1.0 - 1.0 / p[P_RATIO]) * k;
 }
 
-__declspec(dllexport) void hc_gain(const double* a, double* g, double* trace, int n, const double* p)
+__declspec(dllexport) void co_gain(const double* a, double* g, double* trace, int n, const double* p)
 {
     const int D = (int) p[P_D], H = (int) p[P_H], lead = (int) p[P_LEAD], B1 = (int) p[P_B1], B2 = (int) p[P_B2];
     const int mode = (int) p[P_MODE];

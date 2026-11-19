@@ -30,6 +30,10 @@
   `set()` and `load()`; every renderer takes `tune:key=value` and `tuning=<file>` overrides. FwPitchBend's
   modulators and shifter are joined in `dsp/Engine`, which the processor calls. No sound or saved state changes (the
   render regression is byte-identical).
+- **Helper names:** the functions of the null tests' native helpers and the fitting scripts' environment switches
+  carry their plug-in's abbreviation (`bl_`, `bx_`, `bxp_`, `co_`; `BX_`, `CO_`), and `BL_MODEL_DLL` and
+  `VL_MODEL_DLL` alone name another build of a riding model. A helper built before this is rebuilt with
+  `scripts/build_native.py`; its output is the same to the bit.
 - **Reference names:** the null-test and measurement scripts read the reference's component names from `local.yaml`
   (`<Id>.ref_name` and the other component keys, `<Id>.ref_presets` for the preset files and folders) and name no
   reference product; the test helpers' namespaces nest in their plug-in's.
@@ -132,10 +136,24 @@
   show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
   (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed
   more than its table.
+- **Documents, controls:** the READMEs of Flatwater Bass Lift, BassX Lift, Vocal Chain and Pitch Bend say that the
+  Mode menu does not change the sound in them (they process the channels the host gives them); Bass Lift's and Vocal
+  Comp's name the parameters that are kept for compatibility and have no effect; Vocal Chain's says that its noise is
+  always on and not in the saved state. Flatwater Comp's summary of its null tests quotes the rows of its table, and
+  Flatwater Vocal Comp's report calls -60 dB a null.
+- **Reset from the host:** every plug-in clears its tails when the host resets it: the delay lines, the echoes, the
+  reverb, the filters, the rides and the envelopes start again as after loading, the bypass line too, without
+  allocating memory. Before, no plug-in answered the host's reset, so an echo, a reverb tail or the audio held in a
+  look-ahead line sounded on after it. Flatwater Vocal Chain's noise goes on from where it is.
+- **Offline renderers, Flatwater Vocal Chain and Vocal Leveler:** ChRender ends with exit code 1 and one line on
+  stderr for a `compressAuto` file it cannot read or a bus layout the processor refuses; VlRender ends with 2 for a
+  channel count other than 1 or 2 or a block under 1. Before, ChRender went on without the file and VlRender took
+  the nearest value.
 - **Null tests:** the harnesses of Flatwater Comp, Vocal Comp and Bass Lift run as scripts again (`nulltest.py`
   starts them that way); each called its `main()` above the functions it needs.
 - **Resize corner:** the grip in the window's lower right corner is drawn in Flatwater BassX Lift, Comp, Delay and
-  Vocal Chain, as in the other five plug-ins. Before, the corner resized those four windows but nothing showed it.
+  Vocal Chain, as in the other five plug-ins. Before, the corner resized those four windows but nothing showed it. Their four images under
+  `docs/screenshots` show the grip.
 - **Window size, one range:** the corner resizes a window between 75 and 200 % of its design size, the range of the
   window-size menu. Before, the corner went up to 300 %. A project saved with a larger window opens at 200 %.
 - **Window size in the saved state:** the size is saved as `uiScale`, the name the standard gives it, beside the

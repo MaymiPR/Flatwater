@@ -231,7 +231,7 @@ def residuals(q, cs, x0, nF, nA, dec=16):
 
 
 def setup():
-    LAW.dll.hc_set_charge_from_r(1)
+    LAW.dll.co_set_charge_from_r(1)
     x0 = np.array(json.load(open(LAW.OUT))['x'])
     z0 = np.array(json.load(open(W.OUT))['z'])
     nF, nA = len(LAW.KN['Fs']), len(LAW.KN['As'])
@@ -282,18 +282,18 @@ def first(stages):
 # ---- the CMA-ES fit -------------------------------------------------------------------------------------------
 DEC = 32
 POOL = ThreadPoolExecutor(8)
-MODE = os.environ.get('HC_OBJ', 'null')       # null: the mean null (dB) over the cases, energy-weighted as a null test; db: rms dB error
+MODE = os.environ.get('CO_OBJ', 'null')       # null: the mean null (dB) over the cases, energy-weighted as a null test; db: rms dB error
 
 
-EXTRA = os.environ.get('HC_FIT_MEMFLOOR') is not None      # one more parameter: ln of the memory's release-time floor (ms)
-FITBETA = os.environ.get('HC_FIT_BETA') is not None         # one more: logit of the charge blend (before the floor's)
+EXTRA = os.environ.get('CO_FIT_MEMFLOOR') is not None      # one more parameter: ln of the memory's release-time floor (ms)
+FITBETA = os.environ.get('CO_FIT_BETA') is not None         # one more: logit of the charge blend (before the floor's)
 
 
 def objective(q, cs, x0, nF, nA):
     if FITBETA:
-        LAW.dll.hc_set_charge_blend(__import__('ctypes').c_double(float(1 / (1 + np.exp(-q[-2 if EXTRA else -1])))))
+        LAW.dll.co_set_charge_blend(__import__('ctypes').c_double(float(1 / (1 + np.exp(-q[-2 if EXTRA else -1])))))
     if EXTRA:
-        LAW.dll.hc_set_mem_floor(__import__('ctypes').c_double(float(np.exp(q[-1]))))
+        LAW.dll.co_set_mem_floor(__import__('ctypes').c_double(float(np.exp(q[-1]))))
         q = q[:-1]
     if FITBETA: q = q[:-1]
     X = law(q, x0, nF, nA)                 # sets the C model's w0 / K / p globals for this candidate
@@ -340,21 +340,21 @@ def cma(f, x0, sigma, gens, lam=16, seed=1):
 
 
 def main():
-    if os.environ.get('HC_ORDER'): LAW.dll.hc_set_order(int(os.environ['HC_ORDER']))      # 1: the attack before the release
+    if os.environ.get('CO_ORDER'): LAW.dll.co_set_order(int(os.environ['CO_ORDER']))      # 1: the attack before the release
     gens = int(sys.argv[1]) if len(sys.argv) > 1 else 60
     sigma = float(sys.argv[2]) if len(sys.argv) > 2 else 0.2
     x0, z0, nF, nA = setup()
-    if os.environ.get('HC_ORDER'): LAW.dll.hc_set_order(int(os.environ['HC_ORDER']))
-    if os.environ.get('HC_CHARGE_OUT'): LAW.dll.hc_set_charge_from_out(int(os.environ['HC_CHARGE_OUT']))
-    if os.environ.get('HC_BETA'): LAW.dll.hc_set_charge_blend(__import__('ctypes').c_double(float(os.environ['HC_BETA'])))
+    if os.environ.get('CO_ORDER'): LAW.dll.co_set_order(int(os.environ['CO_ORDER']))
+    if os.environ.get('CO_CHARGE_OUT'): LAW.dll.co_set_charge_from_out(int(os.environ['CO_CHARGE_OUT']))
+    if os.environ.get('CO_BETA'): LAW.dll.co_set_charge_blend(__import__('ctypes').c_double(float(os.environ['CO_BETA'])))
     _L = json.load(open(LAW.OUT))
-    if not EXTRA: LAW.dll.hc_set_mem_floor(__import__('ctypes').c_double(_L.get('memory_floor_ms', 0.0)))
-    if os.environ.get('HC_RFLOOR'): LAW.dll.hc_set_r_floor(int(os.environ['HC_RFLOOR']))
-    LAW.dll.hc_set_startup(__import__('ctypes').c_double(json.load(open(LAW.OUT)).get('startup_ms', 0.0)))
+    if not EXTRA: LAW.dll.co_set_mem_floor(__import__('ctypes').c_double(_L.get('memory_floor_ms', 0.0)))
+    if os.environ.get('CO_RFLOOR'): LAW.dll.co_set_r_floor(int(os.environ['CO_RFLOOR']))
+    LAW.dll.co_set_startup(__import__('ctypes').c_double(json.load(open(LAW.OUT)).get('startup_ms', 0.0)))
     cs = cases()
     q0 = np.concatenate([x0[:nF + nA], z0])
-    if FITBETA: b0 = float(os.environ['HC_FIT_BETA']); q0 = np.concatenate([q0, [np.log(b0 / (1 - b0))]])
-    if EXTRA: q0 = np.concatenate([q0, [np.log(float(os.environ['HC_FIT_MEMFLOOR']))]])
+    if FITBETA: b0 = float(os.environ['CO_FIT_BETA']); q0 = np.concatenate([q0, [np.log(b0 / (1 - b0))]])
+    if EXTRA: q0 = np.concatenate([q0, [np.log(float(os.environ['CO_FIT_MEMFLOOR']))]])
     t0 = time.time(); f0 = objective(q0, cs, x0, nF, nA); print('%d cases, one evaluation %.1f s' % (len(cs), time.time() - t0), flush=True)
     best, q = cma(lambda q: objective(q, cs, x0, nF, nA), q0, sigma, gens)
     print('best %.4f dB (start %.4f)' % (best, f0))
@@ -367,18 +367,18 @@ def main():
     x = x0.copy(); x[:nF + nA] = q[:nF + nA]
     lw = json.load(open(LAW.OUT)); lw['x'] = list(map(float, x)); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
     json.dump({'S': W.SX.tolist(), 'z': list(map(float, q[nF + nA:]))}, open(W.OUT, 'w'))
-    if os.environ.get('HC_ORDER'):
-        lw = json.load(open(LAW.OUT)); lw['attack_first'] = int(os.environ['HC_ORDER']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
-    if os.environ.get('HC_CHARGE_OUT'):
-        lw = json.load(open(LAW.OUT)); lw['charge_from_output'] = int(os.environ['HC_CHARGE_OUT']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
-    if os.environ.get('HC_BETA'):
-        lw = json.load(open(LAW.OUT)); lw['charge_blend'] = float(os.environ['HC_BETA']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
+    if os.environ.get('CO_ORDER'):
+        lw = json.load(open(LAW.OUT)); lw['attack_first'] = int(os.environ['CO_ORDER']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
+    if os.environ.get('CO_CHARGE_OUT'):
+        lw = json.load(open(LAW.OUT)); lw['charge_from_output'] = int(os.environ['CO_CHARGE_OUT']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
+    if os.environ.get('CO_BETA'):
+        lw = json.load(open(LAW.OUT)); lw['charge_blend'] = float(os.environ['CO_BETA']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
     if EXTRA:
         lw = json.load(open(LAW.OUT)); lw['memory_floor_ms'] = floor; json.dump(lw, open(LAW.OUT, 'w'), indent=1)
     if FITBETA:
         lw = json.load(open(LAW.OUT)); lw['charge_blend'] = beta; json.dump(lw, open(LAW.OUT, 'w'), indent=1)
-    if os.environ.get('HC_RFLOOR'):
-        lw = json.load(open(LAW.OUT)); lw['r_floor_at_s'] = int(os.environ['HC_RFLOOR']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
+    if os.environ.get('CO_RFLOOR'):
+        lw = json.load(open(LAW.OUT)); lw['r_floor_at_s'] = int(os.environ['CO_RFLOOR']); json.dump(lw, open(LAW.OUT, 'w'), indent=1)
 
 
 if __name__ == '__main__':

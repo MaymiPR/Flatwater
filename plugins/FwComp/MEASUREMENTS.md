@@ -55,7 +55,7 @@ The law, in the gain-reduction domain, with two states (`plugins/FwComp/nulltest
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/native/ReleaseLaw.c hc_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
+| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/native/ReleaseLaw.c co_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
 | Slow state S | charges toward out + 0.032 (R - out), out the reduction after the attack (the previous sample's), as a one-pole on the linear gain (142 ms; the reference's own hidden crest time is 149.6 ms); releases at Fs(S) / Release + As(S) dB/s with a release time of at least 16.8 ms; charges only when its source rises by more than rounding (src > S + 1e-9; any margin from 1e-12 to 1e-6 gives the same output), level or falling it releases | CMA-ES over all the tables (`plugins/FwComp/nulltest/fit_release_law.py`, 250 generations) | objective -43.97 dB |
 | Start-up | the effective release time is pulled toward the Release time by exp(-t / 90 ms) after a reset | start-up probes and program material from 0.05 s | null test median -40.0 -> -41.9 dB when added; threshold -24 / ratio 10 / Release 300 -21.9 -> -31.5; the defaults lose about 3 dB in their first half second only |
 | Release time seen from outside | after sustained compression the 63 % point is 0.75 x Release (3 -> 3.0, 100 -> 76, 1000 -> 753, 3000 -> 2258 ms); the gain rises at a constant rate in dB and stops sharply at the threshold: the release acts on the detector's level, not on the gain | steps | measured |
@@ -200,12 +200,12 @@ voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB. The worst c
 a sustained chord of three tones at Threshold -12, Ratio 50, Release 30 and Punch 10, -6.7 dB (not a null; the
 side-chain table's column without a key).
 
-- At the default settings: tones and sweeps -84 dB (a null), voice-like -61 dB, bass line -57 dB, white noise -43 dB,
-  drums -33 dB, pink noise -32 dB.
-- Weakest: low notes under long attacks (30 ... 60 ms: -15 ... -20 dB on a bass line), a long release on voice (300 ms
-  at threshold -24: -22 dB), fast attacks on drums (about -23 dB), the output limiter on voice (-24.5 ... -28 dB), and
-  a few presets on drums (Hard Squash -20.8 dB, Light Kit -26.4, Parallel Blend, Heavy Drums and Pumping Kit -29 ...
-  -30).
+- At the default settings: tones and sweeps -84.0 dB (a null), voice-like -59.5 dB, bass line -56.3 dB, white noise
+  -43.5 dB, drums -34.1 dB, pink noise -32.4 dB, noise bursts -30.0 dB.
+- Weakest in the settings table: a 5 Hz AM tone under a long release (Threshold -24, Ratio 10, Release 300: -22.1 dB,
+  a model), noise bursts (-24.5 ... -40.0 dB over the twelve settings), and the output limiter on voice and drums
+  (-27.6 and -27.9 dB). Weakest in the presets: a few on drums (Hard Squash -20.8 dB, Light Kit -26.1, Parallel Blend
+  -28.7, Heavy Drums -29.9, Pumping Kit -30.0).
 - The learned correction: the null test from -41.4 dB median (worst -16.8) without it to -47.0 (worst -24.5) over 168
   cases (-37.2 / -9.6 before the CMA-ES refit of the release law), 70 cases better and one worse by more than 1 dB;
   the presets from -35.6 to -43.7 dB median (Analog Off, from 0.5 s, a fresh reference per preset), 82 better and 4
@@ -226,7 +226,7 @@ side-chain table's column without a key).
 
 | Check | Result |
 |---|---|
-| CHECK sites | 66 |
+| Unit-test program | `FwCompTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

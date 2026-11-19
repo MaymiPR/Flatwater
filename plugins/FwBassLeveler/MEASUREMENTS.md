@@ -214,7 +214,7 @@ setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
 
 | Check | Result |
 |---|---|
-| CHECK sites | 69 |
+| Unit-test program | `FwBassLevelerTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

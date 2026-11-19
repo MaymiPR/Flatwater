@@ -1,6 +1,6 @@
 # Flatwater Vocal Comp null test results
 
-Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match.
+Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a null, 0 dB is no match.
 
 ## Settings
 
@@ -157,7 +157,7 @@ Compression settings -12, -24, -36 dB (with and without gate / gain); residual o
 
 ## Grid
 
-Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for four signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, about -60 dB or less is a close match.
+Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for four signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, about -60 dB or less is a null.
 
 ### By Compression
 

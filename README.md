@@ -109,7 +109,7 @@ same toolbar:
 | Control | What it does |
 |---|---|
 | Logo | About, the GitHub page, Report an Issue, License |
-| Mode (Stereo ▼) | Picks the variant, such as Mono or Stereo |
+| Mode (Stereo ▼) | Picks the variant, such as Mono or Stereo. In Flatwater Bass Lift, BassX Lift, Vocal Chain and Pitch Bend it does not change the sound: they process the channels the host gives them |
 | ↶ ↷ | Undo and redo |
 | Preset box | Default Preset, factory presets, your saved presets, Save As, Show User Presets Folder |
 | ← → | Previous and next preset |

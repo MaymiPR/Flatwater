@@ -1,6 +1,6 @@
 /* Feature helpers for the Flatwater BassX Lift level-control training (loaded with ctypes by train_net.py; the same recursions
    run in plugins/FwBassXLift/Source/dsp/Engine.h): a peak follower with instant attack and one-pole release, and a one-pole power smoother. */
-__declspec(dllexport) void mb_peak(const double* x, double* y, int n, double rel)
+__declspec(dllexport) void bx_peak(const double* x, double* y, int n, double rel)
 {
     double e = 0.0;
     for (int i = 0; i < n; ++i)
@@ -10,7 +10,7 @@ __declspec(dllexport) void mb_peak(const double* x, double* y, int n, double rel
         y[i] = e;
     }
 }
-__declspec(dllexport) void mb_power(const double* x, double* y, int n, double a)
+__declspec(dllexport) void bx_power(const double* x, double* y, int n, double a)
 {
     double e = 0.0;
     for (int i = 0; i < n; ++i) { e = a * e + (1.0 - a) * x[i] * x[i]; y[i] = e; }
@@ -20,7 +20,7 @@ __declspec(dllexport) void mb_power(const double* x, double* y, int n, double a)
      e1 = c1 e1 + (1 - c1) |z|,  c1 = a1 if |z| > e1 else r1
      e2 = c2 e2 + (1 - c2) e1,   c2 = a2 if e1 > e2 else r2
    with forward-mode derivatives of e1 wrt (a1, r1) and of e2 wrt (a1, r1, a2, r2), for training the time constants. */
-__declspec(dllexport) void mb_follow2(const double* z, int n, double a1, double r1, double a2, double r2,
+__declspec(dllexport) void bx_follow2(const double* z, int n, double a1, double r1, double a2, double r2,
                                       double* e1o, double* e2o, double* d1, double* d2)
 {
     double e1 = 0.0, e2 = 0.0, s1a = 0.0, s1r = 0.0, s2a1 = 0.0, s2r1 = 0.0, s2a2 = 0.0, s2r2 = 0.0;

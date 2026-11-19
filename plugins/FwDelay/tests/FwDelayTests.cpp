@@ -10,6 +10,7 @@
 #include "PluginEditor.h"
 #include "shared/test/AllocCounter.h"
 #include "shared/test/PresetChecks.h"
+#include "shared/test/ResetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -494,6 +495,17 @@ static void testSyncConversion()
     CHECK_NEAR (qget (de::id::delay), 500.0, 1.0e-3);
 }
 
+// reset(), which a host calls to clear the tails (shared/test/ResetChecks.h): the default setting: echoes in the lines, and the Analog stage adds its noise
+static void testReset()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL reset: %s\n", what); } };
+    flatwater::test::resetChecks<FwDelayProcessor> ([] (FwDelayProcessor& p)
+    {
+        p.setRateAndBufferSizeDetails (48000.0, 512);
+        p.prepareToPlay (48000.0, 512);
+    }, check);
+}
+
 // presets, programs and the saved state (shared/test/PresetChecks.h)
 static void testPresetState()
 {
@@ -517,6 +529,7 @@ int main()
     testModeAndAnalogChangeOnTheAudioThread();
     testPresets();
     testSyncConversion();
+    testReset();
     testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;

@@ -42,7 +42,7 @@ def run(c, vals, Rt=None):
     ns = np.array([len(KN[k]) for k in ORDER], np.int32)
     vs = np.ascontiguousarray(vals, np.float64)
     att_c = np.exp(-1 / (c['att'] * 0.99e-3 * FS))
-    dll.hc_release(Rt.ctypes.data_as(ct.c_void_p), g.ctypes.data_as(ct.c_void_p), None, None, n, ct.c_double(FS), ct.c_double(c['rel']),
+    dll.co_release(Rt.ctypes.data_as(ct.c_void_p), g.ctypes.data_as(ct.c_void_p), None, None, n, ct.c_double(FS), ct.c_double(c['rel']),
                    ct.c_double(att_c), 38, 27, ns.ctypes.data_as(ct.c_void_p), xs.ctypes.data_as(ct.c_void_p), vs.ctypes.data_as(ct.c_void_p))
     return g / g[0]
 

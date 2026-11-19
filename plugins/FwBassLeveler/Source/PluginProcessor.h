@@ -17,6 +17,8 @@ public:
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the look-ahead line, the ride, a held Rider and the bypass line as prepareToPlay leaves them. No allocation.
+    void reset() override;
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;

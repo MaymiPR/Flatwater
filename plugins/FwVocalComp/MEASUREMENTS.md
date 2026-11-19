@@ -159,7 +159,7 @@ guarded so steady signals stay exact). Every case: [NULLTESTS.md, Grid](NULLTEST
 
 | Check | Result |
 |---|---|
-| CHECK sites | 39 |
+| Unit-test program | `FwVocalCompTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

@@ -7,7 +7,8 @@
 // factory preset, 1 .. 43, applied where it stands among the keys: keys after it override it). The latency
 // is removed; the output is stereo and the same length as the input.
 // An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
-// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
+// render with exit code 2 and one line on stderr; an input or a compressAuto file that cannot be read, a bus layout
+// the processor refuses and an output that could not be written in full end it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -66,12 +67,11 @@ int main (int argc, char** argv)
         if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "compressAuto")
         {
-            if (FILE* af = std::fopen (a.c_str() + eq + 1, "rb"))
-            {
-                float t[1024]; size_t m;
-                while ((m = std::fread (t, sizeof (float), 1024, af)) > 0) autoCompress.insert (autoCompress.end(), t, t + m);
-                std::fclose (af);
-            }
+            FILE* af = std::fopen (a.c_str() + eq + 1, "rb");
+            if (! af) { std::fprintf (stderr, "cannot read %s\n", a.c_str() + eq + 1); return 1; }
+            float t[1024]; size_t m;
+            while ((m = std::fread (t, sizeof (float), 1024, af)) > 0) autoCompress.insert (autoCompress.end(), t, t + m);
+            std::fclose (af);
         }
         else if (k == "noise") p.setNoise (v != 0.0f);
         else if (k == "preset") p.setCurrentProgram ((int) v);       // a factory preset (1 ..), before the keys after it
@@ -89,7 +89,7 @@ int main (int argc, char** argv)
     juce::AudioProcessor::BusesLayout layout;
     layout.inputBuses.add (ch == 1 ? juce::AudioChannelSet::mono() : juce::AudioChannelSet::stereo());
     layout.outputBuses.add (juce::AudioChannelSet::stereo());
-    p.setBusesLayout (layout);
+    if (! p.setBusesLayout (layout)) { std::fprintf (stderr, "the bus layout was refused\n"); return 1; }
     p.setPlayConfigDetails (ch, 2, fs, block);
     p.prepareToPlay (fs, block);
     const int lat = p.getLatencySamples();

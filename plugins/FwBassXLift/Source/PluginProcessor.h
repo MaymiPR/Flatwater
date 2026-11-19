@@ -14,6 +14,8 @@ public:
 
     void prepareToPlay (double sampleRate, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the filters and the learned block as prepareToPlay leaves them. No allocation.
+    void reset() override { dsp.reset(); }
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;

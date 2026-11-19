@@ -23,6 +23,9 @@ public:
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the chain's lines and filters, Compress, the echoes, the doubler, the reverb's
+    // convolutions and the bypass line as prepareToPlay leaves them; the Noise goes on from where it is. No allocation.
+    void reset() override;
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;

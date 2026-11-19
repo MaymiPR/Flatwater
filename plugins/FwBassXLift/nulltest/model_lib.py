@@ -52,7 +52,7 @@ def k_out(F):
 try:
     import ctypes as _ct
     _fast = _ct.CDLL(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Generator' + ('.dll' if _os.name == 'nt' else '.so')))
-    _fast.mb_generator.argtypes = [_ct.c_void_p, _ct.c_void_p, _ct.c_int] + [_ct.c_double] * 7
+    _fast.bx_generator.argtypes = [_ct.c_void_p, _ct.c_void_p, _ct.c_int] + [_ct.c_double] * 7
 except OSError:
     _fast = None
 
@@ -73,7 +73,7 @@ def generator(w, F, decay_db, mode="implicit", fs=FS):
         return w + a * w * ss.sosfilt(np.atleast_2d(s), w)
     if mode == "implicit" and _fast is not None:
         w = np.ascontiguousarray(w, np.float64); y = np.empty_like(w)
-        _fast.mb_generator(w.ctypes.data, y.ctypes.data, len(w), a, s[0], s[1], s[2], s[4], s[5], 0.2)
+        _fast.bx_generator(w.ctypes.data, y.ctypes.data, len(w), a, s[0], s[1], s[2], s[4], s[5], 0.2)
         return y
     y = np.zeros_like(w); z1 = z2 = 0.0; prev = 0.0
     for n in range(len(w)):

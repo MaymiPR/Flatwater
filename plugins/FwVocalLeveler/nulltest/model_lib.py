@@ -4,7 +4,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # build/native/FwVocalLeveler/RideModel (scripts/build_native.py); VL_MODEL_DLL names another build of it
-_lib = ctypes.CDLL(os.environ.get('VL_MODEL_DLL') or os.environ.get('VRMODEL_DLL') or os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwVocalLeveler', 'RideModel' + ('.dll' if os.name == 'nt' else '.so')))
+_lib = ctypes.CDLL(os.environ.get('VL_MODEL_DLL') or os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwVocalLeveler', 'RideModel' + ('.dll' if os.name == 'nt' else '.so')))
 _lib.ride.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
 NAMES = ['c', 'bias', 'fatt_s', 'fatt_f', 'frel', 'fhold', 'fpow', 'vatt', 'vrel', 'vk', 'ratt_s', 'ratt_f', 'rrel',
          'rpow', 'park', 'phold_s', 'phold_f', 'spill', 'v0']

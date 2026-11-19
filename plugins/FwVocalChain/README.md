@@ -10,8 +10,9 @@
 Part of [Flatwater](../../README.md). Flatwater Vocal Chain is a whole vocal chain on six faders: EQ, compression,
 de-essing, reverb, delay and doubling. It recreates Waves CLA Vocals. Each fader drives one stage of a fixed chain. A
 colour button above each fader picks one of three flavours or the clear position. The Bass and Treble faders act only
-once moved; the other faders are active at 0 and give the default sound there. The Mode menu picks Stereo or
-Mono/Stereo (mono in, stereo out).
+once moved; the other faders are active at 0 and give the default sound there. The Mode menu (Stereo,
+Mono/Stereo) does not change the sound in this plug-in, which follows the channels the host gives it (a mono input
+comes out in stereo); it sets whether the editor shows the Balance knob and two bars on the input meter.
 
 ## Using it
 
@@ -19,7 +20,7 @@ Mono/Stereo (mono in, stereo out).
 |---|---|
 | INPUT SENS | Input sensitivity, -10 to +10 dB (default 0). Presets leave it alone. The LED above it shows the input level: off (too low), green (good), yellow (optimal), red (very hot). |
 | Input meter | Input level, 0 to 24 dB down, with clip lights. A click on the meter clears them. |
-| Balance | The small knob under the input meter, -6 to +6 dB (default 0). Stereo mode only. |
+| Balance | The small knob under the input meter, -6 to +6 dB (default 0). Shown in Mode Stereo only; a value set there stays in effect when the knob is hidden. |
 | BASS | -10 to +10 (default 0). Colours Sub (default), Lower, Upper, or Bypass. |
 | TREBLE | -10 to +10 (default 0). Colours Bite (default), Top, Roof, or Bypass. |
 | COMPRESS | -10 to +10 (default 0). Colours Push (default), Spank, Wall, or Bypass. |
@@ -29,6 +30,9 @@ Mono/Stereo (mono in, stereo out).
 | Colour buttons | A click steps to the next flavour, then to the clear position. A click on a flavour's name selects it; a click on the lit name turns the colour off. |
 | OUTPUT | Output level, -10 to +10 dB (default 0), with an output meter and clip lights. Presets leave it alone. |
 | LINK | Links Input Sens and Output: Output mirrors Input Sens (+3 in, -3 out). This is Flatwater Vocal Chain's own addition. |
+
+The original has a Noise setting, on by default, that adds a low noise to the signal. In Flatwater Vocal Chain that
+noise is always on: there is no control for it, and it is not part of the saved state.
 
 The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage).
 

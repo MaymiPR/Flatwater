@@ -46,6 +46,13 @@ void FwVocalChainProcessor::prepareToPlay (double sampleRate, int block)
     bypassLine.prepare (jmax (1, getTotalNumInputChannels()), getLatencySamples());
 }
 
+void FwVocalChainProcessor::reset()
+{
+    if (maxBlock <= 0) return;                                          // (a host that never prepared)
+    chain.reset();
+    bypassLine.reset();
+}
+
 ch::dsp::Params FwVocalChainProcessor::chainParams()
 {
     ch::dsp::Params p;

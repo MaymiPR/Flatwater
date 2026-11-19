@@ -10,7 +10,8 @@
 Part of [Flatwater](../../README.md). Flatwater Bass Lift is a psychoacoustic bass enhancer. It recreates Waves
 Renaissance Bass. It creates harmonics of the low end, so the ear hears a fundamental that small speakers cannot play.
 It does not create sub-harmonics. Below Freq, the original bass is removed and replaced by the created harmonics,
-unless Original Bass is switched in. The Mode menu picks Stereo or Mono.
+unless Original Bass is switched in. The Mode menu (Stereo, Mono) does not change the sound in this plug-in, which
+processes the one or two channels the host gives it; it sets whether the output meter shows two bars or one.
 
 ## Controls
 
@@ -26,6 +27,10 @@ unless Original Bass is switched in. The Mode menu picks Stereo or Mono.
 | Clip light | Lights when the output's peaks reach the clip level. A click resets it. |
 
 A click on any meter or readout resets all the peak holds.
+
+Seven parameters in the host's list are kept for compatibility with saved projects and have no effect on the sound:
+Input, Response, Ratio, SmoothTc, Tc, XFadeTc and Smooth (ids `inGain`, `response`, `ratio`, `smoothTc`, `tc`,
+`xfadeTc`, `smooth`). The editor does not show them.
 
 The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage).
 

@@ -63,6 +63,14 @@ void FwBassLevelerProcessor::setMode (int mode)
     latencyNow.store (delaySamples);
 }
 
+// The component stays; its lines, the ride and the bypass line start again (a host that never prepared has none).
+void FwBassLevelerProcessor::reset()
+{
+    if (configuredMode < 0) return;
+    setMode (configuredMode);
+    wasHeld = returning = false;
+}
+
 void FwBassLevelerProcessor::followMode (int channels)
 {
     if (configuredMode < 0 || (int) line.size() < channels) configure();

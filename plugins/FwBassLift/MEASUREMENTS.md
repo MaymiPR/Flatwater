@@ -164,7 +164,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 | Check | Result |
 |---|---|
-| CHECK sites | 28 |
+| Unit-test program | `FwBassLiftTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

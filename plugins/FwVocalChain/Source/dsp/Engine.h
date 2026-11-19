@@ -103,6 +103,8 @@ public:
         if (colourIdx != colourIndex) { colourIndex = colourIdx; for (auto& s : sec) s.reset(); dirty = true; shown = target; }
         to = target;
     }
+    // the sections' states; the colour and the fader's place stay
+    void reset() { for (auto& s : sec) s.reset(); }
     void run (double& l, double& r)
     {
         if (colourIndex == 0) return;
@@ -245,11 +247,12 @@ class Compressor
 {
 public:
     void prepare (double fs);
+    // every state as prepare() leaves it, the colour kept. No allocation.
+    void reset();
     int lookAhead() const { return la; }
     void process (float* l, float* r, int n, int colour, float fader);
 
 private:
-    void reset();
     double fs = 48000.0;
     int la = 64, w = 0, active = -1;
     std::vector<float> bl, br;
@@ -303,6 +306,8 @@ class Delays
 {
 public:
     void prepare (double fs, int block, const Tuning&);
+    // the line, its Analog stage and the second tap's history silent, the colour kept. No allocation.
+    void reset();
     void process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain, double bpm);
 
 private:
@@ -365,6 +370,9 @@ class Chain
 {
 public:
     void prepare (double fs, int maxBlock);
+    // Every stage's audible state as prepare() leaves it: the lines, the filters, Compress, the de-essers, the
+    // reverb's convolutions, the echoes, the doubler (its LFOs start again). The colours, the faders' places and
+    // the Noise generator stay. No allocation and no wait, so the audio thread may call it.
     void reset();
     // the reverb's convolution engine (owned by the caller, outliving the chain's use of it)
     void setReverb (Reverb* r) { reverb = r; }

@@ -285,7 +285,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 | Check | Result |
 |---|---|
-| CHECK sites | 37 |
+| Unit-test program | `FwVocalChainTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |
