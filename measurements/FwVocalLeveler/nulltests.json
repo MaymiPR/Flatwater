@@ -121,10 +121,9 @@
     },
     {
      "lines": [
-      "The same model (`plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical to the plug-in's C++ to 0.0000 dB) against the 620 reference renders",
-      "of `plugins/FwVocalLeveler/nulltest/render_reference.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at ten",
-      "settings. Median null in dB per setting:"
-     ]
+      "The same model (`plugins/FwVocalLeveler/nulltest/native/RideModel.c`, the plug-in's ride: `check_port.py`) against the 620 cached reference renders of `plugins/FwVocalLeveler/nulltest/render_reference.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at 10 settings. Median null in dB per setting. Produced by `plugins/FwVocalLeveler/nulltest/fit_model.py report`."
+     ],
+     "part": "model"
     },
     {
      "table": true,
@@ -199,13 +198,14 @@
        "-54.9",
        "-63.8"
       ]
-     ]
+     ],
+     "part": "model"
     },
     {
      "lines": [
-      "The worst case over all 620 is -40 dB (a training part at Fast). The residual left is mostly at word onsets at",
-      "Attack Fast, where the gain drops in about 10 ms and the two differ by a fraction of a dB for a few milliseconds."
-     ]
+      "The worst case over all 620 is -40.1 dB (training part 18 at Fast). The residual left is mostly at word onsets at Attack Fast, where the gain drops in about 10 ms and the two differ by a fraction of a dB for a few milliseconds."
+     ],
+     "part": "model"
     },
     {
      "heading": 3,
@@ -474,5 +474,11 @@
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "fixed": "python -I plugins/FwVocalLeveler/nulltest/nulltest.py --save",
+  "sidechain": "python -I plugins/FwVocalLeveler/nulltest/null_sidechain.py --save",
+  "presets": "python -I plugins/FwVocalLeveler/nulltest/null_presets.py",
+  "model": "python -I plugins/FwVocalLeveler/nulltest/fit_model.py report --save"
+ }
 }

@@ -1357,5 +1357,9 @@
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "settings": "python -I plugins/FwBassXLift/nulltest/nulltest.py --save",
+  "grid": "python -I plugins/FwBassXLift/nulltest/null_grid.py"
+ }
 }

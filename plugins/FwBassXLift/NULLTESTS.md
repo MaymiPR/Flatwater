@@ -105,6 +105,8 @@ Flatwater BassX Lift against the reference, case by case (written by `plugins/Fw
 
 Median total -48.5 dB (worst 1.0); median generated part -42.7 dB (worst 3.1); 96 cases.
 
+Reproduce: `python -I plugins/FwBassXLift/nulltest/nulltest.py --save`
+
 ## Grid
 
 Random settings over every control (seeded, `plugins/FwBassXLift/nulltest/null_grid.py`), four signals each; the data
@@ -134,3 +136,5 @@ is `measurements/FwBassXLift/nulltests-grid.json`.
 | kick-like | 120 | -20.8 | -13.5 |
 | sine 50 Hz -12 dBFS | 120 | -35.8 | -28.9 |
 | pink-ish noise -20 rms | 120 | -34.6 | -27.3 |
+
+Reproduce: `python -I plugins/FwBassXLift/nulltest/null_grid.py`
