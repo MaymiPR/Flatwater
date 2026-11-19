@@ -6,6 +6,7 @@ fit finds a clear gain (it did not: MEASUREMENTS.md "Flatwater Vocal Leveler: Ph
 
     python -I fit_model.py fit [gens]          the local fit
     python -I fit_model.py report [fit]        the hidden values (or the saved fit) on probes / training / held-out
+    python -I fit_model.py report --save       the same with the hidden values, written as the model's part of NULLTESTS.md
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -91,8 +92,15 @@ def load_fit():
     return json.load(open(OUT))['params'] if os.path.exists(OUT) else {}
 
 
-def report(use_fit=False):
+LABELS = {'default': 'default', 'fast': 'Fast', 'vs+6': 'VS +6', 'vs-6': 'VS -6', 'tgt-30': 'Target -30', 'tgt-12': 'Target -12',
+          'range12': '±12', 'range-3+9': '-3 .. +9', 'fast12': 'Fast ±12', 'live-30': 'Live, Spill -30'}
+SETS = {'probes': 'probes', 'train': 'corpus %d .. %d' % (V.TRAIN[0], V.TRAIN[-1]),
+        'held': 'corpus %d .. %d (held out)' % (V.HELD[0], V.HELD[-1])}
+
+
+def report(use_fit=False, save=False):
     p = load_fit() if use_fit else {}
+    rows, allv, worst = [], [], None
     for which in ('probes', 'train', 'held'):
         cs = load_cases((which,))
         n = nulls(p, cs)
@@ -100,8 +108,26 @@ def report(use_fit=False):
         for c, v in zip(cs, n): by.setdefault(c['setting'], []).append(v)
         print('%-6s median %+6.1f mean %+6.1f worst %+6.1f | %s' % (which, np.median(n), np.mean(n), n.max(),
               ' '.join('%s %+.1f' % (s, np.median(v)) for s, v in by.items())))
+        rows.append((which, len(cs), np.median(n), by)); allv += list(n)
+        k = int(np.argmax(n))
+        if worst is None or n[k] > worst[0]: worst = (float(n[k]), which, cs[k]['key'], cs[k]['setting'])
+    if save and not use_fit:
+        import report_lib as RL
+        with RL.Part('FwVocalLeveler', 'model') as f:
+            f.write("The same model (`plugins/FwVocalLeveler/nulltest/native/RideModel.c`, the plug-in's ride: `check_port.py`) against "
+                    'the %d cached reference renders of `plugins/FwVocalLeveler/nulltest/render_reference.py`: %d probes (steps, gaps, '
+                    'stops, tones, syllable trains) and the %d corpus parts, each at %d settings. Median null in dB per setting. '
+                    'Produced by `plugins/FwVocalLeveler/nulltest/fit_model.py report`.\n\n'
+                    % (len(allv), rows[0][1] // len(LABELS), (rows[1][1] + rows[2][1]) // len(LABELS), len(LABELS)))
+            f.write('| set | all | ' + ' | '.join(LABELS.values()) + ' |\n|---|---|' + '---|' * len(LABELS) + '\n')
+            for which, _, med, by in rows:
+                f.write('| %s | %.1f | ' % (SETS[which], med) + ' | '.join('%.1f' % np.median(by[s]) for s in LABELS) + ' |\n')
+            f.write('\nThe worst case over all %d is %.1f dB (%s %s at %s). The residual left is mostly at word onsets at Attack '
+                    'Fast, where the gain drops in about 10 ms and the two differ by a fraction of a dB for a few milliseconds.\n'
+                    % (len(allv), worst[0], {'probes': 'the probe', 'train': 'training part', 'held': 'held-out part'}[worst[1]],
+                       worst[2], LABELS[worst[3]]))
 
 
 if __name__ == '__main__':
     if sys.argv[1] == 'fit': fit(int(sys.argv[2]) if len(sys.argv) > 2 else 60)
-    else: report(len(sys.argv) > 2 and sys.argv[2] == 'fit')
+    else: report(len(sys.argv) > 2 and sys.argv[2] == 'fit', '--save' in sys.argv)

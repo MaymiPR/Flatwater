@@ -28,9 +28,10 @@ def signals(fs):
 
 
 def ref_params(thr, rat, att, rel, pu, mix, out, lim):
-    """a setting of co_ref.SETTINGS as the reference's parameters by display text, for tools/RefRender"""
-    return {'Analog': 'Off', 'Sync': 'ms', 'Threshold': thr, 'Ratio': rat, 'Attack': att, 'Release': rel, 'Punch': pu, 'Mix': mix,
-            'Output': out, 'Limiter': lim}
+    """a setting of co_ref.SETTINGS as the reference's parameters for tools/RefRender: the values by display text, the
+    choices (Analog Off, Sync ms, Limiter) by their normalised value, because a choice's text is not taken"""
+    return {'Analog:': 0, 'Sync:': 1, 'Threshold': thr, 'Ratio': rat, 'Attack': att, 'Release': rel, 'Punch': pu, 'Mix': mix,
+            'Output': out, 'Limiter:': 1 if lim == 'On' else 0}
 
 
 def theirs(x, fs, st, key=None):
@@ -55,6 +56,13 @@ def main():
     v = np.array([r[3] for r in rows]); w = np.array([r[4] for r in rows])
     print('with a key: median %.1f dB, best %.1f, worst %.1f (%d cases); the same cases without a key: median %.1f dB, worst %.1f'
           % (np.median(v), v.min(), v.max(), len(v), np.median(w), w.max()))
+    weak = max((r for r in rows if r[1] == 'pad'), key=lambda r: r[4])      # the pad's weakest setting without a key
+    lower = []
+    for db in (-6, -12, -18):
+        m = two(S['pad'] * 10 ** (db / 20))
+        lower.append(NV.residual_db(N.ours(m, fs, *weak[0])[0], theirs(m, fs, weak[0])[0], a0))
+    print('the pad without a key at threshold %g, ratio %g, release %g: %.1f dB; 6, 12 and 18 dB lower: %.1f, %.1f, %.1f dB'
+          % (weak[0][0], weak[0][1], weak[0][3], weak[4], *lower), flush=True)
     if '--save' in args:
         import report_lib as RL
         with RL.Part('FwComp', 'sidechain') as f:
@@ -68,6 +76,9 @@ def main():
                 f.write('| %g | %g | %g | %g | %g | %g | %g | %s | %s | %s | %.1f | %.1f |\n' % (*st[:8], mname, kname, keyed, plain))
             f.write('\nwith a key: median %.1f dB, best %.1f, worst %.1f; without a key: median %.1f dB, worst %.1f\n'
                     % (np.median(v), v.min(), v.max(), np.median(w), w.max()))
+            f.write('\nThe pad without a key at its weakest setting (threshold %g, ratio %g, attack %g, release %g, punch %g): %.1f dB at '
+                    'full level (peak 0.75), and %.1f, %.1f and %.1f dB with the pad 6, 12 and 18 dB lower.\n'
+                    % (*weak[0][:5], weak[4], *lower))
 
 
 if __name__ == '__main__':

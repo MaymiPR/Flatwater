@@ -216,7 +216,7 @@ def write_md(res):
     for case, d in by.items():
         L.append('| %s | ' % case + ' | '.join('%.1f' % d[fs] if fs in d else '' for fs in RATES) + ' |')
     import report_lib as RL                  # the title and the introduction stay; the rest is the Settings part
-    print('wrote', RL.save('FwVocalChain', 'settings', L[L.index('## Summary'):]))
+    print('wrote', RL.save('FwVocalChain', 'settings', L[L.index('## Summary'):], args=['report']))
 
 
 def main():

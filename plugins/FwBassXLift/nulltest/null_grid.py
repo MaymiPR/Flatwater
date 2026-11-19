@@ -58,7 +58,7 @@ def breakdown(rows):
 def main():
     args = sys.argv[1:]
     if '--report' in args:
-        print(RL.save('FwBassXLift', 'grid', breakdown(json.load(open(DATA))), section='Grid'))
+        print(RL.save('FwBassXLift', 'grid', breakdown(json.load(open(DATA))), section='Grid', args=[]))
         return
     import bf_ref as NW
     import nulltest as NX

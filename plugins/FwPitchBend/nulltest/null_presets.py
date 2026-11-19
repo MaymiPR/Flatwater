@@ -13,7 +13,10 @@ A preset whose LFO is one of ours in place of a drawn one ("shape substituted") 
 the reference's own table loaded into ours (PbRender table=), which tells the shape apart from the rest.
 Writes the Presets section of plugins/FwPitchBend/NULLTESTS.md and measurements/FwPitchBend/presets_null.json.
 
-    python -I -B null_presets.py [our preset name ...]
+    python -I -B null_presets.py [our preset name ...] [--jobs n]
+
+With preset names only those are rendered again and the rest kept from the JSON; --jobs: the renders at once
+(default 4).
 """
 import sys, os, re, json, glob, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -169,16 +172,21 @@ def write(rows):
 
 
 def main():
-    want = set(sys.argv[1:])
-    items = [p for p in presets() if not want or p[0] in want]
+    args = sys.argv[1:]
+    jobs = int(args[args.index('--jobs') + 1]) if '--jobs' in args else 4
+    if '--jobs' in args: del args[args.index('--jobs'):args.index('--jobs') + 2]
+    want = set(args)
+    every = presets()
+    items = [p for p in every if not want or p[0] in want]
     xs = takes()
     S.base()                                                       # (the reference's default state, loaded once, before the threads)
     rows = json.load(open(OUT_JSON)) if os.path.exists(OUT_JSON) else {}
-    with ThreadPoolExecutor(4) as ex:
+    rows = {k: v for k, v in rows.items() if k in {p[0] for p in every}}      # (a renamed preset's old row goes)
+    with ThreadPoolExecutor(jobs) as ex:
         for name, row in ex.map(lambda it: run(it, xs), items):
             rows[name] = row
             print('%-24s %s' % (name, '  '.join('%s: %s' % (t, cell(v)) for t, v in row['takes'].items())), flush=True)
-    json.dump(rows, open(OUT_JSON, 'w'), indent=1)
+    json.dump(rows, open(OUT_JSON, 'w', newline='\n'), indent=1)
     if len(rows) == 40: write(rows)
 
 

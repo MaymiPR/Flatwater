@@ -7,6 +7,8 @@ over wrongly.
 
     python -I null_presets.py [--states] [--only name,...] [--rounded] [--save]
       --states: (re)write the state files first; --rounded: Flatwater Delay's renderer rounds the values (as set by a host)
+      --save: the preset table and its summary (the median over all renders, and per Analog mode the median and the
+              worst render) into the Presets section of NULLTESTS.md; with --only the summary is left as it is
 """
 import sys, os, re, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -99,17 +101,35 @@ def main():
     fs = 48000
     S = N.signals(fs)
     lines = ['| group | preset | Analog | ' + ' | '.join(S) + ' |', '|---|---|---|' + '---|' * len(S)]
+    done = []                                            # (Analog mode, preset, signal, residual)
     for k, (g, name, v) in enumerate(P.presets()):
         if only and name not in only: continue
         row = []
         for sname, x in S.items():
             o, r = render_pair(np.stack([x, 0.8 * x]), fs, k, v)
             row.append('%.1f' % N.residual_db(o, r))
+            done.append((['Off', '1', '2', '3', '4'][int(v['analog'])], name, sname, float(row[-1])))
         lines.append('| %s | %s | %s | %s |' % (g, name, ['Off', '1', '2', '3', '4'][int(v['analog'])], ' | '.join(row)))
         print(lines[-1], flush=True)
     if save:
         import report_lib as RL
         print('wrote', RL.save('FwDelay', 'presets', lines, 'Presets'))
+        if not only: RL.save('FwDelay', 'presets-summary', summary(done), 'Presets')
+
+
+def summary(done):
+    """the summary of the preset table: the median over all renders, and per Analog mode the presets, the median and
+    the worst render with its preset and signal"""
+    allv = np.array([d[3] for d in done])
+    out = ['Summary: **median %.1f dB** over all %d renders, worst %.1f dB; %d of %d renders below -60 dB.'
+           % (np.median(allv), len(allv), allv.max(), (allv < -60).sum(), len(allv)), '',
+           '| Analog | presets | median | worst |', '|---|---:|---:|---|']
+    for mode in ('Off', '1', '2', '3', '4'):
+        rows = [d for d in done if d[0] == mode]
+        if not rows: continue
+        w = max(rows, key=lambda d: d[3])
+        out.append('| %s | %d | %.1f | %+.1f (%s, %s) |' % (mode, len({d[1] for d in rows}), np.median([d[3] for d in rows]), w[3], w[1], w[2]))
+    return out
 
 
 if __name__ == '__main__':

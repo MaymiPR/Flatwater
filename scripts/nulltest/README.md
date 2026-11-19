@@ -33,7 +33,7 @@ renders go to the git-ignored `renders/`, `build/` and `reference/` folders.
 
 | Module | What it does |
 |---|---|
-| `report_lib.py` | each plug-in's `NULLTESTS.md`, written from `measurements/<Id>/nulltests.json` (the report as data: a section per kind of case, a part per null script); `nulltest.py --report` calls it |
+| `report_lib.py` | each plug-in's `NULLTESTS.md`, written from `measurements/<Id>/nulltests.json` (the report as data: a section per kind of case, a part per null script, and per part the command that wrote it, shown as its "Reproduce:" line); `nulltest.py --report` calls it |
 
 ## Reference presets
 

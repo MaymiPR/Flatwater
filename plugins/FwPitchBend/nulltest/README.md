@@ -34,7 +34,9 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 | File | What it does |
 |---|---|
 | `null_mods.py` | Our modulators against the reference's, through Mix (MEASUREMENTS.md, Flatwater Pitch Bend) |
+| `null_noshift.py` | Flatwater Pitch Bend with no shift against the reference at the same settings, sample for sample, on the two takes, vowels and noise |
 | `null_presets.py` | Flatwater Pitch Bend's 40 factory presets against the reference's own: the reference with its preset loaded into its state (the stored values, hidden ones included |
+| `null_shift.py` | Sample nulls with a shift, for the record: a steady 150 Hz vowel through both, as rendered and lined up |
 
 ## Checks and comparisons
 

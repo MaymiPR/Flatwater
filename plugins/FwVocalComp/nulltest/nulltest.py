@@ -2,7 +2,8 @@
 
     python -I nulltest.py [the arguments of vc_ref.py]
 
-vc_ref.py gets the arguments.
+vc_ref.py gets the arguments and --extra --save (the published table holds the other rates and the stereo cases), then
+null_grid.py runs with --save.
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwVocalComp/nulltests.json, rendering nothing
     python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
                                        our built VST3 against our renderer, without the reference: exit code 0
@@ -16,7 +17,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-STEPS = (('vc_ref.py', sys.argv[1:] + ['--save']),)
+STEPS = (('vc_ref.py', sys.argv[1:] + ['--extra', '--save']), ('null_grid.py', ['--save']))
 
 
 def main():
