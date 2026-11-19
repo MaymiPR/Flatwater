@@ -8,6 +8,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "shared/test/AllocCounter.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -349,6 +350,69 @@ static void testNonFiniteInput()
     CHECK (finite);
 }
 
+// Mode or Analog changed between two blocks (a host automates them): the block that takes the change allocates
+// nothing on the calling thread. When the change swaps one stereo delay for two mono ones or back, the audio is that
+// of a processor prepared in the new Mode (the change is a full reset: the echoes of before are gone).
+static void testModeAndAnalogChangeOnTheAudioThread()
+{
+    auto set = [] (FwDelayProcessor& q, const char* id, float v) { auto* a = q.apvts.getParameter (id); a->setValueNotifyingHost (a->convertTo0to1 (v)); };
+    auto setup = [&set] (FwDelayProcessor& q) { set (q, de::id::sync, 2.0f); set (q, de::id::delay, 20.0f); set (q, de::id::mix, 50.0f); };
+    FwDelayProcessor p;
+    setup (p);
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512), in (2, 512);
+    juce::MidiBuffer midi;
+    unsigned int seed = 4242u;
+    auto fill = [&seed] (juce::AudioBuffer<float>& b)
+    {
+        for (int i = 0; i < b.getNumSamples(); ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            b.setSample (0, i, v); b.setSample (1, i, 0.5f * v * v - v);
+        }
+    };
+    auto same = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < a.getNumSamples(); ++i)
+                if (! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) return false;
+        return true;
+    };
+    auto blockAllocations = [&]
+    {
+        flatwater::test::AllocScope scope;
+        p.processBlock (buf, midi);
+        return scope.count();
+    };
+    for (int b = 0; b < 8; ++b) { fill (buf); p.processBlock (buf, midi); }
+    for (int mode : { 1, 0, 1, 2 })
+    {
+        set (p, de::id::mode, (float) mode);
+        FwDelayProcessor fresh;
+        setup (fresh); set (fresh, de::id::mode, (float) mode);
+        fresh.prepareToPlay (48000.0, 512);
+        for (int b = 0; b < 4; ++b)
+        {
+            fill (buf);
+            in.makeCopyOf (buf);
+            CHECK (blockAllocations() == 0);
+            fresh.processBlock (in, midi);
+            CHECK (same (buf, in));
+        }
+    }
+    for (int analog : { 0, 3, 4, 1, 0, 2 })
+    {
+        set (p, de::id::analog, (float) analog);
+        fill (buf);
+        CHECK (blockAllocations() == 0);
+        bool finite = true;
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < 512; ++i) finite = finite && std::isfinite (buf.getSample (c, i));
+        CHECK (finite);
+    }
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -360,6 +424,7 @@ int main()
     testProcessor();
     testDisplayClicks();
     testDsp();
+    testModeAndAnalogChangeOnTheAudioThread();
     testPresets();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;

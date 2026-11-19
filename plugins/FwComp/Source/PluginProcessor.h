@@ -60,7 +60,8 @@ public:
 private:
     flatwater::BypassDelay bypassLine;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    void configure();
+    void configure();                // allocates: prepareToPlay
+    void setLayout (bool dual);      // a Mode change: a reset without allocation, also on the audio thread
     co::dsp::Compressor::Settings settings() const;
     int currentProgram = 0;
     co::dsp::Compressor comps[2];

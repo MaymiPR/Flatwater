@@ -97,14 +97,16 @@ void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
 {
     std::array<float, pb::dsp::numTargets> norm {};
     for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
-    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()), norm);
+    sr = sampleRate;
+    maxBlock = jmax (1, block);
+    engine.prepare (sampleRate, maxBlock, jmax (1, getTotalNumInputChannels()), norm);
 }
 
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;
     flatwater::silenceNonFinite (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
-    const int n = buffer.getNumSamples(), ch = jmin (buffer.getNumChannels(), getTotalNumInputChannels());
+    const int n = buffer.getNumSamples(), ch = jmin (2, buffer.getNumChannels(), getTotalNumInputChannels());
     if (n == 0 || ch == 0) return;
     {
         const SpinLock::ScopedTryLockType tl (modelLock);
@@ -130,7 +132,17 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
             if (auto b = pos->getBpm()) p.bpm = *b;
             if (auto q = pos->getPpqPosition()) { p.ppq = *q; p.havePpq = true; }
         }
-    engine.process (buffer.getArrayOfWritePointers(), ch, n, p, audio);
+    // The engine's buffers are made for blocks of up to the size prepareToPlay was given. A larger block goes through
+    // in pieces of that size, so the audio thread never resizes a buffer; the audio is that of the host sending those
+    // pieces as blocks, each with the song position of its start.
+    const int step = maxBlock > 0 ? maxBlock : n;
+    for (int at = 0; at < n; at += step)
+    {
+        const int m = jmin (step, n - at);
+        float* part[2] { buffer.getWritePointer (0) + at, buffer.getWritePointer (ch - 1) + at };
+        engine.process (part, ch, m, p, audio);
+        p.ppq += (double) m * p.bpm / (60.0 * sr);
+    }
     for (int t = 0; t < pb::dsp::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
     for (int m = 0; m < 2; ++m) cycle[m] = engine.cycle[m];
     amValue = engine.amValue;

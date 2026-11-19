@@ -28,17 +28,28 @@ void FwVocalCompProcessor::prepareToPlay (double sampleRate, int)
     configure();
 }
 
-// Stereo bus + Mode "Stereo": one linked gain. Stereo bus + Mode "Mono": two independent mono processors. Mono bus: one.
+// Everything both layouts need, made here (it allocates): prepareToPlay calls it, the audio thread only for a host
+// that sends a block without having prepared. The latency is the same in both layouts.
 void FwVocalCompProcessor::configure()
 {
     const int ch = getTotalNumInputChannels();
-    const bool dual = ch > 1 && pMode->load() > 0.5f;
-    layoutDual = dual;
-    procs[0].prepare (sr, dual ? 1 : ch);
+    procs[0].prepare (sr, ch);
     procs[1].prepare (sr, 1);
     setLatencySamples (procs[0].getLatency());
     bypassLine.prepare (ch, getLatencySamples());
     prepared = true;
+    setLayout (ch > 1 && pMode->load() > 0.5f);
+}
+
+// Stereo bus + Mode "Stereo": one linked gain. Stereo bus + Mode "Mono": two independent mono processors. Mono bus: one.
+// A Mode change on the audio thread comes here: a full reset (the processors, their delay lines, the bypass line),
+// no allocation and no word to the host.
+void FwVocalCompProcessor::setLayout (bool dual)
+{
+    layoutDual = dual;
+    procs[0].setChannels (dual ? 1 : getTotalNumInputChannels());
+    procs[1].reset();
+    bypassLine.reset();
 }
 
 void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
@@ -47,7 +58,8 @@ void FwVocalCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
     const int n = b.getNumSamples(), ch = b.getNumChannels();
     const bool wantDual = ch > 1 && pMode->load() > 0.5f;
-    if (! prepared || wantDual != layoutDual) configure();
+    if (! prepared) configure();
+    if (wantDual != layoutDual) setLayout (wantDual);
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
 
     // input energy meter

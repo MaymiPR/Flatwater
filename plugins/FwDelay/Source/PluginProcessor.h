@@ -61,8 +61,9 @@ public:
     de::dsp::Settings settings (double sampleRate) const;
 
 private:
-    void configure();
-    de::dsp::Delay delays[2];                 // one linked delay, or two mono ones (Mode Mono on a stereo bus)
+    void configure();                // allocates: prepareToPlay
+    void setLayout (bool dual);      // a Mode change: a reset without allocation, also on the audio thread
+    de::dsp::Delay delays[2];                // one linked delay, or two mono ones (Mode Mono on a stereo bus)
     co::dsp::Analog analogStage;
     double sr = 48000.0;
     bool prepared = false, layoutDual = false;

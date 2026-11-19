@@ -230,6 +230,14 @@ public:
         reset();
     }
 
+    // Another channel count (1 or 2) after prepare(), which made both delay lines: every state as prepare() leaves
+    // it. No allocation, so the audio thread may call it.
+    void setChannels (int numChannels)
+    {
+        channels = std::max (1, std::min (numChannels, 2));
+        reset();
+    }
+
     int getLatency() const { return latency; }
     // total gain reduction of the last sample in dB (<= 0): compressor reduction below its idle gain plus the gate
     float getReductionDb() const { return reductionDb; }

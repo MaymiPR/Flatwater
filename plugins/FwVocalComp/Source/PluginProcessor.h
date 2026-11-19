@@ -58,7 +58,8 @@ public:
 private:
     flatwater::BypassDelay bypassLine;
     int currentProgram = 0;
-    void configure();
+    void configure();                // allocates: prepareToPlay
+    void setLayout (bool dual);      // a Mode change: a reset without allocation, also on the audio thread
 
     vc::dsp::Processor procs[2];
     std::atomic<float>* pComp = nullptr; std::atomic<float>* pGate = nullptr; std::atomic<float>* pGain = nullptr; std::atomic<float>* pMode = nullptr;

@@ -68,6 +68,8 @@ private:
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& child) override;
     void applyPresetExtras (const juce::ValueTree& exact);      // a factory preset's slots, Fine, shapes and steps
     int currentProgram = 0;
+    double sr = 48000.0;
+    int maxBlock = 0;                                                 // the block size prepareToPlay was given
     void valueTreeRedirected (juce::ValueTree&) override { refreshModel(); }
 
     // the copy the audio thread works on: written on the message thread under the lock, read with a try-lock

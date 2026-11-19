@@ -7,6 +7,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "dsp/Engine.h"
 #include "PluginProcessor.h"
+#include "shared/test/AllocCounter.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -351,6 +352,59 @@ static void testBypassReleaseHasNoOldAudio()
     }
 }
 
+// Mode changed between two blocks (a host automates it): the block that takes the change allocates nothing on the
+// calling thread, the latency stays, and the audio from the change on is that of a processor prepared in the new
+// Mode (the change is a full reset).
+static void testModeChangeOnTheAudioThread()
+{
+    auto set = [] (FwVocalCompProcessor& q, const char* id, float v) { auto* a = q.apvts.getParameter (id); a->setValueNotifyingHost (a->convertTo0to1 (v)); };
+    FwVocalCompProcessor p;
+    set (p, vc::id::comp, -24.0f);
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512), in (2, 512);
+    juce::MidiBuffer midi;
+    unsigned int seed = 4242u;
+    auto fill = [&seed] (juce::AudioBuffer<float>& b)
+    {
+        for (int i = 0; i < b.getNumSamples(); ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            b.setSample (0, i, v); b.setSample (1, i, 0.5f * v * v - v);
+        }
+    };
+    auto same = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < a.getNumSamples(); ++i)
+                if (! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) return false;
+        return true;
+    };
+    for (int b = 0; b < 8; ++b) { fill (buf); p.processBlock (buf, midi); }
+    for (int mode : { 1, 0, 1 })
+    {
+        set (p, vc::id::mode, (float) mode);
+        FwVocalCompProcessor fresh;
+        set (fresh, vc::id::comp, -24.0f); set (fresh, vc::id::mode, (float) mode);
+        fresh.prepareToPlay (48000.0, 512);
+        for (int b = 0; b < 4; ++b)
+        {
+            fill (buf);
+            in.makeCopyOf (buf);
+            int allocations = 0;
+            {
+                flatwater::test::AllocScope scope;
+                p.processBlock (buf, midi);
+                allocations = scope.count();
+            }
+            CHECK (allocations == 0);
+            fresh.processBlock (in, midi);
+            CHECK (same (buf, in));
+        }
+        CHECK (p.getLatencySamples() == 64);
+    }
+}
+
 int main()
 {
     testBypassIsDelayedInput();
@@ -365,6 +419,7 @@ int main()
     testStereoLink();
     testProcessor();
     testFactoryPresets();
+    testModeChangeOnTheAudioThread();
     testLearnedGuards();
     std::printf ("%d checks, %d failed\n", checks, failures);
     return failures == 0 ? 0 : 1;

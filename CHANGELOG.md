@@ -94,6 +94,21 @@
 - **User presets:** a preset file that is not this plug-in's is refused. Before, it replaced the plug-in's state.
 - **Range in the two levelers:** Range Max automated under Range Min is read as equal to it.
 - **Flatwater Delay:** its settings are read without building text on the audio thread.
+- **Mode automated, Flatwater Comp, Vocal Comp, Bass Leveler and Delay:** a Mode change during playback no longer
+  allocates memory on the audio thread; what both layouts need is made when the host prepares the plug-in, and the
+  change is a reset. The sound right after the change is the same as before (it starts from silence, as a fresh
+  instance in the new Mode). Flatwater Bass Leveler's latency differs between its studio and Live modes: the host
+  now learns the new latency from a timer on the message thread, not from the audio thread.
+- **Analog automated, Flatwater Comp and Delay:** the noise filters of all four Analog modes are made when the host
+  prepares the plug-in, so an Analog change during playback no longer builds one on the audio thread. The sound is
+  unchanged (the render regression is byte-identical).
+- **Large blocks, Flatwater Vocal Chain and Pitch Bend:** a block larger than the size the host announced goes
+  through in pieces of that size, without resizing a buffer on the audio thread. Before, Flatwater Pitch Bend
+  allocated memory there, and Flatwater Vocal Chain crashed on such a block in its test.
+- **Flatwater Vocal Chain, reverb loading:** the reverb's responses load in the background and the plug-in waits
+  for them when the host prepares it, for 20 s at most, so a render has the reverb from its first sample. When the
+  wait runs out, the plug-in now records it, the reverb is silent until the responses are there, and then comes in.
+  Before, nothing recorded it and the reverb's input came through unprocessed meanwhile.
 - **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
   show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
   (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed

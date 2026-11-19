@@ -122,13 +122,24 @@ void FwDelayProcessor::prepareToPlay (double sampleRate, int)
     configure();
 }
 
+// Both delays and every Analog mode, made here (it allocates): prepareToPlay calls it, the audio thread only for a
+// host that sends a block without having prepared.
 void FwDelayProcessor::configure()
 {
     const int in = getMainBusNumInputChannels(), out = getMainBusNumOutputChannels();
-    layoutDual = in > 1 && roundToInt (get (de::id::mode)) == 1;
     for (auto& d : delays) d.prepare (sr);
     analogStage.prepare (sr, jmax (in, out));
     prepared = true;
+    setLayout (in > 1 && roundToInt (get (de::id::mode)) == 1);
+}
+
+// One stereo delay, or two mono ones (Mode Mono on a stereo bus). A Mode change on the audio thread that swaps the
+// two comes here: a full reset (the lines silent, the Analog stage), no allocation.
+void FwDelayProcessor::setLayout (bool dual)
+{
+    layoutDual = dual;
+    for (auto& d : delays) d.reset();
+    analogStage.reset();
 }
 
 // the reference uses its parameters at their resolution (measured: Delay 100.4 ms works as 100): Delay,
@@ -202,7 +213,8 @@ void FwDelayProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
     const int in = getMainBusNumInputChannels(), out = getMainBusNumOutputChannels();
     const int mode = roundToInt (get (de::id::mode));
     const bool wantDual = in > 1 && mode == 1;
-    if (! prepared || wantDual != layoutDual) configure();
+    if (! prepared) configure();
+    if (wantDual != layoutDual) setLayout (wantDual);
     if (in == 1 && out == 2) b.copyFrom (1, 0, b, 0, 0, n);           // mono in, stereo out: both sides get the input
     else if (out == 2 && mode == 2) b.copyFrom (1, 0, b, 0, 0, n);    // M>S on a stereo bus: the left input on both
     float* const* w = b.getArrayOfWritePointers();

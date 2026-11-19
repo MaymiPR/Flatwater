@@ -2,7 +2,7 @@
 // The host's bypass of a plug-in that reports a latency: the input, delayed by that latency, so a bypassed track
 // stays in time with the others. write() takes the input of every processed block, so the line already holds the
 // last samples when the bypass comes on; process() takes the input of a bypassed block and gives the delayed input
-// in its place. Plain C++; prepare() allocates, the other two do not.
+// in its place. Plain C++; prepare() allocates, nothing else does.
 #include <algorithm>
 #include <cstddef>
 #include <vector>
@@ -12,11 +12,26 @@ namespace flatwater
 class BypassDelay
 {
 public:
-    // channels lines of delaySamples each, silent
-    void prepare (int channels, int delaySamples)
+    // channels lines of delaySamples each, silent; maxDelaySamples: the longest delay setDelay() may be given later
+    // (a plug-in whose latency changes while it runs)
+    void prepare (int channels, int delaySamples, int maxDelaySamples = 0)
     {
         delay = std::max (0, delaySamples);
-        lines.assign ((size_t) std::max (0, channels), std::vector<float> ((size_t) std::max (1, delay), 0.0f));
+        lines.assign ((size_t) std::max (0, channels), std::vector<float> ((size_t) std::max ({ 1, delay, maxDelaySamples }), 0.0f));
+        pos = 0;
+    }
+
+    // another delay, up to the longest one prepare() was given, the lines silent again
+    void setDelay (int delaySamples) noexcept
+    {
+        delay = std::clamp (delaySamples, 0, lines.empty() ? 0 : (int) lines[0].size());
+        reset();
+    }
+
+    // the lines silent, as after prepare()
+    void reset() noexcept
+    {
+        for (auto& l : lines) std::fill (l.begin(), l.end(), 0.0f);
         pos = 0;
     }
 

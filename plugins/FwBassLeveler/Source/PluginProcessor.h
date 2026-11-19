@@ -8,10 +8,11 @@
 #include "dsp/Engine.h"
 #include "Params.h"
 
-class FwBassLevelerProcessor : public juce::AudioProcessor
+class FwBassLevelerProcessor : public juce::AudioProcessor, private juce::Timer
 {
 public:
     FwBassLevelerProcessor();
+    ~FwBassLevelerProcessor() override { stopTimer(); }
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
@@ -63,10 +64,19 @@ public:
     int modeIndex() const { return juce::roundToInt (get (bl::id::mode)); }
     float idleDb() const { return bl::idleDb (get (bl::id::idle), get (bl::id::rangeMin), get (bl::id::rangeMax)); }
 
+    // The latency of the component (Mode) in use, told to the host when it is not the one the host has. A Mode change
+    // that reaches the audio thread changes the latency there (42 ms, Live 5 ms) and leaves the telling to this, which
+    // a timer calls on the message thread.
+    void updateHostLatency();
+
 private:
     flatwater::BypassDelay bypassLine;
     int currentProgram = 0;
-    void configure();
+    void timerCallback() override { updateHostLatency(); }
+    void configure();                // allocates: prepareToPlay
+    void setMode (int mode);         // a Mode change: a reset without allocation, also on the audio thread
+    void followMode (int channels);  // at the start of a block: the Mode parameter's component
+    std::atomic<int> latencyNow { 0 };
     double sr = 48000.0;
     int delaySamples = 0, writePos = 0, configuredMode = -1;
     std::vector<std::vector<float>> line;

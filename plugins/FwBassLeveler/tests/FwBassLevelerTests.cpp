@@ -10,6 +10,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "shared/test/AllocCounter.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -363,6 +364,81 @@ static void testInvertedRange()
     CHECK (peak <= 0.1f * 4.1f);                           // +12 dB at most
 }
 
+// Mode changed between two blocks (a host automates it): the block that takes the change allocates nothing on the
+// calling thread, and the audio from the change on is that of a processor prepared in the new Mode (the change is a
+// full reset). Between the Studio and the Live components the latency changes (42 ms, 5 ms): the audio thread does
+// not tell the host, the processor's timer does (updateHostLatency), and the bypass then delays by the new latency.
+static void testModeChangeOnTheAudioThread()
+{
+    auto set = [] (FwBassLevelerProcessor& q, const char* id, float v) { auto* a = q.apvts.getParameter (id); a->setValueNotifyingHost (a->convertTo0to1 (v)); };
+    FwBassLevelerProcessor p;
+    set (p, bl::id::output, -3.0f);
+    p.prepareToPlay (48000.0, 512);
+    CHECK (p.getLatencySamples() == 2016);
+    juce::AudioBuffer<float> buf (2, 512), in (2, 512);
+    juce::MidiBuffer midi;
+    int at = 0;
+    auto fill = [&at] (juce::AudioBuffer<float>& b)
+    {
+        for (int i = 0; i < b.getNumSamples(); ++i, ++at)
+        {
+            const float v = (float) sineAt (at, 80.0, -17.0);
+            b.setSample (0, i, v); b.setSample (1, i, 0.5f * v);
+        }
+    };
+    auto same = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < a.getNumSamples(); ++i)
+                if (! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) return false;
+        return true;
+    };
+    for (int b = 0; b < 40; ++b) { fill (buf); p.processBlock (buf, midi); }
+    for (int mode : { 1, 2, 0, 3 })
+    {
+        set (p, bl::id::mode, (float) mode);
+        FwBassLevelerProcessor fresh;
+        set (fresh, bl::id::output, -3.0f); set (fresh, bl::id::mode, (float) mode);
+        fresh.prepareToPlay (48000.0, 512);
+        for (int b = 0; b < 40; ++b)
+        {
+            fill (buf);
+            in.makeCopyOf (buf);
+            int allocations = 0;
+            {
+                flatwater::test::AllocScope scope;
+                p.processBlock (buf, midi);
+                allocations = scope.count();
+            }
+            CHECK (allocations == 0);
+            fresh.processBlock (in, midi);
+            CHECK (same (buf, in));
+        }
+        const int latency = mode >= 2 ? 240 : 2016;
+        p.updateHostLatency();
+        CHECK (p.getLatencySamples() == latency);
+        // the bypass after the change: the input of `latency` samples before, the processed blocks' input included
+        std::vector<float> x;
+        for (int b = 0; b < 6; ++b)
+        {
+            fill (buf);
+            x.insert (x.end(), buf.getReadPointer (0), buf.getReadPointer (0) + 512);
+            if (b < 5) { p.processBlock (buf, midi); fresh.processBlock (buf, midi); continue; }
+            int allocations = 0;
+            {
+                flatwater::test::AllocScope scope;
+                p.processBlockBypassed (buf, midi);
+                allocations = scope.count();
+            }
+            CHECK (allocations == 0);
+            float err = 0.0f;
+            for (int i = 0; i < 512; ++i) err = std::max (err, std::abs (buf.getSample (0, i) - x[(size_t) (5 * 512 + i - latency)]));
+            CHECK (err == 0.0f);
+            fresh.processBlockBypassed (buf, midi);
+        }
+    }
+}
+
 int main()
 {
     testBypassIsDelayedInput();
@@ -379,6 +455,7 @@ int main()
     testStateAndEditor();
     testSelection();
     testIdle();
+    testModeChangeOnTheAudioThread();
     testPresets();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;

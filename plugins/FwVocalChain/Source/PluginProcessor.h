@@ -68,6 +68,14 @@ public:
     void setNoise (bool on) { chain.noiseOn = on; }                   // (the reference's state-only Noise; off for null tests)
     int modeIndex() const { return juce::roundToInt (get (ch::id::mode)); }
 
+    // The reverb's responses load on a background thread and prepareToPlay waits for them, so the first block has
+    // the reverb. reverbLoaded: they are there. reverbLoadTimedOut: the last prepareToPlay gave up waiting, and the
+    // reverb was silent from then until they were there. setReverbLoadTimeout: the longest wait (ms; 0: none),
+    // before prepareToPlay.
+    bool reverbLoaded() const noexcept { return reverb.loaded(); }
+    bool reverbLoadTimedOut() const noexcept { return reverb.loadTimedOut(); }
+    void setReverbLoadTimeout (int ms) { reverb.loadTimeoutMs = ms; }
+
 private:
     flatwater::BypassDelay bypassLine;
     ch::dsp::Params chainParams();                                    // the chain's settings of this block
@@ -76,5 +84,6 @@ private:
     ch::ReverbConvolution reverb;                                     // (before the chain, which uses it)
     ch::dsp::Chain chain;
     juce::AudioBuffer<float> work;
+    int maxBlock = 0;                                                 // the chain's block size (prepareToPlay)
     int currentProgram = 0;
 };

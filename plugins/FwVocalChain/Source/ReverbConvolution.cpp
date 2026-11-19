@@ -42,7 +42,8 @@ void ReverbConvolution::prepare (double fs, int block, int skip)
     const auto pk = nearestPacked (fs);
     const auto* p = reinterpret_cast<const uint8*> (pk.data);
     const juce::dsp::ProcessSpec spec { fs, (uint32) jmax (1, block), 2 };
-    int want[3] {};
+    isLoaded.store (false);
+    timedOut.store (false);
     for (int c = 0; c < 3; ++c)
     {
         uint32 n;
@@ -69,32 +70,66 @@ void ReverbConvolution::prepare (double fs, int block, int skip)
     }
     // the responses load on a background thread and are swapped in during processing (with a short crossfade): run
     // silence through every engine until each holds its whole response (a busy machine can take seconds), so the first
-    // real block already has it
-    a.setSize (2, jmax (1, block)); b.setSize (2, jmax (1, block));
-    const auto t0 = Time::getMillisecondCounter();
-    for (;;)
-    {
-        bool ready = true;
-        for (int c = 0; c < 3; ++c)
-            for (auto& e : conv[(size_t) c])
-            {
-                a.clear();
-                juce::dsp::AudioBlock<float> blk (a);
-                e->process (juce::dsp::ProcessContextReplacing<float> (blk));
-                ready = ready && e->getCurrentIRSize() >= want[c];
-            }
-        if (ready || Time::getMillisecondCounter() - t0 > 20000) break;
-        std::this_thread::sleep_for (std::chrono::milliseconds (2));
-    }
-    for (int i = 0; i < (int) (0.2 * fs) / jmax (1, block) + 2; ++i)    // (past the crossfade)
-        for (auto& c : conv)
-            for (auto& e : c) { a.clear(); juce::dsp::AudioBlock<float> blk (a); e->process (juce::dsp::ProcessContextReplacing<float> (blk)); }
-    reset();
+    // real block already has it. The offline renderer and a host's own render count on that: they send the first
+    // block right after this call. The wait ends after loadTimeoutMs; then loadTimedOut() says so, and process()
+    // gives silence and goes on with the loading until the responses are there.
+    const int size = jmax (1, block);
+    a.setSize (2, size); b.setSize (2, size);
+    settleSamples = (int) (0.2 * fs) + 2 * size;                        // (past the crossfade)
+    lateLeft = -1;
     running = 0;
+    bool ready = false;
+    if (loadTimeoutMs > 0)
+    {
+        const auto t0 = Time::getMillisecondCounter();
+        for (;;)
+        {
+            ready = silenceThrough (size);
+            if (ready || Time::getMillisecondCounter() - t0 > (uint32) loadTimeoutMs) break;
+            std::this_thread::sleep_for (std::chrono::milliseconds (2));
+        }
+    }
+    if (! ready) { timedOut.store (true); return; }
+    for (int i = 0; i < (int) (0.2 * fs) / size + 2; ++i) silenceThrough (size);
+    reset();
+    isLoaded.store (true);
+}
+
+// n samples of silence through every engine (an engine takes a loaded response in, and fades it in, only while it
+// processes); true when each holds its whole response
+bool ReverbConvolution::silenceThrough (int n)
+{
+    bool ready = true;
+    a.setSize (2, n, false, false, true);
+    for (int c = 0; c < 3; ++c)
+        for (auto& e : conv[(size_t) c])
+        {
+            a.clear();
+            juce::dsp::AudioBlock<float> blk (a);
+            e->process (juce::dsp::ProcessContextReplacing<float> (blk));
+            ready = ready && e->getCurrentIRSize() >= want[c];
+        }
+    return ready;
 }
 
 void ReverbConvolution::process (const float* inL, const float* inR, float* outL, float* outR, int n, int colour, float gain)
 {
+    if (! isLoaded.load (std::memory_order_relaxed))
+    {
+        // prepare() gave up waiting: silence out (an engine without its response hands its input on), and the
+        // loading goes on as in prepare(), block by block: until every response is there, then past the crossfade
+        FloatVectorOperations::clear (outL, n); FloatVectorOperations::clear (outR, n);
+        if (conv[0][0] == nullptr || n <= 0) return;                    // (never prepared)
+        const bool ready = silenceThrough (n);
+        if (lateLeft < 0) { if (ready) lateLeft = settleSamples; }
+        else if ((lateLeft -= n) <= 0)
+        {
+            reset();
+            running = 0;
+            isLoaded.store (true);
+        }
+        return;
+    }
     if (colour > 0 && colour != running) { running = colour; for (auto& e : conv[(size_t) running - 1]) e->reset(); }
     if (running == 0) { FloatVectorOperations::clear (outL, n); FloatVectorOperations::clear (outR, n); return; }
     a.setSize (2, n, false, false, true); b.setSize (2, n, false, false, true);

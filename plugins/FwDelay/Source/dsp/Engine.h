@@ -123,13 +123,21 @@ public:
         lofiK.build (fs, t.lofiCutoffHz, t.kaiserBeta);
         int size = 1;
         while (size < (int) (fs * t.maxSeconds) + 4 * std::max (hifi.taps, lofiK.taps) + 8) size <<= 1;
-        for (auto& l : lines) { l.buf.assign ((size_t) size, 0.0f); l.y1 = 0.0f; l.d = -1.0; l.hp.reset(); l.lp.reset(); }
+        for (auto& l : lines) l.buf.assign ((size_t) size, 0.0f);
         mask = size - 1;
+        rel = std::exp (-1.0 / (t.releaseMs * 0.001 * fs));
+        reset();
+    }
+
+    // Every state as prepare() leaves it: the lines silent, no glide into the first block, the gain stage open, the
+    // LFO at its start. No allocation, so the audio thread may call it.
+    void reset()
+    {
+        for (auto& l : lines) { std::fill (l.buf.begin(), l.buf.end(), 0.0f); l.y1 = 0.0f; l.d = -1.0; l.hp.reset(); l.lp.reset(); }
         pos = 0;
         gain = 1.0;
         lfoValue = 0.0f;
         lfoUp = true;
-        rel = std::exp (-1.0 / (t.releaseMs * 0.001 * fs));
     }
 
     // ch: the output channels (in place; the input is in them: one channel for mono, two otherwise, the second a copy of
