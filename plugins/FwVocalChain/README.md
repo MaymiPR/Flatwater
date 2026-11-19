@@ -39,8 +39,9 @@ The toolbar is the one every Flatwater plug-in shares: see [the suite README](..
 ## How close
 
 On held-out vocals at 48 kHz the whole chain's median residual against the original is -33.2 dB with the doubler clear
-and -36.0 dB on its default Stereo colour; the Bass, Treble and Reverb stages alone reach -75.7 dB. At 44.1 and 96 kHz
-the chain with the doubler clear reaches -32.1 and -35.5 dB. The 43 factory presets, which carry the original's values
+(30 renders) and -36.0 dB on its default Stereo colour (8 renders); the Bass, Treble and Reverb stages alone reach
+-75.7 dB. At 44.1 and 96 kHz the chain with the doubler clear reaches -32.1 and -35.5 dB. With the Stereo doubler the
+median is -35.6 dB at 44.1 kHz and -18.1 dB at 96 kHz (4 renders each): at 96 kHz the doubler is not a null. The 43 factory presets, which carry the original's values
 under Flatwater names, have a median of -30.1 dB. The doubler's Wide and Spreader colours are pitch shifters that pick
 their splice points from the signal, so they do not null sample for sample; their level, spectrum and delay range
 match the original's. Every case: [NULLTESTS.md](NULLTESTS.md) and [the presets null test](NULLTESTS.md#presets).

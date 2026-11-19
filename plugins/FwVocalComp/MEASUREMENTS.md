@@ -141,14 +141,14 @@ Method notes: `plugins/FwVocalComp/nulltest/probe_gate.py` fits the gate on DC s
 The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 `20 log10(rms(ours - reference) / rms(reference))` in dB.
 
-`plugins/FwVocalComp/nulltest/vc_ref.py`:
+`plugins/FwVocalComp/nulltest/vc_ref.py` and `null_grid.py`:
 
 | Set | Result |
 |---|---|
-| Steady tones, any setting (Compression, Gate, Gain, input level, 44.1 to 192 kHz, mono and stereo) | -95 to -120 dB (a null) |
+| Steady tones at 1 kHz and 8 kHz, every setting that compresses (44.1 to 192 kHz, mono and stereo) | -99.2 to -121.5 dB (a null); a 100 Hz tone -47.8 to -51.7 dB (close) |
 | Compression 0 with any Gate and Gain | -120 dB and below (a null) |
-| Level steps, sweeps, speech-like material | -30 to -65 dB, worse at heavy compression |
-| Dense noise at heavy compression | -24 to -33 dB (-10 to -25 dB without the learned slow path) |
+| Level steps, sweeps, speech-like material | -22.9 to -62.4 dB, worse at heavy compression |
+| White and pink noise, every setting that compresses | -22.6 to -35.3 dB (-10 to -25 dB without the learned slow path, measured before the 1.0.0 release and not reproduced by a script in this tree) |
 | The 672-case settings grid | median -70 dB, worst -23 dB |
 
 The compressor's slow path is the fitted model plus a small learned correction (trained on renders of the reference,

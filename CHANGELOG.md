@@ -160,12 +160,26 @@
   older `uiWidth`. A project saved by 1.0.0 opens at its size, and a project saved now opens at its size in 1.0.0.
 - **Closing the editor, Flatwater Pitch Bend:** the list of the Flatten note and a slot's list of sources, left
   open, no longer act on a closed editor.
+- **Published numbers:** the tables of every NULLTESTS.md were run again at the current source, and each part a
+  script writes names its command (a "Reproduce:" line); a table or a text that no script reproduces says so. What
+  the run corrected:
+  Flatwater Pitch Bend with no shift was given as -67 dB on a sung take with no measurement behind it, and is -68.8 dB
+  there, close on steady vowels and not a null on a spoken take (+3.6 dB); Flatwater Bass Leveler's fixed cases and
+  its Sensitivity and Response table were older than its model (a synthetic part at -13.5 dB stood as -34.5, the
+  factory presets' median is -25.2 dB in every place); Flatwater Comp's side-chain table rendered the original with
+  its Release synced to the tempo and now renders it in ms (19 of 24 keyed rows moved, the worst from -28.1 to
+  -27.2 dB); Flatwater Vocal Chain's -36.0 dB on the Stereo doubler is given as the median of 8 renders at 48 kHz,
+  beside -18.1 dB at 96 kHz; Flatwater Pitch Bend's preset table carries the presets' current names.
 
 ### Known issues
 
-- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -6.7 dB. The
+- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -7.0 dB. The
   original holds its gain reduction between the chord's envelope peaks; Flatwater Comp lets go between them. The same
-  chord 6 dB lower is at -60.6 dB.
+  chord 6 dB lower is at -63.1 dB.
+- Flatwater Pitch Bend: with no shift a spoken take does not null against the original (+3.6 dB on the test take): the
+  two delay such a voice by different times, 67 samples apart. A sung take nulls at -68.8 dB.
+- Flatwater Bass Leveler: where one side rides a note afresh and the other does not, the match falls to -13.5 dB on a
+  synthetic part with ghost notes and to -9.0 dB on the worst factory preset render.
 
 ## 1.0.0 (2026-11-04)
 

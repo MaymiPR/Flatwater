@@ -230,10 +230,12 @@ Flatten, noise, each modulator on a control, three presets, 44.1 and 96 kHz), ru
 The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 `20 log10(rms(ours - reference) / rms(reference))` in dB.
 
-`plugins/FwPitchBend/nulltest/null_presets.py`, `plugins/FwPitchBend/nulltest/null_mods.py`, `plugins/FwPitchBend/nulltest/check_shifter.py`:
+`plugins/FwPitchBend/nulltest/null_noshift.py`, `null_shift.py`, `null_presets.py`, `null_mods.py` and `check_shifter.py`:
 
-- With every control at 0 both pass the voice through with the same delay: -67 dB on a sung take, the delay within
-  0.0002 samples.
+- With every control at 0 (`plugins/FwPitchBend/nulltest/null_noshift.py`), ours against the reference sample for
+  sample: a null on a sung take (-68.8 dB), close on steady vowels (-53.7 to -60.6 dB), a model on white noise
+  (-27.2 dB), and not a null on a spoken take (+3.6 dB), where the two delay the voice by different times (67 samples
+  apart). Ours against its own delayed input: the delay within 0.0002 samples (scorecard M4).
 - Once anything shifts, Flatwater Pitch Bend is its own pitch shifter (a pitch detector and overlap-added grains), so
   it is judged by what is heard: the shifter meets all but one of its scorecard measures against the reference's
   numbers (pitch accuracy 0.4 cents on vowels, 6.3 on sung phrases against the reference's 6.0; the formant envelope;
@@ -244,8 +246,8 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 - The reference's 40 presets against ours (Flatwater names), on a sung and a spoken take: 62 of 80 pairs within the
   level, pitch and tone targets; the misses are mostly speech, where two pitch detectors part on rough voice, blends
   at about 35 % Mix, and presets that use the original's drawn LFO shapes, which are not shipped.
-- Sample nulls with a shift: on a steady vowel the grains sit where the reference's do (-13 to -27 dB with small
-  Formant moves); on a real voice the reference rebuilds the sound from its own period estimates, so no recreation
+- Sample nulls with a shift: on a steady vowel the grains sit where the reference's do (-12.7 to -26.7 dB with small
+  Formant moves, not a null); on a real voice the reference rebuilds the sound from its own period estimates, so no recreation
   nulls it sample for sample.
 - Every case: [NULLTESTS.md](NULLTESTS.md).
 

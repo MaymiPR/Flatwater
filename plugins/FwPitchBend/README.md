@@ -37,14 +37,16 @@ drawn ones).
 
 ## How close
 
-With every control at 0 the output is the input, delayed as the reference's (-67 dB residual on a sung take). Once
+With every control at 0 the output is the input, delayed. Against the original at the same settings that is a null on a
+sung take (-68.8 dB) and close on steady vowels (-53.7 to -60.6 dB). On a spoken take it is not a null (+3.6 dB): the
+two delay such a voice by different times, 67 samples apart on the test take. Once
 anything shifts, Flatwater Pitch Bend is its own pitch shifter (a pitch detector and overlap-added grains), so it is
 compared by what is heard rather than sample for sample: the shifter matches the reference on all its scorecard
 measures but one (pitch accuracy, formant envelope, onsets and jumps, noise, Flatten, the gate; the miss is a few
 level cells where the reference's own level varies within one setting), the modulators on all 38 of
 their null cases (to 0.0001 ... 0.006 of the control's range, rms), and 62 of the 80 factory preset and take pairs meet
-every target for level, pitch and tone. On a steady vowel the grains sit where the reference's do: up to -27 dB of
-cancellation with small Formant moves. On a real voice the reference rebuilds the sound from its own period
+every target for level, pitch and tone. On a steady vowel the grains sit where the reference's do: -12.7 to -26.7 dB
+with small Formant moves, which is not a null. On a real voice the reference rebuilds the sound from its own period
 estimates, so no recreation nulls it sample for sample. Every case: [NULLTESTS.md](NULLTESTS.md) and
 [the presets null test](NULLTESTS.md#presets).
 
