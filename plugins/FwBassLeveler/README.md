@@ -31,10 +31,11 @@ The toolbar is the one every Flatwater plug-in shares: see [the suite README](..
 ## How close
 
 On steady tones and level steps, the level read, the gain law, the look-ahead, the smoothing and the hold match the
-original at -48 to -49 dB. A bass line matches at -30 dB at nearly every Sensitivity and Response setting. Real bass
-parts held out from the fit come in at a median of -22 to -26 dB per setting. Most of that is a note ridden afresh by
-one side and not the other; in a mix it is one note slightly louder or quieter. The match is weakest at Response Fast
-and Sensitivity 100. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the original's own:
+original at -48.3 to -48.9 dB. A bass line matches at -25.1 to -30.5 dB over the Sensitivity and Response settings. Real
+bass parts held out from the fit come in at a median of -21.9 to -25.6 dB per setting, a model and not a null. Most of
+that is a note ridden afresh by one side and not the other; in a mix it is one note slightly louder or quieter. Where
+that happens the match is weakest: -13.5 dB on a synthetic part with ghost notes, -10.0 dB on the worst held-out part
+and -9.0 dB on the worst preset render. Every case: [NULLTESTS.md](NULLTESTS.md); the factory presets against the original's own:
 [the presets null test](NULLTESTS.md#presets).
 
 ## How it was made

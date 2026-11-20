@@ -163,7 +163,7 @@ Bass and Harmonics faders): median -48.5 dB on the whole output and -42.7 dB on 
 
 | Check | Result |
 |---|---|
-| CHECK sites | 26 |
+| Unit-test program | `FwBassXLiftTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

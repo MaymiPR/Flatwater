@@ -81,7 +81,7 @@ public:
         maxPunch = (int) std::ceil (t.punchMaxMs * 1e-3 * fs) + 1;
         chargeBlend = t.chargeBlend;
         memFloorS = t.memoryFloorMs * 1e-3;
-        delay.assign ((size_t) channels, std::vector<float> ((size_t) la, 0.0f));
+        delay.assign (2, std::vector<float> ((size_t) la, 0.0f));          // (both, whatever the count: setChannels)
         det.assign ((size_t) (la + maxPunch + 2), 0.0f);
         b1.assign ((size_t) (t.box1 * scale), 1.0f); b2.assign ((size_t) (t.box2 * scale), 1.0f);
         lb1.assign ((size_t) (t.box1 * scale), 1.0f); lb2.assign ((size_t) (t.box2 * scale), 1.0f);
@@ -102,6 +102,14 @@ public:
         startU = t.startupMs > 0.0f ? 1.0 : 0.0;
         R = 0.0; S = tables::hasRelease4 ? (double) t.start4Db : 0.0; S2 = tables::hasRelease4 ? (double) t.start4FastDb : 0.0; g1 = 1.0;
         net.reset(); netCount = 0; corrGain = 1.0; flatPos = flatFill = 0; std::fill (std::begin (flatHist), std::end (flatHist), 0.0f);
+    }
+
+    // Another channel count (1 or 2) after prepare(), which made both delay lines: every state as prepare() leaves
+    // it. No allocation, so the audio thread may call it.
+    void setChannels (int numChannels)
+    {
+        channels = std::max (1, std::min (2, numChannels));
+        reset();
     }
 
     int latency() const { return la; }
@@ -233,6 +241,17 @@ public:
             pos = (pos + 1) % la;                      // the delay line returns the input of la samples ago
             detPos = (detPos + 1) % (int) det.size();
             limPos = (limPos + 1) % (int) lim.size();
+        }
+    }
+
+    // The input of a block that is not processed (the host's bypass): the delay line takes it, so the audio after
+    // the bypass is the audio of now. The detector, the gain and the limiter keep their states. No allocation.
+    void feed (const float* const* ch, int n)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            for (int c = 0; c < channels; ++c) delay[(size_t) c][(size_t) pos] = ch[c][i];
+            pos = (pos + 1) % la;
         }
     }
 

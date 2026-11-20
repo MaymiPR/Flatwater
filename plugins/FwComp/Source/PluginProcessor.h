@@ -3,18 +3,21 @@
 #include <atomic>
 #include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "dsp/Analog.h"
 #include "Params.h"
 
-class FwCompProcessor : public juce::AudioProcessor
+class FwCompProcessor : public juce::AudioProcessor, public flatwater::HasPresets
 {
 public:
     FwCompProcessor();
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the compressors, their delay lines, the Analog stage and the bypass line as prepareToPlay leaves them. No allocation.
+    void reset() override { if (prepared) setLayout (layoutDual); }
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
@@ -29,15 +32,8 @@ public:
     bool producesMidi() const override { return false; }
     double getTailLengthSeconds() const override { return 0.0; }
     int getNumPrograms() override { return 1 + (int) co::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : co::factoryPresets()[(size_t) index - 1], apvts.getParameter (co::id::mode),
-                           { apvts.getParameter (co::id::mix) });           // presets leave Mix alone, as the reference
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -50,6 +46,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // meters (dB, highest peak since the editor last read them): input, output; the compressor's and the limiter's
     // gain reduction (positive dB)
@@ -60,9 +59,9 @@ public:
 private:
     flatwater::BypassDelay bypassLine;
     float get (const char* id) const { return apvts.getRawParameterValue (id)->load(); }
-    void configure();
+    void configure();                // allocates: prepareToPlay
+    void setLayout (bool dual);      // a Mode change: a reset without allocation, also on the audio thread
     co::dsp::Compressor::Settings settings() const;
-    int currentProgram = 0;
     co::dsp::Compressor comps[2];
     co::dsp::Analog analogStage;
     double sr = 44100.0;

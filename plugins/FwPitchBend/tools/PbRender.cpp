@@ -11,6 +11,8 @@
 //   preset=<k>                 factory preset k (1 .. 40, as the host's program list; given first, later keys change it)
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 // There is no latency; the output is the same length as the input.
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -33,11 +35,24 @@ struct Head : public juce::AudioPlayHead
     }
 };
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: PbRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     juce::ScopedJuceInitialiser_GUI init;
-    const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
+    const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     int block = 512;
     double preroll = 0.0;
@@ -65,11 +80,12 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos || a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq), v = a.substr (eq + 1);
         const juce::StringArray parts = juce::StringArray::fromTokens (juce::String (v), ":", "");
         if (k == "preset") p.setCurrentProgram (std::atoi (v.c_str()));
-        else if (k == "block") block = std::max (1, std::atoi (v.c_str()));
+        else if (k == "block") { block = std::atoi (v.c_str()); if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "bpm") head.bpm = std::atof (v.c_str());
         else if (k == "preroll") preroll = std::atof (v.c_str());
         else if (k == "fine") st.setProperty (pb::fineId, std::atoi (v.c_str()) != 0, nullptr);
@@ -118,9 +134,6 @@ int main (int argc, char** argv)
             for (int i = 0; i < m; ++i)
                 if (s + i >= 0) out[(size_t) ((s + i) * ch + c)] = b.getSample (c, i);
     }
-    FILE* o = std::fopen (argv[2], "wb");
-    if (! o) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
-    std::fwrite (out.data(), sizeof (float), out.size(), o);
-    std::fclose (o);
+    if (! writeAll (argv[2], out)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

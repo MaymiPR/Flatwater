@@ -4,6 +4,8 @@ edited by hand.
 The JSON holds the report as data: a title, the introduction and the sections (Settings, Stages, Presets, Grid), each
 a list of blocks: a heading, a paragraph (its lines) or a table (columns and rows of cells). A block may belong to a
 part, the output of one null script: the script replaces its part when it runs, and the report is written again.
+The document's "scripts" names, per part, the command that wrote it (set when the part is saved); the page shows it
+under the part as a "Reproduce:" line.
 
     import report_lib as RL
     RL.save('FwComp', 'presets', md_lines, section='Presets')   # a script's output (Markdown lines) as its part
@@ -82,25 +84,36 @@ def parse(lines, demote=0):
     return blocks
 
 
-def render_blocks(blocks):
+def command(args=None):
+    """the running script as the command that reproduces its part: python -I <its path from the root> <its arguments>
+    (args: the arguments of the run that measures, where this run only wrote the page again from saved results)"""
+    path = os.path.relpath(os.path.abspath(sys.argv[0]), ROOT).replace(os.sep, '/')
+    return ' '.join(['python -I', path] + list(sys.argv[1:] if args is None else args))
+
+
+def render_blocks(blocks, scripts=None):
     out = []
-    for b in blocks:
-        if 'heading' in b:
-            out += ['#' * b['heading'] + ' ' + b['text'], '']
-        elif b.get('table'):
-            out.append('| ' + ' | '.join(b['columns']) + ' |')
-            out.append('|' + '|'.join(b['align']) + '|')
-            out += ['| ' + ' | '.join(r) + ' |' for r in b['rows']]
-            out.append('')
-        else:
-            out += b['lines'] + ['']
+    for i, b in enumerate(blocks):
+        out += _render_block(b)
+        part = b.get('part')
+        if scripts and part in scripts and (i + 1 == len(blocks) or blocks[i + 1].get('part') != part):
+            out += ['Reproduce: `%s`' % scripts[part], '']
     return out
+
+
+def _render_block(b):
+    if 'heading' in b:
+        return ['#' * b['heading'] + ' ' + b['text'], '']
+    if b.get('table'):
+        return (['| ' + ' | '.join(b['columns']) + ' |', '|' + '|'.join(b['align']) + '|']
+                + ['| ' + ' | '.join(r) + ' |' for r in b['rows']] + [''])
+    return b['lines'] + ['']
 
 
 def render(doc):
     out = ['# ' + doc['title'], ''] + render_blocks(doc.get('intro', []))
     for s in doc['sections']:
-        out += ['## ' + s['name'], ''] + render_blocks(s['blocks'])
+        out += ['## ' + s['name'], ''] + render_blocks(s['blocks'], doc.get('scripts'))
     while out and out[-1] == '':
         out.pop()
     return '\n'.join(out) + '\n'
@@ -126,11 +139,11 @@ def write(plugin):
     return path
 
 
-def save(plugin, part, lines, section='Settings', from_table=False):
+def save(plugin, part, lines, section='Settings', from_table=False, args=None):
     """a null script's output as its part of the report: Markdown lines as the script writes them (a title line of its
     own is dropped and its headings go one level down, under the section's); from_table: only from its first table on.
     The part's blocks are replaced where they stand, or added at the end of the section; then NULLTESTS.md is written
-    again. Returns its path."""
+    again, with the running script's command as the part's "Reproduce:" line (args: see command). Returns its path."""
     lines = [x for line in lines for x in line.split(chr(10))]
     if lines and lines[0].startswith('# '):
         lines = lines[1:]
@@ -150,6 +163,7 @@ def save(plugin, part, lines, section='Settings', from_table=False):
             doc['sections'].append(sec)
             doc['sections'].sort(key=lambda s: SECTIONS.index(s['name']) if s['name'] in SECTIONS else len(SECTIONS))
         sec['blocks'] += new
+    doc.setdefault('scripts', {})[part] = command(args)
     store(plugin, doc)
     return write(plugin)
 

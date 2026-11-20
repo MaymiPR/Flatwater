@@ -25,11 +25,6 @@ FwBassXLiftEditor::FwBassXLiftEditor (FwBassXLiftProcessor& p)
       freq (make<HSlider>()), slope (make<SlopeBox>()), lasso (make<LassoOverlay>())
 {
     setAuxLook (std::make_unique<FlatLook>());
-    // the window still resizes from its corner, but the grip is not drawn over the badge
-    for (auto* c : getChildren())
-        if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (bx::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (bx::id::input) });     // presets leave Input alone, as the reference
 
     auto gainFmt = [] (double v) { return gainText ((float) v); };
     for (auto* f : { &input, &origBass, &harmonics }) f->format = gainFmt;
@@ -182,7 +177,7 @@ void FwBassXLiftEditor::paintGraph (Graphics& g)
     g.setGradientFill (bg);
     g.fillRect (area);
     ColourGradient shade (theme::raisedTop.withAlpha (0.3f), area.getX(), area.getBottom(),
-                          Colours::transparentBlack, area.getX() + area.getWidth() * 0.55f, area.getY() + area.getHeight() * 0.35f, false);
+                          theme::clear, area.getX() + area.getWidth() * 0.55f, area.getY() + area.getHeight() * 0.35f, false);
     g.setGradientFill (shade);
     g.fillRect (area);
 
@@ -347,7 +342,7 @@ void FwBassXLiftEditor::paintContent (Graphics& g)
     ColourGradient bg (theme::cyan, 690.0f, 0.0f, theme::amber, 790.0f, 0.0f, false);
     g.setGradientFill (bg);
     g.fillPath (badge);
-    g.setColour (Colours::black.withAlpha (0.3f));                  // a darker top row
+    g.setColour (theme::shadow.withAlpha (0.3f));                  // a darker top row
     g.fillRect (676.0f, 379.0f, 123.0f, 1.0f);
     g.setColour (theme::bg);
     g.setFont (font (13.5f, true));

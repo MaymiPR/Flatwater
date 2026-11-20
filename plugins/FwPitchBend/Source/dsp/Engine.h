@@ -37,6 +37,9 @@ public:
 
     // norm: the modulatable controls' normalised values now (targets[] order), where their modulation starts from
     void prepare (double sampleRate, int maxBlock, int channels, const std::array<float, numTargets>& norm);
+    // every state as prepare() leaves it (the shifter, the modulators, the followers, the count of samples), from
+    // these values of the controls. No allocation, so the audio thread may call it.
+    void reset (const std::array<float, numTargets>& norm);
     // in place, `channels` channels of n samples
     void process (float* const* io, int channels, int n, const Params&, const Setup&);
 

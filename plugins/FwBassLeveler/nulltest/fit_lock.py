@@ -22,10 +22,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 NET = os.path.join(HERE, '..', '..', '..', 'measurements', 'FwBassLeveler', 'lock_net.json')
 FS = 48000
 LIB = B._lib
-NIN = LIB.br_lock_inputs()
-LIB.br_set_lock_net.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_double]
-LIB.br_set_lock_schedule.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_int]
-LIB.br_set_lock_dump.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_int]
+NIN = LIB.bl_lock_inputs()
+LIB.bl_set_lock_net.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_double]
+LIB.bl_set_lock_schedule.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_int]
+LIB.bl_set_lock_dump.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_int]
 _keep = []
 
 
@@ -37,9 +37,9 @@ def setting_kw(st, g, td):
 
 def dump(x, kw):
     """the lock's inputs for every attack millisecond: (output-frame sample, ms since the start, inputs)"""
-    buf = np.zeros((200000, NIN + 2)); LIB.br_set_lock_dump(buf.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), len(buf))
+    buf = np.zeros((200000, NIN + 2)); LIB.bl_set_lock_dump(buf.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), len(buf))
     gm, tr = B.ride(x, trace=True, **kw)
-    n = LIB.br_lock_dumped(); LIB.br_set_lock_dump(None, 0)
+    n = LIB.bl_lock_dumped(); LIB.bl_set_lock_dump(None, 0)
     d = buf[:n].copy(); d[:, 0] -= B.LOOKAHEAD[False]
     return gm, tr, d
 
@@ -83,9 +83,9 @@ def run_with(x, kw, mode, sched=None, thr=0.0):
         L = B.LOOKAHEAD[False]
         flat = [v for s, t in sched for v in (int(s) + L, -1 if t is None else int(t) + L)]
         a = (ctypes.c_int * len(flat))(*flat); _keep.append(a)
-        LIB.br_set_lock_schedule(a, len(sched))
+        LIB.bl_set_lock_schedule(a, len(sched))
     gm = B.ride(x, **dict(kw, lock=float(mode), lock_thr=thr))
-    LIB.br_set_lock_schedule(None, 0)
+    LIB.bl_set_lock_schedule(None, 0)
     return gm
 
 
@@ -160,7 +160,7 @@ def load_net(path=NET):
     d = json.load(open(path))
     arr = lambda v: (ctypes.c_double * len(v))(*v)
     a = [arr(d['w1']), arr(d['b1']), arr(d['w2'])]; _keep.append(a)
-    LIB.br_set_lock_net(d['hidden'], a[0], a[1], a[2], d['b2'])
+    LIB.bl_set_lock_net(d['hidden'], a[0], a[1], a[2], d['b2'])
     return d
 
 

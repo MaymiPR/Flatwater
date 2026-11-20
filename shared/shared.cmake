@@ -3,6 +3,7 @@
 # the top-level CMakeLists.txt before the plug-ins. Built once as the static library FlatwaterShared, which every plug-in,
 # test, snapshot and renderer with JUCE links; its include path is the repository root (#include "shared/ui/...").
 add_library(FlatwaterShared STATIC
+    ${CMAKE_CURRENT_LIST_DIR}/Presets.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ui/Widgets.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ui/HostFocus.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ui/RenUI.cpp

@@ -190,15 +190,16 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 `20 log10(rms(ours - reference) / rms(reference))` in dB.
 
 `plugins/FwBassLeveler/nulltest/nulltest.py`. The level read, the gain law, the 42 ms look-ahead, the smoothing and the hold
-null at -48 ... -49 dB on steady tones and level steps; a bass line at -30 dB at nearly every Sensitivity x Response
-setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
+are close at -48.3 ... -48.9 dB on steady tones and level steps; a bass line is at -25.1 ... -30.5 dB over Sensitivity x
+Response (the weaker ones at Sensitivity 75 and 100, and at Fast from Sensitivity 50), at 44.1 and 96 kHz as at 48. Two
+synthetic parts where one side rides a note and the other does not are at -13.5 and -18.8 dB (not a null).
 
 | Set | Result |
 |---|---|
 | Sample rates (the bass line) | 44.1 kHz -30.2 dB, 96 kHz -30.0 dB |
 | Components | Live Mono -26.0 dB (Spill -25: -21.2, Spill -15: -24.2), Stereo (different bass on L and R) -27.7, Live Stereo -26.8 |
-| Real bass parts held out from the fit | median -22 ... -26 dB per setting, the worst parts -10 ... -17 dB |
-| The reference's own 17 presets, set on both (bass line and two corpus parts) | median -24.8 dB (-25.2 in [NULLTESTS.md, Presets](NULLTESTS.md#presets)'s set); Live components -26 dB, Stereo -27 dB |
+| Real bass parts held out from the fit (`compare_corpus.py`) | median -21.9 ... -25.6 dB per setting; the worst held-out render -10.0 dB, the worst fitted one -6.2 dB |
+| The reference's own 17 presets, set on both (bass line and two corpus parts) | median -25.2 dB, worst -9.0 dB over 51 renders ([NULLTESTS.md, Presets](NULLTESTS.md#presets)) |
 
 - Nearly all of the error on real bass parts (a DAW's own bass samples played as bass lines) is a note ridden afresh
   by one side and not the other, after which the two hold 1 ... 4 dB apart until the next note; in a mix that is one
@@ -214,7 +215,7 @@ setting (-25 ... -28 dB at Sensitivity 75 and 100), at 44.1 and 96 kHz alike.
 
 | Check | Result |
 |---|---|
-| CHECK sites | 69 |
+| Unit-test program | `FwBassLevelerTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

@@ -57,7 +57,7 @@ def run(c, x, Rt):
     n = len(Rt); g = np.empty(n)
     xs = np.concatenate([np.asarray(I.KN[k], float) for k in I.ORDER]); ns = np.array([len(I.KN[k]) for k in I.ORDER], np.int32)
     att_c = np.exp(-1 / (c['att'] * 0.99e-3 * FS))
-    I.dll.hc_release(Rt.ctypes.data_as(ct.c_void_p), g.ctypes.data_as(ct.c_void_p), None, None, n, ct.c_double(FS), ct.c_double(c['rel']),
+    I.dll.co_release(Rt.ctypes.data_as(ct.c_void_p), g.ctypes.data_as(ct.c_void_p), None, None, n, ct.c_double(FS), ct.c_double(c['rel']),
                      ct.c_double(att_c), 38, 27, ns.ctypes.data_as(ct.c_void_p), xs.ctypes.data_as(ct.c_void_p),
                      np.ascontiguousarray(x, np.float64).ctypes.data_as(ct.c_void_p))
     return g
@@ -113,7 +113,7 @@ def fit(nfev):
     cs = prepare(list(np.load(CACHE, allow_pickle=True)['cases']))
     x0 = np.array(json.load(open(I.OUT))['x'])
     z0 = np.array(json.load(open(W.OUT))['z'])
-    I.dll.hc_set_charge_from_r(1)
+    I.dll.co_set_charge_from_r(1)
     nF, nA = len(I.KN['Fs']), len(I.KN['As'])
     q0 = np.concatenate([x0[:nF + nA], z0])
     Rts = [c['Rt'] for c in cs]
@@ -136,7 +136,7 @@ def report(cs=None):
     global X_CUR
     if cs is None: cs = prepare(list(np.load(CACHE, allow_pickle=True)['cases']))
     x0 = np.array(json.load(open(I.OUT))['x']); z0 = np.array(json.load(open(W.OUT))['z'])
-    I.dll.hc_set_charge_from_r(1)
+    I.dll.co_set_charge_from_r(1)
     X_CUR = W.apply(z0, x0)
     rows = []
     for c in cs:

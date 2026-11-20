@@ -7,9 +7,18 @@ using namespace juce;
 FwBassLevelerProcessor::FwBassLevelerProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassLeveler", bl::createLayout())
+      apvts (*this, &undo, "FwBassLeveler", bl::createLayout()),
+      presets (apvts, undo, bl::factoryPresets(), apvts.getParameter (bl::id::mode))
 {
-    setLatencySamples (roundToInt (bl::latencyMs (0) * 0.001 * sr));
+    latencyNow.store (roundToInt (bl::latencyMs (0) * 0.001 * sr));
+    setLatencySamples (latencyNow.load());
+    startTimerHz (20);
+}
+
+// The host learns a latency that a Mode change on the audio thread brought here, on the message thread.
+void FwBassLevelerProcessor::updateHostLatency()
+{
+    if (const int now = latencyNow.load(); now != getLatencySamples()) setLatencySamples (now);
 }
 
 bool FwBassLevelerProcessor::isBusesLayoutSupported (const BusesLayout& l) const
@@ -21,28 +30,56 @@ bool FwBassLevelerProcessor::isBusesLayoutSupported (const BusesLayout& l) const
 void FwBassLevelerProcessor::prepareToPlay (double sampleRate, int)
 {
     sr = sampleRate;
-    configuredMode = -1;
     configure();
+    setLatencySamples (delaySamples);
 }
 
+// The lines for the longest latency of the four components and the ride, made here (it allocates): prepareToPlay
+// calls it, the audio thread only for a host that sends a block without having prepared.
 void FwBassLevelerProcessor::configure()
 {
-    configuredMode = modeIndex();
-    delaySamples = roundToInt (bl::latencyMs (configuredMode) * 0.001 * sr);
-    line.assign ((size_t) jmax (1, getMainBusNumInputChannels()), std::vector<float> ((size_t) delaySamples + 1, 0.0f));
-    writePos = 0;
+    int longest = 0;
+    for (int m = 0; m < bl::modeNames().size(); ++m) longest = jmax (longest, roundToInt (bl::latencyMs (m) * 0.001 * sr));
+    line.assign ((size_t) jmax (1, getMainBusNumInputChannels()), std::vector<float> ((size_t) longest + 1, 0.0f));
     ride.prepare (sr);
-    ride.preHold = delaySamples;
     smooth5 = std::exp (-1.0 / (0.005 * sr));
+    bypassLine.prepare ((int) line.size(), 0, longest);
+    setMode (modeIndex());
+}
+
+// A component (Mode) and its latency. A Mode change on the audio thread comes here: a full reset (the lines silent
+// at their new length, the ride, the bypass line), no allocation; the host hears of the latency from the timer.
+void FwBassLevelerProcessor::setMode (int mode)
+{
+    configuredMode = mode;
+    delaySamples = jmin (roundToInt (bl::latencyMs (mode) * 0.001 * sr), (int) line[0].size() - 1);
+    for (auto& l : line) std::fill (l.begin(), l.end(), 0.0f);
+    writePos = 0;
+    ride.reset();
+    ride.preHold = delaySamples;
     outGain = Decibels::decibelsToGain ((double) get (bl::id::output));
     heldDb = 0.0;
-    setLatencySamples (delaySamples);
-    bypassLine.prepare ((int) line.size(), delaySamples);
+    bypassLine.setDelay (delaySamples);
+    latencyNow.store (delaySamples);
+}
+
+// The component stays; its lines, the ride and the bypass line start again (a host that never prepared has none).
+void FwBassLevelerProcessor::reset()
+{
+    if (configuredMode < 0) return;
+    setMode (configuredMode);
+    wasHeld = returning = false;
+}
+
+void FwBassLevelerProcessor::followMode (int channels)
+{
+    if (configuredMode < 0 || (int) line.size() < channels) configure();
+    else if (const int mode = modeIndex(); mode != configuredMode) setMode (mode);
 }
 
 void FwBassLevelerProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 {
-    if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
+    followMode (b.getNumChannels());
     // the main line takes the input too, so the release of the bypass goes on with the audio of now, not with what
     // the line held when the bypass came on
     const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size()), len = delaySamples + 1;
@@ -60,7 +97,7 @@ void FwBassLevelerProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
 {
     ScopedNoDenormals nd;
     flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
-    if (modeIndex() != configuredMode || (int) line.size() < b.getNumChannels()) configure();
+    followMode (b.getNumChannels());
     const int n = b.getNumSamples(), ch = jmin (b.getNumChannels(), (int) line.size());
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
     bl::dsp::RideSettings st;

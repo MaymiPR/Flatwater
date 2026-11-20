@@ -8,6 +8,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
+#include "shared/test/ResetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -349,6 +352,169 @@ static void testNonFiniteInput()
     CHECK (finite);
 }
 
+// Mode or Analog changed between two blocks (a host automates them): the block that takes the change allocates
+// nothing on the calling thread. When the change swaps one stereo delay for two mono ones or back, the audio is that
+// of a processor prepared in the new Mode (the change is a full reset: the echoes of before are gone).
+static void testModeAndAnalogChangeOnTheAudioThread()
+{
+    auto set = [] (FwDelayProcessor& q, const char* id, float v) { auto* a = q.apvts.getParameter (id); a->setValueNotifyingHost (a->convertTo0to1 (v)); };
+    auto setup = [&set] (FwDelayProcessor& q) { set (q, de::id::sync, 2.0f); set (q, de::id::delay, 20.0f); set (q, de::id::mix, 50.0f); };
+    FwDelayProcessor p;
+    setup (p);
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512), in (2, 512);
+    juce::MidiBuffer midi;
+    unsigned int seed = 4242u;
+    auto fill = [&seed] (juce::AudioBuffer<float>& b)
+    {
+        for (int i = 0; i < b.getNumSamples(); ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            b.setSample (0, i, v); b.setSample (1, i, 0.5f * v * v - v);
+        }
+    };
+    auto same = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < a.getNumSamples(); ++i)
+                if (! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) return false;
+        return true;
+    };
+    auto blockAllocations = [&]
+    {
+        flatwater::test::AllocScope scope;
+        p.processBlock (buf, midi);
+        return scope.count();
+    };
+    for (int b = 0; b < 8; ++b) { fill (buf); p.processBlock (buf, midi); }
+    for (int mode : { 1, 0, 1, 2 })
+    {
+        set (p, de::id::mode, (float) mode);
+        FwDelayProcessor fresh;
+        setup (fresh); set (fresh, de::id::mode, (float) mode);
+        fresh.prepareToPlay (48000.0, 512);
+        for (int b = 0; b < 4; ++b)
+        {
+            fill (buf);
+            in.makeCopyOf (buf);
+            CHECK (blockAllocations() == 0);
+            fresh.processBlock (in, midi);
+            CHECK (same (buf, in));
+        }
+    }
+    for (int analog : { 0, 3, 4, 1, 0, 2 })
+    {
+        set (p, de::id::analog, (float) analog);
+        fill (buf);
+        CHECK (blockAllocations() == 0);
+        bool finite = true;
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < 512; ++i) finite = finite && std::isfinite (buf.getSample (c, i));
+        CHECK (finite);
+    }
+}
+
+// Sync's conversion between ms and note values belongs to a click on the Sync control. A preset, a reload or an undo
+// that changes Sync brings its own Delay, and the open editor leaves it there.
+static void testSyncConversion()
+{
+    FwDelayProcessor p;
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    ed->setVisible (true);
+    auto get = [&p] (const char* id) { return p.apvts.getRawParameterValue (id)->load(); };
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    auto tick = [&ed] { ((juce::Timer*) dynamic_cast<FwDelayEditor*> (ed.get()))->timerCallback(); };
+    auto click = [&] (float x, float y)
+    {
+        const juce::Point<float> pt (x, y);
+        auto* c = ed->getComponentAt (pt.roundToInt());
+        if (c == nullptr) return;
+        const auto local = c->getLocalPoint (ed.get(), pt);
+        const auto now = juce::Time::getCurrentTime();
+        c->mouseDown (juce::MouseEvent (juce::Desktop::getInstance().getMainMouseSource(), local, juce::ModifierKeys::leftButtonModifier,
+                                        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, c, c, now, local, now, 1, false));
+    };
+    const auto& list = de::factoryPresets();
+    auto program = [&list] (const char* name) { for (int k = 0; k < (int) list.size(); ++k) if (juce::String (list[(size_t) k].name) == name) return k + 1; return 0; };
+
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);                    // a fresh instance follows the host
+    p.setCurrentProgram (program ("Live Sound Start"));              // an ms preset: Delay 505
+    tick(); tick();
+    CHECK_NEAR (get (de::id::sync), 2.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+
+    juce::MemoryBlock ms;                                            // a state saved in ms, loaded over a synced one
+    p.getStateInformation (ms);
+    p.setCurrentProgram (program ("Default"));
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);
+    p.setStateInformation (ms.getData(), (int) ms.getSize());
+    tick(); tick();
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+
+    set (de::id::sync, 1.0f);                                        // the host's automation of Sync, there and back
+    tick();
+    set (de::id::sync, 2.0f);
+    tick();
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delayNote), 13.0, 1.0e-3);
+
+    // the click itself converts, as the reference: ms to the nearest note (505 ms at 120 BPM: a quarter), a note to
+    // its time (an eighth: 250 ms)
+    set (de::id::delayNote, 5.0f);
+    click (362.0f, 156.0f);                                          // HOST
+    tick();
+    CHECK_NEAR (get (de::id::sync), 1.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 505.0, 1.0e-3);
+    set (de::id::delayNote, 10.0f);
+    click (409.0f, 156.0f);                                          // MS
+    tick();
+    CHECK_NEAR (get (de::id::sync), 2.0, 1.0e-3);
+    CHECK_NEAR (get (de::id::delay), 250.0, 1.0e-3);
+    click (409.0f, 156.0f);                                          // MS again: no change, nothing to convert
+    set (de::id::delay, 300.0f);
+    click (409.0f, 156.0f);
+    CHECK_NEAR (get (de::id::delay), 300.0, 1.0e-3);
+
+    // without an editor the same conversion is the processor's
+    FwDelayProcessor q;
+    auto qget = [&q] (const char* id) { return q.apvts.getRawParameterValue (id)->load(); };
+    auto* d = q.apvts.getParameter (de::id::delay);
+    d->setValueNotifyingHost (d->convertTo0to1 (250.0f));
+    q.convertDelayForSync (2, 1);
+    CHECK_NEAR (qget (de::id::delayNote), 10.0, 1.0e-3);
+    auto* n = q.apvts.getParameter (de::id::delayNote);
+    n->setValueNotifyingHost (n->convertTo0to1 (13.0f));
+    q.convertDelayForSync (1, 2);
+    CHECK_NEAR (qget (de::id::delay), 500.0, 1.0e-3);
+    q.convertDelayForSync (1, 0);                                    // between Host and BPM: note values both, nothing to do
+    CHECK_NEAR (qget (de::id::delayNote), 13.0, 1.0e-3);
+    CHECK_NEAR (qget (de::id::delay), 500.0, 1.0e-3);
+}
+
+// reset(), which a host calls to clear the tails (shared/test/ResetChecks.h): the default setting: echoes in the lines, and the Analog stage adds its noise
+static void testReset()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL reset: %s\n", what); } };
+    flatwater::test::resetChecks<FwDelayProcessor> ([] (FwDelayProcessor& p)
+    {
+        p.setRateAndBufferSizeDetails (48000.0, 512);
+        p.prepareToPlay (48000.0, 512);
+    }, check);
+}
+
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwDelayProcessor> (de::id::mode, check);
+    flatwater::test::presetChecks<FwDelayProcessor> (de::id::mode, check);
+    flatwater::test::windowChecks<FwDelayProcessor> (check);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -360,7 +526,11 @@ int main()
     testProcessor();
     testDisplayClicks();
     testDsp();
+    testModeAndAnalogChangeOnTheAudioThread();
     testPresets();
+    testSyncConversion();
+    testReset();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

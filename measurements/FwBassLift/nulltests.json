@@ -907,5 +907,8 @@
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "settings": "python -I plugins/FwBassLift/nulltest/bf_ref.py --save"
+ }
 }

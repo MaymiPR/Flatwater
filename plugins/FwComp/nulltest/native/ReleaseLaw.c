@@ -21,11 +21,11 @@ static double tab(const Tab* t, double x)
     return exp(t->v[i] + f * (t->v[i + 1] - t->v[i]));
 }
 
-/* the effective release table: log ms on a grid of R (rows) and S (columns), set by hc_set_rel2d */
+/* the effective release table: log ms on a grid of R (rows) and S (columns), set by co_set_rel2d */
 static int nR2 = 0, nS2 = 0, attackFirst = 0, useMlp = 0, chargeFromR = 0, useW0 = 0;
 static double W0x[16], W0v[16], Kms = 56.23, Kp = 1.42; static int nW0 = 0;
 /* rel_eff = min(release, release * w0(S), K / (R - S)^p); w0 a log table over S */
-__declspec(dllexport) void hc_set_w0(int n, const double* xs, const double* v, double K, double p)
+__declspec(dllexport) void co_set_w0(int n, const double* xs, const double* v, double K, double p)
 { useW0 = 1; nW0 = n; for (int k = 0; k < n; ++k) { W0x[k] = xs[k]; W0v[k] = v[k]; } Kms = K; Kp = p; }
 static double w0_of(double S)
 {
@@ -35,23 +35,23 @@ static double w0_of(double S)
     const double f = (S - W0x[i]) / (W0x[i + 1] - W0x[i]);
     return exp(W0v[i] + f * (W0v[i + 1] - W0v[i]));
 }
-__declspec(dllexport) void hc_set_charge_from_r(int a) { chargeFromR = a; }
+__declspec(dllexport) void co_set_charge_from_r(int a) { chargeFromR = a; }
 /* 1: S charges from the output after the attack (the gain the listener gets) instead of R */
 static int chargeFromOut = 0;
 static double chargeBeta = 0.0;          /* with chargeFromOut: S charges toward out + beta (R - out) */
-__declspec(dllexport) void hc_set_charge_from_out(int a) { chargeFromOut = a; chargeBeta = 0.0; }
-__declspec(dllexport) void hc_set_charge_blend(double beta) { chargeFromOut = beta < 1.0; chargeBeta = beta; }
+__declspec(dllexport) void co_set_charge_from_out(int a) { chargeFromOut = a; chargeBeta = 0.0; }
+__declspec(dllexport) void co_set_charge_blend(double beta) { chargeFromOut = beta < 1.0; chargeBeta = beta; }
 /* the slow state releases at the slow law with a release time of at least this (ms; 0: the Release time itself) */
 static double memFloorMs = 0.0;
-__declspec(dllexport) void hc_set_mem_floor(double ms) { memFloorMs = ms; }
+__declspec(dllexport) void co_set_mem_floor(double ms) { memFloorMs = ms; }
 /* 0: R may fall below the slow state (the memory only slows the release; with S charged from the output a floor
    latches: S holds the output up and the output holds S) */
 static int rFloorS = 1;
-__declspec(dllexport) void hc_set_r_floor(int a) { rFloorS = a; }
+__declspec(dllexport) void co_set_r_floor(int a) { rFloorS = a; }
 /* an MLP for the effective release: inputs R/30, S/30, (R-S)/30, ln(release / 100 ms)/3; 8 tanh units; output w,
    rel_eff = release * sigmoid(w)                                                                           */
 static double W1[8 * 4], B1m[8], W2[8], B2m;
-__declspec(dllexport) void hc_set_mlp(const double* p) { useMlp = 1; for (int k = 0; k < 32; ++k) W1[k] = p[k]; for (int k = 0; k < 8; ++k) { B1m[k] = p[32 + k]; W2[k] = p[40 + k]; } B2m = p[48]; }
+__declspec(dllexport) void co_set_mlp(const double* p) { useMlp = 1; for (int k = 0; k < 32; ++k) W1[k] = p[k]; for (int k = 0; k < 8; ++k) { B1m[k] = p[32 + k]; W2[k] = p[40 + k]; } B2m = p[48]; }
 static double mlp_w(double R, double S, double lr)
 {
     const double in[4] = { R / 30.0, S / 30.0, (R - S) / 30.0, lr };
@@ -64,15 +64,15 @@ static double mlp_w(double R, double S, double lr)
     }
     return 1.0 / (1.0 + exp(-o));
 }
-__declspec(dllexport) void hc_set_order(int a) { attackFirst = a; }
+__declspec(dllexport) void co_set_order(int a) { attackFirst = a; }
 /* the start-up state: after a reset the effective release time is pulled toward the Release time by a factor that
    decays from 1 with this time constant (0: none); the reference releases slowly for its first 0.2 - 0.4 s */
 static double startupMs = 0.0, startupEndMs = 0.0;
-__declspec(dllexport) void hc_set_startup(double ms) { startupMs = ms; startupEndMs = 0.0; }
+__declspec(dllexport) void co_set_startup(double ms) { startupMs = ms; startupEndMs = 0.0; }
 /* logistic form: u = 1 / (1 + exp((t - end) / width)) */
-__declspec(dllexport) void hc_set_startup2(double end_ms, double width_ms) { startupEndMs = end_ms; startupMs = width_ms; }
+__declspec(dllexport) void co_set_startup2(double end_ms, double width_ms) { startupEndMs = end_ms; startupMs = width_ms; }
 static double R2[32], S2[32], V2[32 * 32];
-__declspec(dllexport) void hc_set_rel2d(int nr, const double* r, int ns, const double* sv, const double* v)
+__declspec(dllexport) void co_set_rel2d(int nr, const double* r, int ns, const double* sv, const double* v)
 {
     nR2 = nr; nS2 = ns;
     for (int i = 0; i < nr; ++i) R2[i] = r[i];
@@ -95,7 +95,7 @@ static double rel2d(double R, double S)
 }
 
 /* knots: xs = [Fs knots | As knots | C knots | Ff knots], vs likewise; ns = counts of each */
-__declspec(dllexport) void hc_release(const double* Rt, double* g, double* Rout, double* Sout, int n, double fs, double rel_ms,
+__declspec(dllexport) void co_release(const double* Rt, double* g, double* Rout, double* Sout, int n, double fs, double rel_ms,
                                       double att_c, int B1, int B2, const int* ns, const double* xs, const double* vs)
 {
     Tab Fs = { ns[0], xs, vs }, As = { ns[1], xs + ns[0], vs + ns[0] };

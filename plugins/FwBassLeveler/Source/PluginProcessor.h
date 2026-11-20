@@ -4,17 +4,21 @@
 #include <vector>
 #include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "Params.h"
 
-class FwBassLevelerProcessor : public juce::AudioProcessor
+class FwBassLevelerProcessor : public juce::AudioProcessor, public flatwater::HasPresets, private juce::Timer
 {
 public:
     FwBassLevelerProcessor();
+    ~FwBassLevelerProcessor() override { stopTimer(); }
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the look-ahead line, the ride, a held Rider and the bypass line as prepareToPlay leaves them. No allocation.
+    void reset() override;
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
@@ -30,14 +34,8 @@ public:
     double getTailLengthSeconds() const override { return 0.0; }
     // programs for the host's preset list: 0 = Default, then the factory presets (bl::factoryPresets())
     int getNumPrograms() override { return 1 + (int) bl::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : bl::factoryPresets()[(size_t) index - 1], apvts.getParameter (bl::id::mode));
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -50,6 +48,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // editor taps: the input's energy (dB, the highest of the block, for the Target meter), the output's peak (clip LED),
     // the Rider's gain (dB)
@@ -63,10 +64,18 @@ public:
     int modeIndex() const { return juce::roundToInt (get (bl::id::mode)); }
     float idleDb() const { return bl::idleDb (get (bl::id::idle), get (bl::id::rangeMin), get (bl::id::rangeMax)); }
 
+    // The latency of the component (Mode) in use, told to the host when it is not the one the host has. A Mode change
+    // that reaches the audio thread changes the latency there (42 ms, Live 5 ms) and leaves the telling to this, which
+    // a timer calls on the message thread.
+    void updateHostLatency();
+
 private:
     flatwater::BypassDelay bypassLine;
-    int currentProgram = 0;
-    void configure();
+    void timerCallback() override { updateHostLatency(); }
+    void configure();                // allocates: prepareToPlay
+    void setMode (int mode);         // a Mode change: a reset without allocation, also on the audio thread
+    void followMode (int channels);  // at the start of a block: the Mode parameter's component
+    std::atomic<int> latencyNow { 0 };
     double sr = 48000.0;
     int delaySamples = 0, writePos = 0, configuredMode = -1;
     std::vector<std::vector<float>> line;

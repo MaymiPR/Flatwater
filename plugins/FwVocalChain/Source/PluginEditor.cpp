@@ -33,7 +33,7 @@ Font italicFont (float size)
 // a screw: a raised face in a dark ring, its slot across
 void drawScrew (Graphics& g, Point<float> c, float r)
 {
-    g.setColour (Colours::black.withAlpha (0.4f));
+    g.setColour (theme::shadow.withAlpha (0.4f));
     g.fillEllipse (Rectangle<float> (2.0f * r + 1.0f, 2.0f * r + 1.0f).withCentre (c.translated (0.0f, 1.0f)));
     g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, c.y - r, theme::raised, 0.0f, c.y + r, false));
     g.fillEllipse (Rectangle<float> (2.0f * r, 2.0f * r).withCentre (c));
@@ -104,7 +104,7 @@ void drawNamePlate (Graphics& g)
     all.addPath (bars);
     for (auto o : { Point<float> (2.0f, 2.4f), Point<float> (1.2f, 1.5f) })
     {
-        g.setColour (Colours::black.withAlpha (0.45f));
+        g.setColour (theme::shadow.withAlpha (0.45f));
         g.fillPath (all, AffineTransform::translation (o));
     }
     g.setGradientFill (ColourGradient (theme::text, 0.0f, top, theme::textDim, 0.0f, base, false));
@@ -582,11 +582,6 @@ FwVocalChainEditor::FwVocalChainEditor (FwVocalChainProcessor& p)
       inMeter (make<Meter> (marks)), outMeter (make<Meter> (marks)), led (make<SensLed> (marks)), balance (make<BalanceKnob> (marks)),
       linkButton (make<LinkButton> (marks))
 {
-    for (auto* c : getChildren())
-        if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (ch::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (ch::id::sensitivity), p.apvts.getParameter (ch::id::output),   // (IgnoreOnPresetLoad)
-                           p.apvts.getParameter (ch::id::link) });
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { showEntry (sl); };
 

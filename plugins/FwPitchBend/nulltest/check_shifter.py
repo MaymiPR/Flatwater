@@ -2,11 +2,12 @@
 OUR shifter alone (plugins/FwPitchBend/tools/PbShifterRender) next to the reference's numbers (the JSON files of
 measure_shifter.py in the same folder). The same signals and the same measures as that battery.
 
-    python -I -B check_shifter.py [m1 m1b m2 m3 m4 m5 m6 m7 m8 blocks cpu | all]
+    python -I -B check_shifter.py [m1 m1b m2 m3 m4 m5 m6 m7 m8 blocks cpu | all] [--save]
 
 Writes measurements/FwPitchBend/shifter/ours.json (merged per metric) and prints: metric, reference, ours, threshold,
 PASS / FAIL. Renders of ours are cached in nulltest/renders/pbshift_ours/ by the renderer's own hash, the input and
-the settings. FW_SHIFTER_RENDER overrides the renderer's path (default: the build folder's Release exe).
+the settings. --save writes the scorecard's part of NULLTESTS.md from ours.json (every row but the CPU time, which is
+the machine's). FW_SHIFTER_RENDER overrides the renderer's path (default: the build folder's Release exe).
 """
 import sys, os, json, hashlib, subprocess, tempfile, time
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -490,7 +491,8 @@ DATA = {}
 
 
 def main():
-    which = sys.argv[1:] or ['all']
+    save = '--save' in sys.argv
+    which = [a for a in sys.argv[1:] if a != '--save'] or ['all']
     if which == ['all']: which = list(CMDS)
     data = DATA
     data.update(load_ours())
@@ -506,7 +508,25 @@ def main():
         print('  (%s: %.0f s)' % (w, time.time() - t), flush=True)
     data['table'] = sorted(table.values(), key=lambda q: (['M1', 'M1b', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'blk', 'cpu'].index(q['metric']), q['what']))
     data['renderer'] = 'plugins/FwPitchBend/tools/PbShifterRender (sha1 %s)' % exe_hash()
-    with open(os.path.join(OUT, 'ours.json'), 'w') as f: json.dump(data, f, indent=1)
+    with open(os.path.join(OUT, 'ours.json'), 'w', newline='\n') as f: json.dump(data, f, indent=1)
+    if save: report(data['table'])
+
+
+def report(table):
+    """the scorecard's part of NULLTESTS.md: the rows of ours.json as they are"""
+    rows = [q for q in table if q['metric'] != 'cpu']
+    judged = [q for q in rows if q['result']]
+    cell = lambda v: fmt(v).replace('|', '\\|')
+    import report_lib as RL
+    with RL.Part('FwPitchBend', 'scorecard') as f:
+        f.write("`plugins/FwPitchBend/nulltest/check_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`; the reference's "
+                'numbers in `measurements/FwPitchBend/shifter/`, from `measure_shifter.py`). The same signals and measures on both '
+                'shifters; a row with no threshold met or missed is reported, not judged:\n\n')
+        f.write('| metric | measure | reference | ours | threshold | result |\n|---|---|---|---|---|---|\n')
+        for q in rows:
+            f.write('| %s | %s | %s | %s | %s | %s |\n' % (q['metric'], cell(q['what']), cell(q['reference']), cell(q['ours']), cell(q['threshold']),
+                                                          {'PASS': 'pass', 'FAIL': '**miss**'}.get(q['result'], 'report')))
+        f.write('\n%d of %d judged measures within their thresholds.\n' % (sum(q['result'] == 'PASS' for q in judged), len(judged)))
 
 
 if __name__ == '__main__':

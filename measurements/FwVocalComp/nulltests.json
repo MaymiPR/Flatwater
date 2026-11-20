@@ -3,7 +3,7 @@
  "intro": [
   {
    "lines": [
-    "Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match."
+    "Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a null, 0 dB is no match."
    ]
   }
  ],
@@ -799,13 +799,15 @@
     },
     {
      "lines": [
-      "Compression settings -12, -24, -36 dB (with and without gate / gain); residual over everything after 0.2 s, and over the last second only."
-     ]
+      "The rows above with Compression at work (every setting but Compression 0, which is a fixed gain), per signal: the residual over everything after 0.2 s, and over the last second only."
+     ],
+     "part": "summary"
     },
     {
      "table": true,
      "columns": [
       "signal",
+      "cases",
       "best (dB)",
       "median (dB)",
       "worst (dB)",
@@ -816,18 +818,21 @@
       "---:",
       "---:",
       "---:",
+      "---:",
       "---:"
      ],
      "rows": [
       [
        "sine 1 kHz -40 dBFS",
+       "6",
        "-121.5",
        "-114.0",
        "-107.1",
-       "-110.2"
+       "-110.1"
       ],
       [
        "sine 1 kHz -20 dBFS",
+       "6",
        "-114.8",
        "-110.2",
        "-103.6",
@@ -835,6 +840,7 @@
       ],
       [
        "sine 1 kHz -6 dBFS",
+       "6",
        "-113.4",
        "-107.3",
        "-101.7",
@@ -842,13 +848,15 @@
       ],
       [
        "sine 100 Hz -20",
+       "6",
        "-51.7",
-       "-49.5",
+       "-49.4",
        "-47.8",
        "-50.5"
       ],
       [
        "sine 8 kHz -20",
+       "6",
        "-109.4",
        "-102.7",
        "-101.8",
@@ -856,6 +864,7 @@
       ],
       [
        "log sweep -20",
+       "6",
        "-58.7",
        "-53.1",
        "-50.1",
@@ -863,6 +872,7 @@
       ],
       [
        "tone steps -50/-10/-30",
+       "6",
        "-62.4",
        "-36.9",
        "-22.9",
@@ -870,6 +880,7 @@
       ],
       [
        "AM 5 Hz 3 kHz",
+       "6",
        "-49.4",
        "-35.1",
        "-19.3",
@@ -877,6 +888,7 @@
       ],
       [
        "white noise -20 rms",
+       "6",
        "-33.3",
        "-27.6",
        "-25.2",
@@ -884,6 +896,7 @@
       ],
       [
        "pink noise -20 rms",
+       "6",
        "-35.3",
        "-26.1",
        "-22.6",
@@ -891,6 +904,7 @@
       ],
       [
        "noise bursts",
+       "6",
        "-44.8",
        "-33.1",
        "-25.6",
@@ -898,6 +912,7 @@
       ],
       [
        "voice-like",
+       "6",
        "-52.2",
        "-39.8",
        "-29.5",
@@ -905,6 +920,7 @@
       ],
       [
        "sine 1 kHz -20 @44100",
+       "2",
        "-112.6",
        "-106.7",
        "-100.8",
@@ -912,6 +928,7 @@
       ],
       [
        "tone steps @44100",
+       "2",
        "-60.8",
        "-48.1",
        "-35.4",
@@ -919,6 +936,7 @@
       ],
       [
        "white noise @44100",
+       "2",
        "-33.9",
        "-31.5",
        "-29.2",
@@ -926,6 +944,7 @@
       ],
       [
        "sine 1 kHz -20 @96000",
+       "2",
        "-109.5",
        "-106.8",
        "-104.1",
@@ -933,6 +952,7 @@
       ],
       [
        "tone steps @96000",
+       "2",
        "-60.9",
        "-48.1",
        "-35.4",
@@ -940,6 +960,7 @@
       ],
       [
        "white noise @96000",
+       "2",
        "-32.6",
        "-30.9",
        "-29.1",
@@ -947,6 +968,7 @@
       ],
       [
        "sine 1 kHz -20 @192000",
+       "2",
        "-110.6",
        "-104.9",
        "-99.2",
@@ -954,20 +976,23 @@
       ],
       [
        "tone steps @192000",
+       "2",
        "-60.9",
-       "-48.1",
+       "-48.2",
        "-35.4",
        "-38.9"
       ],
       [
        "white noise @192000",
+       "2",
        "-33.7",
-       "-32.2",
+       "-32.3",
        "-30.8",
        "-34.0"
       ],
       [
        "stereo: L -10 / R -40 tones",
+       "2",
        "-109.4",
        "-108.6",
        "-107.8",
@@ -975,19 +1000,22 @@
       ],
       [
        "stereo: noise L -20 / R -30",
+       "2",
        "-33.1",
        "-30.3",
        "-27.5",
-       "-28.8"
+       "-28.7"
       ],
       [
        "stereo: alternating loud channel",
+       "2",
        "-105.6",
        "-102.5",
        "-99.4",
        "-100.8"
       ]
-     ]
+     ],
+     "part": "summary"
     },
     {
      "heading": 3,
@@ -995,7 +1023,7 @@
     },
     {
      "lines": [
-      "- **Steady tones match to numerical precision** (about -95 to -120 dB at 1 kHz and 8 kHz, at 44.1 to 192 kHz, mono and stereo). A null is claimed only for these stationary cases and for Compression 0 (a fixed gain).",
+      "- **Steady tones match to numerical precision** (-99.2 to -121.5 dB at 1 kHz and 8 kHz, at 44.1 to 192 kHz, mono and stereo, in the summary above; a 100 Hz tone is close, not a null). A null is claimed only for these stationary cases and for Compression 0 (a fixed gain).",
       "- **Level changes are close but not a null** (medians over the settings): sweeps about -53 dB, a 100 Hz tone about -50 dB, voice-like material about -40 dB, steps about -37 dB (-48 dB at the other rates), amplitude modulation about -35 dB, noise bursts about -33 dB, white / pink noise about -26 to -32 dB; the worst case is -19 dB (AM at Compression -36). The detector, look-ahead and gate are identified exactly (MEASUREMENTS.md, sections 2, 3 and 7); the slow path is the fitted analytical path plus a small learned correction (MEASUREMENTS.md, section 6), so on dynamic material expect a small difference in how the gain moves, not in the tone.",
       "- The gate matches to 0.0004 dB rms on level steps; with gate and compression together the residual follows the compressor numbers.",
       "- The learned correction was trained on separate random renders of the same kinds of material (voice, noise, tones, steps, AM, sweeps, drums), not on these signals; the analytical path was tuned on signals like these, so the numbers are not a fully independent test set."
@@ -1008,12 +1036,14 @@
    "blocks": [
     {
      "lines": [
-      "Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for four signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, about -60 dB or less is a close match."
-     ]
+      "Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for 4 signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, -60 dB or less is a null. Produced by `plugins/FwVocalComp/nulltest/null_grid.py` (`measurements/FwVocalComp/nulltests-grid.json`)."
+     ],
+     "part": "grid"
     },
     {
      "heading": 3,
-     "text": "By Compression"
+     "text": "By Compression",
+     "part": "grid"
     },
     {
      "table": true,
@@ -1043,7 +1073,7 @@
        "-6",
        "-74.0 / -64.1",
        "-59.8 / -44.5",
-       "-88.3 / -75.7",
+       "-88.2 / -75.7",
        "-120.0 / -100.3"
       ],
       [
@@ -1081,11 +1111,13 @@
        "-36.3 / -22.8",
        "-104.8 / -97.2"
       ]
-     ]
+     ],
+     "part": "grid"
     },
     {
      "heading": 3,
-     "text": "By Gate"
+     "text": "By Gate",
+     "part": "grid"
     },
     {
      "table": true,
@@ -1132,11 +1164,13 @@
        "-74.9 / -25.6",
        "-105.3 / -97.2"
       ]
-     ]
+     ],
+     "part": "grid"
     },
     {
      "heading": 3,
-     "text": "By Gain"
+     "text": "By Gain",
+     "part": "grid"
     },
     {
      "table": true,
@@ -1169,11 +1203,13 @@
        "-72.7 / -22.8",
        "-110.4 / -97.2"
       ]
-     ]
+     ],
+     "part": "grid"
     },
     {
      "heading": 3,
-     "text": "By input level"
+     "text": "By input level",
+     "part": "grid"
     },
     {
      "table": true,
@@ -1213,14 +1249,21 @@
        "-47.8 / -22.8",
        "-110.0 / -103.2"
       ]
-     ]
+     ],
+     "part": "grid"
     },
     {
      "lines": [
       "Overall: median -70.2 dB, worst -22.8 dB, 396 of 672 cases below -60 dB."
-     ]
+     ],
+     "part": "grid"
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "settings": "python -I plugins/FwVocalComp/nulltest/vc_ref.py --extra --save",
+  "summary": "python -I plugins/FwVocalComp/nulltest/vc_ref.py --extra --save",
+  "grid": "python -I plugins/FwVocalComp/nulltest/null_grid.py --save"
+ }
 }

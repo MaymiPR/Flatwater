@@ -9,6 +9,9 @@
 #include "PluginProcessor.h"
 #include "ui/Controls.h"
 #include "shared/ui/FlatUI.h"
+#include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
+#include "shared/test/ResetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -469,9 +472,128 @@ static void testBypassIsDelayedInput()
     CHECK (err == 0.0);
 }
 
+// The release of the host's bypass: the audio after it is the audio of now. Noise is processed, then silence is
+// bypassed for longer than the latency, then silence is processed: nothing of the noise comes out, because the
+// compressor's delay line took the input while the bypass was on.
+static void testBypassReleaseHasNoOldAudio()
+{
+    for (int dual = 0; dual < 2; ++dual)                       // Mode Stereo (one linked compressor), Mode Mono (two)
+    {
+        FwCompProcessor p;
+        auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+        set (co::id::analog, 0.0f);                            // (the Analog stage adds its own noise)
+        set (co::id::mode, (float) dual);
+        p.prepareToPlay (48000.0, 512);
+        const int lat = p.getLatencySamples();
+        CHECK (lat > 0);
+        const int block = 512, quiet = lat / block + 2;
+        juce::AudioBuffer<float> buf (2, block);
+        juce::MidiBuffer midi;
+        unsigned int seed = 777u;
+        for (int b = 0; b < 20; ++b)                           // noise, processed
+        {
+            for (int i = 0; i < block; ++i)
+            {
+                seed = seed * 1664525u + 1013904223u;
+                const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+                buf.setSample (0, i, v); buf.setSample (1, i, -v);
+            }
+            p.processBlock (buf, midi);
+        }
+        for (int b = 0; b < quiet; ++b) { buf.clear(); p.processBlockBypassed (buf, midi); }   // silence, bypassed
+        buf.clear();
+        p.processBlock (buf, midi);                            // silence, processed: the delayed silence
+        CHECK (buf.getMagnitude (0, block) == 0.0f);
+    }
+}
+
+// Mode or Analog changed between two blocks (a host automates them): the block that takes the change allocates
+// nothing on the calling thread and the latency stays. After a Mode change the audio is that of a processor
+// prepared in the new Mode (the change is a full reset, the Analog stage's noise included).
+static void testModeAndAnalogChangeOnTheAudioThread()
+{
+    auto set = [] (FwCompProcessor& q, const char* id, float v) { auto* a = q.apvts.getParameter (id); a->setValueNotifyingHost (a->convertTo0to1 (v)); };
+    FwCompProcessor p;
+    set (p, co::id::threshold, -30.0f); set (p, co::id::analog, 2.0f);
+    p.prepareToPlay (48000.0, 512);
+    juce::AudioBuffer<float> buf (2, 512), in (2, 512);
+    juce::MidiBuffer midi;
+    unsigned int seed = 4242u;
+    auto fill = [&seed] (juce::AudioBuffer<float>& b)
+    {
+        for (int i = 0; i < b.getNumSamples(); ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            b.setSample (0, i, v); b.setSample (1, i, 0.5f * v * v - v);
+        }
+    };
+    auto same = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < a.getNumSamples(); ++i)
+                if (! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) return false;
+        return true;
+    };
+    auto blockAllocations = [&]
+    {
+        flatwater::test::AllocScope scope;
+        p.processBlock (buf, midi);
+        return scope.count();
+    };
+    for (int b = 0; b < 8; ++b) { fill (buf); p.processBlock (buf, midi); }
+    for (int mode : { 1, 0, 1 })
+    {
+        set (p, co::id::mode, (float) mode);
+        FwCompProcessor fresh;
+        set (fresh, co::id::threshold, -30.0f); set (fresh, co::id::analog, 2.0f); set (fresh, co::id::mode, (float) mode);
+        fresh.prepareToPlay (48000.0, 512);
+        for (int b = 0; b < 4; ++b)
+        {
+            fill (buf);
+            in.makeCopyOf (buf);
+            CHECK (blockAllocations() == 0);
+            fresh.processBlock (in, midi);
+            CHECK (same (buf, in));
+        }
+        CHECK (p.getLatencySamples() == 64);
+    }
+    for (int analog : { 0, 3, 4, 1, 0, 2 })
+    {
+        set (p, co::id::analog, (float) analog);
+        fill (buf);
+        CHECK (blockAllocations() == 0);
+        bool finite = true;
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < 512; ++i) finite = finite && std::isfinite (buf.getSample (c, i));
+        CHECK (finite);
+    }
+}
+
+// reset(), which a host calls to clear the tails (shared/test/ResetChecks.h): the default setting: it compresses, and Analog 2 adds its noise
+static void testReset()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL reset: %s\n", what); } };
+    flatwater::test::resetChecks<FwCompProcessor> ([] (FwCompProcessor& p)
+    {
+        p.setRateAndBufferSizeDetails (48000.0, 512);
+        p.prepareToPlay (48000.0, 512);
+    }, check);
+}
+
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwCompProcessor> (co::id::mode, check);
+    flatwater::test::presetChecks<FwCompProcessor> (co::id::mode, check);
+    flatwater::test::windowChecks<FwCompProcessor> (check);
+}
+
 int main()
 {
     testBypassIsDelayedInput();
+    testBypassReleaseHasNoOldAudio();
     juce::ScopedJuceInitialiser_GUI init;
     testParamIds();
     testMath();
@@ -485,9 +607,12 @@ int main()
     testSync();
     testAnalog();
     testProcessor();
+    testModeAndAnalogChangeOnTheAudioThread();
     testValueEntry();
     testPresets();
     testNeedle();
+    testReset();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

@@ -38,6 +38,6 @@ def gain(a, p, trace=False):
     a = np.ascontiguousarray(a, np.float64)
     g = np.empty_like(a)
     tr = np.empty(3 * len(a)) if trace else None
-    _dll.hc_gain(a.ctypes.data_as(_ct.c_void_p), g.ctypes.data_as(_ct.c_void_p), tr.ctypes.data_as(_ct.c_void_p) if trace else None,
+    _dll.co_gain(a.ctypes.data_as(_ct.c_void_p), g.ctypes.data_as(_ct.c_void_p), tr.ctypes.data_as(_ct.c_void_p) if trace else None,
                  len(a), np.ascontiguousarray(p, np.float64).ctypes.data_as(_ct.c_void_p))
     return (g, tr.reshape(-1, 3)) if trace else g

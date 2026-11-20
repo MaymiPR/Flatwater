@@ -3,17 +3,20 @@
 #include <atomic>
 #include "shared/dsp/BypassDelay.h"
 #include "shared/ui/Widgets.h"
+#include "shared/Presets.h"
 #include "Presets.h"
 #include "dsp/Engine.h"
 #include "Params.h"
 
-class FwVocalCompProcessor : public juce::AudioProcessor
+class FwVocalCompProcessor : public juce::AudioProcessor, public flatwater::HasPresets
 {
 public:
     FwVocalCompProcessor();
 
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    // the host clears the tails: the processors, their delay lines and the bypass line as prepareToPlay leaves them. No allocation.
+    void reset() override { if (prepared) setLayout (layoutDual); }
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
@@ -30,14 +33,8 @@ public:
     // programs for the host's preset list: 0 = Default, then the factory presets (vc::factoryPresets()).
     // A change applies only when the number changes, so a host that sets program 0 at load keeps the restored state.
     int getNumPrograms() override { return 1 + (int) vc::factoryPresets().size(); }
-    int getCurrentProgram() override { return currentProgram; }
-    void setCurrentProgram (int index) override
-    {
-        if (index == currentProgram || index < 0 || index >= getNumPrograms()) return;
-        currentProgram = index;
-        static const flatwater::FactoryPreset defaults { "", "Default", {} };
-        flatwater::applyPreset (apvts, index == 0 ? defaults : vc::factoryPresets()[(size_t) index - 1], apvts.getParameter (vc::id::mode));
-    }
+    int getCurrentProgram() override { return presets.program(); }
+    void setCurrentProgram (int index) override { presets.setProgram (index); }
     const juce::String getProgramName (int index) override
     {
         if (index <= 0 || index >= getNumPrograms()) return "Default";
@@ -50,6 +47,9 @@ public:
 
     juce::UndoManager undo { 32, 32 };   // the reference undoes the last 32 actions
     juce::AudioProcessorValueTreeState apvts;
+    // the preset in use, the two setups and the host's program (shared/Presets.h); the toolbar drives it
+    flatwater::PresetState presets;
+    flatwater::PresetState& presetState() override { return presets; }
 
     // Meter values for the editor, the highest since it last read them (dB): input energy, depth of the total gain
     // reduction (>= 0), output peaks.
@@ -57,8 +57,8 @@ public:
 
 private:
     flatwater::BypassDelay bypassLine;
-    int currentProgram = 0;
-    void configure();
+    void configure();                // allocates: prepareToPlay
+    void setLayout (bool dual);      // a Mode change: a reset without allocation, also on the audio thread
 
     vc::dsp::Processor procs[2];
     std::atomic<float>* pComp = nullptr; std::atomic<float>* pGate = nullptr; std::atomic<float>* pGain = nullptr; std::atomic<float>* pMode = nullptr;

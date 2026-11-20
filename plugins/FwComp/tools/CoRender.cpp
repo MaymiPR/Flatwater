@@ -5,6 +5,8 @@
 //       learned=0: without the learned gain correction (as the training set is rendered)
 //       sc=<file>: the side-chain signal (the key), raw interleaved floats of scch channels (scch=, default: channels)
 //       trace=<file>: per processed sample (the latency first) six floats: held peak, target, R, S (dB), the gains g1, g
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -13,10 +15,23 @@
 #include "dsp/Engine.h"
 #include "dsp/Analog.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: CoRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
     for (int i = 5; i < argc; ++i)
@@ -44,17 +59,20 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq); const float v = (float) std::atof (a.c_str() + eq + 1);
         if (k == "trace") { tracePath = a.substr (eq + 1); continue; }
         if (k == "sc") { keyPath = a.substr (eq + 1); continue; }
         if (k == "scch") { keyCh = (int) v; continue; }
         if (k == "threshold") s.thresholdDb = v; else if (k == "ratio") s.ratio = v; else if (k == "attack") s.attackMs = v;
         else if (k == "release") s.releaseMs = v; else if (k == "punch") s.punch = v; else if (k == "mix") s.mix = v / 100.0f;
-        else if (k == "output") s.outputDb = v; else if (k == "limiter") s.limiter = v > 0.5f; else if (k == "block") block = (int) v;
+        else if (k == "output") s.outputDb = v; else if (k == "limiter") s.limiter = v > 0.5f;
+        else if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "analog") analogMode = (int) v;
         else if (k == "limest") comp.t.limEstimate = (int) v;
         else if (k == "learned") comp.t.learned = v > 0.5f;
+        else return fail ("unknown key", a.c_str());
     }
     FILE* f = std::fopen (argv[1], "rb");
     if (! f) { std::fprintf (stderr, "cannot read %s\n", argv[1]); return 1; }
@@ -93,14 +111,7 @@ int main (int argc, char** argv)
         analog.process (q, std::min (block, total - p));
     }
     for (int i = 0; i < frames; ++i) for (int c = 0; c < ch; ++c) inter[(size_t) i * (size_t) ch + (size_t) c] = buf[(size_t) c][(size_t) (i + lat)];
-    f = std::fopen (argv[2], "wb");
-    std::fwrite (inter.data(), sizeof (float), inter.size(), f);
-    std::fclose (f);
-    if (! tracePath.empty())
-    {
-        f = std::fopen (tracePath.c_str(), "wb");
-        std::fwrite (trace.data(), sizeof (float), trace.size(), f);
-        std::fclose (f);
-    }
+    if (! writeAll (argv[2], inter)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
+    if (! tracePath.empty() && ! writeAll (tracePath.c_str(), trace)) { std::fprintf (stderr, "cannot write %s\n", tracePath.c_str()); return 1; }
     return 0;
 }

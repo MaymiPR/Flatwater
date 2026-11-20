@@ -48,6 +48,12 @@ result files stay git-ignored. The report is [NULLTESTS.md](../NULLTESTS.md), wr
 |---|---|
 | `render_trainset.py` | Training / validation renders for the learned Flatwater Vocal Comp slow path (plugins/FwVocalComp/nulltest/train_net.py) |
 
+## Null tests
+
+| File | What it does |
+|---|---|
+| `null_grid.py` | Null grid of Flatwater Vocal Comp: every combination of Compression, Gate, Gain and an input trim on four signals, our renderer against the reference |
+
 ## Checks and comparisons
 
 | File | What it does |

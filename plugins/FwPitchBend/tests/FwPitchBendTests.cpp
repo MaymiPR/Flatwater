@@ -6,6 +6,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
+#include "shared/test/ResetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -413,6 +416,19 @@ static void testPresets()
     CHECK (getSlot (st, 0, 0).source == None);
     CHECK (getSlot (st, 1, 0).source == None);
     CHECK_NEAR (getTable (st, 1)[64], defaultTable (1)[64], 1e-6);
+
+    // a preset is one undo step, with what it sets beyond the parameters (the slots, the steps)
+    FwPitchBendProcessor u;
+    auto& ut = u.apvts.state;
+    u.setCurrentProgram (robot);
+    CHECK (getSlot (ut, 0, 0).source == M1);
+    CHECK (u.undo.undo());
+    CHECK (getSlot (ut, 0, 0).source == None);
+    CHECK (getSlot (ut, 1, 0).source == None);
+    CHECK (stepValue (getTable (ut, 0), 0) == stepValue (defaultTable (0), 0));
+    CHECK (u.undo.redo());
+    CHECK (getSlot (ut, 0, 0).source == M1);
+    CHECK_NEAR (getSlot (ut, 0, 0).depth, 100.0, 1e-6);
 }
 
 // the modulators' laws as measured (MEASUREMENTS.md, Flatwater Pitch Bend, Phase 3)
@@ -547,6 +563,68 @@ static void testTargetRanges()
     CHECK (same == total);
 }
 
+// A block larger than the size given to prepareToPlay (a host may send one): it allocates nothing on the calling
+// thread and gives the audio of the same input in blocks of the prepared size, to the bit.
+static void testOversizedBlock()
+{
+    auto setup = [] (FwPitchBendProcessor& q) { set (q, pb::id::pitch, 5.0f); set (q, pb::id::formant, -2.0f); set (q, pb::id::mix, 70.0f); };
+    FwPitchBendProcessor big, small;
+    setup (big); setup (small);
+    big.prepareToPlay (48000.0, 256);
+    small.prepareToPlay (48000.0, 256);
+    juce::AudioBuffer<float> a (2, 1024), b (2, 256);
+    juce::MidiBuffer midi;
+    int allocations = 0, differing = 0;
+    for (int blk = 0; blk < 12; ++blk)
+    {
+        for (int i = 0; i < 1024; ++i)
+        {
+            const double t = blk * 1024 + i;
+            a.setSample (0, i, (float) (0.3 * std::sin (0.0288 * t) + 0.1 * std::sin (0.0577 * t)));
+            a.setSample (1, i, (float) (0.3 * std::sin (0.0288 * t + 1.0)));
+        }
+        juce::AudioBuffer<float> x;
+        x.makeCopyOf (a);
+        {
+            flatwater::test::AllocScope scope;
+            big.processBlock (a, midi);
+            allocations += scope.count();
+        }
+        for (int part = 0; part < 4; ++part)
+        {
+            for (int c = 0; c < 2; ++c) b.copyFrom (c, 0, x, c, part * 256, 256);
+            small.processBlock (b, midi);
+            for (int c = 0; c < 2; ++c)
+                for (int i = 0; i < 256; ++i)
+                    if (! juce::exactlyEqual (b.getSample (c, i), a.getSample (c, part * 256 + i))) ++differing;
+        }
+    }
+    CHECK (allocations == 0);
+    CHECK (differing == 0);
+}
+
+// reset(), which a host calls to clear the tails (shared/test/ResetChecks.h): Pitch at +3, so the shifter runs
+static void testReset()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL reset: %s\n", what); } };
+    flatwater::test::resetChecks<FwPitchBendProcessor> ([] (FwPitchBendProcessor& p)
+    {
+        auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+        set (pb::id::pitch, 3.0f);
+        p.setRateAndBufferSizeDetails (48000.0, 512);
+        p.prepareToPlay (48000.0, 512);
+    }, check);
+}
+
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwPitchBendProcessor> (pb::id::mode, check);
+    flatwater::test::presetChecks<FwPitchBendProcessor> (pb::id::mode, check);
+    flatwater::test::windowChecks<FwPitchBendProcessor> (check);
+}
+
 int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
@@ -561,7 +639,10 @@ int main()
     testBehaviour();
     testModLaws();
     testPresets();
+    testOversizedBlock();
     testShifterLatch();
+    testReset();
+    testPresetState();
     std::printf ("%d checks, %d failed\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

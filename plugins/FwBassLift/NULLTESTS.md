@@ -104,3 +104,5 @@ Flatwater Bass Lift against the reference, case by case (written by `plugins/FwB
 | 32 | +0 | +0 | Out | kick-like | -37.4 | -31.0 |
 
 Median total -36.8 dB (worst -4.0); median generated part -31.5 dB (worst 1.9); 96 cases.
+
+Reproduce: `python -I plugins/FwBassLift/nulltest/bf_ref.py --save`

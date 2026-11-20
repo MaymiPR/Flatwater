@@ -23,6 +23,9 @@ compressor. Gain sets the output level. The Mode menu picks Stereo or Mono.
 
 A click on any meter or readout resets all the peak holds.
 
+One parameter in the host's list, Gate Release (id `gateRel`), is kept for compatibility with saved projects and has
+no effect on the sound. The editor does not show it.
+
 The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage). The factory
 presets carry the original's values under Flatwater names.
 

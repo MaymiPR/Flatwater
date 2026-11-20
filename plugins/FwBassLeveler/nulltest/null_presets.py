@@ -1,6 +1,7 @@
 """Flatwater Bass Leveler's factory presets against the reference's own (build/ref_presets_FwBassLeveler.json, plugins/FwBassLeveler/nulltest/read_ref_presets.py):
 each preset's values set on both (Target left at its default where the preset keeps it), on the bass line and two
-held-out corpus parts; the output residual over the loud parts. Writes the Presets section of plugins/FwBassLeveler/NULLTESTS.md.
+held-out corpus parts; the output residual over the loud parts. Writes the Presets section of plugins/FwBassLeveler/NULLTESTS.md
+and the summary line under "Factory presets" in its Settings section.
 
     python -I null_presets.py
 """
@@ -58,6 +59,8 @@ def main():
     lines += ['', 'Median %.1f dB, worst %.1f dB.' % (np.median(allv), allv.max()), '']
     import report_lib as RL
     print('median %.1f, worst %.1f -> %s' % (np.median(allv), allv.max(), RL.save('FwBassLeveler', 'presets', lines, 'Presets')))
+    RL.save('FwBassLeveler', 'presets-summary', ["The reference's %d, set on both, on %d signals: median %.1f dB, worst %.1f dB over the %d renders. "
+                                                 'Every preset: [Presets](#presets).' % (len(rows), len(mats), np.median(allv), allv.max(), len(allv))])
 
 
 if __name__ == '__main__':

@@ -181,7 +181,7 @@ either side and Feedback up to 200 % at -84 ... -104 dB; modulation at -61 ... -
 
 | Check | Result |
 |---|---|
-| CHECK sites | 69 |
+| Unit-test program | `FwDelayTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

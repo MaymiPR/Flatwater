@@ -21,7 +21,7 @@ import train_net as T
 
 FS = T.FS; dev = T.dev
 _D = ct.CDLL(os.path.join(HERE, '..', '..', '..', 'build', 'native', 'FwBassXLift', 'Features' + ('.dll' if os.name == 'nt' else '.so')))
-_D.mb_follow2.argtypes = [ct.c_void_p, ct.c_int] + [ct.c_double] * 4 + [ct.c_void_p] * 4
+_D.bx_follow2.argtypes = [ct.c_void_p, ct.c_int] + [ct.c_double] * 4 + [ct.c_void_p] * 4
 TAU0 = (0.001, 0.03, 0.01, 0.06)
 
 
@@ -33,7 +33,7 @@ class DetFn(torch.autograd.Function):
         for b in range(B):
             e1, e2, d1, d2 = np.empty(n), np.empty(n), np.empty(2 * n), np.empty(4 * n)
             z = np.ascontiguousarray(zs[b], np.float64)
-            _D.mb_follow2(z.ctypes.data, n, *al[b], e1.ctypes.data, e2.ctypes.data, d1.ctypes.data, d2.ctypes.data)
+            _D.bx_follow2(z.ctypes.data, n, *al[b], e1.ctypes.data, e2.ctypes.data, d1.ctypes.data, d2.ctypes.data)
             E1[b], E2[b], D1[b], D2[b] = e1, e2, d1.reshape(n, 2), d2.reshape(n, 4)
         ctx.D1, ctx.D2, ctx.dev = D1, D2, alpha.device
         return torch.from_numpy(E1).float().to(alpha.device), torch.from_numpy(E2).float().to(alpha.device)
@@ -107,16 +107,16 @@ def evaluate(net, exs, bs=16):
 def main():
     steps = int(sys.argv[1]); width = int(sys.argv[2]) if len(sys.argv) > 2 else 48
     init = sys.argv[3] if len(sys.argv) > 3 else None
-    tag = os.environ.get("MB_TAG", "")
+    tag = os.environ.get("BX_TAG", "")
     tr, va = T.load_light("train"), T.load_light("val")
     for e in tr + va: e["coefs"] = T.gen_coefs(e)
     print(len(tr), "train", len(va), "val (det model)", flush=True)
     net = DetNet(width).to(dev)
     if init: net.load_state_dict(torch.load(init), strict=False)
-    lr = float(os.environ.get("MB_LR", "2e-3"))
+    lr = float(os.environ.get("BX_LR", "2e-3"))
     opt = torch.optim.Adam(net.parameters(), lr)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps)
-    rng = np.random.default_rng(int(os.environ.get("MB_SEED", "1"))); best = 1e9; t0 = time.time()
+    rng = np.random.default_rng(int(os.environ.get("BX_SEED", "1"))); best = 1e9; t0 = time.time()
     path = os.path.join(T.OUTD, f"det_w{width}{tag}.pt")
     for it in range(1, steps + 1):
         y, G = out(net, batch(tr, rng.choice(len(tr), 16, replace=False)))

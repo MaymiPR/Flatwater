@@ -11,7 +11,8 @@ Part of [Flatwater](../../README.md). Flatwater BassX Lift is a bass enhancer wi
 monitor modes. It recreates Waves MaxxBass. Below the crossover Frequency, it creates harmonics for the bass, so the
 ear hears a fundamental that small speakers cannot play. Above it, the signal passes unaltered. Separate faders set
 the level of the original bass and of the harmonics. An upward compressor works on the harmonics only. The Mode menu
-picks Stereo or Mono.
+(Stereo, Mono) does not change the sound in this plug-in, which processes the one or two channels the host gives it;
+it sets whether the output meter shows two bars or one.
 
 ## Controls
 

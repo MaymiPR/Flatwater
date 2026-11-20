@@ -153,7 +153,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 - Per signal (median over the settings): tones at or above Freq, sweeps, white noise -43 to -49 dB; bass notes, level
   steps, pink noise and tones below Freq -31 to -40 dB; kick-like transients -28 dB.
-- Worst cases: Freq 160 with Original Bass Out on very low input (30 Hz tone -4 dB, kicks -9 dB, 60 Hz tone -16 dB):
+- Worst cases: Freq 160 with Original Bass Out on very low input (30 Hz tone -4.0 dB, kicks -8.5 dB, 60 Hz tone -15.7 dB):
   the output is then only the created bass, and its level is off there.
 - How: the filters and the harmonic generator were identified exactly; the gain control of the created bass is a small
   recurrent network (32 units, about 6 % of one core) trained on renders of the reference, so it is a learned model of
@@ -164,7 +164,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 | Check | Result |
 |---|---|
-| CHECK sites | 28 |
+| Unit-test program | `FwBassLiftTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

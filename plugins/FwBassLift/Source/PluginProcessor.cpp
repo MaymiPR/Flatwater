@@ -7,7 +7,8 @@ using namespace juce;
 FwBassLiftProcessor::FwBassLiftProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwBassLift", bf::createLayout())
+      apvts (*this, &undo, "FwBassLift", bf::createLayout()),
+      presets (apvts, undo, bf::factoryPresets(), apvts.getParameter (bf::id::mode))
 {
 }
 

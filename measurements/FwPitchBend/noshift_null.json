@@ -1,0 +1,37 @@
+[
+ {
+  "case": "sung take",
+  "residual_db": -68.8,
+  "lag": 0
+ },
+ {
+  "case": "spoken take",
+  "residual_db": 3.6,
+  "lag": 67
+ },
+ {
+  "case": "vowel, 100 Hz",
+  "residual_db": -57.9,
+  "lag": 0
+ },
+ {
+  "case": "vowel, 150 Hz",
+  "residual_db": -60.6,
+  "lag": 0
+ },
+ {
+  "case": "vowel, 300 Hz",
+  "residual_db": -53.7,
+  "lag": 0
+ },
+ {
+  "case": "vowel, 150 Hz, vibrato 100 cents",
+  "residual_db": -58.0,
+  "lag": 0
+ },
+ {
+  "case": "white noise, -18 dBFS rms",
+  "residual_db": -27.2,
+  "lag": 0
+ }
+]

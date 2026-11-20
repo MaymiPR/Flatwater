@@ -10,8 +10,9 @@
 Part of [Flatwater](../../README.md). Flatwater Vocal Chain is a whole vocal chain on six faders: EQ, compression,
 de-essing, reverb, delay and doubling. It recreates Waves CLA Vocals. Each fader drives one stage of a fixed chain. A
 colour button above each fader picks one of three flavours or the clear position. The Bass and Treble faders act only
-once moved; the other faders are active at 0 and give the default sound there. The Mode menu picks Stereo or
-Mono/Stereo (mono in, stereo out).
+once moved; the other faders are active at 0 and give the default sound there. The Mode menu (Stereo,
+Mono/Stereo) does not change the sound in this plug-in, which follows the channels the host gives it (a mono input
+comes out in stereo); it sets whether the editor shows the Balance knob and two bars on the input meter.
 
 ## Using it
 
@@ -19,7 +20,7 @@ Mono/Stereo (mono in, stereo out).
 |---|---|
 | INPUT SENS | Input sensitivity, -10 to +10 dB (default 0). Presets leave it alone. The LED above it shows the input level: off (too low), green (good), yellow (optimal), red (very hot). |
 | Input meter | Input level, 0 to 24 dB down, with clip lights. A click on the meter clears them. |
-| Balance | The small knob under the input meter, -6 to +6 dB (default 0). Stereo mode only. |
+| Balance | The small knob under the input meter, -6 to +6 dB (default 0). Shown in Mode Stereo only; a value set there stays in effect when the knob is hidden. |
 | BASS | -10 to +10 (default 0). Colours Sub (default), Lower, Upper, or Bypass. |
 | TREBLE | -10 to +10 (default 0). Colours Bite (default), Top, Roof, or Bypass. |
 | COMPRESS | -10 to +10 (default 0). Colours Push (default), Spank, Wall, or Bypass. |
@@ -30,13 +31,17 @@ Mono/Stereo (mono in, stereo out).
 | OUTPUT | Output level, -10 to +10 dB (default 0), with an output meter and clip lights. Presets leave it alone. |
 | LINK | Links Input Sens and Output: Output mirrors Input Sens (+3 in, -3 out). This is Flatwater Vocal Chain's own addition. |
 
+The original has a Noise setting, on by default, that adds a low noise to the signal. In Flatwater Vocal Chain that
+noise is always on: there is no control for it, and it is not part of the saved state.
+
 The toolbar is the one every Flatwater plug-in shares: see [the suite README](../../README.md#usage).
 
 ## How close
 
 On held-out vocals at 48 kHz the whole chain's median residual against the original is -33.2 dB with the doubler clear
-and -36.0 dB on its default Stereo colour; the Bass, Treble and Reverb stages alone reach -75.7 dB. At 44.1 and 96 kHz
-the chain with the doubler clear reaches -32.1 and -35.5 dB. The 43 factory presets, which carry the original's values
+(30 renders) and -36.0 dB on its default Stereo colour (8 renders); the Bass, Treble and Reverb stages alone reach
+-75.7 dB. At 44.1 and 96 kHz the chain with the doubler clear reaches -32.1 and -35.5 dB. With the Stereo doubler the
+median is -35.6 dB at 44.1 kHz and -18.1 dB at 96 kHz (4 renders each): at 96 kHz the doubler is not a null. The 43 factory presets, which carry the original's values
 under Flatwater names, have a median of -30.1 dB. The doubler's Wide and Spreader colours are pitch shifters that pick
 their splice points from the signal, so they do not null sample for sample; their level, spectrum and delay range
 match the original's. Every case: [NULLTESTS.md](NULLTESTS.md) and [the presets null test](NULLTESTS.md#presets).

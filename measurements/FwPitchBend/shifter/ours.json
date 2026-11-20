@@ -6600,10 +6600,10 @@
   ]
  },
  "cpu": {
-  "shifted P+5 F-2": 1.04,
-  "no shift": 0.91,
-  "flatten": 1.06,
-  "LFO through zero": 1.05
+  "shifted P+5 F-2": 1.19,
+  "no shift": 1.02,
+  "flatten": 1.17,
+  "LFO through zero": 1.2
  },
  "table": [
   {
@@ -6890,7 +6890,7 @@
    "metric": "cpu",
    "what": "stereo 48k LFO through zero (% of a core)",
    "reference": null,
-   "ours": 1.05,
+   "ours": 1.2,
    "threshold": "< 5",
    "result": "PASS"
   },
@@ -6898,7 +6898,7 @@
    "metric": "cpu",
    "what": "stereo 48k flatten (% of a core)",
    "reference": null,
-   "ours": 1.06,
+   "ours": 1.17,
    "threshold": "< 5",
    "result": "PASS"
   },
@@ -6906,7 +6906,7 @@
    "metric": "cpu",
    "what": "stereo 48k no shift (% of a core)",
    "reference": null,
-   "ours": 0.91,
+   "ours": 1.02,
    "threshold": "< 5",
    "result": "PASS"
   },
@@ -6914,10 +6914,10 @@
    "metric": "cpu",
    "what": "stereo 48k shifted P+5 F-2 (% of a core)",
    "reference": null,
-   "ours": 1.04,
+   "ours": 1.19,
    "threshold": "< 5",
    "result": "PASS"
   }
  ],
- "renderer": "plugins/FwPitchBend/tools/PbShifterRender (sha1 af57f28fbd30)"
+ "renderer": "plugins/FwPitchBend/tools/PbShifterRender (sha1 4903f961f477)"
 }

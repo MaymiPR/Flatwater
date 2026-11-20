@@ -24,7 +24,9 @@ FwCompProcessor::FwCompProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                                        .withInput ("Side Chain", AudioChannelSet::stereo(), false)),
-      apvts (*this, &undo, "FwComp", co::createLayout())
+      apvts (*this, &undo, "FwComp", co::createLayout()),
+      presets (apvts, undo, co::factoryPresets(), apvts.getParameter (co::id::mode),
+               { apvts.getParameter (co::id::mix) })   // presets leave Mix alone, as the reference
 {
 }
 
@@ -59,18 +61,30 @@ void FwCompProcessor::prepareToPlay (double sampleRate, int)
     configure();
 }
 
-// Stereo bus + Mode "Stereo": one linked compressor. Stereo bus + Mode "Mono": two independent mono ones. Mono bus: one.
+// Everything both layouts and every Analog mode need, made here (it allocates): prepareToPlay calls it, the audio
+// thread only for a host that sends a block without having prepared. The latency is the same in both layouts.
 void FwCompProcessor::configure()
 {
     const int ch = getMainBusNumInputChannels();
-    const bool dual = ch > 1 && get (co::id::mode) > 0.5f;
-    layoutDual = dual;
-    comps[0].prepare (sr, dual ? 1 : ch);
+    comps[0].prepare (sr, ch);
     comps[1].prepare (sr, 1);
     analogStage.prepare (sr, ch);
     setLatencySamples (comps[0].latency());
     bypassLine.prepare (ch, getLatencySamples());
     prepared = true;
+    setLayout (ch > 1 && get (co::id::mode) > 0.5f);
+}
+
+// Stereo bus + Mode "Stereo": one linked compressor. Stereo bus + Mode "Mono": two independent mono ones. Mono bus: one.
+// A Mode change on the audio thread comes here: a full reset (the compressors, their delay lines, the Analog stage,
+// the bypass line), no allocation and no word to the host.
+void FwCompProcessor::setLayout (bool dual)
+{
+    layoutDual = dual;
+    comps[0].setChannels (dual ? 1 : getMainBusNumInputChannels());
+    comps[1].reset();
+    analogStage.reset();
+    bypassLine.reset();
 }
 
 co::dsp::Compressor::Settings FwCompProcessor::settings() const
@@ -101,6 +115,11 @@ void FwCompProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
 {
     if (! prepared) configure();
     const int n = b.getNumSamples();
+    // the compressors' delay lines take the input too, so the release of the bypass goes on with the audio of now,
+    // not with what the lines held when the bypass came on
+    if (const float* const* r = b.getArrayOfReadPointers(); ! layoutDual) { if (b.getNumChannels() >= jmin (2, getMainBusNumInputChannels())) comps[0].feed (r, n); }
+    else if (b.getNumChannels() >= 2)
+        for (int c = 0; c < 2; ++c) { const float* one[1] = { r[c] }; comps[c].feed (one, n); }
     for (int c = getMainBusNumOutputChannels(); c < b.getNumChannels(); ++c) b.clear (c, 0, n);   // (the side-chain bus)
     bypassLine.process (b.getArrayOfWritePointers(), jmin (2, getMainBusNumInputChannels(), b.getNumChannels()), n);
 }
@@ -114,7 +133,8 @@ void FwCompProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
             hostBpm.store (pos->getBpm() ? *pos->getBpm() : 0.0);
     const int n = b.getNumSamples(), ch = jmin (2, getMainBusNumInputChannels());
     const bool wantDual = ch > 1 && get (co::id::mode) > 0.5f;
-    if (! prepared || wantDual != layoutDual) configure();
+    if (! prepared) configure();
+    if (wantDual != layoutDual) setLayout (wantDual);
     bypassLine.write (b.getArrayOfReadPointers(), ch, n);
     // The side-chain bus, when the host enabled it, is the key: the detector and the limiter read it and nothing of
     // the main signal, also while it is silent (no reduction then), as the reference does (MEASUREMENTS.md,

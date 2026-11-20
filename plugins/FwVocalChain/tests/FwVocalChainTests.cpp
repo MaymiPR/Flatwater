@@ -10,6 +10,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "shared/test/AllocCounter.h"
+#include "shared/test/PresetChecks.h"
+#include "shared/test/ResetChecks.h"
 
 static int failures = 0, checks = 0;
 #define CHECK(cond) do { ++checks; if (! (cond)) { ++failures; std::printf ("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
@@ -256,9 +259,168 @@ static void testNonFiniteInput()
     CHECK (finite);
 }
 
+// The release of the host's bypass: the audio after it is the audio of now. Noise is processed, then silence is
+// bypassed for two seconds, then silence is processed: nothing of the noise comes out (under -120 dB: what is left
+// is the filters' decay), because the chain went on running on the input while the bypass was on. The Noise is off
+// and the three sends are muted, so the output is the dry path alone.
+static void testBypassReleaseHasNoOldAudio()
+{
+    FwVocalChainProcessor p;
+    auto set = [&p] (const char* id, float v) { auto* q = p.apvts.getParameter (id); q->setValueNotifyingHost (q->convertTo0to1 (v)); };
+    set (ch::id::reverbColor, 0.0f); set (ch::id::delayColor, 0.0f); set (ch::id::pitchColor, 0.0f);
+    p.setNoise (false);
+    p.prepareToPlay (48000.0, 512);
+    const int lat = p.getLatencySamples();
+    CHECK (lat > 0);
+    const int block = 512, quiet = 2 * 48000 / block;
+    juce::AudioBuffer<float> buf (2, block);
+    juce::MidiBuffer midi;
+    unsigned int seed = 777u;
+    float loud = 0.0f;
+    for (int b = 0; b < 20; ++b)                               // noise, processed
+    {
+        for (int i = 0; i < block; ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            buf.setSample (0, i, v); buf.setSample (1, i, -v);
+        }
+        p.processBlock (buf, midi);
+        loud = buf.getMagnitude (0, block);
+    }
+    CHECK (loud > 0.01f);
+    for (int b = 0; b < quiet; ++b) { buf.clear(); p.processBlockBypassed (buf, midi); }   // silence, bypassed
+    buf.clear();
+    p.processBlock (buf, midi);                                // silence, processed: the delayed silence
+    CHECK (buf.getMagnitude (0, block) < 1.0e-6f);
+}
+
+// A block larger than the size given to prepareToPlay (a host may send one): it allocates nothing on the calling
+// thread and gives the audio of the same input in blocks of the prepared size, to the bit.
+static void testOversizedBlock()
+{
+    auto setup = [] (FwVocalChainProcessor& q) { set (q, ch::id::sensitivity, 3.0f); set (q, ch::id::reverb, 4.0f); set (q, ch::id::delay, 2.0f); };
+    FwVocalChainProcessor big, small;
+    setup (big); setup (small);
+    big.prepareToPlay (48000.0, 256);
+    small.prepareToPlay (48000.0, 256);
+    juce::AudioBuffer<float> a (2, 1024), b (2, 256);
+    juce::MidiBuffer midi;
+    unsigned int seed = 4242u;
+    int allocations = 0, differing = 0;
+    for (int blk = 0; blk < 12; ++blk)
+    {
+        for (int i = 0; i < 1024; ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            a.setSample (0, i, v); a.setSample (1, i, 0.5f * v * v - v);
+        }
+        juce::AudioBuffer<float> x;
+        x.makeCopyOf (a);
+        {
+            flatwater::test::AllocScope scope;
+            if (blk % 4 == 3) big.processBlockBypassed (a, midi); else big.processBlock (a, midi);
+            allocations += scope.count();
+        }
+        for (int part = 0; part < 4; ++part)
+        {
+            for (int c = 0; c < 2; ++c) b.copyFrom (c, 0, x, c, part * 256, 256);
+            if (blk % 4 == 3) small.processBlockBypassed (b, midi); else small.processBlock (b, midi);
+            for (int c = 0; c < 2; ++c)
+                for (int i = 0; i < 256; ++i)
+                    if (! juce::exactlyEqual (b.getSample (c, i), a.getSample (c, part * 256 + i))) ++differing;
+        }
+    }
+    CHECK (allocations == 0);
+    CHECK (differing == 0);
+}
+
+// The reverb's responses load on a background thread. prepareToPlay waits for them: after it they are there and no
+// time-out is recorded. With no wait allowed, the time-out is recorded, and until the responses are there the reverb
+// is silent: the output is that of the chain with Reverb muted, to the bit, not the send handed on unconvolved.
+// Then the reverb comes in, and the record of the late start stays.
+static void testReverbLoadTimeOut()
+{
+    auto setup = [] (FwVocalChainProcessor& q, float reverbColour)
+    {
+        for (const auto& st : ch::stages()) set (q, st.colour, 0.0f);
+        set (q, ch::id::reverbColor, reverbColour);
+        set (q, ch::id::reverb, 10.0f);
+        q.setNoise (false);
+    };
+    FwVocalChainProcessor waited;
+    setup (waited, 1.0f);
+    waited.prepareToPlay (48000.0, 256);
+    CHECK (waited.reverbLoaded() && ! waited.reverbLoadTimedOut());
+
+    FwVocalChainProcessor late, muted;
+    setup (late, 1.0f); setup (muted, 0.0f);
+    late.setReverbLoadTimeout (0);
+    late.prepareToPlay (48000.0, 256);
+    muted.prepareToPlay (48000.0, 256);
+    CHECK (late.reverbLoadTimedOut() && ! late.reverbLoaded());
+    juce::AudioBuffer<float> a (2, 256), b (2, 256);
+    juce::MidiBuffer midi;
+    unsigned int seed = 99u;
+    int differingWhileLoading = 0, blocksWhileLoading = 0, blocksAfter = 0;
+    bool finite = true;
+    double wetAfter = 0.0;
+    for (int blk = 0; blk < 20000 && blocksAfter < 40; ++blk)
+    {
+        for (int i = 0; i < 256; ++i)
+        {
+            seed = seed * 1664525u + 1013904223u;
+            const float v = ((float) (seed >> 8) / 8388608.0f - 1.0f) * 0.25f;
+            a.setSample (0, i, v); a.setSample (1, i, -v);
+        }
+        b.makeCopyOf (a);
+        const bool loading = ! late.reverbLoaded();
+        late.processBlock (a, midi);
+        muted.processBlock (b, midi);
+        for (int c = 0; c < 2; ++c)
+            for (int i = 0; i < 256; ++i)
+            {
+                finite = finite && std::isfinite (a.getSample (c, i));
+                if (loading && ! juce::exactlyEqual (a.getSample (c, i), b.getSample (c, i))) ++differingWhileLoading;
+                if (! loading) wetAfter = std::max (wetAfter, (double) std::fabs (a.getSample (c, i) - b.getSample (c, i)));
+            }
+        if (loading) { ++blocksWhileLoading; juce::Thread::sleep (1); } else ++blocksAfter;
+    }
+    CHECK (blocksWhileLoading > 0);
+    CHECK (differingWhileLoading == 0);
+    CHECK (finite);
+    CHECK (late.reverbLoaded());
+    CHECK (late.reverbLoadTimedOut());
+    CHECK (wetAfter > 1.0e-3);
+}
+
+// reset(), which a host calls to clear the tails (shared/test/ResetChecks.h): every stage at its default: Compress, the reverb, the echoes and the doubler sound
+static void testReset()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL reset: %s\n", what); } };
+    flatwater::test::resetChecks<FwVocalChainProcessor> ([] (FwVocalChainProcessor& p)
+    {
+        p.setNoise (false);                                            // (the Noise is not reseeded by a reset)
+        p.setRateAndBufferSizeDetails (48000.0, 512);
+        p.prepareToPlay (48000.0, 512);
+    }, check);
+}
+
+// presets, programs and the saved state (shared/test/PresetChecks.h)
+static void testPresetState()
+{
+    const auto check = [] (bool ok, const char* what) { ++checks; if (! ok) { ++failures; std::printf ("FAIL preset state: %s\n", what); } };
+    flatwater::test::programChecks<FwVocalChainProcessor> (ch::id::mode, check);
+    flatwater::test::presetChecks<FwVocalChainProcessor> (ch::id::mode, check);
+    flatwater::test::windowChecks<FwVocalChainProcessor> (check);
+}
+
 int main()
 {
+    testReverbLoadTimeOut();
     testBypassIsDelayedInput();
+    testBypassReleaseHasNoOldAudio();
     juce::ScopedJuceInitialiser_GUI init;
     testNonFiniteInput();
     testParamIds();
@@ -266,7 +428,10 @@ int main()
     testBusesAndLatency();
     testPath();
     testDeEsser();
+    testOversizedBlock();
     testEditor();
+    testReset();
+    testPresetState();
     std::printf ("%d checks, %d failures\n", checks, failures);
     return failures == 0 ? 0 : 1;
 }

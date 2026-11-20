@@ -2,7 +2,8 @@
 
     python -I nulltest.py [the arguments of null_mods.py]
 
-null_mods.py gets the arguments, then null_presets.py run with none.
+null_mods.py gets the arguments and --save; then null_noshift.py --save, null_shift.py --save, check_shifter.py all
+--save and null_presets.py, each writing its part of NULLTESTS.md.
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwPitchBend/nulltests.json, rendering nothing
     python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
                                        our built VST3 against our renderer, without the reference: exit code 0
@@ -16,7 +17,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'scripts', 'nulltest'))   # scripts/nulltest/
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-STEPS = (('null_mods.py', sys.argv[1:]), ('null_presets.py', []))
+STEPS = (('null_mods.py', sys.argv[1:] + ['--save']), ('null_noshift.py', ['--save']), ('null_shift.py', ['--save']),
+         ('check_shifter.py', ['all', '--save']), ('null_presets.py', []))
 
 
 def main():

@@ -3,7 +3,9 @@
 moments either side starts moving its gain after holding (a note taken), matched within 15 ms, and each unmatched one
 with its context (the input's level step, the time since the last event, the gain before and after on both sides).
 
-    python -I compare_corpus.py [train|held|all] [setting ...] [--events] [--fit path]
+    python -I compare_corpus.py [train|held|all] [setting ...] [--events] [--fit path] [--save]
+
+--save (with every part and setting: no other argument) writes the corpus part of NULLTESTS.md.
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -48,11 +50,14 @@ def main():
     args = [a for a in sys.argv[1:]]
     if '--fit' in args: i = args.index('--fit'); F.OUT = args[i + 1]; del args[i:i + 2]
     events = '--events' in args; args = [a for a in args if a != '--events']
+    save = '--save' in args; args = [a for a in args if a != '--save']
+    if save and (args or events): raise SystemExit('--save takes every part and setting: give no other argument')
     which = args[0] if args and args[0] in ('train', 'held', 'all') else 'all'
     sets = [a for a in args if a in CR.SETTINGS] or list(CR.SETTINGS)
     parts = {'train': list(K.TRAIN), 'held': list(K.HELD), 'all': list(K.TRAIN) + list(K.HELD)}[which]
     g, td = F.load_fit()
     table = {s: [] for s in sets}
+    split = {s: {'held': [], 'train': []} for s in sets}
     for k in parts:
         x, desc = K.part(k); ok = loud(x)
         row = []
@@ -60,6 +65,7 @@ def main():
             if not os.path.exists(CR.path(k, s)): row.append('   -  '); continue
             gr = CR.load(k, s); gm, tr = model(x, CR.SETTINGS[s], g, td)
             r = residual(x, gm, gr, ok); table[s].append(r); row.append('%6.1f' % r)
+            split[s]['train' if k in K.TRAIN else 'held'].append(r)
             if events:
                 er, em = ride_starts(gr, ok), ride_starts(gm, ok)
                 er, em = er[er < len(x) - 2400], em[em < len(x) - 2400]
@@ -77,6 +83,32 @@ def main():
     print('settings          ' + ' '.join('%6s' % s[:6] for s in sets))
     print('median residual   ' + ' '.join('%6.1f' % (np.median(table[s]) if table[s] else np.nan) for s in sets))
     print('worst             ' + ' '.join('%6.1f' % (np.max(table[s]) if table[s] else np.nan) for s in sets))
+    if save: report(split)
+
+
+LABELS = {'default': 'defaults', 's0': 'Sensitivity 0', 's75': 'Sensitivity 75', 's100': 'Sensitivity 100', 'fast': 'Fast',
+          'fast25': 'Fast, Sensitivity 25', 'fast100': 'Fast, Sensitivity 100', 'art15': 'Artifacts 15', 'art85': 'Artifacts 85',
+          'tgt24': 'Target -24'}
+
+
+def report(split):
+    """the corpus part of NULLTESTS.md: the median per setting over the held-out and the fitted parts, and the worst"""
+    held = np.array([v for s in split for v in split[s]['held']]); train = np.array([v for s in split for v in split[s]['train']])
+    import report_lib as RL
+    with RL.Part('FwBassLeveler', 'corpus') as f:
+        f.write("36 twelve-second parts from FL Studio's own bass samples (acoustic, 80s pick, Ibanez, slap, Temptated, a picked "
+                '5-string, a pluck) and three synthetic voices (808 sub, filtered saw, slow swells): rhythms, accents, ghost notes, '
+                'rests, staccato, legato and ringing notes. %d parts were used in the fit, %d are held out. The riding model '
+                "(`native/RideModel.c` with the current fit, the plug-in's ride: `check_port.py`) against the reference's gain on "
+                'each part (`render_corpus.py`); the residual over the loud parts, the median per setting (dB). Produced by '
+                '`plugins/FwBassLeveler/nulltest/compare_corpus.py`.\n\n' % (len(K.TRAIN), len(K.HELD)))
+        f.write('| setting | held-out parts | fitted parts |\n|---|---|---|\n')
+        for s in LABELS:
+            if s in split: f.write('| %s | %.1f | %.1f |\n' % (LABELS[s], np.median(split[s]['held']), np.median(split[s]['train'])))
+        f.write('\nOver the %d held-out renders: median %.1f dB, worst %.1f dB, %d above -20 dB. Over the %d fitted renders: median '
+                '%.1f dB, worst %.1f dB, %d above -20 dB. Nearly all of the remaining error is a note ridden by one side and not the '
+                'other (then the two hold 1 .. 4 dB apart until the next note: `--events` lists them), not a different gain law.\n' % (len(held), np.median(held), held.max(), (held > -20).sum(),
+                                                               len(train), np.median(train), train.max(), (train > -20).sum()))
 
 
 if __name__ == '__main__':

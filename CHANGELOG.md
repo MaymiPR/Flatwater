@@ -30,6 +30,10 @@
   `set()` and `load()`; every renderer takes `tune:key=value` and `tuning=<file>` overrides. FwPitchBend's
   modulators and shifter are joined in `dsp/Engine`, which the processor calls. No sound or saved state changes (the
   render regression is byte-identical).
+- **Helper names:** the functions of the null tests' native helpers and the fitting scripts' environment switches
+  carry their plug-in's abbreviation (`bl_`, `bx_`, `bxp_`, `co_`; `BX_`, `CO_`), and `BL_MODEL_DLL` and
+  `VL_MODEL_DLL` alone name another build of a riding model. A helper built before this is rebuilt with
+  `scripts/build_native.py`; its output is the same to the bit.
 - **Reference names:** the null-test and measurement scripts read the reference's component names from `local.yaml`
   (`<Id>.ref_name` and the other component keys, `<Id>.ref_presets` for the preset files and folders) and name no
   reference product; the test helpers' namespaces nest in their plug-in's.
@@ -71,6 +75,20 @@
   renderer's by about -90 dB at that setting, the default one.
 - **Bypass released, Flatwater Bass Leveler:** the first 42 ms after the host's bypass is switched off (5 ms on Live)
   are the audio of now. Before, they were the audio from before the bypass was switched on.
+- **Bypass released, Flatwater Comp, Vocal Comp and Vocal Chain:** the audio after the host's bypass is switched
+  off is the audio of now. Before, the first samples (the plug-in's latency) were audio from before the bypass was
+  switched on. Flatwater Vocal Chain goes on running on its input while it is bypassed, unheard, so it uses its
+  processing time then too.
+- **Flatwater Vocal Comp, long sessions:** two sample counters wrap without an undefined step. Before, they were
+  signed and overflowed after 2^31 samples of continuous running. The sound is unchanged (the render regression is
+  byte-identical).
+- **Toolbar:** the shared toolbar is repainted when what it shows changes (undo and redo, the star of a changed
+  preset, the Mode), not at every frame of the editor's timer. It looks and works as before.
+- **Offline renderers:** the renderers of the eight plug-ins besides Flatwater Vocal Leveler (whose VlRender checks
+  its keys and its output already) end with exit code 2 and one line on stderr for an unknown key, an argument that
+  is no `key=value`, a channel count other than 1 or 2 or a block under 1, and with 1 for an output they could not
+  write in full. Before, a mistyped key was ignored, a channel count of 0 was a division by zero in BfRender,
+  BxRender, CoRender and VcRender, and CoRender ran without end at `block=0`.
 - **Input that is not a number:** a NaN or infinite input sample is taken as silence in every plug-in. Before, one
   such sample stayed in the filters until playback was restarted, and it could crash Flatwater Vocal Chain with
   Compress on.
@@ -80,18 +98,88 @@
 - **User presets:** a preset file that is not this plug-in's is refused. Before, it replaced the plug-in's state.
 - **Range in the two levelers:** Range Max automated under Range Min is read as equal to it.
 - **Flatwater Delay:** its settings are read without building text on the audio thread.
+- **Mode automated, Flatwater Comp, Vocal Comp, Bass Leveler and Delay:** a Mode change during playback no longer
+  allocates memory on the audio thread; what both layouts need is made when the host prepares the plug-in, and the
+  change is a reset. The sound right after the change is the same as before (it starts from silence, as a fresh
+  instance in the new Mode). Flatwater Bass Leveler's latency differs between its studio and Live modes: the host
+  now learns the new latency from a timer on the message thread, not from the audio thread.
+- **Analog automated, Flatwater Comp and Delay:** the noise filters of all four Analog modes are made when the host
+  prepares the plug-in, so an Analog change during playback no longer builds one on the audio thread. The sound is
+  unchanged (the render regression is byte-identical).
+- **Large blocks, Flatwater Vocal Chain and Pitch Bend:** a block larger than the size the host announced goes
+  through in pieces of that size, without resizing a buffer on the audio thread. Before, Flatwater Pitch Bend
+  allocated memory there, and Flatwater Vocal Chain crashed on such a block in its test.
+- **Flatwater Vocal Chain, reverb loading:** the reverb's responses load in the background and the plug-in waits
+  for them when the host prepares it, for 20 s at most, so a render has the reverb from its first sample. When the
+  wait runs out, the plug-in now records it, the reverb is silent until the responses are there, and then comes in.
+  Before, nothing recorded it and the reverb's input came through unprocessed meanwhile.
+- **Presets and Setup A/B kept:** the preset's name, its place in the factory list and both setups are part of
+  the plug-in's saved state, in every plug-in. They are still there when the window is closed and opened again and
+  when the project is reloaded, and each setup keeps its own preset name. Before, they lived in the window: closing
+  it or reloading the project put the bar back on Default Preset, setup A, and the other setup was lost. A project
+  saved by 1.0.0 loads with the same settings, on Default Preset; a project saved now still loads in 1.0.0, which
+  skips the added entries.
+- **Undo across presets:** loading a factory or user preset, switching the setup and a program change from the host
+  are each one undo step, so undo after a preset gives back the settings before it. Before, a user preset and a setup
+  switch cleared the undo history.
+- **Programs after a reload:** the host's program is saved with the state and comes back without being loaded
+  again, and a program the host sets in the first half second after it restored a state is not applied. Before, a
+  host that set a program after restoring could load that preset over the restored settings.
+- **Flatwater Delay, Sync:** the change between ms and note values converts the delay time only when Sync is
+  clicked in the window. A preset, an undo, a setup switch, the host's automation of Sync and a reloaded project keep
+  the times they bring. Before, with the window open, a preset in ms loaded after a synced one had its Delay
+  replaced by the note's time (505 ms became 500 ms at 120 BPM), and with the window closed it had not.
+- **Flatwater Vocal Leveler, threads:** a preset's own Idle value is read when the state changes, on the thread
+  that changes it. Before, a timer read the state 30 times a second, also while a host replaced it from another
+  thread.
 - **Documents:** the How close sentences of Flatwater Delay, Vocal Comp, Comp and Bass Lift say what their tables
   show: Delay's two cases with a gliding time (-41.9 to -96.2 dB) and its 96 kHz table, Vocal Comp's 100 Hz tone
   (-47.8 to -51.7 dB), Comp's weakest preset (-20.8 dB) and Bass Lift's weakest case (-4.0 dB). Before, each claimed
   more than its table.
+- **Documents, controls:** the READMEs of Flatwater Bass Lift, BassX Lift, Vocal Chain and Pitch Bend say that the
+  Mode menu does not change the sound in them (they process the channels the host gives them); Bass Lift's and Vocal
+  Comp's name the parameters that are kept for compatibility and have no effect; Vocal Chain's says that its noise is
+  always on and not in the saved state. Flatwater Comp's summary of its null tests quotes the rows of its table, and
+  Flatwater Vocal Comp's report calls -60 dB a null.
+- **Reset from the host:** every plug-in clears its tails when the host resets it: the delay lines, the echoes, the
+  reverb, the filters, the rides and the envelopes start again as after loading, the bypass line too, without
+  allocating memory. Before, no plug-in answered the host's reset, so an echo, a reverb tail or the audio held in a
+  look-ahead line sounded on after it. Flatwater Vocal Chain's noise goes on from where it is.
+- **Offline renderers, Flatwater Vocal Chain and Vocal Leveler:** ChRender ends with exit code 1 and one line on
+  stderr for a `compressAuto` file it cannot read or a bus layout the processor refuses; VlRender ends with 2 for a
+  channel count other than 1 or 2 or a block under 1. Before, ChRender went on without the file and VlRender took
+  the nearest value.
 - **Null tests:** the harnesses of Flatwater Comp, Vocal Comp and Bass Lift run as scripts again (`nulltest.py`
   starts them that way); each called its `main()` above the functions it needs.
+- **Resize corner:** the grip in the window's lower right corner is drawn in Flatwater BassX Lift, Comp, Delay and
+  Vocal Chain, as in the other five plug-ins. Before, the corner resized those four windows but nothing showed it. Their four images under
+  `docs/screenshots` show the grip.
+- **Window size, one range:** the corner resizes a window between 75 and 200 % of its design size, the range of the
+  window-size menu. Before, the corner went up to 300 %. A project saved with a larger window opens at 200 %.
+- **Window size in the saved state:** the size is saved as `uiScale`, the name the standard gives it, beside the
+  older `uiWidth`. A project saved by 1.0.0 opens at its size, and a project saved now opens at its size in 1.0.0.
+- **Closing the editor, Flatwater Pitch Bend:** the list of the Flatten note and a slot's list of sources, left
+  open, no longer act on a closed editor.
+- **Published numbers:** the tables of every NULLTESTS.md were run again at the current source, and each part a
+  script writes names its command (a "Reproduce:" line); a table or a text that no script reproduces says so. What
+  the run corrected:
+  Flatwater Pitch Bend with no shift was given as -67 dB on a sung take with no measurement behind it, and is -68.8 dB
+  there, close on steady vowels and not a null on a spoken take (+3.6 dB); Flatwater Bass Leveler's fixed cases and
+  its Sensitivity and Response table were older than its model (a synthetic part at -13.5 dB stood as -34.5, the
+  factory presets' median is -25.2 dB in every place); Flatwater Comp's side-chain table rendered the original with
+  its Release synced to the tempo and now renders it in ms (19 of 24 keyed rows moved, the worst from -28.1 to
+  -27.2 dB); Flatwater Vocal Chain's -36.0 dB on the Stereo doubler is given as the median of 8 renders at 48 kHz,
+  beside -18.1 dB at 96 kHz; Flatwater Pitch Bend's preset table carries the presets' current names.
 
 ### Known issues
 
-- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -6.7 dB. The
+- Flatwater Comp: a sustained chord at full level with Ratio 50 and Release 30 ms matches at only -7.0 dB. The
   original holds its gain reduction between the chord's envelope peaks; Flatwater Comp lets go between them. The same
-  chord 6 dB lower is at -60.6 dB.
+  chord 6 dB lower is at -63.1 dB.
+- Flatwater Pitch Bend: with no shift a spoken take does not null against the original (+3.6 dB on the test take): the
+  two delay such a voice by different times, 67 samples apart. A sung take nulls at -68.8 dB.
+- Flatwater Bass Leveler: where one side rides a note afresh and the other does not, the match falls to -13.5 dB on a
+  synthetic part with ghost notes and to -9.0 dB on the worst factory preset render.
 
 ## 1.0.0 (2026-11-04)
 

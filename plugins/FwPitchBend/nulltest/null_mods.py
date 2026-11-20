@@ -6,7 +6,8 @@ samples later, far enough from the dry on noise). Each case: the rms and the lar
 readings are blurred by the reading window); an exact law is judged away from the jumps (target 0.003 rms), a fitted
 one over the whole curve (0.01).
 
-    python -I null_mods.py [case ...]        -> measurements/FwPitchBend/mods/null.json and a table
+    python -I null_mods.py [case ...] [--save]   -> measurements/FwPitchBend/mods/null.json and a table; --save writes
+                                                  the modulators' part of NULLTESTS.md from that file
 """
 import sys, os, json, subprocess
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -207,13 +208,36 @@ def run(name):
 
 
 def main():
-    names = sys.argv[1:] or list(CASES)
+    save = '--save' in sys.argv
+    names = [a for a in sys.argv[1:] if a != '--save'] or list(CASES)
     out = json.load(open(OUT)) if os.path.exists(OUT) else {}
     for n in names:
         out[n] = run(n)
         r = out[n]
         print('%-10s %-6s rms %.4f (away from jumps %.4f) max %.4f, target %.3f %s' % (n, r['cls'], r['rms'], r['rms_away'], r['max'], r['target'], {True: 'PASS', False: 'FAIL', None: 'report'}[r['pass']]), flush=True)
-    json.dump(out, open(OUT, 'w'), indent=1)
+    json.dump(out, open(OUT, 'w', newline='\n'), indent=1)
+    if save: report(out)
+
+
+def report(out):
+    """the part of NULLTESTS.md from null.json: every case of CASES that has a result"""
+    rows = [(n, out[n]) for n in CASES if n in out]
+    judged = [r for _, r in rows if r['pass'] is not None]
+    import report_lib as RL
+    with RL.Part('FwPitchBend', 'mods') as f:
+        f.write("`plugins/FwPitchBend/nulltest/null_mods.py` (`measurements/FwPitchBend/mods/null.json`): each case's control value "
+                'over time, read through Mix on both sides, ours against the reference; rms after 0.1 s, over the whole curve and away '
+                "from its jumps (more than 600 samples from a step or a wrap), in parts of the control's range. An exact law is judged "
+                'away from the jumps (target 0.003 rms), a fitted one over the whole curve (0.01). The cases are described in '
+                'MEASUREMENTS.md, sections 3 to 6.\n\n')
+        f.write('| case | class | rms | away from jumps | max | result |\n|---|---|---|---|---|---|\n')
+        for n, r in rows:
+            f.write('| %s | %s | %.4f | %.4f | %.4f | %s |\n' % (n, r['cls'], r['rms'], r['rms_away'], r['max'],
+                                                               {True: 'pass', False: '**miss**', None: 'report'}[r['pass']]))
+        f.write('\n%d of %d judged cases within their targets; %d reported, not judged.\n\n' % (
+            sum(bool(r['pass']) for r in judged), len(judged), len(rows) - len(judged)))
+        f.write('PT on the spoken take is reported, not judged: two pitch detectors on speech disagree where the voice is rough (the '
+                'falling, creaky end of a phrase), which neither reproduces from the other.\n')
 
 
 if __name__ == '__main__':
