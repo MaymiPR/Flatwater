@@ -300,13 +300,13 @@ void SlotPad::mouseDown (const MouseEvent& e)
         m.showMenuAsync (PopupMenu::Options().withTargetComponent (this).withMinimumWidth (70).withStandardItemHeight (18), [safe] (int r)
         {
             if (safe == nullptr || r <= 0) return;
-            auto& ui = safe->ui;
-            const auto& owner = safe->owner;
-            const int slot = safe->slot;
-            auto cur = getSlot (ui.state(), owner.target, slot);
-            ui.um()->beginNewTransaction();
-            setSlot (ui.state(), owner.target, slot, r - 1 == None ? Slot {} : Slot { r - 1, cur.depth }, ui.um());
-            if (ui.changed) ui.changed();
+            auto& u = safe->ui;
+            const int target = safe->owner.target;
+            const int index = safe->slot;
+            auto cur = getSlot (u.state(), target, index);
+            u.um()->beginNewTransaction();
+            setSlot (u.state(), target, index, r - 1 == None ? Slot {} : Slot { r - 1, cur.depth }, u.um());
+            if (u.changed) u.changed();
         });
         return;
     }
