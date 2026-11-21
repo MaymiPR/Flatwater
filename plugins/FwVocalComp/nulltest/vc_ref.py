@@ -1,10 +1,13 @@
 """Null test: Flatwater Vocal Comp (offline renderer of the plug-in DSP) against the reference's render, residual in dB.
 
-    python -I vc_ref.py [--quick] [--tune key=value ...] [--save]
+    python -I vc_ref.py [--quick] [--extra] [--tune key=value ...] [--save]
+
+--extra adds the other sample rates and the stereo cases; --save writes the table and, per signal, its summary over
+the settings that compress (the published page is the run with --extra).
 
 For every signal x setting both plug-ins render the same input at 48 kHz. The residual is
 20 log10( rms(ours - reference) / rms(reference) ), measured after the first 0.2 s (start-up) and
-also over the last 1 s (steady state). A residual of -60 dB or lower is a close match; 0 dB means nothing in common.
+also over the last 1 s (steady state). A residual of -60 dB or lower is a null; 0 dB means nothing in common.
 Numbers are reported as they come: no case is labelled a null unless the data shows it.
 """
 import sys, os, subprocess, json, time
@@ -94,10 +97,16 @@ def main():
         import report_lib as RL
         with RL.Part("FwVocalComp", "settings", from_table=True) as f:
             f.write("# Flatwater Vocal Comp null test results\n\nResidual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. ")
-            f.write("'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match.\n\n")
+            f.write("'steady' = last second only. Lower is better; about -60 dB or less is a null, 0 dB is no match.\n\n")
             f.write("| signal | comp / gate / gain (dB) | residual all (dB) | residual steady (dB) | peak error (dB re. peak) |\n|---|---|---:|---:|---:|\n")
             for r in rows: f.write("| %s | %s | %.1f | %.1f | %.1f |\n" % r)
             f.write("\nMedian %.1f dB, best %.1f dB, worst %.1f dB; %d of %d cases below -60 dB.\n" % (np.median(allv), allv.min(), allv.max(), (allv < -60).sum(), len(allv)))
+        with RL.Part("FwVocalComp", "summary") as f:
+            f.write("The rows above with Compression at work (every setting but Compression 0, which is a fixed gain), per signal: the residual over everything after 0.2 s, and over the last second only.\n\n")
+            f.write("| signal | cases | best (dB) | median (dB) | worst (dB) | median, last second (dB) |\n|---|---:|---:|---:|---:|---:|\n")
+            for name in dict.fromkeys(r[0] for r in rows):
+                v = np.array([(r[2], r[3]) for r in rows if r[0] == name and not r[1].startswith("0/")])
+                f.write("| %s | %d | %.1f | %.1f | %.1f | %.1f |\n" % (name, len(v), v[:, 0].min(), np.median(v[:, 0]), v[:, 0].max(), np.median(v[:, 1])))
     return rows
 
 

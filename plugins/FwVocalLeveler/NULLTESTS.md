@@ -26,11 +26,11 @@ How the model was found: [MEASUREMENTS.md](MEASUREMENTS.md).
 | vocal part 33, 44.1 kHz | -63.5 | 0.003 | 0.008 |
 | vocal part 34, 96 kHz, Fast | -53.2 | 0.005 | 0.037 |
 
+Reproduce: `python -I plugins/FwVocalLeveler/nulltest/nulltest.py --save`
+
 ### The model over all cached renders (`plugins/FwVocalLeveler/nulltest/fit_model.py report`)
 
-The same model (`plugins/FwVocalLeveler/nulltest/native/RideModel.c`, identical to the plug-in's C++ to 0.0000 dB) against the 620 reference renders
-of `plugins/FwVocalLeveler/nulltest/render_reference.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at ten
-settings. Median null in dB per setting:
+The same model (`plugins/FwVocalLeveler/nulltest/native/RideModel.c`, the plug-in's ride: `check_port.py`) against the 620 cached reference renders of `plugins/FwVocalLeveler/nulltest/render_reference.py`: 26 probes (steps, gaps, stops, tones, syllable trains) and the 36 corpus parts, each at 10 settings. Median null in dB per setting. Produced by `plugins/FwVocalLeveler/nulltest/fit_model.py report`.
 
 | set | all | default | Fast | VS +6 | VS -6 | Target -30 | Target -12 | ±12 | -3 .. +9 | Fast ±12 | Live, Spill -30 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -38,8 +38,9 @@ settings. Median null in dB per setting:
 | corpus 0 .. 23 | -60.8 | -61.1 | -49.5 | -62.0 | -62.8 | -64.7 | -64.2 | -59.5 | -60.5 | -52.3 | -63.6 |
 | corpus 24 .. 35 (held out) | -62.3 | -64.2 | -50.3 | -63.4 | -64.2 | -64.9 | -68.7 | -60.2 | -61.6 | -54.9 | -63.8 |
 
-The worst case over all 620 is -40 dB (a training part at Fast). The residual left is mostly at word onsets at
-Attack Fast, where the gain drops in about 10 ms and the two differ by a fraction of a dB for a few milliseconds.
+The worst case over all 620 is -40.1 dB (training part 18 at Fast). The residual left is mostly at word onsets at Attack Fast, where the gain drops in about 10 ms and the two differ by a fraction of a dB for a few milliseconds.
+
+Reproduce: `python -I plugins/FwVocalLeveler/nulltest/fit_model.py report --save`
 
 ### Not covered
 
@@ -76,6 +77,8 @@ Flatwater Vocal Leveler against the reference, both fed the same voice on the ma
 
 median -70.7 dB, best -76.2, worst -51.7; 21 cases
 
+Reproduce: `python -I plugins/FwVocalLeveler/nulltest/null_sidechain.py --save`
+
 ## Presets
 
 Each of the reference's 13 presets loaded into its state (its stored values, hidden ones included), against
@@ -101,3 +104,5 @@ side here (no side-chain).
 | Open Up | -59.8 | -37.9 | -61.4 |
 
 Median -60.9 dB, worst -37.9 dB over 39 renders.
+
+Reproduce: `python -I plugins/FwVocalLeveler/nulltest/null_presets.py`

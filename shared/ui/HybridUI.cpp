@@ -201,7 +201,7 @@ void Knob::paint (Graphics& g)
     const auto disc = Rectangle<float> (P.body * 2.0f, P.body * 2.0f).withCentre (c);
     for (int k = 3; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.14f));
+        g.setColour (theme::shadow.withAlpha (0.14f));
         g.fillEllipse (disc.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k));
     }
     g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
@@ -216,14 +216,14 @@ void Knob::paint (Graphics& g)
         for (float r = P.cap + 4.0f; r < P.body - 2.0f; r += 3.0f)
             g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c), 0.6f);
         const auto cap = fluted (c, P.cap, P.cap * 0.07f, 10, turn);
-        g.setColour (Colours::black.withAlpha (0.45f));
+        g.setColour (theme::shadow.withAlpha (0.45f));
         g.fillPath (cap, AffineTransform::translation (0.0f, 2.5f));
         g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, theme::raised, 0.0f, c.y + P.cap, false));
         g.fillPath (cap);
         g.setColour (theme::line.brighter (0.25f));
         g.strokePath (cap, PathStrokeType (1.0f));
         // the cap's lit top: a faint disc a little inside the flutes
-        g.setColour (Colours::white.withAlpha (0.035f));
+        g.setColour (theme::glint.withAlpha (0.035f));
         g.fillEllipse (Rectangle<float> (P.cap * 1.5f, P.cap * 1.5f).withCentre (c.translated (0.0f, -P.cap * 0.08f)));
     }
     else if (kind == Knurled)
@@ -244,7 +244,7 @@ void Knob::paint (Graphics& g)
     {
         const Point<float> d (std::sin (a), -std::cos (a));
         const float r0 = P.cap > 0.0f ? P.cap * 0.35f : P.body * 0.25f, r1 = P.body - 3.0f;
-        g.setColour (Colours::black.withAlpha (0.35f));
+        g.setColour (theme::shadow.withAlpha (0.35f));
         const Point<float> drop (0.0f, 1.2f);
         g.drawLine (Line<float> (c + d * r0 + drop, c + d * r1 + drop), P.pointer + 1.0f);
         g.setColour (theme::amber);
@@ -298,7 +298,7 @@ static void drawButtonFrame (Graphics& g, Rectangle<float> f)
 {
     for (int k = 3; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.12f));
+        g.setColour (theme::shadow.withAlpha (0.12f));
         g.fillRoundedRectangle (f.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k), 3.0f + 0.4f * (float) k);
     }
     theme::drawWell (g, f, 3.0f);
@@ -409,7 +409,12 @@ void ButtonGroup::mouseDown (const MouseEvent& e)
         if (buttonRect (i).contains (e.position))
         {
             if (toggle) attachment->setValueAsCompleteGesture (selected != 0 ? 0.0f : 1.0f);
-            else attachment->setValueAsCompleteGesture ((float) i);
+            else
+            {
+                const int from = selected;
+                attachment->setValueAsCompleteGesture ((float) i);
+                if (i != from && onChoice) onChoice (from, i);
+            }
         }
 }
 
@@ -527,7 +532,7 @@ void VuMeter::paint (Graphics& g)
             Path p;
             p.startNewSubPath (np + sh + dir * 22.0f);
             p.lineTo (np + sh + dir * 110.3f);
-            g.setColour (Colours::black.withAlpha (alpha));
+            g.setColour (theme::shadow.withAlpha (alpha));
             g.strokePath (p, PathStrokeType (w, PathStrokeType::curved, PathStrokeType::rounded));
         }
         g.setColour (theme::amber);
@@ -538,7 +543,7 @@ void VuMeter::paint (Graphics& g)
         g.fillEllipse (rv.x - 1.15f, rv.y - 1.15f, 2.3f, 2.3f);
     }
     // the glass: a faint sheen across the top
-    g.setGradientFill (ColourGradient (Colours::white.withAlpha (0.05f), 0.0f, kFace.getY(), Colours::white.withAlpha (0.0f), 0.0f, kFace.getY() + 45.0f, false));
+    g.setGradientFill (ColourGradient (theme::glint.withAlpha (0.05f), 0.0f, kFace.getY(), theme::glint.withAlpha (0.0f), 0.0f, kFace.getY() + 45.0f, false));
     g.fillPath (faceShape);
     g.restoreState();
 
@@ -584,7 +589,7 @@ void drawVuHousing (Graphics& g, Rectangle<float> h, Point<float> archCentre, fl
     // its shadow on the panel, below and to the right
     for (int k = 4; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.10f));
+        g.setColour (theme::shadow.withAlpha (0.10f));
         g.fillPath (p, AffineTransform::translation (0.6f * (float) k, 0.9f * (float) k));
     }
     // a raised block lit from above, a lit line along its top edge, its rim
@@ -593,7 +598,7 @@ void drawVuHousing (Graphics& g, Rectangle<float> h, Point<float> archCentre, fl
     {
         g.saveState();
         g.reduceClipRegion (p);
-        g.setColour (Colours::white.withAlpha (0.06f));
+        g.setColour (theme::glint.withAlpha (0.06f));
         g.strokePath (p, PathStrokeType (3.0f), AffineTransform::translation (0.0f, 1.5f));
         // the arch's edge faces down toward the knob: an even dark lip all round it
         const float lw = 5.6f, rl = archRadius + lw * 0.5f;
@@ -742,7 +747,7 @@ void drawLedDisplay (Graphics& g, Rectangle<float> box, const String& text, cons
     // digits at a 16 px pitch, right-aligned 8.5 px from the right edge, 7 px from the top (measured)
     for (int k = 3; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.12f));
+        g.setColour (theme::shadow.withAlpha (0.12f));
         g.fillRoundedRectangle (box.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k), 5.0f);
     }
     theme::drawWell (g, box, 5.0f);
@@ -792,7 +797,7 @@ Slider::SliderLayout HybridLook::getSliderLayout (Slider& s)
 Label* HybridLook::createSliderTextBox (Slider& s)
 {
     auto* l = FlatLook::createSliderTextBox (s);
-    if (dynamic_cast<Knob*> (&s) != nullptr) l->setColour (Label::textColourId, Colours::transparentBlack);   // shown only while typing
+    if (dynamic_cast<Knob*> (&s) != nullptr) l->setColour (Label::textColourId, theme::clear);   // shown only while typing
     return l;
 }
 }

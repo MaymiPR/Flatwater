@@ -81,10 +81,6 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
       rMark (make<RMark>())
 {
     setAuxLook (std::make_unique<HybridLook>());
-    for (auto* c : getChildren())
-        if (dynamic_cast<ResizableCornerComponent*> (c) != nullptr) c->setAlpha (0.0f);
-    setFactoryPresets (de::factoryPresets());
-    setKeepOnPresetLoad ({ p.apvts.getParameter (de::id::mix) });        // presets leave Mix alone, as the reference
 
     auto place = [this] (Knob& k, const char* id, Rectangle<int> r, Point<float> c, double reset, std::function<String (double)> fmt)
     {
@@ -146,6 +142,9 @@ FwDelayEditor::FwDelayEditor (FwDelayProcessor& p)
     // the tap pad
     for (auto* r : { stereoRow, monoRow }) r->onClick = [this] (Component* c) { selectOnly (c); };
     for (auto* b : { syncGroup, lofiButton }) b->onClick = [this] (Component* c) { selectOnly (c); };
+    // as the reference: the user's switch between ms and note values keeps the time, as near as the new unit allows.
+    // It belongs to this click alone (with the click's undo step); Sync changed any other way leaves the times alone.
+    syncGroup->onChoice = [this] (int from, int to) { proc.convertDelayForSync (from, to); };
 
     addToContent (display, kDisplay);
     addToContent (tap, kTapPad.expanded (6.0f).getSmallestIntegerContainer());
@@ -189,21 +188,6 @@ void FwDelayEditor::updateDelayKnobs()
     lastDualOn = (int) dualOn;
     // the right side's knob while Dual's layout shows (Ping Pong's takes over the display and shows the left)
     const bool right = rightSide && dual && ! ping;
-    if (s != lastSync && lastSync >= 0)
-    {
-        // as the reference: switching between ms and note values keeps the time, as near as the new unit allows
-        const double t = tempo();
-        if (s == 2)
-        {
-            setValue (de::id::delay, (float) (de::noteBeats (roundToInt (value (de::id::delayNote))) * 60000.0 / t));
-            setValue (de::id::delayR, (float) (de::noteBeats (roundToInt (value (de::id::delayNoteR))) * 60000.0 / t));
-        }
-        else if (lastSync == 2)
-        {
-            setValue (de::id::delayNote, (float) de::nearestNote (value (de::id::delay), t));
-            setValue (de::id::delayNoteR, (float) de::nearestNote (value (de::id::delayR), t));
-        }
-    }
     if (s == lastSync && m == lastMode && (int) dual == lastDual && (int) ping == lastPing && right == lastRight) return;
     lastSync = s; lastMode = m; lastDual = (int) dual; lastPing = (int) ping; lastRight = right;
     delay.setVisible (s == 2 && ! right);
@@ -314,7 +298,7 @@ void FwDelayEditor::Display::paint (Graphics& g)
         for (int i = 0; i < 9; ++i)
         {
             const float x = pane.getX() + rnd.nextFloat() * pane.getWidth(), y = pane.getY() + rnd.nextFloat() * 40.0f;
-            g.setColour (Colours::white.withAlpha (0.012f + 0.02f * rnd.nextFloat()));
+            g.setColour (theme::glint.withAlpha (0.012f + 0.02f * rnd.nextFloat()));
             g.drawLine (x, y, x + 40.0f, y + 12.0f, 0.8f + rnd.nextFloat());
         }
         g.setColour (theme::line.withAlpha (0.8f));
@@ -549,7 +533,7 @@ void FwDelayEditor::TapPad::paint (Graphics& g)
     const Rectangle<float> pad (24.0f, 59.0f, 94.0f, 96.0f), face (36.5f, 72.5f, 67.0f, 68.0f);
     for (int k = 4; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.12f));
+        g.setColour (theme::shadow.withAlpha (0.12f));
         g.fillRoundedRectangle (pad.translated (0.24f, 0.6f * (float) k).expanded (0.4f * (float) k), 6.0f + 0.4f * (float) k);
     }
     g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, pad.getY(), theme::raised.darker (0.3f), 0.0f, pad.getBottom(), false));
@@ -610,7 +594,7 @@ void FwDelayEditor::LinkWheel::paint (Graphics& g)
     }
     for (int k = 4; k >= 1; --k)
     {
-        g.setColour (Colours::black.withAlpha (0.14f));
+        g.setColour (theme::shadow.withAlpha (0.14f));
         const float r = 14.5f + 0.8f * (float) k;
         g.fillEllipse (wc.x + 1.5f - r, wc.y + 3.0f - r, 2.0f * r, 2.0f * r);
     }
@@ -723,7 +707,7 @@ void FwDelayEditor::Meter::paint (Graphics& g)
         const float xb = left ? 608.0f : 638.5f, xt = left ? 618.0f : 628.5f;
         Path p;
         p.addTriangle (xb, y - 3.6f, xt, y - 0.1f, xb, y + 3.6f);
-        g.setColour (Colours::black.withAlpha (0.5f));
+        g.setColour (theme::shadow.withAlpha (0.5f));
         g.fillPath (p, AffineTransform::translation (0.4f, 1.4f));
         g.setGradientFill (ColourGradient (theme::amberLight, 0.0f, y - 3.6f, theme::amber.darker (0.3f), 0.0f, y + 3.6f, false));
         g.fillPath (p);
@@ -799,7 +783,7 @@ void FwDelayEditor::paintContent (Graphics& g)
         const auto c = kClipLamp;
         for (int k = 3; k >= 1; --k)
         {
-            g.setColour (Colours::black.withAlpha (0.13f));
+            g.setColour (theme::shadow.withAlpha (0.13f));
             const float r = 12.3f + 0.5f * (float) k;
             g.fillEllipse (c.x - r, c.y + 0.8f * (float) k - r, 2.0f * r, 2.0f * r);
         }
@@ -817,7 +801,7 @@ void FwDelayEditor::paintContent (Graphics& g)
         }
         else g.setGradientFill (ColourGradient (theme::raised, c.x, c.y + 2.6f, theme::well, c.x, c.y + 10.0f, true));
         g.fillEllipse (c.x - 7.8f, c.y - 7.8f, 15.6f, 15.6f);
-        g.setColour (Colours::white.withAlpha (0.3f));
+        g.setColour (theme::glint.withAlpha (0.3f));
         g.fillEllipse (c.x - 5.2f, c.y - 5.0f, 2.6f, 2.0f);
     }
     // the name plate: the Flatwater mark and the plug-in's name

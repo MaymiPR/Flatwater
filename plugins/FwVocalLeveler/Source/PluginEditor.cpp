@@ -95,7 +95,7 @@ void drawLed (Graphics& g, Point<float> c, float radius, float level, Colour col
                                            colour.withAlpha (level), c.x, c.y + radius, true));
         g.fillEllipse (r);
     }
-    g.setColour (Colours::white.withAlpha (0.10f + 0.15f * level));
+    g.setColour (theme::glint.withAlpha (0.10f + 0.15f * level));
     g.fillEllipse (Rectangle<float> (radius * 0.9f, radius * 0.6f).withCentre ({ c.x - radius * 0.25f, c.y - radius * 0.45f }));
 }
 
@@ -404,7 +404,7 @@ void AutomationButtons::paint (Graphics& g)
         }
         else
         {
-            g.setColour (Colours::black.withAlpha (0.35f));
+            g.setColour (theme::shadow.withAlpha (0.35f));
             g.fillRoundedRectangle (b.translated (0.0f, 2.0f), 3.0f);
             g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, b.getY(), theme::raised, 0.0f, b.getBottom(), false));
             g.fillRoundedRectangle (b, 3.0f);
@@ -436,7 +436,6 @@ FwVocalLevelerEditor::FwVocalLevelerEditor (FwVocalLevelerProcessor& p)
       output (make<Fader> (Fader::Output)), rider (make<Fader> (Fader::Rider)), idleColumn (make<IdleColumn>()),
       automation (make<AutomationButtons>())
 {
-    setFactoryPresets (vl::factoryPresets());
     marks.blueAlone = { &rider, &idleColumn };
     marks.changed = [this] { content().repaint(); };
     marks.enter = [this] (Slider* sl) { openEntry (sl); };
@@ -546,13 +545,13 @@ void FwVocalLevelerEditor::openEntry (Slider* sl)
     entry->setFont (arial (12.0f, true));
     entry->setJustification (Justification::centredLeft);
     entry->setIndents (2, 0);
-    entry->setColour (TextEditor::backgroundColourId, Colours::white);
-    entry->setColour (TextEditor::textColourId, Colours::black);
+    entry->setColour (TextEditor::backgroundColourId, theme::entryPaper);
+    entry->setColour (TextEditor::textColourId, theme::entryInk);
     entry->setColour (TextEditor::highlightColourId, theme::cyan.withAlpha (0.35f));
-    entry->setColour (TextEditor::highlightedTextColourId, Colours::white);
-    entry->setColour (CaretComponent::caretColourId, Colours::black);
-    entry->setColour (TextEditor::outlineColourId, Colours::black);
-    entry->setColour (TextEditor::focusedOutlineColourId, Colours::black);
+    entry->setColour (TextEditor::highlightedTextColourId, theme::entryPaper);
+    entry->setColour (CaretComponent::caretColourId, theme::entryInk);
+    entry->setColour (TextEditor::outlineColourId, theme::entryInk);
+    entry->setColour (TextEditor::focusedOutlineColourId, theme::entryInk);
     entry->setText (sl->getTextFromValue (sl->getValue()).upToFirstOccurrenceOf (" ", false, false), false);
     entry->onReturnKey = [this] { closeEntry (true); };
     entry->onEscapeKey = [this] { closeEntry (false); };

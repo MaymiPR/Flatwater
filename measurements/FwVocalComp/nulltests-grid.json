@@ -1,0 +1,5378 @@
+[
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -195.6
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -195.6
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -91.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -91.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -80.5
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -80.5
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -85.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -85.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -85.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -85.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -84.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -84.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -79.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -79.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -76.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -76.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -76.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -76.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -76.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -76.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -74.1
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -74.1
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -69.7
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -68.1
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -68.1
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -65.0
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -65.0
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -65.0
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -65.0
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -64.9
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -64.9
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -63.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -63.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -55.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -55.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -55.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -55.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -55.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -55.3
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -54.6
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -54.6
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -48.4
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -48.2
+},
+{
+"signal": "voice-like",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -48.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -207.6
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -207.6
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -207.6
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -81.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -81.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -74.0
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -72.4
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -72.4
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -66.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -64.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -64.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -59.7
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -58.4
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -58.4
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -50.8
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -50.3
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -50.3
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -45.1
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -44.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -44.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -38.9
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -39.2
+},
+{
+"signal": "voice-like",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -39.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -219.6
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -219.6
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -219.6
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -142.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -99.4
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -99.4
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -64.1
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -52.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -45.2
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -39.8
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -40.0
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -40.0
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -34.3
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -34.4
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -34.4
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -29.5
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -29.6
+},
+{
+"signal": "voice-like",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -29.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -195.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -195.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -195.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -75.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -75.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -71.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -69.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -69.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -62.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -61.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -61.3
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -54.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -54.2
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -54.2
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -45.4
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -44.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -44.9
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -37.1
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -36.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -36.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -33.8
+},
+{
+"signal": "white noise",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -33.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -207.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -207.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -207.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -75.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -75.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -59.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -59.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -59.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -48.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -48.2
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -48.2
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -38.4
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -38.1
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -38.1
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -34.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -34.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -34.5
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -30.6
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -30.0
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -30.0
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -26.3
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -25.8
+},
+{
+"signal": "white noise",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -25.8
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -219.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -219.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -219.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -219.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -142.9
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -44.5
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -33.3
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -32.4
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -27.6
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -26.7
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -25.2
+},
+{
+"signal": "white noise",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -25.2
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -198.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -141.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -125.7
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -125.6
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -123.2
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -123.1
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -106.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -106.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -99.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -99.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -99.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -99.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -104.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -104.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -102.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -102.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -89.7
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -89.7
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -89.6
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -89.6
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -93.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -93.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -94.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -94.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -82.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -82.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -82.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -82.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -86.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -86.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -88.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -88.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -76.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -76.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -76.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -76.3
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -81.2
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -81.2
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -82.6
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -82.6
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -69.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -69.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -69.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -69.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -71.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -71.9
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -73.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -73.5
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -57.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -57.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -57.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -57.8
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -59.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -59.0
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -210.5
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.7
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -137.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -136.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -123.1
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -123.1
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -108.5
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -108.4
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -87.6
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -87.6
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -87.6
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -87.6
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -88.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -88.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -93.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -93.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -78.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -78.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -78.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -78.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -79.4
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -79.4
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -84.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -84.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -70.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -70.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -70.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -70.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -71.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -71.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -74.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -74.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -58.7
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -58.7
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -58.7
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -58.7
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -58.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -58.9
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -63.1
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -63.1
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -46.2
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -52.0
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -52.0
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -36.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -43.3
+},
+{
+"signal": "tone steps",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -43.3
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -222.5
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -142.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -222.5
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -142.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -127.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -126.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -123.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -123.5
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -75.7
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -79.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -79.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -62.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -63.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -63.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -47.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -48.2
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -48.2
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -36.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -37.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -37.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -29.0
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -30.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -30.4
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -22.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -22.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -22.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -22.9
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -22.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -22.8
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -25.6
+},
+{
+"signal": "tone steps",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -25.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -192.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -144.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -192.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -144.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -108.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -108.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -100.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -100.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -121.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -121.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -121.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -121.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -107.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -107.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -100.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -100.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -124.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -124.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -124.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -124.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -108.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -108.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -99.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -99.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -122.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -123.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -122.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -123.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -107.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -107.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -100.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -100.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -118.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -117.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -118.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -117.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -100.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -100.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -115.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -115.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -115.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -115.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -106.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -106.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -99.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -98.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -113.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -113.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -113.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -113.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -106.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -106.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -97.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -24,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -97.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -204.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -143.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -204.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -143.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -204.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -143.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -106.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -106.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -124.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -107.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -107.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -121.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -121.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -121.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -121.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -121.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -121.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -106.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -106.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -117.1
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -106.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -105.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -112.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -105.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -105.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -111.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -104.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -104.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -109.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -102.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": -12,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -102.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": 0,
+"residual_db": -216.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": "off",
+"gain": -12,
+"residual_db": -141.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": 0,
+"residual_db": -216.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -60,
+"gain": -12,
+"residual_db": -141.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": 0,
+"residual_db": -216.9
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -40,
+"gain": -12,
+"residual_db": -141.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": 0,
+"residual_db": -108.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": 0,
+"gate": -20,
+"gain": -12,
+"residual_db": -108.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": 0,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": "off",
+"gain": -12,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": 0,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -60,
+"gain": -12,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": 0,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -40,
+"gain": -12,
+"residual_db": -120.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": 0,
+"residual_db": -108.7
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -6,
+"gate": -20,
+"gain": -12,
+"residual_db": -108.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": 0,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": "off",
+"gain": -12,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": 0,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -60,
+"gain": -12,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": 0,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -40,
+"gain": -12,
+"residual_db": -114.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": 0,
+"residual_db": -108.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -12,
+"gate": -20,
+"gain": -12,
+"residual_db": -108.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": 0,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": "off",
+"gain": -12,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": 0,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -60,
+"gain": -12,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": 0,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -40,
+"gain": -12,
+"residual_db": -110.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": 0,
+"residual_db": -106.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -18,
+"gate": -20,
+"gain": -12,
+"residual_db": -106.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": 0,
+"residual_db": -110.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": "off",
+"gain": -12,
+"residual_db": -110.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": 0,
+"residual_db": -110.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -60,
+"gain": -12,
+"residual_db": -110.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": 0,
+"residual_db": -110.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -40,
+"gain": -12,
+"residual_db": -110.0
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": 0,
+"residual_db": -105.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -24,
+"gate": -20,
+"gain": -12,
+"residual_db": -105.8
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": 0,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": "off",
+"gain": -12,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": 0,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -60,
+"gain": -12,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": 0,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -40,
+"gain": -12,
+"residual_db": -107.4
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": 0,
+"residual_db": -105.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -30,
+"gate": -20,
+"gain": -12,
+"residual_db": -105.3
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": 0,
+"residual_db": -103.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": "off",
+"gain": -12,
+"residual_db": -103.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": 0,
+"residual_db": -103.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -60,
+"gain": -12,
+"residual_db": -103.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": 0,
+"residual_db": -103.6
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -40,
+"gain": -12,
+"residual_db": -103.5
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": 0,
+"residual_db": -103.2
+},
+{
+"signal": "sine 1 kHz",
+"trim": 0,
+"comp": -36,
+"gate": -20,
+"gain": -12,
+"residual_db": -103.2
+}
+]

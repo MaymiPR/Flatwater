@@ -247,7 +247,8 @@ With Wall's B + D pair the chain's medians with the doubler clear are -32.1 dB a
 
 [NULLTESTS.md](NULLTESTS.md) holds every case at 44.1, 48 and 96 kHz; the linear stages with the others clear have a
 median of -75.7 dB at 48 kHz (worst -67.9, Bass Upper from 0 up -69.7 ... -75.1); the whole chain with the doubler
-clear -33.2 dB, with Stereo -36.0 dB. Compress at high faders is the largest error after the doubler's Wide and
+clear -33.2 dB (the median of 30 renders at 48 kHz), with the Stereo doubler -36.0 dB (the median of 8 renders at
+48 kHz; -18.1 dB over 4 renders at 96 kHz). Compress at high faders is the largest error after the doubler's Wide and
 Spreader colours.
 
 ## Factory presets
@@ -270,7 +271,8 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
   -77.7 dB at 44.1 kHz and -71.0 dB at 96 kHz.
 - The whole chain at the defaults, factory presets and random settings: median -33.2 dB at 48 kHz with the doubler
   (the Pitch stage) clear, -32.1 dB at 44.1 kHz and -35.5 dB at 96 kHz. With the doubler on its default Stereo
-  colour: -36.0 dB at 48 kHz, -35.6 dB at 44.1 kHz, -18.1 dB at 96 kHz.
+  colour, the median of 8 renders at 48 kHz and of 4 at each other rate: -36.0 dB at 48 kHz, -35.6 dB at 44.1 kHz,
+  -18.1 dB at 96 kHz (not a null there).
 - The doubler's Wide and Spreader colours are pitch shifters that pick their splice points from the signal, so a
   voice parts from the reference wherever the two pick different steps: medians -9 to -24 dB with them on, worst
   -3.4. They are compared in behaviour instead: level within 0.05 dB, third-octave spectrum within 0.12 dB, and
@@ -285,7 +287,7 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 
 | Check | Result |
 |---|---|
-| CHECK sites | 37 |
+| Unit-test program | `FwVocalChainTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

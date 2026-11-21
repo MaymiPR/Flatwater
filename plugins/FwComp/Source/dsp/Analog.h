@@ -19,17 +19,32 @@ namespace co::dsp
 class Analog
 {
 public:
+    // Allocates: the noise filters of all four modes and the noise lines are made here, so a mode change (setMode)
+    // and reset() allocate nothing and the audio thread may call them.
     void prepare (double sampleRate, int numChannels)
     {
         fs = sampleRate;
         channels = std::max (1, std::min (2, numChannels));
-        for (auto& c : chans) c = {};
-        for (int c = 0; c < 2; ++c) chans[(size_t) c].rng = (uint64_t) 0x9E3779B97F4A7C15ull * (uint64_t) (c + 1);
+        build();
+        reset();
+    }
+
+    // every state as prepare() leaves it (the filters, the noise lines, the noise generators), the mode kept
+    void reset()
+    {
+        for (int c = 0; c < 2; ++c)
+        {
+            auto& s = chans[(size_t) c];
+            s.rng = (uint64_t) 0x9E3779B97F4A7C15ull * (uint64_t) (c + 1);
+            s.spare = 0.0;
+            s.hasSpare = false;
+        }
         built = -1;
         setMode (mode);
     }
 
-    // the four modes' tables (the compressor reference's by default; Flatwater Delay gives its own reference's, whose modes 1-3 differ)
+    // the four modes' tables (the compressor reference's by default; Flatwater Delay gives its own reference's, whose
+    // modes 1-3 differ); set before prepare(), which reads them
     const tables::AnalogMode* modes = tables::analog;
 
     // 0: Off (an identity), 1 .. 4
@@ -37,6 +52,7 @@ public:
     {
         m = std::max (0, std::min (tables::analogModes, m));
         if (m == mode && built == m) return;
+        if (taps == 0) build();                        // (never prepared: at the default rate)
         mode = m;
         built = m;
         for (auto& c : chans) { for (auto& s : c.st) s = {}; c.bx1 = c.bx2 = c.by1 = c.by2 = 0.0; std::fill (c.noise.begin(), c.noise.end(), 0.0); c.np = 0; }
@@ -56,7 +72,7 @@ public:
             bp = { b1 * kb / d0, 0.0, -b1 * kb / d0, (2.0 - 2.0 * a2 * kb * kb) / d0, (a2 * kb * kb - a1 * kb + 1.0) / d0 };
         }
         g0 = table (0.0, t.g);
-        buildNoise (t.noiseDb);
+        fir = firs[(size_t) (m - 1)].data();
     }
 
     void process (float* const* ch, int n)
@@ -137,12 +153,21 @@ private:
         return g[i] + f * (g[i + 1] - g[i]);
     }
 
+    // the noise filter of every mode at this rate and the channels' noise lines
+    void build()
+    {
+        taps = fs > 100000.0 ? 512 : fs > 50000.0 ? 256 : 128;
+        for (int m = 0; m < tables::analogModes; ++m) buildNoise (modes[m].noiseDb, firs[(size_t) m]);
+        for (auto& c : chans) { c.noise.assign ((size_t) taps, 0.0); c.np = 0; }
+        fir = firs[(size_t) std::max (0, mode - 1)].data();
+    }
+
     // a linear-phase FIR whose magnitude is sqrt(PSD fs / 2) (unit-variance white noise in: the measured one-sided
     // spectrum out), frequency-sampled at this rate; above the table's last band the level is held, above 24 kHz it fades
-    void buildNoise (const float* psdDb)
+    void buildNoise (const float* psdDb, std::vector<double>& out) const
     {
         using namespace tables;
-        const int taps = fs > 100000.0 ? 512 : fs > 50000.0 ? 256 : 128, half = taps / 2;
+        const int half = taps / 2;
         std::vector<double> mag ((size_t) half + 1);
         for (int j = 0; j <= half; ++j)
         {
@@ -155,16 +180,15 @@ private:
             if (f > 24000.0) db -= 60.0 * std::min (1.0, (f - 24000.0) / 4000.0);
             mag[(size_t) j] = std::sqrt (std::pow (10.0, db / 10.0) * fs / 2.0);
         }
-        fir.assign ((size_t) taps, 0.0);
+        out.assign ((size_t) taps, 0.0);
         for (int n = 0; n < taps; ++n)
         {
             double v = mag[0];
             for (int j = 1; j < half; ++j) v += 2.0 * mag[(size_t) j] * std::cos (2.0 * 3.14159265358979323846 * j * (n - half) / taps);
             v += mag[(size_t) half] * std::cos (3.14159265358979323846 * (n - half));
             const double win = 0.5 - 0.5 * std::cos (2.0 * 3.14159265358979323846 * (n + 0.5) / taps);
-            fir[(size_t) n] = v / taps * win;
+            out[(size_t) n] = v / taps * win;
         }
-        for (auto& c : chans) { c.noise.assign ((size_t) taps, 0.0); c.np = 0; }
     }
 
     double gauss (Channel& s)
@@ -182,7 +206,6 @@ private:
 
     double noiseSample (Channel& s)
     {
-        const int taps = (int) fir.size();
         s.noise[(size_t) s.np] = gauss (s);
         double v = 0.0;
         int j = s.np;
@@ -194,9 +217,10 @@ private:
     double fs = 48000.0, g0 = 0.0;
     Biquad bp;
     bool hasBp = false;
-    int channels = 2, mode = 0, built = -1;
+    int channels = 2, mode = 0, built = -1, taps = 0;
     std::array<Coef, tables::analogLin + tables::analogPre + tables::analogPost> coef {};
     std::array<Channel, 2> chans {};
-    std::vector<double> fir;
+    std::array<std::vector<double>, tables::analogModes> firs;    // the noise filter of each mode (build)
+    const double* fir = nullptr;                                  // the one of the mode in use
 };
 }

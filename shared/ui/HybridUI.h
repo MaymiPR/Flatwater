@@ -79,6 +79,7 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     std::unique_ptr<juce::ParameterAttachment> attachment;
     std::function<void (juce::Component*)> onClick;   // the editor's selection (the outline)
+    std::function<void (int from, int to)> onChoice;  // after a click chose another button of a radio group
     void setOutlined (bool o) { if (o != outlined) { outlined = o; repaint(); } }
 private:
     juce::Rectangle<float> buttonRect (int i) const;

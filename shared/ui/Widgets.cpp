@@ -7,7 +7,7 @@ namespace
 {
 namespace theme = flatwater::theme;
 juce::Font tbFont (float h = 11.0f, bool bold = false) { return theme::font (h, bold); }
-const float kScales[] = { 0.75f, 1.0f, 1.25f, 1.5f, 2.0f };
+const float kScales[] = { minUiScale, 1.0f, 1.25f, 1.5f, maxUiScale };   // the window menu, over the corner's range
 
 // the bar's pieces in Flatwater's look (shared/ui/Theme.h): raised buttons with a 1 px border, the preset name in a well, a
 // cyan border on the button under the mouse; lettering and icons light grey, white-ish when hot, faint when idle
@@ -40,11 +40,11 @@ void downArrow (juce::Graphics& g, juce::Point<float> c, juce::Colour col)
 }
 }
 
-Toolbar::Toolbar (juce::UndoManager& u, juce::AudioProcessorValueTreeState& s, juce::StringArray m,
-                  juce::RangedAudioParameter* mp, juce::String name, juce::String ver, Style st)
-    : style (st), undo (u), apvts (s), modes (std::move (m)), modeParam (mp), product (std::move (name)), version (std::move (ver))
+Toolbar::Toolbar (juce::UndoManager& u, PresetState& ps, juce::StringArray m, juce::RangedAudioParameter* mp,
+                  juce::String name, juce::String ver, Style st)
+    : style (st), undo (u), presets (ps), modes (std::move (m)), modeParam (mp), product (std::move (name)),
+      version (std::move (ver))
 {
-    loadedValues = currentValues();
     if (style == Style::Flat) setSize (flatWidth, flatHeight);
     else if (hybridLayout()) setSize (hybridWidth, hybridHeight);
     else setSize (width, height);
@@ -130,25 +130,24 @@ int Toolbar::itemAt (juce::Point<int> p) const
     return -1;
 }
 
-void Toolbar::refresh() { repaint(); }
-
-//==============================================================================
-// Setup A/B
-void Toolbar::switchSetup()
+// The editor's timer calls this at every frame. The bar's own actions repaint it themselves; what it shows of the
+// plug-in's state (whether undo and redo can go, the preset's name and the star of a changed one, the setup, the
+// Mode's name) changes outside it (the host's programs, an undo, a restore), so those are compared with the last look
+// and the bar is repainted only when one of them differs.
+void Toolbar::refresh()
 {
-    slot[active] = apvts.copyState();
-    const int other = 1 - active;
-    if (! slot[other].isValid()) slot[other] = slot[active].createCopy();
-    active = other;
-    const auto w = apvts.state.getProperty ("uiWidth");
-    apvts.replaceState (slot[active].createCopy());
-    apvts.state.setProperty ("uiWidth", w, nullptr);
+    const Shown now { undo.canUndo(), undo.canRedo(), presets.modified(),
+                      modeParam != nullptr ? (int) modeParam->convertFrom0to1 (modeParam->getValue()) : -1,
+                      presets.activeSetup(), presets.name() };
+    if (now.canUndo == shown.canUndo && now.canRedo == shown.canRedo && now.modified == shown.modified && now.mode == shown.mode
+        && now.setup == shown.setup && now.preset == shown.preset) return;
+    shown = now;
+    repaint();
 }
 
-void Toolbar::copyToOther()
+juce::String Toolbar::presetLabel() const
 {
-    slot[active] = apvts.copyState();
-    slot[1 - active] = slot[active].createCopy();
+    return juce::String (presets.activeSetup() == 0 ? "A: " : "B: ") + presets.name() + (presets.modified() ? "*" : "");
 }
 
 //==============================================================================
@@ -166,75 +165,46 @@ juce::Array<juce::File> Toolbar::userPresets() const
     return files;
 }
 
-std::vector<float> Toolbar::currentValues() const
+// a user preset is known by its name: the file of that name in the user presets folder
+juce::File Toolbar::presetFile() const
 {
-    std::vector<float> v;
-    for (auto* p : apvts.processor.getParameters())
-        v.push_back (p->getValue());
-    return v;
-}
-
-bool Toolbar::isModified() const
-{
-    const auto now = currentValues();
-    for (size_t i = 0; i < now.size() && i < loadedValues.size(); ++i)
-        if (std::abs (now[i] - loadedValues[i]) > 1.0e-5f) return true;
-    return false;
+    const auto name = presets.name();
+    if (presets.factoryIndex() >= 0 || name == PresetState::defaultName) return {};
+    const auto f = userDir().getChildFile (name + ".flatwaterpreset");
+    return f.existsAsFile() ? f : juce::File();
 }
 
 void Toolbar::loadDefault()
 {
-    for (auto* p : apvts.processor.getParameters())
-    {
-        if (p == modeParam || std::find (keepOnLoad.begin(), keepOnLoad.end(), p) != keepOnLoad.end()) continue;
-        p->beginChangeGesture();
-        p->setValueNotifyingHost (p->getDefaultValue());
-        p->endChangeGesture();
-    }
+    presets.loadDefault();
     if (onLoadDefault) onLoadDefault();
-    presetName = "Default Preset";
-    presetFile = juce::File();
-    factoryIndex = -1;
-    loadedValues = currentValues();
     repaint();
 }
 
 void Toolbar::loadFactory (int index)
 {
-    if (factory == nullptr || index < 0 || index >= (int) factory->size()) return;
-    applyPreset (apvts, (*factory)[(size_t) index], modeParam, keepOnLoad);
-    presetName = (*factory)[(size_t) index].name;
-    presetFile = juce::File();
-    factoryIndex = index;
-    loadedValues = currentValues();
+    presets.loadFactory (index);
     repaint();
 }
 
+// (a file of another plug-in or a damaged one changes nothing)
 void Toolbar::loadUser (const juce::File& f)
 {
     if (auto xml = juce::XmlDocument::parse (f))
-    {
-        if (! xml->hasTagName (apvts.state.getType())) return;   // not a preset of this plug-in: the state stays
-        const auto w = apvts.state.getProperty ("uiWidth");
-        apvts.replaceState (juce::ValueTree::fromXml (*xml));
-        apvts.state.setProperty ("uiWidth", w, nullptr);
-        presetName = f.getFileNameWithoutExtension();
-        presetFile = f;
-        factoryIndex = -1;
-        loadedValues = currentValues();
-        repaint();
-    }
+        if (presets.loadTree (juce::ValueTree::fromXml (*xml), f.getFileNameWithoutExtension()))
+            repaint();
 }
 
 void Toolbar::step (int delta)
 {
     // order: Default Preset, the factory list, then the user presets
-    const int nf = factory != nullptr ? (int) factory->size() : 0;
+    const int nf = (int) presets.factory().size(), factoryIndex = presets.factoryIndex();
     const auto users = userPresets();
+    const auto file = presetFile();
     const int total = 1 + nf + users.size();
     int idx = 0;
     if (factoryIndex >= 0) idx = 1 + factoryIndex;
-    else if (presetFile.exists() && users.contains (presetFile)) idx = 1 + nf + users.indexOf (presetFile);
+    else if (file.exists() && users.contains (file)) idx = 1 + nf + users.indexOf (file);
     idx = (idx + delta + total) % total;
     if (idx == 0) loadDefault();
     else if (idx <= nf) loadFactory (idx - 1);
@@ -244,13 +214,8 @@ void Toolbar::step (int delta)
 void Toolbar::saveTo (const juce::File& f)
 {
     f.getParentDirectory().createDirectory();
-    auto state = apvts.copyState();
-    state.removeProperty ("uiWidth", nullptr);
-    if (auto xml = state.createXml()) xml->writeTo (f);
-    presetName = f.getFileNameWithoutExtension();
-    presetFile = f;
-    factoryIndex = -1;
-    loadedValues = currentValues();
+    if (auto xml = presets.presetTree().createXml())
+        if (xml->writeTo (f)) presets.savedAs (f.getFileNameWithoutExtension());
     repaint();
 }
 
@@ -258,7 +223,7 @@ void Toolbar::saveAs()
 {
     auto* w = new juce::AlertWindow ("Save Preset", "Preset name:", juce::MessageBoxIconType::NoIcon, this);
     w->setLookAndFeel (&menuLook);
-    w->addTextEditor ("name", presetFile.exists() ? presetName : juce::String());
+    w->addTextEditor ("name", presetFile().exists() ? presets.name() : juce::String());
     w->addButton ("Save", 1, juce::KeyPress (juce::KeyPress::returnKey));
     w->addButton ("Cancel", 0, juce::KeyPress (juce::KeyPress::escapeKey));
     juce::Component::SafePointer<Toolbar> safe (this);
@@ -276,20 +241,22 @@ void Toolbar::showPresetMenu()
     juce::PopupMenu m;
     m.setLookAndFeel (&menuLook);
     m.addSectionHeader ("Factory Presets");
-    m.addItem (1, "Default Preset", true, ! presetFile.exists() && factoryIndex < 0);
-    if (factory != nullptr)
+    const auto& factory = presets.factory();
+    const int factoryIndex = presets.factoryIndex();
+    const auto file = presetFile();
+    m.addItem (1, PresetState::defaultName, true, ! file.exists() && factoryIndex < 0);
     {
         juce::StringArray groups;
-        for (const auto& p : *factory) groups.addIfNotAlreadyThere (p.group);
+        for (const auto& p : factory) groups.addIfNotAlreadyThere (p.group);
         for (const auto& g : groups)
         {
             juce::PopupMenu sub;
             sub.setLookAndFeel (&menuLook);
             bool inside = false;
-            for (int i = 0; i < (int) factory->size(); ++i)
-                if (g == (*factory)[(size_t) i].group)
+            for (int i = 0; i < (int) factory.size(); ++i)
+                if (g == factory[(size_t) i].group)
                 {
-                    sub.addItem (1000 + i, (*factory)[(size_t) i].name, true, i == factoryIndex);
+                    sub.addItem (1000 + i, factory[(size_t) i].name, true, i == factoryIndex);
                     inside = inside || i == factoryIndex;
                 }
             m.addSubMenu (g, sub, true, nullptr, inside);
@@ -301,11 +268,11 @@ void Toolbar::showPresetMenu()
         m.addSeparator();
         m.addSectionHeader ("User Presets");
         for (int i = 0; i < users.size(); ++i)
-            m.addItem (100 + i, users[i].getFileNameWithoutExtension(), true, users[i] == presetFile);
+            m.addItem (100 + i, users[i].getFileNameWithoutExtension(), true, users[i] == file);
     }
     m.addSeparator();
     m.addItem (2, "Save As...");
-    if (presetFile.exists()) m.addItem (3, "Save " + presetName);
+    if (file.exists()) m.addItem (3, "Save " + presets.name());
     m.addItem (4, "Show User Presets Folder");
     juce::Component::SafePointer<Toolbar> safe (this);
     m.showMenuAsync (juce::PopupMenu::Options().withTargetScreenArea (localAreaToGlobal (rect (Preset))).withMinimumWidth (rect (Preset).getWidth()).withStandardItemHeight (18),
@@ -314,7 +281,7 @@ void Toolbar::showPresetMenu()
         if (safe == nullptr || r <= 0) return;
         if (r == 1) safe->loadDefault();
         else if (r == 2) safe->saveAs();
-        else if (r == 3) safe->saveTo (safe->presetFile);
+        else if (r == 3) { if (const auto current = safe->presetFile(); current.exists()) safe->saveTo (current); }
         else if (r == 4) { safe->userDir().createDirectory(); safe->userDir().revealToUser(); }
         else if (r >= 1000) safe->loadFactory (r - 1000);
         else if (r >= 100 && r - 100 < users.size()) safe->loadUser (users[r - 100]);
@@ -436,6 +403,7 @@ void menuIcon (juce::Graphics& g, juce::Point<float> c, juce::Colour col, float 
 
 void Toolbar::paintFlat (juce::Graphics& g)
 {
+    const int active = presets.activeSetup();
     // the single-row bar: the same pieces as the other bars, as pills on the editor's background
     g.fillAll (theme::bg);
     g.setColour (theme::line);
@@ -465,7 +433,7 @@ void Toolbar::paintFlat (juce::Graphics& g)
             case Preset:
             {
                 well (g, rf, hot, rf.getHeight() * 0.5f);
-                label (r.withTrimmedLeft (8).withTrimmedRight (22), juce::String (active == 0 ? "A: " : "B: ") + presetName + (isModified() ? "*" : ""), true);
+                label (r.withTrimmedLeft (8).withTrimmedRight (22), presetLabel(), true);
                 g.setColour (theme::line);
                 g.fillRect (r.getRight() - 18, r.getY() + 4, 1, r.getHeight() - 8);
                 downArrow (g, { (float) r.getRight() - 9.5f, c.y }, hot ? theme::cyan : theme::textDim);
@@ -504,6 +472,7 @@ void Toolbar::paint (juce::Graphics& g)
 {
     if (style == Style::Flat) { paintFlat (g); return; }
     const bool hybrid = hybridLayout();
+    const int active = presets.activeSetup();
     if (hybrid) g.fillAll (theme::bg);
     auto label = [&] (juce::Rectangle<int> r, const juce::String& t, bool hot, float size = 11.0f)
     {
@@ -567,8 +536,7 @@ void Toolbar::paint (juce::Graphics& g)
                 well (g, rf, hot, 2.0f);
                 g.setColour (theme::text);
                 g.setFont (tbFont (11.0f));
-                g.drawText (juce::String (active == 0 ? "A: " : "B: ") + presetName + (isModified() ? "*" : ""),
-                            r.withTrimmedRight (16), juce::Justification::centred);
+                g.drawText (presetLabel(), r.withTrimmedRight (16), juce::Justification::centred);
                 // the menu's arrow at the right end
                 g.setColour (theme::line);
                 g.fillRect (r.getRight() - 16, r.getY() + 2, 1, r.getHeight() - 4);
@@ -597,9 +565,9 @@ void Toolbar::mouseDown (const juce::MouseEvent& e)
         case Next:   step (+1); break;
         case Undo:   undo.undo(); break;
         case Redo:   undo.redo(); break;
-        case Copy:   copyToOther(); break;
-        case Setup:  switchSetup(); break;
-        case Save:   if (presetFile.exists()) saveTo (presetFile); else saveAs(); break;
+        case Copy:   presets.copyToOther(); break;
+        case Setup:  presets.switchSetup(); break;
+        case Save:   if (const auto file = presetFile(); file.exists()) saveTo (file); else saveAs(); break;
         case Preset: showPresetMenu(); break;
         case About:  showAboutMenu(); break;
         case Menu:   showToolbarMenu(); break;

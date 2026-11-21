@@ -55,7 +55,7 @@ The law, in the gain-reduction domain, with two states (`plugins/FwComp/nulltest
 
 | Quantity | Value | Method | Residual or confidence |
 |---|---|---|---|
-| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/native/ReleaseLaw.c hc_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
+| Target R | the reduction after the static curve releases at an effective release time min(Release, Release w0(S), K / (R - S)^p) and never below S (`plugins/FwComp/nulltest/native/ReleaseLaw.c co_set_r_floor`, `plugins/FwComp/Source/dsp/Tables.h rFloorAtS`) | release probes | without the floor the refit reaches -42.09 dB against -43.81 with it |
 | Slow state S | charges toward out + 0.032 (R - out), out the reduction after the attack (the previous sample's), as a one-pole on the linear gain (142 ms; the reference's own hidden crest time is 149.6 ms); releases at Fs(S) / Release + As(S) dB/s with a release time of at least 16.8 ms; charges only when its source rises by more than rounding (src > S + 1e-9; any margin from 1e-12 to 1e-6 gives the same output), level or falling it releases | CMA-ES over all the tables (`plugins/FwComp/nulltest/fit_release_law.py`, 250 generations) | objective -43.97 dB |
 | Start-up | the effective release time is pulled toward the Release time by exp(-t / 90 ms) after a reset | start-up probes and program material from 0.05 s | null test median -40.0 -> -41.9 dB when added; threshold -24 / ratio 10 / Release 300 -21.9 -> -31.5; the defaults lose about 3 dB in their first half second only |
 | Release time seen from outside | after sustained compression the 63 % point is 0.75 x Release (3 -> 3.0, 100 -> 76, 1000 -> 753, 3000 -> 2258 ms); the gain rises at a constant rate in dB and stops sharply at the threshold: the release acts on the detector's level, not on the gain | steps | measured |
@@ -70,7 +70,7 @@ The law, in the gain-reduction domain, with two states (`plugins/FwComp/nulltest
 | Memory follows the output | with a long attack (Round Kick preset: Attack 33 ms) the target swings to 9 dB on every half-cycle of a kick but the output only reaches about 1.5 dB, and the reference releases almost to 0 between half-cycles, while a slow state charged from R held 5.7 dB; hence the charge toward out + blend (R - out) | presets on program signals | when added (CMA-ES, 1034 cases, objective -42.7 -> -43.7 dB): presets' median -32.0 -> -35.5 dB (Round Kick drums -12.9 -> -21.7, Kit Smack voice -21.6 -> -38.0, Pumping Kit voice -33.1 -> -44.5, Drum Knockout drums -24.7 -> -41.7); the null test's worst -10.5 -> -16.7, its median -41.9 -> -40.3 |
 | Memory at short Release | on a sustained bass note with Attack 17.7 and Release 13.5 ms (Classic Kit Crush preset) the reference keeps 6 to 9 dB between cycles; hence the floor on the slow state's release time | presets | when added (objective -43.70 -> -43.81 dB): Classic Kit Crush bass -8.4 -> -17.0 dB, Lo-Fi Radio bass -24.3 -> -27.5, Kit Smack voice -38.0 -> -33.5; presets' median -35.5 -> -34.8; the null test the same or better everywhere (deep slow setting -31.5 -> -33.5) |
 | Final joint fit | the blend (0.032) and the floor (16.8 ms) fitted with all the tables | CMA-ES, 250 generations | objective -43.81 -> -43.97 dB; the null test's median -40.3 -> -41.4 dB (worst -16.8); the presets' median -34.8 -> -35.6 dB (Classic Kit Crush bass -17.0 -> -19.1, Lo-Fi Radio bass -27.5 -> -31.1) |
-| A sustained chord at a heavy ratio and a short Release | three tones (220, 277.2, 329.6 Hz, peak 0.75) at Threshold -12, Ratio 50, Attack 1, Release 30, Punch 10: -6.7 dB (not a null; -4.5 with the learned correction off). The same chord 6, 12 and 18 dB lower: -60.6, -61.8 and -61.8 dB. The reference holds its reduction between the envelope peaks, about 4 ms apart (its gain -7.05 to -2.07 dB, mean -4.16); ours lets go between them (-6.99 to 1.28 dB, mean -2.56): at a short Release the slow state drains between the peaks (its release floor is 16.8 ms), and without it the fitted law releases at once. One control moved: Ratio 4 -22.9, Punch 0 -14.4, Punch 1 -14.8, Release 100 -37.7, Attack 7 -31.1, Threshold -24 -35.9, Output -12 -6.7 dB (so not the limiter) | `plugins/FwComp/nulltest/measure_dense_chord.py` | open: the release law was fitted without dense multi-tone material |
+| A sustained chord at a heavy ratio and a short Release | three tones (220, 277.2, 329.6 Hz, peak 0.75) at Threshold -12, Ratio 50, Attack 1, Release 30, Punch 10: -7.1 dB (not a null; -4.8 with the learned correction off; -7.0 on the shorter chord of NULLTESTS.md). The same chord 6, 12 and 18 dB lower: -64.5, -90.3 and -90.3 dB. The reference holds its reduction between the envelope peaks, about 4 ms apart (its gain -7.05 to -2.01 dB, mean -4.07); ours lets go between them (-6.99 to 1.28 dB, mean -2.56): at a short Release the slow state drains between the peaks (its release floor is 16.8 ms), and without it the fitted law releases at once. One control moved: Ratio 4 -24.2, Punch 0 -14.7, Punch 1 -15.2, Release 100 -39.2, Attack 7 -32.9, Threshold -24 -35.6, Output -12 -7.1 dB (so not the limiter). These figures are the script's run of 2026-11-18, with the reference's Sync set to ms by its normalised value; before, its text was not taken and the reference released in tempo sync | `plugins/FwComp/nulltest/measure_dense_chord.py` | open: the release law was fitted without dense multi-tone material |
 
 Method notes: the CMA-ES objective is the energy-weighted mean null in dB over the settled probes, the memory probes,
 realistic envelopes and the null-test material (x3), all past the start-up, plus the 26 factory presets' settings on
@@ -147,7 +147,7 @@ Full tables: `results.json` `analog`.
 | The correction trained on the mean null in dB over all cases | the good cases' gradients drowned the weak ones |
 | The correction without the steady-tone guard | 1 kHz tones lose 20 to 30 dB |
 | The correction with little data at the common settings | the default drum loop at its +2.7 dBFS level went from -31.6 to -24 dB until the common settings were added densely |
-| The release memory's floor raised from 16.8 ms, for the sustained chord of section 5 | the chord: -6.8 dB at 50 ms, -23.2 at 100, -30.6 at 300, -19.3 at 1000 (from -6.7); the floor acts on every case with a Release under it, and a trial over the settings table (not kept as a script) made other cases worse by more than 0.5 dB from 100 ms on: declined, the law needs a refit with such material and the correction a retraining |
+| The release memory's floor raised from 16.8 ms, for the sustained chord of section 5 | the chord: -7.1 dB at 50 ms, -25.1 at 100, -32.3 at 300, -18.4 at 1000 (from -7.1; `measure_dense_chord.py`, run again on 2026-11-18); the floor acts on every case with a Release under it, and a trial over the settings table (not kept as a script) made other cases worse by more than 0.5 dB from 100 ms on: declined, the law needs a refit with such material and the correction a retraining |
 
 ## 12. The VU needle and the limiter lamp
 
@@ -197,20 +197,22 @@ The generated [NULLTESTS.md](NULLTESTS.md) in brief; the residual is
 `plugins/FwComp/nulltest/co_ref.py`, 14 signals x 12 settings (the default, fast and slow releases, heavy ratios, Mix, the
 output limiter, the four Analog modes): median -48.7 dB, worst -22.1 dB; the reference's 26 factory presets (each on
 voice, drums, bass and pink noise): median -44.0 dB, worst -20.8 dB. The worst case of the page is outside both sets:
-a sustained chord of three tones at Threshold -12, Ratio 50, Release 30 and Punch 10, -6.7 dB (not a null; the
+a sustained chord of three tones at Threshold -12, Ratio 50, Release 30 and Punch 10, -7.0 dB (not a null; the
 side-chain table's column without a key).
 
-- At the default settings: tones and sweeps -84 dB (a null), voice-like -61 dB, bass line -57 dB, white noise -43 dB,
-  drums -33 dB, pink noise -32 dB.
-- Weakest: low notes under long attacks (30 ... 60 ms: -15 ... -20 dB on a bass line), a long release on voice (300 ms
-  at threshold -24: -22 dB), fast attacks on drums (about -23 dB), the output limiter on voice (-24.5 ... -28 dB), and
-  a few presets on drums (Hard Squash -20.8 dB, Light Kit -26.4, Parallel Blend, Heavy Drums and Pumping Kit -29 ...
-  -30).
+- At the default settings: tones and sweeps -84.0 dB (a null), voice-like -59.5 dB, bass line -56.3 dB, white noise
+  -43.5 dB, drums -34.1 dB, pink noise -32.4 dB, noise bursts -30.0 dB.
+- Weakest in the settings table: a 5 Hz AM tone under a long release (Threshold -24, Ratio 10, Release 300: -22.1 dB,
+  a model), noise bursts (-24.5 ... -40.0 dB over the twelve settings), and the output limiter on voice and drums
+  (-27.6 and -27.9 dB). Weakest in the presets: a few on drums (Hard Squash -20.8 dB, Light Kit -26.1, Parallel Blend
+  -28.7, Heavy Drums -29.9, Pumping Kit -30.0).
 - The learned correction: the null test from -41.4 dB median (worst -16.8) without it to -47.0 (worst -24.5) over 168
   cases (-37.2 / -9.6 before the CMA-ES refit of the release law), 70 cases better and one worse by more than 1 dB;
   the presets from -35.6 to -43.7 dB median (Analog Off, from 0.5 s, a fresh reference per preset), 82 better and 4
   worse by more than 1 dB (all still -58 ... -72).
-- Analog modes: mode 4 nulls at -82 ... -100 dB on loud material; modes 1 to 3 add random noise as the reference does,
+- Analog modes: mode 4 adds no noise, and its rows (Threshold -24, Ratio 4) are at -27.0 ... -74.5 dB, the compressor's
+  own match there; its stage alone was at -82 ... -100 dB on loud material when measured before the 1.0.0 release
+  and not reproduced by a script in this tree; modes 1 to 3 add random noise as the reference does,
   which no null can remove (mode 2, the default, is limited to about -54 ... -69 dB by its noise alone).
 - How: the detector, static curve, makeup, attack, smoothing, mix, limiter, tempo sync and the Analog stage were
   identified on the reference; the program-dependent release is a fitted two-state law (its tables found by CMA-ES on
@@ -226,7 +228,7 @@ side-chain table's column without a key).
 
 | Check | Result |
 |---|---|
-| CHECK sites | 66 |
+| Unit-test program | `FwCompTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

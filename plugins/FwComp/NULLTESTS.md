@@ -118,7 +118,7 @@ Residual = 20 log10(rms(FwComp - reference) / rms(reference)), 48000 Hz, after t
 | -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | Off | voice-like | -27.6 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | Off | drum loop | -27.9 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | Off | bass line | -31.7 |
-| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 4 | sine 1 kHz -40 dBFS | -68.5 |
+| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 4 | sine 1 kHz -40 dBFS | -68.4 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 4 | sine 1 kHz -20 dBFS | -74.5 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 4 | sine 1 kHz -6 dBFS | -58.7 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 4 | sine 100 Hz -20 | -55.1 |
@@ -136,7 +136,7 @@ Residual = 20 log10(rms(FwComp - reference) / rms(reference)), 48000 Hz, after t
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | sine 1 kHz -20 dBFS | -49.2 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | sine 1 kHz -6 dBFS | -49.0 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | sine 100 Hz -20 | -48.5 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | sine 8 kHz -20 | -57.8 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | sine 8 kHz -20 | -57.7 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | log sweep -20 | -49.9 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | tone steps -50/-10/-30 | -49.2 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | AM 5 Hz 3 kHz | -53.7 |
@@ -146,9 +146,9 @@ Residual = 20 log10(rms(FwComp - reference) / rms(reference)), 48000 Hz, after t
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | voice-like | -47.3 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | drum loop | -34.4 |
 | -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | 2 | bass line | -47.6 |
-| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 1 kHz -40 dBFS | -60.2 |
+| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 1 kHz -40 dBFS | -60.3 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 1 kHz -20 dBFS | -72.6 |
-| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 1 kHz -6 dBFS | -58.3 |
+| -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 1 kHz -6 dBFS | -58.2 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 100 Hz -20 | -55.3 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | sine 8 kHz -20 | -67.8 |
 | -24 | 4 | 7 | 100 | 1 | 100 | 0 | Off | 1 | log sweep -20 | -45.3 |
@@ -177,38 +177,44 @@ Residual = 20 log10(rms(FwComp - reference) / rms(reference)), 48000 Hz, after t
 
 median -48.7 dB, best -99.2, worst -22.1
 
+Reproduce: `python -I plugins/FwComp/nulltest/co_ref.py --save`
+
 ### With a key on the side-chain
 
 The main signal against the reference, both keyed by the same signal on the side-chain bus, and the same case without a key (48000 Hz, residual after the first 0.2 s, dB re the reference output; Analog Off). The pad is a sustained chord of three tones. Produced by `plugins/FwComp/nulltest/null_sidechain.py`.
 
 | threshold | ratio | attack | release | punch | mix | output | limiter | signal | key | residual (dB) | without a key (dB) |
 |---:|---:|---:|---:|---:|---:|---:|---|---|---|---:|---:|
-| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | drum loop | -37.7 | -38.3 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | bass line | drum loop | -34.4 | -54.3 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | bass line | -52.4 | -38.3 |
-| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | drum loop | -28.1 | -37.9 |
-| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | bass line | drum loop | -28.3 | -40.8 |
-| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | bass line | -37.8 | -37.9 |
-| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | drum loop | -30.6 | -29.4 |
-| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | bass line | drum loop | -31.3 | -33.5 |
-| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | bass line | -34.2 | -29.4 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | drum loop | -35.9 | -36.1 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | bass line | drum loop | -33.2 | -56.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 0 | Off | pad | bass line | -53.3 | -36.1 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | drum loop | -27.2 | -38.5 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | bass line | drum loop | -27.2 | -43.5 |
+| -30 | 4 | 0.5 | 50 | 0 | 100 | -6 | Off | pad | bass line | -40.4 | -38.5 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | drum loop | -28.4 | -33.6 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | bass line | drum loop | -29.7 | -43.7 |
+| -24 | 10 | 20 | 300 | 3 | 100 | -6 | Off | pad | bass line | -43.4 | -33.6 |
 | -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | pad | drum loop | -30.8 | -38.9 |
 | -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | bass line | drum loop | -36.1 | -42.6 |
 | -36 | 2 | 3 | 1000 | 1 | 100 | -12 | Off | pad | bass line | -40.8 | -38.9 |
-| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | drum loop | -41.7 | -6.7 |
-| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | bass line | drum loop | -38.5 | -60.0 |
-| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | bass line | -61.4 | -6.7 |
-| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | drum loop | -33.0 | -48.5 |
-| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | bass line | drum loop | -33.5 | -40.4 |
-| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | bass line | -39.6 | -48.5 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | drum loop | -35.9 | -38.9 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | bass line | drum loop | -30.9 | -34.6 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | bass line | -42.0 | -38.9 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | drum loop | -35.0 | -36.3 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | bass line | drum loop | -30.2 | -31.7 |
-| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | bass line | -38.9 | -36.3 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | drum loop | -41.9 | -7.0 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | bass line | drum loop | -38.7 | -65.8 |
+| -12 | 50 | 1 | 30 | 10 | 100 | 0 | Off | pad | bass line | -68.2 | -7.0 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | drum loop | -31.6 | -45.6 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | bass line | drum loop | -32.5 | -44.7 |
+| -24 | 4 | 7 | 100 | 1 | 50 | 0 | Off | pad | bass line | -44.0 | -45.6 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | drum loop | -34.7 | -38.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | bass line | drum loop | -30.2 | -34.6 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | Off | pad | bass line | -42.0 | -38.3 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | drum loop | -34.1 | -36.1 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | bass line | drum loop | -29.7 | -31.7 |
+| -18 | 3 | 7 | 100 | 1 | 100 | 12 | On | pad | bass line | -38.9 | -36.1 |
 
-with a key: median -35.4 dB, best -61.4, worst -28.1; without a key: median -38.3 dB, worst -6.7
+with a key: median -35.3 dB, best -68.2, worst -27.2; without a key: median -38.4 dB, worst -7.0
+
+The pad without a key at its weakest setting (threshold -12, ratio 50, attack 1, release 30, punch 10): -7.0 dB at full level (peak 0.75), and -63.1, -90.3 and -90.3 dB with the pad 6, 12 and 18 dB lower.
+
+Reproduce: `python -I plugins/FwComp/nulltest/null_sidechain.py --save`
 
 ## Presets
 
@@ -219,7 +225,7 @@ Each preset against the reference with the same settings (48 kHz, residual after
 | Default | -64.4 | -34.2 | -63.7 | -32.3 | 2 | -47.4 | -34.6 | -48.1 | -32.3 |
 | Live Sound Start | -64.5 | -33.5 | -63.6 | -32.3 | 0 | -64.5 | -33.5 | -63.6 | -32.3 |
 | Kit Smack | -47.2 | -33.0 | -44.5 | -36.4 | 1 | -47.1 | -32.9 | -44.4 | -36.4 |
-| Drum Body | -43.9 | -39.5 | -49.9 | -39.1 | 2 | -42.2 | -39.1 | -46.4 | -38.8 |
+| Drum Body | -43.9 | -39.5 | -49.9 | -39.1 | 2 | -42.1 | -39.1 | -46.4 | -38.8 |
 | Light Kit | -33.2 | -26.1 | -43.9 | -34.2 | 2 | -33.3 | -26.1 | -42.8 | -34.1 |
 | Heavy Drums | -52.5 | -29.9 | -51.8 | -28.3 | 3 | -38.1 | -30.3 | -34.7 | -27.5 |
 | Pumping Kit | -57.0 | -30.0 | -56.9 | -45.6 | 1 | -56.8 | -30.0 | -56.6 | -45.6 |
@@ -227,11 +233,11 @@ Each preset against the reference with the same settings (48 kHz, residual after
 | Round Kick | -63.3 | -36.0 | -59.3 | -32.1 | 2 | -47.3 | -35.8 | -47.5 | -32.1 |
 | Transient Lift | -48.6 | -32.8 | -51.2 | -52.6 | 1 | -48.6 | -32.8 | -51.3 | -52.6 |
 | Hard Squash | -43.5 | -20.8 | -40.0 | -33.5 | 4 | -43.4 | -20.7 | -40.0 | -33.4 |
-| Firm Voice | -49.7 | -41.0 | -52.0 | -45.3 | 1 | -49.7 | -40.9 | -51.9 | -45.3 |
-| Parallel Blend | -61.8 | -28.7 | -67.1 | -57.0 | 1 | -60.0 | -28.7 | -64.3 | -56.9 |
+| Firm Voice | -49.7 | -41.0 | -52.0 | -45.3 | 1 | -49.7 | -40.9 | -51.8 | -45.3 |
+| Parallel Blend | -61.8 | -28.7 | -67.1 | -57.0 | 1 | -60.0 | -28.7 | -64.2 | -57.0 |
 | Thick Bass Hold | -47.0 | -38.5 | -36.3 | -35.2 | 3 | -40.5 | -36.9 | -33.0 | -34.1 |
 | Punchy Keys | -49.7 | -40.4 | -50.5 | -45.6 | 1 | -49.7 | -40.3 | -50.4 | -45.6 |
-| Solo Guitar Sustain | -51.9 | -45.0 | -50.1 | -41.2 | 2 | -46.7 | -43.8 | -46.4 | -40.6 |
+| Solo Guitar Sustain | -51.9 | -45.0 | -50.1 | -41.2 | 2 | -46.6 | -43.8 | -46.4 | -40.6 |
 | Dirty Guitar Hold | -44.2 | -33.7 | -49.2 | -39.6 | 4 | -44.2 | -33.7 | -49.2 | -39.5 |
 | Orchestral Section | -43.4 | -42.5 | -47.7 | -40.4 | 1 | -43.4 | -42.5 | -47.6 | -40.5 |
 | Master Glue | -62.0 | -43.6 | -62.4 | -54.4 | 0 | -62.0 | -43.6 | -62.4 | -54.4 |
@@ -244,3 +250,5 @@ Each preset against the reference with the same settings (48 kHz, residual after
 | Lo-Fi Radio | -44.6 | -34.2 | -42.4 | -43.2 | 4 | -44.6 | -34.1 | -42.4 | -43.1 |
 
 Median with Analog Off: -44.0 dB.
+
+Reproduce: `python -I plugins/FwComp/nulltest/null_presets.py --save`

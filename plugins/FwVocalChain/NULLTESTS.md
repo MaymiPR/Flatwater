@@ -184,6 +184,8 @@ A held-out vocal at -16 dBFS peak (under the dynamics), every other colour clear
 | reverb c2, sens +5, out -3, bal +3 | -76.8 | -75.5 | -70.9 |
 | reverb c3, bass c1 +6, treble c2 +4 | -76.7 | -75.2 | -69.9 |
 
+Reproduce: `python -I plugins/FwVocalChain/nulltest/nulltest.py report`
+
 ## Presets
 
 Each of the reference's 43 presets (the faders, colours and Balance from its preset file, set as host parameters;
@@ -191,7 +193,8 @@ Sensitivity and Output at 0, as the reference keeps them when a preset loads) ag
 its factory preset of the same place (our names). Residual in dB, lower is better: three held-out vocal parts at
 -6 dBFS peaks after 6 s of silence, 48 kHz, the Noise off in both. "Pitch clear" is the same preset with the Pitch
 stage cleared in both: the doubler's Wide and Spreader colours pick their splice points from the signal and are
-matched in behaviour, not sample for sample (NULLTESTS.md). Written by `plugins/FwVocalChain/nulltest/null_presets.py`.
+matched in behaviour, not sample for sample (NULLTESTS.md). Written by `plugins/FwVocalChain/nulltest/null_presets.py`
+(2026-11-18).
 
 | # | preset | doubler | part 24 (dB) | part 27 (dB) | part 33 (dB) | Pitch clear, median (dB) |
 |---:|---|---|---:|---:|---:|---:|
@@ -244,3 +247,5 @@ Over the 129 renders: median **-30.1 dB**, worst -3.5; with the Pitch stage clea
 - Doubler Stereo: 42 renders, median -30.5 dB, worst -24.3.
 - Doubler Wide: 15 renders, median -34.3 dB, worst -11.2.
 - Doubler Spreader: 24 renders, median -18.2 dB, worst -3.5.
+
+Reproduce: `python -I plugins/FwVocalChain/nulltest/null_presets.py 1`

@@ -30,13 +30,15 @@ namespace vc::dsp
 
 inline int latencyFor (double fs) { return fs < 60000.0 ? 64 : fs < 120000.0 ? 128 : 256; }
 
-// sliding-window maximum in O(1) per sample (monotone queue)
+// sliding-window maximum in O(1) per sample (monotone queue). The sample count and the queue's two ends are unsigned:
+// they wrap after 2^32 pushes, and every use of them is a difference or an index under a power-of-two mask, which
+// the wrap leaves as it is.
 class SlidingMax
 {
 public:
     void prepare (int windowSamples)
     {
-        win = std::max (1, windowSamples);
+        win = (unsigned int) std::max (1, windowSamples);
         cap = 1; while (cap < win + 2) cap <<= 1;
         idx.assign ((size_t) cap, 0); val.assign ((size_t) cap, 0.0f);
         reset();
@@ -46,13 +48,13 @@ public:
     {
         while (tail != head && val[(size_t) ((tail - 1) & (cap - 1))] <= v) --tail;
         idx[(size_t) (tail & (cap - 1))] = time; val[(size_t) (tail & (cap - 1))] = v; ++tail;
-        while (idx[(size_t) (head & (cap - 1))] <= time - win) ++head;
+        while (time - idx[(size_t) (head & (cap - 1))] >= win) ++head;   // (entries older than the window)
         ++time;
         return val[(size_t) (head & (cap - 1))];
     }
 private:
-    std::vector<int> idx; std::vector<float> val;
-    int win = 1, cap = 2, head = 0, tail = 0, time = 0;
+    std::vector<unsigned int> idx; std::vector<float> val;
+    unsigned int win = 1, cap = 2, head = 0, tail = 0, time = 0;
 };
 
 // moving average over the last L samples
@@ -222,9 +224,17 @@ public:
         net.prepare (fs);
         gateRho = std::exp (-1.0f / (std::max (t.gateRelMs, 0.1f) * 0.001f * (float) fs));
         size = 1;
-        while (size < latency + 8) size <<= 1;
+        while (size < (unsigned int) latency + 8) size <<= 1;
         mask = size - 1;
         for (auto& d : delay) d.assign ((size_t) size, 0.0f);
+        reset();
+    }
+
+    // Another channel count (1 or 2) after prepare(), which made both delay lines: every state as prepare() leaves
+    // it. No allocation, so the audio thread may call it.
+    void setChannels (int numChannels)
+    {
+        channels = std::max (1, std::min (numChannels, 2));
         reset();
     }
 
@@ -261,7 +271,7 @@ public:
 
         for (int i = 0; i < numSamples; ++i)
         {
-            const int idx = n & mask;
+            const unsigned int idx = n & mask;
             float v = 0.0f;
             for (int c = 0; c < channels; ++c)
             {
@@ -304,8 +314,19 @@ public:
             blockMinReductionDb = std::min (blockMinReductionDb, reductionDb);
 
             const float lin = g * idleGain * outGain;
-            const int j = n - latency;                                // audio index that leaves now
+            const unsigned int j = n - (unsigned int) latency;        // audio index that leaves now
             for (int c = 0; c < channels; ++c) out[c][i] = delay[c][(size_t) (j & mask)] * lin;
+            ++n;
+        }
+    }
+
+    // The input of a block that is not processed (the host's bypass): the delay line takes it, so the audio after
+    // the bypass is the audio of now. The detector and the gains keep their states. No allocation.
+    void feed (const float* const* in, int numSamples)
+    {
+        for (int i = 0; i < numSamples; ++i)
+        {
+            for (int c = 0; c < channels; ++c) delay[c][(size_t) (n & mask)] = in[c][i];
             ++n;
         }
     }
@@ -322,7 +343,10 @@ private:
     static constexpr float kA[3] = { 0.1607f, 0.3569f, 0.6308f };
     float apX[2] = {}, apY[2][3] = {};
     float gateLevel = 0.0f, gateRho = 0.0f;
-    int channels = 2, latency = 64, size = 128, mask = 127, n = 0;
+    int channels = 2, latency = 64;
+    // the delay line's size (a power of two), its mask and the running sample count: unsigned, so the count wraps
+    // after 2^32 samples and the masked index goes on in step
+    unsigned int size = 128, mask = 127, n = 0;
     float reductionDb = 0.0f, blockMinReductionDb = 0.0f;
 };
 }

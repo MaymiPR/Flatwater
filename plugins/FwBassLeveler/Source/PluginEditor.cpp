@@ -289,14 +289,14 @@ static MouseCursor dragCursor()
         arrow.startNewSubPath (6.5f, 7.5f);
         arrow.lineTo (6.5f, 21.5f); arrow.lineTo (9.5f, 18.5f); arrow.lineTo (12.0f, 24.0f); arrow.lineTo (14.0f, 23.0f);
         arrow.lineTo (11.5f, 17.5f); arrow.lineTo (15.5f, 17.5f); arrow.closeSubPath();
-        g.setColour (Colours::white); g.fillPath (arrow);
-        g.setColour (Colours::black); g.strokePath (arrow, PathStrokeType (1.0f));
+        g.setColour (theme::cursorBody); g.fillPath (arrow);
+        g.setColour (theme::cursorEdge); g.strokePath (arrow, PathStrokeType (1.0f));
         Path updown;
         updown.startNewSubPath (22.5f, 17.5f); updown.lineTo (25.5f, 20.5f); updown.lineTo (23.5f, 20.5f); updown.lineTo (23.5f, 23.5f);
         updown.lineTo (25.5f, 23.5f); updown.lineTo (22.5f, 26.5f); updown.lineTo (19.5f, 23.5f); updown.lineTo (21.5f, 23.5f);
         updown.lineTo (21.5f, 20.5f); updown.lineTo (19.5f, 20.5f); updown.closeSubPath();
-        g.setColour (Colours::white); g.fillPath (updown);
-        g.setColour (Colours::black); g.strokePath (updown, PathStrokeType (1.0f));
+        g.setColour (theme::cursorBody); g.fillPath (updown);
+        g.setColour (theme::cursorEdge); g.strokePath (updown, PathStrokeType (1.0f));
     }
     return MouseCursor (img, 6, 7);
 }
@@ -311,7 +311,6 @@ FwBassLevelerEditor::FwBassLevelerEditor (FwBassLevelerProcessor& p)
       target (make<TargetSlider>()), rangeMax (make<Fader> (Fader::RangeMax)), rangeMin (make<Fader> (Fader::RangeMin)),
       output (make<Fader> (Fader::Output)), rider (make<Fader> (Fader::Rider)), idleColumn (make<IdleColumn>())
 {
-    setFactoryPresets (bl::factoryPresets());             // Target stays where it is, as in the reference, unless a preset sets it
     marks.blueAlone = { &rider, &idleColumn };
     marks.changed = [this] { content().repaint(); };
     const auto dragging = dragCursor();

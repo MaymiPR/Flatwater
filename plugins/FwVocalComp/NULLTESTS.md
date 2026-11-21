@@ -1,6 +1,6 @@
 # Flatwater Vocal Comp null test results
 
-Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a close match, 0 dB is no match.
+Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after the first 0.2 s. 'steady' = last second only. Lower is better; about -60 dB or less is a null, 0 dB is no match.
 
 ## Settings
 
@@ -117,54 +117,58 @@ Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, afte
 
 Median -53.1 dB, best -230.9 dB, worst -19.3 dB; 51 of 108 cases below -60 dB.
 
+Reproduce: `python -I plugins/FwVocalComp/nulltest/vc_ref.py --extra --save`
+
 ### Summary by signal
 
-Compression settings -12, -24, -36 dB (with and without gate / gain); residual over everything after 0.2 s, and over the last second only.
+The rows above with Compression at work (every setting but Compression 0, which is a fixed gain), per signal: the residual over everything after 0.2 s, and over the last second only.
 
-| signal | best (dB) | median (dB) | worst (dB) | median, last second (dB) |
-|---|---:|---:|---:|---:|
-| sine 1 kHz -40 dBFS | -121.5 | -114.0 | -107.1 | -110.2 |
-| sine 1 kHz -20 dBFS | -114.8 | -110.2 | -103.6 | -107.2 |
-| sine 1 kHz -6 dBFS | -113.4 | -107.3 | -101.7 | -104.8 |
-| sine 100 Hz -20 | -51.7 | -49.5 | -47.8 | -50.5 |
-| sine 8 kHz -20 | -109.4 | -102.7 | -101.8 | -102.7 |
-| log sweep -20 | -58.7 | -53.1 | -50.1 | -84.4 |
-| tone steps -50/-10/-30 | -62.4 | -36.9 | -22.9 | -25.2 |
-| AM 5 Hz 3 kHz | -49.4 | -35.1 | -19.3 | -34.3 |
-| white noise -20 rms | -33.3 | -27.6 | -25.2 | -25.2 |
-| pink noise -20 rms | -35.3 | -26.1 | -22.6 | -25.1 |
-| noise bursts | -44.8 | -33.1 | -25.6 | -32.3 |
-| voice-like | -52.2 | -39.8 | -29.5 | -38.9 |
-| sine 1 kHz -20 @44100 | -112.6 | -106.7 | -100.8 | -103.8 |
-| tone steps @44100 | -60.8 | -48.1 | -35.4 | -38.5 |
-| white noise @44100 | -33.9 | -31.5 | -29.2 | -30.8 |
-| sine 1 kHz -20 @96000 | -109.5 | -106.8 | -104.1 | -103.0 |
-| tone steps @96000 | -60.9 | -48.1 | -35.4 | -38.6 |
-| white noise @96000 | -32.6 | -30.9 | -29.1 | -32.5 |
-| sine 1 kHz -20 @192000 | -110.6 | -104.9 | -99.2 | -101.2 |
-| tone steps @192000 | -60.9 | -48.1 | -35.4 | -38.9 |
-| white noise @192000 | -33.7 | -32.2 | -30.8 | -34.0 |
-| stereo: L -10 / R -40 tones | -109.4 | -108.6 | -107.8 | -105.4 |
-| stereo: noise L -20 / R -30 | -33.1 | -30.3 | -27.5 | -28.8 |
-| stereo: alternating loud channel | -105.6 | -102.5 | -99.4 | -100.8 |
+| signal | cases | best (dB) | median (dB) | worst (dB) | median, last second (dB) |
+|---|---:|---:|---:|---:|---:|
+| sine 1 kHz -40 dBFS | 6 | -121.5 | -114.0 | -107.1 | -110.1 |
+| sine 1 kHz -20 dBFS | 6 | -114.8 | -110.2 | -103.6 | -107.2 |
+| sine 1 kHz -6 dBFS | 6 | -113.4 | -107.3 | -101.7 | -104.8 |
+| sine 100 Hz -20 | 6 | -51.7 | -49.4 | -47.8 | -50.5 |
+| sine 8 kHz -20 | 6 | -109.4 | -102.7 | -101.8 | -102.7 |
+| log sweep -20 | 6 | -58.7 | -53.1 | -50.1 | -84.4 |
+| tone steps -50/-10/-30 | 6 | -62.4 | -36.9 | -22.9 | -25.2 |
+| AM 5 Hz 3 kHz | 6 | -49.4 | -35.1 | -19.3 | -34.3 |
+| white noise -20 rms | 6 | -33.3 | -27.6 | -25.2 | -25.2 |
+| pink noise -20 rms | 6 | -35.3 | -26.1 | -22.6 | -25.1 |
+| noise bursts | 6 | -44.8 | -33.1 | -25.6 | -32.3 |
+| voice-like | 6 | -52.2 | -39.8 | -29.5 | -38.9 |
+| sine 1 kHz -20 @44100 | 2 | -112.6 | -106.7 | -100.8 | -103.8 |
+| tone steps @44100 | 2 | -60.8 | -48.1 | -35.4 | -38.5 |
+| white noise @44100 | 2 | -33.9 | -31.5 | -29.2 | -30.8 |
+| sine 1 kHz -20 @96000 | 2 | -109.5 | -106.8 | -104.1 | -103.0 |
+| tone steps @96000 | 2 | -60.9 | -48.1 | -35.4 | -38.6 |
+| white noise @96000 | 2 | -32.6 | -30.9 | -29.1 | -32.5 |
+| sine 1 kHz -20 @192000 | 2 | -110.6 | -104.9 | -99.2 | -101.2 |
+| tone steps @192000 | 2 | -60.9 | -48.2 | -35.4 | -38.9 |
+| white noise @192000 | 2 | -33.7 | -32.3 | -30.8 | -34.0 |
+| stereo: L -10 / R -40 tones | 2 | -109.4 | -108.6 | -107.8 | -105.4 |
+| stereo: noise L -20 / R -30 | 2 | -33.1 | -30.3 | -27.5 | -28.7 |
+| stereo: alternating loud channel | 2 | -105.6 | -102.5 | -99.4 | -100.8 |
+
+Reproduce: `python -I plugins/FwVocalComp/nulltest/vc_ref.py --extra --save`
 
 ### How to read this
 
-- **Steady tones match to numerical precision** (about -95 to -120 dB at 1 kHz and 8 kHz, at 44.1 to 192 kHz, mono and stereo). A null is claimed only for these stationary cases and for Compression 0 (a fixed gain).
+- **Steady tones match to numerical precision** (-99.2 to -121.5 dB at 1 kHz and 8 kHz, at 44.1 to 192 kHz, mono and stereo, in the summary above; a 100 Hz tone is close, not a null). A null is claimed only for these stationary cases and for Compression 0 (a fixed gain).
 - **Level changes are close but not a null** (medians over the settings): sweeps about -53 dB, a 100 Hz tone about -50 dB, voice-like material about -40 dB, steps about -37 dB (-48 dB at the other rates), amplitude modulation about -35 dB, noise bursts about -33 dB, white / pink noise about -26 to -32 dB; the worst case is -19 dB (AM at Compression -36). The detector, look-ahead and gate are identified exactly (MEASUREMENTS.md, sections 2, 3 and 7); the slow path is the fitted analytical path plus a small learned correction (MEASUREMENTS.md, section 6), so on dynamic material expect a small difference in how the gain moves, not in the tone.
 - The gate matches to 0.0004 dB rms on level steps; with gate and compression together the residual follows the compressor numbers.
 - The learned correction was trained on separate random renders of the same kinds of material (voice, noise, tones, steps, AM, sweeps, drums), not on these signals; the analytical path was tuned on signals like these, so the numbers are not a fully independent test set.
 
 ## Grid
 
-Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for four signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, about -60 dB or less is a close match.
+Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', -60, -40, -20], Gain [0, -12] and an input trim of [-24, -12, 0] dB, for 4 signals (672 cases). Residual = 20 log10(rms(FwVocalComp - reference) / rms(reference)), 48 kHz, after 0.2 s. Cells give **median / worst** in dB; lower is better, -60 dB or less is a null. Produced by `plugins/FwVocalComp/nulltest/null_grid.py` (`measurements/FwVocalComp/nulltests-grid.json`).
 
 ### By Compression
 
 | Comp (dB) | voice-like | white noise | tone steps | sine 1 kHz |
 |---|---:|---:|---:|---:|
 | 0 | -142.8 / -80.5 | -142.9 / -75.3 | -126.3 / -106.4 | -143.1 / -100.4 |
-| -6 | -74.0 / -64.1 | -59.8 / -44.5 | -88.3 / -75.7 | -120.0 / -100.3 |
+| -6 | -74.0 / -64.1 | -59.8 / -44.5 | -88.2 / -75.7 | -120.0 / -100.3 |
 | -12 | -66.2 / -52.2 | -48.5 / -33.3 | -78.8 / -62.4 | -114.8 / -99.1 |
 | -18 | -59.7 / -45.2 | -38.4 / -32.4 | -70.7 / -47.8 | -110.4 / -100.2 |
 | -24 | -50.8 / -39.8 | -34.6 / -27.6 | -58.8 / -36.9 | -110.2 / -100.1 |
@@ -196,3 +200,5 @@ Every combination of Compression [0, -6, -12, -18, -24, -30, -36], Gate ['off', 
 | 0 | -45.2 / -29.5 | -32.4 / -25.2 | -47.8 / -22.8 | -110.0 / -103.2 |
 
 Overall: median -70.2 dB, worst -22.8 dB, 396 of 672 cases below -60 dB.
+
+Reproduce: `python -I plugins/FwVocalComp/nulltest/null_grid.py --save`

@@ -4,6 +4,8 @@
 // (dB or 0 .. 100), response (0 Slow, 1 Fast), idle (dB, its place in the range as the editor's arrow), mode (0 Stereo,
 // 1 Mono, 2 Live Stereo, 3 Live Mono), block (samples, default 512). The output is lined up with the input (the
 // reported latency removed, as a host's compensation does), the same length.
+// An unknown key, an argument that is no key=value, a channel count other than 1 or 2 or a block under 1 ends the
+// render with exit code 2 and one line on stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -12,11 +14,24 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
+// the whole of v into the file, or false
+static bool writeAll (const char* path, const std::vector<float>& v)
+{
+    FILE* o = std::fopen (path, "wb");
+    if (! o) return false;
+    const bool written = std::fwrite (v.data(), sizeof (float), v.size(), o) == v.size();
+    return std::fclose (o) == 0 && written;
+}
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: BlRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     juce::ScopedJuceInitialiser_GUI init;
-    const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
+    const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     int block = 512;
     // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
@@ -42,11 +57,13 @@ int main (int argc, char** argv)
     {
         const std::string a = argv[i];
         const auto eq = a.find ('=');
-        if (eq == std::string::npos) continue;
+        if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;   // (read above)
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq);
         const float v = (float) std::atof (a.c_str() + eq + 1);
-        if (k == "block") block = std::max (1, (int) v);
+        if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "idle") { idleDbValue = v; idleGiven = true; }
+        else if (p.apvts.getParameter (k.c_str()) == nullptr) return fail ("unknown key", a.c_str());
         else set (k.c_str(), v);
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked
@@ -82,9 +99,6 @@ int main (int argc, char** argv)
                 if (t >= 0 && t < n) out[(size_t) (t * ch + c)] = b.getSample (c, i);
             }
     }
-    FILE* o = std::fopen (argv[2], "wb");
-    if (! o) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
-    std::fwrite (out.data(), sizeof (float), out.size(), o);
-    std::fclose (o);
+    if (! writeAll (argv[2], out)) { std::fprintf (stderr, "cannot write %s\n", argv[2]); return 1; }
     return 0;
 }

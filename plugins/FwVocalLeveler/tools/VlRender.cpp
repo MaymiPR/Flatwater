@@ -5,7 +5,9 @@
 // place in the range as the editor's arrow), mode (0 Stereo, 1 Mono, 2 Live Stereo, 3 Live Mono), preset (a factory
 // preset's index, applied where it appears among the keys), block (samples, default 512), sc (a raw float file for
 // the side-chain bus, which is enabled only when it is given) and scch (its channels, 1 or 2, default 2). There is no
-// latency; the output is the same length as the input. An unknown key ends the render with exit code 2.
+// latency; the output is the same length as the input. An unknown key, an argument that is no key=value, a channel
+// count (channels, scch) other than 1 or 2 or a block under 1 ends the render with exit code 2 and one line on
+// stderr; an output that could not be written in full ends it with 1.
 //   tune:key=value: a constant of Source/dsp/Tuning.h for this render; tuning=<file>: key=value lines of them
 #include <cstdio>
 #include <cstdlib>
@@ -14,11 +16,15 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 
+// a wrong argument: one line on stderr, exit code 2
+static int fail (const char* what, const char* arg) { std::fprintf (stderr, "%s: %s\n", what, arg); return 2; }
+
 int main (int argc, char** argv)
 {
     if (argc < 5) { std::fprintf (stderr, "usage: VlRender in.f32 out.f32 channels fs [key=value ...]\n"); return 2; }
     juce::ScopedJuceInitialiser_GUI init;
-    const int ch = std::max (1, std::min (2, std::atoi (argv[3])));
+    const int ch = std::atoi (argv[3]);
+    if (ch < 1 || ch > 2) return fail ("channels must be 1 or 2", argv[3]);
     const double fs = std::atof (argv[4]);
     int block = 512;
     // tune:key=value and tuning=file first: the Tuning constants (Source/dsp/Tuning.h) the DSP copies when it is made
@@ -47,19 +53,19 @@ int main (int argc, char** argv)
         const std::string a = argv[i];
         const auto eq = a.find ('=');
         if (a.rfind ("tune:", 0) == 0 || a.rfind ("tuning=", 0) == 0) continue;
-        if (eq == std::string::npos) { std::fprintf (stderr, "not a key=value argument: %s\n", a.c_str()); return 2; }
+        if (eq == std::string::npos) return fail ("not a key=value argument", a.c_str());
         const std::string k = a.substr (0, eq);
         const float v = (float) std::atof (a.c_str() + eq + 1);
-        if (k == "block") block = std::max (1, (int) v);
+        if (k == "block") { block = (int) v; if (block < 1) return fail ("block must be 1 or more", a.c_str()); }
         else if (k == "sc") keyPath = a.substr (eq + 1);
-        else if (k == "scch") keyCh = std::max (1, std::min (2, (int) v));
+        else if (k == "scch") { keyCh = (int) v; if (keyCh < 1 || keyCh > 2) return fail ("scch must be 1 or 2", a.c_str()); }
         else if (k == "preset")
         {
             const auto& list = vl::factoryPresets();
-            if ((int) v >= 0 && (int) v < (int) list.size()) { flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::id::mode)); p.readExactIdle(); }
+            if ((int) v >= 0 && (int) v < (int) list.size()) flatwater::applyPreset (p.apvts, list[(size_t) v], p.apvts.getParameter (vl::id::mode));
         }
         else if (k == "idle") { idleDbValue = v; idleGiven = true; }
-        else if (p.apvts.getParameter (k.c_str()) == nullptr) { std::fprintf (stderr, "unknown key in %s\n", a.c_str()); return 2; }
+        else if (p.apvts.getParameter (k.c_str()) == nullptr) return fail ("unknown key", a.c_str());
         else set (k.c_str(), v);
     }
     if (idleGiven)       // the arrow's place in the range for the dB asked

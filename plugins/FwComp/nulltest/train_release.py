@@ -22,7 +22,7 @@ AX = [0, 0.5, 1, 1.5, 2, 3, 5]
 WX = [0, 0.5, 1, 2, 3, 4, 6, 8, 12, 16, 20, 30]
 NH = 8
 DT = torch.float32
-DEV = torch.device('cuda' if torch.cuda.is_available() and os.environ.get('HC_CPU') is None else 'cpu')
+DEV = torch.device('cuda' if torch.cuda.is_available() and os.environ.get('CO_CPU') is None else 'cpu')
 
 
 def interp(x, knots, logv):

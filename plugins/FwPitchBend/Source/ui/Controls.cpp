@@ -129,12 +129,12 @@ void ModKnob::paint (Graphics& g)
     {
         for (int k = 3; k >= 1; --k)
         {
-            g.setColour (Colours::black.withAlpha (0.14f));
+            g.setColour (theme::shadow.withAlpha (0.14f));
             g.fillEllipse (disc.translated (0.0f, 0.8f * (float) k).expanded (0.4f * (float) k));
         }
         g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised.darker (0.25f), 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
-        g.setColour (Colours::black);
+        g.setColour (theme::shadow);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
         g.setGradientFill (ColourGradient (theme::rim, 0.0f, disc.getY(), theme::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
         g.drawEllipse (disc.reduced (1.5f), 1.0f);
@@ -142,7 +142,7 @@ void ModKnob::paint (Graphics& g)
         for (float r = P.cap + 4.0f; r < P.body - 2.0f; r += 3.0f)
             g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c), 0.6f);
         const auto cap = fluted (c, P.cap, P.cap * 0.07f, 10, a - a0);
-        g.setColour (Colours::black.withAlpha (0.45f));
+        g.setColour (theme::shadow.withAlpha (0.45f));
         g.fillPath (cap, AffineTransform::translation (0.0f, 2.5f));
         g.setGradientFill (ColourGradient (theme::raisedTop.brighter (0.12f), 0.0f, c.y - P.cap, theme::raised, 0.0f, c.y + P.cap, false));
         g.fillPath (cap);
@@ -157,11 +157,11 @@ void ModKnob::paint (Graphics& g)
     }
     else
     {
-        g.setColour (Colours::black.withAlpha (0.35f));
+        g.setColour (theme::shadow.withAlpha (0.35f));
         g.fillEllipse (disc.translated (0.0f, 1.5f));
         g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised, 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
-        g.setColour (Colours::black);
+        g.setColour (theme::shadow);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
         g.setGradientFill (ColourGradient (theme::rim, 0.0f, disc.getY(), theme::rim.withAlpha (0.0f), 0.0f, disc.getCentreY(), false));
         g.drawEllipse (disc.reduced (1.5f), 1.0f);
@@ -296,13 +296,17 @@ void SlotPad::mouseDown (const MouseEvent& e)
         m.addSectionHeader (String ("Slot ") + String (slot + 1));
         for (int s = None; s < numSources; ++s)
             m.addItem (s + 1, s == None ? "None" : sourceName (s), s == None || s == sl.source || ! holds (ui.state(), owner.target, s, slot), s == sl.source);
-        m.showMenuAsync (PopupMenu::Options().withTargetComponent (this).withMinimumWidth (70).withStandardItemHeight (18), [this] (int r)
+        Component::SafePointer<SlotPad> safe (this);                 // (the editor may close while the list is open)
+        m.showMenuAsync (PopupMenu::Options().withTargetComponent (this).withMinimumWidth (70).withStandardItemHeight (18), [safe] (int r)
         {
-            if (r <= 0) return;
-            auto cur = getSlot (ui.state(), owner.target, slot);
-            ui.um()->beginNewTransaction();
-            setSlot (ui.state(), owner.target, slot, r - 1 == None ? Slot {} : Slot { r - 1, cur.depth }, ui.um());
-            if (ui.changed) ui.changed();
+            if (safe == nullptr || r <= 0) return;
+            auto& u = safe->ui;
+            const int target = safe->owner.target;
+            const int index = safe->slot;
+            auto cur = getSlot (u.state(), target, index);
+            u.um()->beginNewTransaction();
+            setSlot (u.state(), target, index, r - 1 == None ? Slot {} : Slot { r - 1, cur.depth }, u.um());
+            if (u.changed) u.changed();
         });
         return;
     }

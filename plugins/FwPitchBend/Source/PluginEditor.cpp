@@ -93,7 +93,6 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
 {
     ui.changed = [this] { content().repaint(); };
     ui.menuLook = &menuLook;
-    setFactoryPresets (pb::factoryPresets());
     onDefaultPreset ([this] { proc.resetExtras(); });
     ui.enter = [this] (ModKnob& k) { openEntry (k); };
     ui.readout = [this] (const String& t, Rectangle<int> r) { readoutText = t; readoutArea = r; if (overlay) overlay->repaint(); };
@@ -118,7 +117,7 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         const auto disc = Rectangle<float> (36.0f, 36.0f).withCentre (c);
         g.setGradientFill (ColourGradient (theme::raisedTop, 0.0f, disc.getY(), theme::raised, 0.0f, disc.getBottom(), false));
         g.fillEllipse (disc);
-        g.setColour (Colours::black);
+        g.setColour (theme::shadow);
         g.drawEllipse (disc.reduced (0.5f), 1.0f);
         g.setColour (theme::textDim);                                   // a chain: two links
         g.drawRoundedRectangle (Rectangle<float> (14.0f, 8.0f).withCentre (c.translated (-4.0f, 0.0f)), 4.0f, 1.8f);
@@ -249,8 +248,9 @@ FwPitchBendEditor::FwPitchBendEditor (FwPitchBendProcessor& p)
         m.addSectionHeader ("Flatten to");
         const int cur = roundToInt (proc.get (pb::id::flattenNote));
         for (int i = 0; i < 24; ++i) m.addItem (i + 1, noteNames()[i], true, i == cur);
+        Component::SafePointer<FwPitchBendEditor> safe (this);   // (the editor may close while the list is open)
         m.showMenuAsync (PopupMenu::Options().withTargetComponent (&note).withMinimumWidth (note.getWidth()).withStandardItemHeight (18),
-                         [setNote] (int r) { if (r > 0) setNote (r - 1); });
+                         [safe, setNote] (int r) { if (safe != nullptr && r > 0) setNote (r - 1); });
     };
     note.hover = [this, &note] (bool in) { noteHot = in; note.repaint(); };
     note.wheel = [this, setNote] (int dir) { setNote (roundToInt (proc.get (pb::id::flattenNote)) + dir); };

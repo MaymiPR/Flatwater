@@ -4,7 +4,9 @@
   {
    "lines": [
     "Flatwater Pitch Bend against the reference (its Stereo component), both at 48 kHz unless said. With every control at 0",
-    "both pass the voice through with the same delay, and that is null-tested sample for sample. Once anything shifts,",
+    "the two are compared sample for sample ([No shift](#no-shift)): a null on the sung take (-68.8 dB) and close on",
+    "steady vowels (-53.7 to -58.0 dB; one of the four a null at -60.6), but not a null on the spoken take (+3.6 dB), where the two delay the voice by",
+    "different times (67 samples apart). Once anything shifts,",
     "Flatwater Pitch Bend is its own pitch shifter (a pitch detector and overlap-added grains, not a copy), so the shifter",
     "is judged by what is heard (pitch, envelope, level, timing) on the scorecard below, and the modulators, which are exact",
     "laws, are null-tested through the Mix control. How each part was identified is in [MEASUREMENTS.md](MEASUREMENTS.md)."
@@ -33,9 +35,9 @@
      ],
      "rows": [
       [
-       "No shift (every control at 0): the delayed voice",
-       "sung and spoken takes, vowels",
-       "-67 dB on the sung take; -57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4)"
+       "No shift (every control at 0), ours against the reference sample for sample",
+       "7",
+       "the sung take -68.8 dB (a null); steady vowels -53.7 to -58.0 dB (close) and -60.6 dB (a null); white noise -27.2 dB (a model); the spoken take +3.6 dB (not a null: the two are 67 samples apart there). Ours against its own delayed input: -57.9 dB worst on voice, the delay within 0.0002 samples (scorecard M4)"
       ],
       [
        "The modulators (M1, M2, AM, PT; their laws, timing and modulation of each other), read through Mix",
@@ -44,8 +46,8 @@
       ],
       [
        "The shifter's scorecard: pitch accuracy, formant envelope, level, onsets and jumps, noise, Flatten, the gate",
-       "12 judged measures (one more reported)",
-       "11 of 12 within their thresholds (the miss: a few level cells where the reference's own level varies by more than 1 dB within one setting)"
+       "22 judged rows, 13 reported",
+       "20 of 22 within their thresholds (the misses: M3, a few level cells where the reference's own level varies by more than 1 dB within one setting)"
       ],
       [
        "The 40 factory presets on a sung and a spoken take: level, pitch track and tone",
@@ -53,16 +55,84 @@
        "62 of 80 meet every target (67 with the reference's own LFO tables loaded into ours)"
       ],
       [
-       "Sample nulls with a shift, a steady vowel",
-       "Formant 0.01 … ±6",
-       "-27 dB at a time scale of 1 (-31 at 200 Hz), -13 … -19 dB at Formant +0.5 … +2"
+       "Sample nulls with a shift, a steady 150 Hz vowel",
+       "7 settings",
+       "-26.7 dB at Formant +0.01, -12.7 to -14.4 dB at Formant +0.5, +1 and -1, as rendered (not a null)"
       ],
       [
        "Sample nulls with a shift, a voice",
        "sung take",
-       "no cancellation (the reference resynthesises the voice from its own period estimates)"
+       "no cancellation (the reference resynthesises the voice from its own period estimates; measured before the 1.0.0 release and not reproduced by a script in this tree)"
       ]
      ]
+    },
+    {
+     "heading": 3,
+     "text": "No shift",
+     "part": "noshift"
+    },
+    {
+     "lines": [
+      "Flatwater Pitch Bend at its defaults (Pitch 0, Formant 0, Mix 100, no modulation) against the reference at the same settings, sample for sample (Stereo, 48000 Hz; the residual after the first 0.1 s, as rendered, dB re the reference output; the lag is the shift of ours against the reference in samples). Produced by `plugins/FwPitchBend/nulltest/null_noshift.py` (`measurements/FwPitchBend/noshift_null.json`)."
+     ],
+     "part": "noshift"
+    },
+    {
+     "table": true,
+     "columns": [
+      "case",
+      "residual (dB)",
+      "lag (samples)"
+     ],
+     "align": [
+      "---",
+      "---:",
+      "---:"
+     ],
+     "rows": [
+      [
+       "sung take",
+       "-68.8",
+       "0"
+      ],
+      [
+       "spoken take",
+       "3.6",
+       "67"
+      ],
+      [
+       "vowel, 100 Hz",
+       "-57.9",
+       "0"
+      ],
+      [
+       "vowel, 150 Hz",
+       "-60.6",
+       "0"
+      ],
+      [
+       "vowel, 300 Hz",
+       "-53.7",
+       "0"
+      ],
+      [
+       "vowel, 150 Hz, vibrato 100 cents",
+       "-58.0",
+       "0"
+      ],
+      [
+       "white noise, -18 dBFS rms",
+       "-27.2",
+       "0"
+      ]
+     ],
+     "part": "noshift"
+    },
+    {
+     "lines": [
+      "median -57.9 dB, best -68.8, worst 3.6; 7 cases"
+     ],
+     "part": "noshift"
     },
     {
      "heading": 3,
@@ -70,10 +140,9 @@
     },
     {
      "lines": [
-      "`plugins/FwPitchBend/nulltest/null_mods.py` (`measurements/FwPitchBend/mods/null.json`): each case's control value over time,",
-      "read through Mix on both sides, ours against the reference; rms after 0.1 s, over the whole curve and away from its",
-      "jumps (more than 600 samples from a step or a wrap). The cases are described in MEASUREMENTS.md, sections 3 to 6."
-     ]
+      "`plugins/FwPitchBend/nulltest/null_mods.py` (`measurements/FwPitchBend/mods/null.json`): each case's control value over time, read through Mix on both sides, ours against the reference; rms after 0.1 s, over the whole curve and away from its jumps (more than 600 samples from a step or a wrap), in parts of the control's range. An exact law is judged away from the jumps (target 0.003 rms), a fitted one over the whole curve (0.01). The cases are described in MEASUREMENTS.md, sections 3 to 6."
+     ],
+     "part": "mods"
     },
     {
      "table": true,
@@ -172,54 +241,6 @@
        "0.0018",
        "0.0018",
        "0.0639",
-       "pass"
-      ],
-      [
-       "am10_100",
-       "fitted",
-       "0.0006",
-       "0.0006",
-       "0.0091",
-       "pass"
-      ],
-      [
-       "am1_1000",
-       "fitted",
-       "0.0059",
-       "0.0059",
-       "0.0312",
-       "pass"
-      ],
-      [
-       "am100_10",
-       "fitted",
-       "0.0022",
-       "0.0022",
-       "0.0091",
-       "pass"
-      ],
-      [
-       "am1000_1",
-       "fitted",
-       "0.0019",
-       "0.0019",
-       "0.0142",
-       "pass"
-      ],
-      [
-       "am30_300",
-       "fitted",
-       "0.0005",
-       "0.0005",
-       "0.0032",
-       "pass"
-      ],
-      [
-       "am300_1",
-       "fitted",
-       "0.0008",
-       "0.0008",
-       "0.0077",
        "pass"
       ],
       [
@@ -399,6 +420,54 @@
        "pass"
       ],
       [
+       "am10_100",
+       "fitted",
+       "0.0006",
+       "0.0006",
+       "0.0091",
+       "pass"
+      ],
+      [
+       "am1_1000",
+       "fitted",
+       "0.0059",
+       "0.0059",
+       "0.0312",
+       "pass"
+      ],
+      [
+       "am100_10",
+       "fitted",
+       "0.0022",
+       "0.0022",
+       "0.0091",
+       "pass"
+      ],
+      [
+       "am1000_1",
+       "fitted",
+       "0.0019",
+       "0.0019",
+       "0.0142",
+       "pass"
+      ],
+      [
+       "am30_300",
+       "fitted",
+       "0.0005",
+       "0.0005",
+       "0.0032",
+       "pass"
+      ],
+      [
+       "am300_1",
+       "fitted",
+       "0.0008",
+       "0.0008",
+       "0.0077",
+       "pass"
+      ],
+      [
        "am_spoken",
        "fitted",
        "0.0030",
@@ -406,13 +475,20 @@
        "0.0174",
        "pass"
       ]
-     ]
+     ],
+     "part": "mods"
     },
     {
      "lines": [
-      "PT on the spoken take is reported, not judged: two pitch detectors on speech disagree where the voice is rough (the",
-      "falling, creaky end of a phrase), which neither reproduces from the other."
-     ]
+      "38 of 38 judged cases within their targets; 1 reported, not judged."
+     ],
+     "part": "mods"
+    },
+    {
+     "lines": [
+      "PT on the spoken take is reported, not judged: two pitch detectors on speech disagree where the voice is rough (the falling, creaky end of a phrase), which neither reproduces from the other."
+     ],
+     "part": "mods"
     },
     {
      "heading": 3,
@@ -420,14 +496,15 @@
     },
     {
      "lines": [
-      "`plugins/FwPitchBend/nulltest/check_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`; the reference's numbers in",
-      "`measurements/FwPitchBend/shifter/`). The same signals and measures on both shifters:"
-     ]
+      "`plugins/FwPitchBend/nulltest/check_shifter.py` (`measurements/FwPitchBend/shifter/ours.json`; the reference's numbers in `measurements/FwPitchBend/shifter/`, from `measure_shifter.py`). The same signals and measures on both shifters; a row with no threshold met or missed is reported, not judged:"
+     ],
+     "part": "scorecard"
     },
     {
      "table": true,
      "columns": [
       "metric",
+      "measure",
       "reference",
       "ours",
       "threshold",
@@ -438,101 +515,298 @@
       "---",
       "---",
       "---",
+      "---",
       "---"
      ],
      "rows": [
       [
-       "M1 vowel grid: worst median / worst p90 (c) / gross",
-       "0.41 / 1.01 / 0",
-       "0.41 / 0.70 / 0",
-       "≤ 1 / ≤ 3 / 0",
-       "pass"
-      ],
-      [
-       "M1 at 44.1 and 96 kHz: worst median, worst p90 (c)",
+       "M1",
+       "44.1/96k: \\|median\\| max, p90 max (c)",
        "0.06, 0.13",
        "0.04, 0.05",
-       "≤ 1, ≤ 3",
+       "<= 1, <= 3",
        "pass"
       ],
       [
-       "M1b sung phrases: median p90 (c) / max gross",
-       "5.96 / 0.118",
-       "6.29 / 0.099",
-       "≤ 10 / ≤ 0.15",
+       "M1",
+       "vowel grid abs p90 max (c)",
+       "1.01",
+       "0.7",
+       "<= 3",
        "pass"
       ],
       [
-       "M2 envelope against F + β: worst error (st) / envelope error against the reference (dB)",
-       "0.34 / n/a",
-       "0.24 / +0.34",
-       "≤ 0.5 / ≤ +1",
+       "M1",
+       "vowel grid gross max",
+       "0",
+       "0",
+       "0",
        "pass"
       ],
       [
-       "M3 level cells within ±1 dB",
+       "M1",
+       "vowel grid \\|median\\| max (c)",
+       "0.41",
+       "0.41",
+       "<= 1",
+       "pass"
+      ],
+      [
+       "M1b",
+       "sung phrases: max gross",
+       "0.118",
+       "0.099",
+       "<= 0.15",
+       "pass"
+      ],
+      [
+       "M1b",
+       "sung phrases: median p90 (c)",
+       "5.96",
+       "6.29",
+       "<= 10",
+       "pass"
+      ],
+      [
+       "M2",
+       "envelope err minus ref, worst (dB)",
+       "0",
+       "0.34",
+       "<= +1",
+       "pass"
+      ],
+      [
+       "M2",
+       "envelope \\|median - (F+beta)\\| max (st)",
+       "0.34",
+       "0.24",
+       "<= 0.5",
+       "pass"
+      ],
+      [
+       "M3",
+       "level cells within 1 dB of ref",
        "143 cells",
-       "139 of 143 (worst +1.35)",
+       "139 of 143",
        "all",
        "**miss**"
       ],
       [
-       "M4 no-shift delay error (samples)",
-       "n/a",
-       "0.0002",
-       "±0.05",
+       "M3",
+       "level worst diff (dB)",
+       "0",
+       "+1.35 +0/-12",
+       "+-1",
+       "**miss**"
+      ],
+      [
+       "M4",
+       "jump settle, worst minus ref (ms)",
+       "0",
+       "5",
+       "<= +10",
        "pass"
       ],
       [
-       "M4 no-shift residual on voice (dB)",
-       "-57 … -68",
-       "-57.9 worst (-82 … -92 sung)",
+       "M4",
+       "no-shift delay error max (samples)",
+       "0",
+       "0.0002",
+       "<= 0.05",
+       "pass"
+      ],
+      [
+       "M4",
+       "no-shift residual on voice, worst (dB)",
+       "-57",
+       "-57.9",
        "< -55",
        "pass"
       ],
       [
-       "M4 onset settle, worst against the reference",
-       "n/a",
-       "+4 ms",
-       "≤ +10",
+       "M4",
+       "onset delay, worst \\|ours - ref\\|",
+       "0",
+       "37",
+       "+-20 samples",
+       "report"
+      ],
+      [
+       "M4",
+       "onset settle, worst minus ref (ms)",
+       "0",
+       "4",
+       "<= +10",
        "pass"
       ],
       [
-       "M4 jump settle, worst against the reference",
-       "n/a",
-       "+5 ms",
-       "≤ +10",
+       "M5",
+       "band 4-10k centroid vs F+beta (st)",
+       "0.06",
+       "0.08",
+       "+-0.5",
        "pass"
       ],
       [
-       "M4 onset delay (report only, samples)",
-       "69 … 131",
-       "105 … 106",
-       "±20",
-       "37 off"
-      ],
-      [
-       "M5 noise level against -0.6 dB / centroid against F + β",
-       "n/a",
-       "0.5 dB / 0.08 st",
-       "±1 / ±0.5",
+       "M5",
+       "noise level vs -0.6 dB, worst (dB)",
+       "0.05",
+       "0.5",
+       "+-1",
        "pass"
       ],
       [
-       "M6 Flatten steady / vibrato p90 / lock",
-       "0.16 c / 8.5 c / 54 ms",
-       "0.23 c / 6.5 c / 45 ms",
-       "≤ 1 / ≤ 10 / ≤ 60",
+       "M6",
+       "Flatten lock after onset, max (ms)",
+       "54",
+       "45",
+       "<= 60",
        "pass"
       ],
       [
-       "M7 gate / SNR",
-       "-50 dBFS / 10 dB",
-       "-51 dBFS / 10 dB",
-       "-51 ± 3 / ≤ 10",
+       "M6",
+       "Flatten steady \\|median\\| max (c)",
+       "0.16",
+       "0.23",
+       "<= 1",
+       "pass"
+      ],
+      [
+       "M6",
+       "Flatten vibrato p90 max (c)",
+       "8.49",
+       "6.49",
+       "<= 10",
+       "pass"
+      ],
+      [
+       "M7",
+       "gate: lowest shifted level (dBFS)",
+       "-50",
+       "-51",
+       "-51 +-3",
+       "pass"
+      ],
+      [
+       "M7",
+       "lowest SNR with no gross errors (dB)",
+       "10",
+       "10",
+       "<= 10",
+       "pass"
+      ],
+      [
+       "M8",
+       "chord A2 P+12 shifted share",
+       "0.186",
+       "0.234",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord A2 P+5 shifted share",
+       "0.137",
+       "0.157",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord A2 P-7 shifted share",
+       "0.581",
+       "0.59",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord C3 P+12 shifted share",
+       "0.209",
+       "0.194",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord C3 P+5 shifted share",
+       "0.18",
+       "0.212",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord C3 P-7 shifted share",
+       "0.521",
+       "0.5",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord sines P+12 shifted share",
+       "0.374",
+       "0.403",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord sines P+5 shifted share",
+       "0.966",
+       "0.966",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "chord sines P-7 shifted share",
+       "0.358",
+       "0.576",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "noise at P +-1 level (dB)",
+       "1.8",
+       "-1.09, -1.09, -0.24, -0.21, -0.23, -0.26",
+       "not copied (decided)",
+       "report"
+      ],
+      [
+       "M8",
+       "noise re-granulated: max \\|corr\\|",
+       "0.02",
+       "0.069",
+       "report",
+       "report"
+      ],
+      [
+       "M8",
+       "octave down 400->200 settle (ms)",
+       "never",
+       "19.6, 14.6",
+       "follows (decided)",
+       "report"
+      ],
+      [
+       "blk",
+       "block 64 vs 1/512/4096, worst null",
+       "None",
+       "-279",
+       "< -90 dB",
        "pass"
       ]
-     ]
+     ],
+     "part": "scorecard"
+    },
+    {
+     "lines": [
+      "20 of 22 judged measures within their thresholds."
+     ],
+     "part": "scorecard"
     },
     {
      "heading": 3,
@@ -542,7 +816,7 @@
      "lines": [
       "The reference's 40 presets loaded into it against Flatwater Pitch Bend's (Flatwater names): level, the pitch track",
       "where both outputs are clearly voiced, and the long-term spectrum, on a sung and a spoken take. Median pitch",
-      "difference 2.3 cents on the sung take and 6.5 on the spoken one. Every pair, and why the misses miss:",
+      "difference 2.3 cents on the sung take and 6.5 on the spoken one (`measurements/FwPitchBend/presets_null.json`). Every pair, and why the misses miss:",
       "[Presets](#presets)."
      ]
     },
@@ -552,9 +826,9 @@
     },
     {
      "lines": [
-      "Click probes and pulse trains (MEASUREMENTS.md, section 11, Sample nulls with a shift) show where the reference's grains sit and what they read; ours read the same for Formant up to +1.5. On a",
-      "steady 150 Hz vowel the residual (raw, then with ours moved by a fraction of a sample and matched in level):"
-     ]
+      "Click probes and pulse trains (MEASUREMENTS.md, section 11, Sample nulls with a shift) show where the reference's grains sit and what they read; ours read the same for Formant up to +1.5. On a steady 150 Hz vowel the residual (dB re the reference output; as rendered, then with ours moved by up to 3 samples, in fractions of one, and matched in level). None of these is a null. Produced by `plugins/FwPitchBend/nulltest/null_shift.py` (`measurements/FwPitchBend/shift_null.json`)."
+     ],
+     "part": "shift"
     },
     {
      "table": true,
@@ -571,46 +845,45 @@
      "rows": [
       [
        "Formant +0.01",
-       "-27.2",
-       "-46.9"
+       "-26.7",
+       "-47.1"
       ],
       [
        "Formant +0.5",
-       "-14.4",
-       "-31.7"
+       "-14.3",
+       "-32.1"
       ],
       [
        "Formant +1",
-       "-12.9",
-       "-25.5"
+       "-12.7",
+       "-25.9"
       ],
       [
        "Formant -1",
-       "-14.6",
-       "-26.7"
+       "-14.4",
+       "-26.9"
       ],
       [
        "Formant -3",
-       "-6.6",
-       "-13.7"
-      ],
-      [
-       "Formant -6",
-       "-9.4",
+       "-7.1",
        "-16.1"
       ],
       [
+       "Formant -6",
+       "-10.4",
+       "-16.5"
+      ],
+      [
        "Pitch +5",
-       "-0.6",
-       "-9.4"
+       "4.0",
+       "-0.9"
       ]
-     ]
+     ],
+     "part": "shift"
     },
     {
      "lines": [
-      "On a sung take, even at Formant +0.01, the reference's output against its own input, delayed, is +0.3 dB: it",
-      "rebuilds a moving voice grain by grain from its own pitch-period estimates, so no recreation that does not share its",
-      "detector's exact estimates nulls it; ours reaches about -7 dB per 100 ms window at best alignment."
+      "On a sung take, even at Formant +0.01, the reference's output against its own input, delayed, is +0.3 dB: it rebuilds a moving voice grain by grain from its own pitch-period estimates, so no recreation that does not share its detector's exact estimates nulls it; ours reaches about -7 dB per 100 ms window at best alignment (measured before the 1.0.0 release and not reproduced by a script in this tree)."
      ]
     }
    ]
@@ -650,8 +923,8 @@
     {
      "lines": [
       "In a blend (Mix well under 100 %) the pitch column measures which of the two voices a tracker hears frame by",
-      "frame, which is decided where they are close in level; MEASUREMENTS.md (Factory presets) checks those presets'",
-      "modulation directly."
+      "frame, which is decided where they are close in level; MEASUREMENTS.md (Phase 3) checks those presets' modulation",
+      "directly."
      ],
      "part": "presets"
     },
@@ -1517,5 +1790,12 @@
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "scorecard": "python -I plugins/FwPitchBend/nulltest/check_shifter.py all --save",
+  "noshift": "python -I plugins/FwPitchBend/nulltest/null_noshift.py --save",
+  "mods": "python -I plugins/FwPitchBend/nulltest/null_mods.py --save",
+  "presets": "python -I plugins/FwPitchBend/nulltest/null_presets.py --jobs 1",
+  "shift": "python -I plugins/FwPitchBend/nulltest/null_shift.py --save"
+ }
 }

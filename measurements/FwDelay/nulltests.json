@@ -98,9 +98,9 @@
       ],
       [
        "Output -6, Mix 70, Analog 4",
-       "-89.7",
+       "-89.6",
        "-90.0",
-       "-83.2"
+       "-83.3"
       ],
       [
        "Analog 1 (noise -103 dBFS)",
@@ -135,15 +135,15 @@
       "- The Analog modes 1-3 add random noise (the levels in the case names), which no null removes; mode 4 has none.",
       "- Cases whose time was set less than a few time constants before the input are still gliding: in a glide's slow tail",
       "  the reference and Flatwater Delay move to the next 1/32 phase of the interpolator on different samples (\"ms 250, Feedback",
-      "  80\", \"Host 1/4 at 97 BPM\"; both null at -100 dB once settled).",
+      "  80\", \"Host 1/4 at 97 BPM\"; both nulled at -100 dB once settled, measured before the 1.0.0 release and not reproduced by a script in this tree).",
       "- LoFi: the interpolator's window is not quite Kaiser; LoFi's lower cutoff shows the difference.",
       "- Modulation: the LFO is the reference's float triangle and Rate is taken at its shown resolution (three",
-      "  significant digits); modulated cases null at -60 ... -84 dB. Feedback above 100 % with the filters on makes the loop",
+      "  significant digits); the modulated and gliding cases are at -60.1 ... -82.7 dB. Feedback above 100 % with the filters on makes the loop",
       "  self-oscillate chaotically (a 1e-6 change of the input grows to -4 dB within 3 s, in either plug-in), so such",
       "  settings null only for their first fraction of a second (MEASUREMENTS.md section 4).",
       "- The factory presets: [Presets](#presets).",
       "- 44.1 kHz behaves as 48 kHz (the same suite at 44.1 kHz: within 1 ... 4 dB of these numbers, the Analog 4 case",
-      "  -80 ... -90)."
+      "  -80 ... -90; measured before the 1.0.0 release and not reproduced by a script in this tree: `--save` keeps the 48 and 96 kHz tables)."
      ]
     },
     {
@@ -289,8 +289,9 @@
     },
     {
      "lines": [
-      "Summary: **median -53.2 dB** over all 264 renders."
-     ]
+      "Summary: **median -53.2 dB** over all 264 renders, worst 2.9 dB; 94 of 264 renders below -60 dB."
+     ],
+     "part": "presets-summary"
     },
     {
      "table": true,
@@ -302,8 +303,8 @@
      ],
      "align": [
       "---",
-      "---",
-      "---",
+      "---:",
+      "---:",
       "---"
      ],
      "rows": [
@@ -311,33 +312,34 @@
        "Off",
        "19",
        "-78.1",
-       "-50.8 (Wobble Engine, drums)"
+       "-50.8 (Wobble Engine, drum loop)"
       ],
       [
        "1",
        "12",
        "-53.2",
-       "+2.9 (Quick Alarm, see below)"
+       "+2.9 (Quick Alarm, bass line)"
       ],
       [
        "2",
        "21",
-       "-51.6",
-       "-37.6 (Thin Straw)"
+       "-51.5",
+       "-37.5 (Thin Straw, drum loop)"
       ],
       [
        "3",
        "22",
        "-41.2",
-       "-26.5 (Saucer (Loud), drums)"
+       "-26.5 (Saucer (Loud), drum loop)"
       ],
       [
        "4",
        "14",
        "-69.5",
-       "-43.9 (Hard Left Six-String, drums)"
+       "-43.9 (Hard Left Six-String, drum loop)"
       ]
-     ]
+     ],
+     "part": "presets-summary"
     },
     {
      "lines": [
@@ -416,7 +418,7 @@
        "4",
        "-70.2",
        "-70.9",
-       "-71.0"
+       "-71.1"
       ],
       [
        "Essentials",
@@ -480,7 +482,7 @@
        "3",
        "-38.4",
        "-42.1",
-       "-43.0"
+       "-42.9"
       ],
       [
        "Essentials",
@@ -504,7 +506,7 @@
        "2",
        "-54.0",
        "-54.8",
-       "-51.6"
+       "-51.5"
       ],
       [
        "Essentials",
@@ -623,7 +625,7 @@
        "Clang Double",
        "4",
        "-90.9",
-       "-90.4",
+       "-90.3",
        "-85.2"
       ],
       [
@@ -679,7 +681,7 @@
        "Ceramic Room",
        "1",
        "-63.2",
-       "-56.8",
+       "-56.9",
        "-49.0"
       ],
       [
@@ -702,9 +704,9 @@
        "Essentials",
        "Spinning Cabinet",
        "2",
-       "-44.3",
+       "-44.2",
        "-47.9",
-       "-42.4"
+       "-42.5"
       ],
       [
        "Essentials",
@@ -720,7 +722,7 @@
        "4",
        "-62.7",
        "-68.7",
-       "-78.6"
+       "-78.7"
       ],
       [
        "Essentials",
@@ -742,9 +744,9 @@
        "Essentials",
        "Thin Straw",
        "2",
-       "-37.6",
+       "-37.5",
        "-44.8",
-       "-46.0"
+       "-45.9"
       ],
       [
        "Essentials",
@@ -768,7 +770,7 @@
        "4",
        "-75.4",
        "-79.2",
-       "-77.7"
+       "-77.8"
       ],
       [
        "Essentials",
@@ -776,14 +778,14 @@
        "4",
        "-61.3",
        "-67.9",
-       "-76.2"
+       "-76.1"
       ],
       [
        "Essentials",
        "Haunted Voices",
        "2",
        "-50.1",
-       "-52.8",
+       "-52.7",
        "-50.2"
       ],
       [
@@ -806,9 +808,9 @@
        "Essentials",
        "Quick Alarm",
        "1",
-       "-7.5",
+       "-8.1",
        "2.9",
-       "2.6"
+       "-3.6"
       ],
       [
        "Essentials",
@@ -816,7 +818,7 @@
        "2",
        "-48.1",
        "-52.4",
-       "-50.0"
+       "-50.1"
       ],
       [
        "Essentials",
@@ -847,8 +849,8 @@
        "Dark Haunt (Loud)",
        "2",
        "-56.3",
-       "-57.1",
-       "-51.5"
+       "-57.3",
+       "-50.9"
       ],
       [
        "Essentials",
@@ -880,23 +882,23 @@
        "2",
        "-48.6",
        "-52.8",
-       "-51.1"
+       "-51.0"
       ],
       [
        "Essentials",
        "Worn Infinite Loop",
        "4",
        "-69.7",
-       "-71.2",
-       "-70.8"
+       "-71.1",
+       "-70.7"
       ],
       [
        "Essentials",
        "Siren Drive (Loud)",
        "4",
-       "-59.7",
+       "-59.9",
        "-66.8",
-       "-53.6"
+       "-53.4"
       ],
       [
        "Essentials",
@@ -1016,7 +1018,7 @@
        "1",
        "-46.7",
        "-49.3",
-       "-53.5"
+       "-53.4"
       ],
       [
        "Studio",
@@ -1046,7 +1048,7 @@
        "Studio",
        "Rotor (Loud)",
        "4",
-       "-65.1",
+       "-65.2",
        "-64.6",
        "-63.6"
       ],
@@ -1079,5 +1081,11 @@
     }
    ]
   }
- ]
+ ],
+ "scripts": {
+  "settings": "python -I plugins/FwDelay/nulltest/nulltest.py --save",
+  "settings-96k": "python -I plugins/FwDelay/nulltest/nulltest.py --save --fs 96000 --band 20000",
+  "presets": "python -I plugins/FwDelay/nulltest/null_presets.py --save",
+  "presets-summary": "python -I plugins/FwDelay/nulltest/null_presets.py --save"
+ }
 }

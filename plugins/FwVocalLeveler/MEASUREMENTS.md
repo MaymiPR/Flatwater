@@ -124,7 +124,7 @@ identification, at Studio and Live, Slow and Fast, other Targets, ranges and Idl
 
 | Check | Result |
 |---|---|
-| CHECK sites | 65 |
+| Unit-test program | `FwVocalLevelerTests`, which prints its count of checks |
 | `ctest` | pass |
 | pluginval at strictness 10 | pass |
 | FocusCheck | pass |

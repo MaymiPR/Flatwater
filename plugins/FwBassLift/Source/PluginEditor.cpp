@@ -15,7 +15,6 @@ FwBassLiftEditor::FwBassLiftEditor (FwBassLiftProcessor& p)
       intensity (makeFader (Fader::Big)), gain (makeFader (Fader::Small, 5)), freq (makeFader (Fader::Horizontal)),
       origBass (makeSwitch())
 {
-    setFactoryPresets (bf::factoryPresets());
     intensity.negateTyped = false;                                   // -24 .. +24 dB
     freq.format = [] (double v) { return String (roundToInt (v)); };
     freq.negateTyped = false;

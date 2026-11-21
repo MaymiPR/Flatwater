@@ -7,7 +7,10 @@ using namespace juce;
 FwVocalChainProcessor::FwVocalChainProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwVocalChain", ch::createLayout())
+      apvts (*this, &undo, "FwVocalChain", ch::createLayout()),
+      presets (apvts, undo, ch::factoryPresets(), apvts.getParameter (ch::id::mode),
+               { apvts.getParameter (ch::id::sensitivity), apvts.getParameter (ch::id::output),   // (presets leave these
+                 apvts.getParameter (ch::id::link) })                                             // alone, as the reference)
 {
     chain.setReverb (&reverb);
     setLatencySamples (ch::latencySamples (48000.0));
@@ -37,31 +40,21 @@ void FwVocalChainProcessor::prepareToPlay (double sampleRate, int block)
 {
     sr = sampleRate;
     setLatencySamples (ch::latencySamples (sr));
-    chain.prepare (sr, jmax (block, 16));
-    work.setSize (2, jmax (block, 16));
+    maxBlock = jmax (block, 16);
+    chain.prepare (sr, maxBlock);
+    work.setSize (2, maxBlock);
     bypassLine.prepare (jmax (1, getTotalNumInputChannels()), getLatencySamples());
 }
 
-void FwVocalChainProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+void FwVocalChainProcessor::reset()
 {
-    const int n = b.getNumSamples(), ins = jmin (getTotalNumInputChannels(), b.getNumChannels());
-    bypassLine.process (b.getArrayOfWritePointers(), ins, n);
-    for (int c = jmax (1, ins); c < b.getNumChannels(); ++c) b.copyFrom (c, 0, b, 0, 0, n);   // (Mono/Stereo)
+    if (maxBlock <= 0) return;                                          // (a host that never prepared)
+    chain.reset();
+    bypassLine.reset();
 }
 
-void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
+ch::dsp::Params FwVocalChainProcessor::chainParams()
 {
-    ScopedNoDenormals nd;
-    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
-    const int n = b.getNumSamples(), ins = getTotalNumInputChannels(), outs = b.getNumChannels();
-    if (work.getNumSamples() < n) work.setSize (2, n, false, false, true);
-    bypassLine.write (b.getArrayOfReadPointers(), jmin (ins, outs), n);
-    float pin[2] { 0.0f, 0.0f }, pout[2] { 0.0f, 0.0f };
-    for (int c = 0; c < 2; ++c)                                         // (Mono/Stereo: the input on both sides)
-    {
-        work.copyFrom (c, 0, b, jmin (c, jmax (0, ins - 1)), 0, n);
-        pin[c] = work.getMagnitude (c, 0, n);
-    }
     ch::dsp::Params p;
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())
@@ -74,13 +67,60 @@ void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
         p.fader[i] = get (st.fader);
         p.colour[i] = roundToInt (get (st.colour));
     }
-    chain.process (work.getWritePointer (0), work.getWritePointer (1), n, p);
-    for (int c = 0; c < outs; ++c)
+    return p;
+}
+
+void FwVocalChainProcessor::processBlockBypassed (AudioBuffer<float>& b, MidiBuffer&)
+{
+    const int n = b.getNumSamples(), ins = jmin (getTotalNumInputChannels(), b.getNumChannels());
+    // The chain's delays stand between its stages (the input delay, Compress's look-ahead, the de-esser's band), so
+    // they cannot be fed apart from the stages: the chain runs on the input as in processBlock and its output is
+    // dropped. The release of the bypass then goes on with the audio of now, the echoes and the reverb of it too,
+    // not with what the chain held when the bypass came on.
+    if (ins > 0 && maxBlock > 0)
     {
-        b.copyFrom (c, 0, work, outs == 1 ? 0 : jmin (c, 1), 0, n);
-        if (outs == 1) { b.addFrom (0, 0, work, 1, 0, n); b.applyGain (0, 0, n, 0.5f); }
+        ScopedNoDenormals nd;
+        const auto prm = chainParams();
+        for (int at = 0; at < n; at += maxBlock)                        // (in pieces: see processBlock)
+        {
+            const int m = jmin (maxBlock, n - at);
+            for (int c = 0; c < 2; ++c) work.copyFrom (c, 0, b, jmin (c, ins - 1), at, m);
+            flatwater::silenceNonFinite (work.getArrayOfWritePointers(), 2, m);
+            chain.process (work.getWritePointer (0), work.getWritePointer (1), m, prm);
+        }
     }
-    for (int c = 0; c < 2; ++c) pout[c] = work.getMagnitude (c, 0, n);
+    bypassLine.process (b.getArrayOfWritePointers(), ins, n);
+    for (int c = jmax (1, ins); c < b.getNumChannels(); ++c) b.copyFrom (c, 0, b, 0, 0, n);   // (Mono/Stereo)
+}
+
+void FwVocalChainProcessor::processBlock (AudioBuffer<float>& b, MidiBuffer&)
+{
+    ScopedNoDenormals nd;
+    flatwater::silenceNonFinite (b.getArrayOfWritePointers(), b.getNumChannels(), b.getNumSamples());
+    const int n = b.getNumSamples(), ins = getTotalNumInputChannels(), outs = b.getNumChannels();
+    if (maxBlock <= 0) return;                                          // (a host that never prepared)
+    bypassLine.write (b.getArrayOfReadPointers(), jmin (ins, outs), n);
+    float pin[2] { 0.0f, 0.0f }, pout[2] { 0.0f, 0.0f };
+    const auto prm = chainParams();
+    // The chain and its buffers are made for blocks of up to the size prepareToPlay was given. A larger block goes
+    // through in pieces of that size, so the audio thread never resizes a buffer; the audio is that of the host
+    // sending those pieces as blocks.
+    for (int at = 0; at < n; at += maxBlock)
+    {
+        const int m = jmin (maxBlock, n - at);
+        for (int c = 0; c < 2; ++c)                                     // (Mono/Stereo: the input on both sides)
+        {
+            work.copyFrom (c, 0, b, jmin (c, jmax (0, ins - 1)), at, m);
+            pin[c] = jmax (pin[c], work.getMagnitude (c, 0, m));
+        }
+        chain.process (work.getWritePointer (0), work.getWritePointer (1), m, prm);
+        for (int c = 0; c < outs; ++c)
+        {
+            b.copyFrom (c, at, work, outs == 1 ? 0 : jmin (c, 1), 0, m);
+            if (outs == 1) { b.addFrom (0, at, work, 1, 0, m); b.applyGain (0, at, m, 0.5f); }
+        }
+        for (int c = 0; c < 2; ++c) pout[c] = jmax (pout[c], work.getMagnitude (c, 0, m));
+    }
     auto db = [] (float v) { return v > 1.0e-5f ? Decibels::gainToDecibels (v) : -100.0f; };
     inL.push (db (pin[0])); inR.push (db (pin[1]));
     outL.push (db (pout[0])); outR.push (db (pout[1]));

@@ -7,7 +7,8 @@ using namespace juce;
 FwPitchBendProcessor::FwPitchBendProcessor()
     : AudioProcessor (BusesProperties().withInput ("Input", AudioChannelSet::stereo(), true)
                                        .withOutput ("Output", AudioChannelSet::stereo(), true)),
-      apvts (*this, &undo, "FwPitchBend", pb::createLayout())
+      apvts (*this, &undo, "FwPitchBend", pb::createLayout()),
+      presets (apvts, undo, pb::factoryPresets(), apvts.getParameter (pb::id::mode))
 {
     ensureState();
     for (int t = 0; t < pb::dsp::numTargets; ++t)
@@ -17,6 +18,7 @@ FwPitchBendProcessor::FwPitchBendProcessor()
         engine.modNorm[(size_t) t] = targetParams[(size_t) t]->getValue();
     }
     apvts.state.addListener (this);
+    presets.applyExtras = [this] (const ValueTree& exact, UndoManager* um) { applyPresetExtras (exact, um); };
     refreshModel();
 }
 
@@ -49,33 +51,19 @@ void FwPitchBendProcessor::refreshModel()
     shared = m;
 }
 
-// a factory preset: its host parameters (flatwater::applyPreset), then the rest (applyPresetExtras, when its values land in
-// the state); index 0 the defaults
-void FwPitchBendProcessor::setCurrentProgram (int index)
-{
-    if (index < 0 || index >= getNumPrograms()) return;
-    currentProgram = index;
-    static const flatwater::FactoryPreset defaults { "", "Default", {} };
-    flatwater::applyPreset (apvts, index == 0 ? defaults : pb::factoryPresets()[(size_t) index - 1], apvts.getParameter (pb::id::mode));
-}
-
-void FwPitchBendProcessor::valueTreeChildAdded (ValueTree&, ValueTree& child)
-{
-    if (child.hasType (flatwater::presetExactTag)) applyPresetExtras (child);
-    refreshModel();
-}
-
-void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
+// A factory preset is its host parameters (flatwater::applyPreset) and then the rest, which flatwater::PresetState hands over
+// as the preset's stored values; the default preset has none, so everything goes back to its default.
+void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact, UndoManager* um)
 {
     using namespace pb;
     using namespace pb::dsp;
     auto& st = apvts.state;
-    st.setProperty (fineId, (bool) exact.getProperty ("fine", false), nullptr);
+    st.setProperty (fineId, (bool) exact.getProperty ("fine", false), um);
     for (int t = 0; t < numTargets; ++t)
         for (int s = 0; s < numSlots; ++s)
         {
             const String key = String ("slot.") + targets[t].key + "." + String (s);
-            setSlot (st, t, s, { (int) exact.getProperty (key + ".src", 0), (float) exact.getProperty (key + ".depth", 0.0f) }, nullptr);
+            setSlot (st, t, s, { (int) exact.getProperty (key + ".src", 0), (float) exact.getProperty (key + ".depth", 0.0f) }, um);
         }
     for (int m = 0; m < 2; ++m)
     {
@@ -83,7 +71,7 @@ void FwPitchBendProcessor::applyPresetExtras (const ValueTree& exact)
         Table t = defaultTable (m);
         if (exact.hasProperty (pre + "Shape")) setLfo (t, (Shape) jlimit (0, shapeNames().size() - 1, (int) exact.getProperty (pre + "Shape")));
         for (int k = 0; k < maxSteps; ++k) t[(size_t) (seqFirst + k)] = (float) (int) exact.getProperty (pre + "Step" + String (k), 0) / 24.0f;
-        setTable (st, m, t, nullptr);
+        setTable (st, m, t, um);
     }
 }
 
@@ -97,14 +85,23 @@ void FwPitchBendProcessor::prepareToPlay (double sampleRate, int block)
 {
     std::array<float, pb::dsp::numTargets> norm {};
     for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
-    engine.prepare (sampleRate, jmax (1, block), jmax (1, getTotalNumInputChannels()), norm);
+    sr = sampleRate;
+    maxBlock = jmax (1, block);
+    engine.prepare (sampleRate, maxBlock, jmax (1, getTotalNumInputChannels()), norm);
+}
+
+void FwPitchBendProcessor::reset()
+{
+    std::array<float, pb::dsp::numTargets> norm {};
+    for (int t = 0; t < pb::dsp::numTargets; ++t) norm[(size_t) t] = targetParams[(size_t) t]->getValue();
+    engine.reset (norm);
 }
 
 void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     ScopedNoDenormals nd;
     flatwater::silenceNonFinite (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), buffer.getNumSamples());
-    const int n = buffer.getNumSamples(), ch = jmin (buffer.getNumChannels(), getTotalNumInputChannels());
+    const int n = buffer.getNumSamples(), ch = jmin (2, buffer.getNumChannels(), getTotalNumInputChannels());
     if (n == 0 || ch == 0) return;
     {
         const SpinLock::ScopedTryLockType tl (modelLock);
@@ -130,7 +127,17 @@ void FwPitchBendProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
             if (auto b = pos->getBpm()) p.bpm = *b;
             if (auto q = pos->getPpqPosition()) { p.ppq = *q; p.havePpq = true; }
         }
-    engine.process (buffer.getArrayOfWritePointers(), ch, n, p, audio);
+    // The engine's buffers are made for blocks of up to the size prepareToPlay was given. A larger block goes through
+    // in pieces of that size, so the audio thread never resizes a buffer; the audio is that of the host sending those
+    // pieces as blocks, each with the song position of its start.
+    const int step = maxBlock > 0 ? maxBlock : n;
+    for (int at = 0; at < n; at += step)
+    {
+        const int m = jmin (step, n - at);
+        float* part[2] { buffer.getWritePointer (0) + at, buffer.getWritePointer (ch - 1) + at };
+        engine.process (part, ch, m, p, audio);
+        p.ppq += (double) m * p.bpm / (60.0 * sr);
+    }
     for (int t = 0; t < pb::dsp::numTargets; ++t) modulated[(size_t) t] = engine.modulated[(size_t) t];
     for (int m = 0; m < 2; ++m) cycle[m] = engine.cycle[m];
     amValue = engine.amValue;

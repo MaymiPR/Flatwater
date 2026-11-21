@@ -57,10 +57,10 @@ def panel(x, y):
 
 # The reference's panel (fitted on reference/fwdelay, as drawPanel's delay model): a base colour with a broad warm highlight at
 # the upper left, darkened toward the bottom and the side edges, a bright line along the top
-HD_PANEL = (183.5, 100.5, 35.97, 42.52, 55.87, 15.76, 107.1, 73.12, 100.4, 105.7, 229.3, 0.2535, 0.229, 22.65, 0.2993, 20.33, 0.7836)
+DELAY_PANEL = (183.5, 100.5, 35.97, 42.52, 55.87, 15.76, 107.1, 73.12, 100.4, 105.7, 229.3, 0.2535, 0.229, 22.65, 0.2993, 20.33, 0.7836)
 
 def panel_hd(x, y):
-    Br, Bg, Bb, Hr, Hg, Hb, x0, y0, sx, sy, yb, vb, el, wl, er, wr, tg = HD_PANEL
+    Br, Bg, Bb, Hr, Hg, Hb, x0, y0, sx, sy, yb, vb, el, wl, er, wr, tg = DELAY_PANEL
     blob = np.exp(-((x - x0) / sx) ** 2 - ((y - y0) / sy) ** 2)
     k = (1 - vb * np.clip((y - yb) / (292 - yb), 0, 1) ** 2) * (1 - el * np.exp(-x / wl)) * (1 - er * np.exp(-(749 - x) / wr))         * (1 + tg * np.exp(-(y - 19) / 3))
     return np.stack([(Br + Hr * blob) * k, (Bg + Hg * blob) * k, (Bb + Hb * blob) * k], axis=-1)

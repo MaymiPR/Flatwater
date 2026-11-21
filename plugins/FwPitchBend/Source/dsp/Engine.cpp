@@ -13,9 +13,16 @@ void Engine::prepare (double sampleRate, int maxBlock, int channels, const std::
     mono.assign ((size_t) block, 0.0f);
     pitchPer.assign ((size_t) block, 0.0f);
     formantPer.assign ((size_t) block, 0.0f);
-    for (auto& l : lfo) l.reset();
     am.prepare (sr, t);
     pt.refHz = t.ptRefHz;
+    reset (norm);
+}
+
+void Engine::reset (const std::array<float, numTargets>& norm)
+{
+    shifter.reset();
+    for (auto& l : lfo) l.reset();
+    am.reset();
     pt.reset();
     processed = 0;
     modNorm = norm;

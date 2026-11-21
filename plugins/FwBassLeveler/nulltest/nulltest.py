@@ -4,13 +4,17 @@ same input on both channels unless the case says otherwise. Reports per case the
 0.1 s, and the applied gain's error (ours vs the reference's, sample by sample where the input is loud enough).
 Numbers are reported as they come: no case is called a null unless the data shows it.
 
-    python -I nulltest.py [--quick] [--save] [--report] [--checks]
+    python -I nulltest.py [--quick] [--save] [--report] [--checks] [--grid]
     python -I nulltest.py --report     NULLTESTS.md again from measurements/FwBassLeveler/nulltests.json, rendering nothing
     python -I nulltest.py --vst3 [--fs rate] [--only text] [--threshold dB]
                                        our built VST3 against our renderer, without the reference: exit code 0
                                        equal (below -120 dB), 1 a case differs, 2 it could not run
-    python -I nulltest.py --checks     the reference against the plug-in at other rates, in the Live components and in
-                                       stereo, and the CPU load
+    python -I nulltest.py --checks [--save]
+                                       the reference against the plug-in at other rates, in the Live components and in
+                                       stereo, and the CPU load (printed only: it is the machine's)
+    python -I nulltest.py --grid [--save]
+                                       the bass line at every Sensitivity x Response, and over Artifacts
+--save writes the run's part of NULLTESTS.md.
 """
 import sys, os, json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -84,6 +88,34 @@ def cases(quick):
     return out[:4] if quick else out
 
 
+def out_residual(y_ours, y_ref):
+    """20 log10 (rms (ours - reference) / rms (reference)) after the first 0.1 s"""
+    s = int(0.1 * FS)
+    return 20 * np.log10(np.sqrt(np.mean((y_ours[:, s:] - y_ref[:, s:]) ** 2)) / np.sqrt(np.mean(y_ref[:, s:] ** 2)) + 1e-30)
+
+
+def grid():
+    """--grid: the bass line at every Sensitivity x Response, and over Artifacts at Slow; the fixed cases' residual"""
+    x = np.asarray(C.bassline(), np.float32); xs = np.stack([x, x])
+    one = lambda **kw: out_residual(render_ours(xs, **kw), render_ref(xs, **kw))
+    sens, arts = (0.0, 25.0, 50.0, 75.0, 100.0), (0.0, 30.0, 50.0, 68.2, 100.0)
+    rows = []
+    for resp in ('Slow', 'Fast'):
+        rows.append((resp, [one(sensitivity=v, response=resp + ' ') for v in sens]))
+        print('%-5s ' % resp + '  '.join('%6.1f' % v for v in rows[-1][1]), flush=True)
+    art = [one(artifacts=v) for v in arts]
+    print('Artifacts ' + '  '.join('%6.1f' % v for v in art), flush=True)
+    if '--save' in sys.argv:
+        import report_lib as RL
+        with RL.Part('FwBassLeveler', 'grid') as f:
+            f.write('The bass line of the fixed cases, the residual as there (dB). Produced by '
+                    '`plugins/FwBassLeveler/nulltest/nulltest.py --grid`.\n\n')
+            f.write('| Sensitivity | ' + ' | '.join('%g' % v for v in sens) + ' |\n|---|' + '---|' * len(sens) + '\n')
+            for resp, v in rows: f.write('| %s | ' % resp + ' | '.join('%.1f' % q for q in v) + ' |\n')
+            f.write('\n| Artifacts (Slow, Sensitivity 50) | ' + ' | '.join('%g' % v for v in arts) + ' |\n|---|' + '---|' * len(arts) + '\n')
+            f.write('| residual (dB) | ' + ' | '.join('%.1f' % q for q in art) + ' |\n')
+
+
 def main():
     if '--report' in sys.argv:
         import report_lib as RL
@@ -91,6 +123,8 @@ def main():
         return
     if '--checks' in sys.argv:
         return checks()
+    if '--grid' in sys.argv:
+        return grid()
     quick = '--quick' in sys.argv
     rows = []
     for name, x, kw in cases(quick):
@@ -100,7 +134,7 @@ def main():
         ours_kw = {k: v for k, v in kw.items()}
         y_ours = render_ours(xs, **ours_kw)
         s = int(0.1 * FS)
-        res = 20 * np.log10(np.sqrt(np.mean((y_ours[:, s:] - y_ref[:, s:]) ** 2)) / np.sqrt(np.mean(y_ref[:, s:] ** 2)) + 1e-30)
+        res = out_residual(y_ours, y_ref)
         g_ref, g_ours = M.gtrace(x, y_ref[0]), M.gtrace(x, y_ours[0])
         env = np.convolve(x.astype(float) ** 2, np.ones(96) / 96, 'same'); ok = env > 10 ** (-55 / 10); ok[:s] = False
         d = np.abs(g_ours - g_ref)[ok]
@@ -173,6 +207,13 @@ def checks():
     x = np.tile(xs, (1, 6)); t0 = time.perf_counter(); render_fs(x, 48000); dt = time.perf_counter() - t0
     rows.append(('CPU: 60 s of stereo at 48 kHz rendered in (s; % of one core in real time)', dt)); print('cpu %.2f s = %.2f %%' % (dt, dt / 60 * 100))
     for k, v in rows: print('| %s | %.1f |' % (k, v))
+    if '--save' in sys.argv:
+        import report_lib as RL
+        with RL.Part('FwBassLeveler', 'vst3') as f:
+            f.write('The residual over the loud parts (dB); the bass line of the fixed cases, resampled for the other rates. Produced by '
+                    '`plugins/FwBassLeveler/nulltest/nulltest.py --checks`.\n\n')
+            f.write('| case | residual (dB) |\n|---|---|\n')
+            for k, v in rows[:-1]: f.write('| %s | %.1f |\n' % (k.replace('reference vs Flatwater Bass Leveler, ', ''), v))
 
 if __name__ == '__main__':
     main()
